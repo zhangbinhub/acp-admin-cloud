@@ -1,0 +1,100 @@
+debug: false
+server:
+  port: 8780
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Spring Config
+# ===============================
+spring:
+  thymeleaf:
+    cache: false
+  # ==== zipkin 链路监控，需要时放开注释
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: 127.0.0.1:9092
+      bindings:
+        log_output:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: test-log
+          group: log-server-group
+          content-type: application/json
+        # 与@StreamListener注解中的value一致，是绑定的渠道名
+        log_input:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: test-log
+          group: log-server-group
+          content-type: application/json
+###### 多个 kafka 时配置
+#      binders:
+#        kafka1:
+#          type: kafka
+#          environment:
+#            spring:
+#              cloud:
+#                stream:
+#                  kafka:
+#                    binder:
+#                      brokers: name87:9094
+#                      zkNodes: name85:2181,name86:2181,name87:2181/kafka0101
+#        kafka2:
+#          type: kafka
+#          environment:
+#            spring:
+#              cloud:
+#                stream:
+#                  kafka:
+#                    binder:
+#                      brokers: name85:9094
+#                      zkNodes: name85:2181,name86:2181,name87:2181/kafkatest0101
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    client:
+      client-id: client
+      client-secret: client
+    resource:
+      token-info-uri: http://127.0.0.1:8770/oauth/2.0/oauth/check_token
+      user-info-uri:  http://127.0.0.1:8770/oauth/2.0/user
+      prefer-token-info: false

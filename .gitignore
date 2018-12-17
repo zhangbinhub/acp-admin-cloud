@@ -1,0 +1,15 @@
+# Intellij IDEA
+.idea
+.gradle
+.svn
+.git
+
+out/
+build/
+logs/
+elasticsearch/
+zk-kafka/
+
+# OSX
+#
+.DS_Store

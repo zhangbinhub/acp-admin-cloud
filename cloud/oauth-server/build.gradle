@@ -1,0 +1,21 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$versions.spring_boot")
+    }
+}
+
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$versions.spring_boot"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
+    }
+}
+dependencies {
+    compile fileTree(dir: "$rootDir/libs", include: "*.jar")
+
+    compile "org.springframework.boot:spring-boot-starter-data-redis"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    compile "org.springframework.cloud:spring-cloud-starter-oauth2"
+}

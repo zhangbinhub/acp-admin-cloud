@@ -1,0 +1,171 @@
+ext {
+    println("gradle version is ${gradleVersion}")
+    println("jdk version is ${javaVersion}")
+    println("compile : detected JAVA_HOME=$System.env.JAVA_HOME")
+    println("encoding : ${encoding}")
+}
+
+wrapper {
+    gradleVersion = "${gradleVersion}"
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.spring.io/plugins-release/" }
+        maven { url "${mavenCentralUrl}" }
+        mavenCentral()
+        jcenter()
+    }
+}
+
+configure(allprojects) {
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    apply from: "$rootDir/gradle/dependencies.gradle"
+
+    sourceCompatibility = "${javaVersion}"
+    targetCompatibility = "${javaVersion}"
+
+    buildscript {
+        repositories {
+            mavenLocal()
+            maven { url "https://repo.spring.io/plugins-release/" }
+            maven { url "${mavenCentralUrl}" }
+            mavenCentral()
+            jcenter()
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.spring.io/plugins-release/" }
+        maven { url "${mavenCentralUrl}" }
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        testCompile("org.junit.jupiter:junit-jupiter-engine:$versions.jupiter")
+        testCompile("org.junit.jupiter:junit-jupiter-api:$versions.jupiter")
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "${encoding}"
+    }
+
+    tasks.withType(Javadoc) {
+        options.encoding = "${encoding}"
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    task clearPj(type: Delete) {
+        delete 'build', 'target', 'out'
+    }
+
+    task copyJar(type: Copy) {
+        from(configurations.runtime)
+        into('build/libs/dependencies')
+    }
+
+    task mapperXmlCopy(type: Copy) {
+        copy {
+            from("src/main/java") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/main")
+        }
+        copy {
+            from("src/test/java") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/test")
+        }
+        copy {
+            from("src/main/scala") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/main")
+        }
+        copy {
+            from("src/test/scala") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/test")
+        }
+        copy {
+            from("src/main/kotlin") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/main")
+        }
+        copy {
+            from("src/test/kotlin") {
+                include("**/*.xml")
+                include("**/*.json")
+                include("**/*.properties")
+            }
+            into("${buildDir}/classes/test")
+        }
+    }
+
+    jar {
+        dependsOn(copyJar)
+    }
+
+    jar.manifest {
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Application Construction Platform (acp)')
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    javadoc {
+        options.charSet = "${encoding}"
+        options.docEncoding = "${encoding}"
+        options.encoding = "${encoding}"
+    }
+
+    compileJava {
+        options.encoding = "${encoding}"
+        options.fork = true
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+    compileJava.dependsOn(processResources)
+
+    compileTestJava {
+        options.encoding = "${encoding}"
+        options.fork = true
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    task release(type: Copy, dependsOn: [build, copyJar]) {
+        from 'conf'
+        into('build/libs/eachend/conf') // 目标位置
+    }
+
+}

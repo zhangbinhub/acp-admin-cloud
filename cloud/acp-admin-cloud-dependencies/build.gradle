@@ -1,0 +1,63 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$versions.spring_boot")
+    }
+}
+apply plugin: "io.spring.dependency-management"
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$versions.spring_boot"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
+    }
+}
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compile fileTree(dir: "$rootDir/libs", include: "*.jar")
+
+    compile "org.apache.commons:commons-text:$versions.commons_text"
+    compile "org.apache.commons:commons-lang3:$versions.commons_lang3"
+    compile "org.slf4j:slf4j-api:$versions.slf4j"
+    compile "ch.qos.logback:logback-classic:$versions.logback"
+    compile "com.fasterxml.jackson.core:jackson-databind:$versions.jackson_databind"
+    compile "org.bouncycastle:bcmail-jdk15on:$versions.bouncycastle"
+    compile "org.bouncycastle:bcprov-ext-jdk15on:$versions.bouncycastle"
+    compile "com.thoughtworks.xstream:xstream:$versions.xstream"
+    compile "dom4j:dom4j:$versions.dom4j"
+
+    // sql data base connection
+    compile "com.zaxxer:HikariCP:$versions.hikaricp"
+    compile "mysql:mysql-connector-java:$versions.mysql"
+    compile "com.microsoft.sqlserver:mssql-jdbc:$versions.mssqljdbc"
+    compile "com.hynnet:oracle-driver-ojdbc:$versions.ojdbc"
+    compile "org.postgresql:postgresql:$versions.postgresql"
+
+    // tcp/udp
+    compile "org.apache.mina:mina-core:$versions.mina"
+
+    // http client
+    compile "org.apache.httpcomponents:httpclient:$versions.httpclient"
+
+    compile "org.javassist:javassist:$versions.javassist"
+    compile "org.mockito:mockito-core:$versions.mockito"
+    compile "org.glassfish.jaxb:jaxb-runtime:$versions.jaxb_runtime"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    // Swagger2
+    compile "io.springfox:springfox-swagger2:$versions.swagger"
+    compile "io.springfox:springfox-swagger-ui:$versions.swagger"
+
+    compile "org.jolokia:jolokia-core"
+
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    compile "org.springframework.cloud:spring-cloud-starter-oauth2"
+    compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
+    // monitor : 服务间调用、断路器、链路追踪
+    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+}

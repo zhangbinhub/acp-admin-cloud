@@ -1,0 +1,35 @@
+jdk1.7及以下
+nohup java
+-server
+-XX:+UseConcMarkSweepGC
+-XX:ConcGCThreads=2
+-XX:ParallelCMSThreads=2
+-XX:CMSInitiatingOccupancyFraction=60
+-XX:+UseCMSCompactAtFullCollection
+-XX:CMSFullGCsBeforeCompaction=2
+-XX:+CMSParallelRemarkEnabled
+-XX:+CMSIncrementalMode
+-Xms4086m -Xmx6144m -Xmn1536m
+-Djava.rmi.server.hostname=ip -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9596
+-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dfile.encoding=utf-8
+-jar xxxx.jar &
+
+jdk1.8
+nohup java
+-server
+-XX:+UseG1GC
+-XX:InitiatingHeapOccupancyPercent=0
+-Xms4086m -Xmx6144m
+-Djava.rmi.server.hostname=ip -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9596
+-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dfile.encoding=utf-8
+-jar xxxx.jar &
+
+jdk-11
+nohup java
+-server
+-XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+-Xlog:age*,gc*=info:file=gc-%t.log:time,tid,tags:filecount=3,filesize=20m -Djava.io.tmpdir=/tmp
+-Xms4086m -Xmx6144m
+-Djava.rmi.server.hostname=ip -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9596
+-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dfile.encoding=utf-8
+-jar xxxx.jar &
