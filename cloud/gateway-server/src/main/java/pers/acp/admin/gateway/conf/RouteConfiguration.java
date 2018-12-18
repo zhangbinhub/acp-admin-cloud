@@ -20,7 +20,6 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class RouteConfiguration {
 
-    //这里为支持的请求头，如果有自定义的header字段请自己添加（不知道为什么不能使用*）
     private static final String ALLOWED_HEADERS = "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent";
 
     private static final String ALLOWED_METHODS = "*";
