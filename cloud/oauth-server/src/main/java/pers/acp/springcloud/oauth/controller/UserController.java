@@ -12,7 +12,7 @@ import java.security.Principal;
 @RestController
 public class UserController {
 
-    @RequestMapping("/user")
+    @RequestMapping("/oauth/user")
     public Principal user(Principal user) {
         return user;
     }

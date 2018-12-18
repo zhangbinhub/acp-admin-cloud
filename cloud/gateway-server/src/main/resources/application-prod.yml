@@ -62,9 +62,9 @@ spring:
         - id: server-oauth2
           uri: lb://server-oauth2
           predicates:
-            - Path=/oauth/2.0/**
+            - Path=/api/oauth/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
             - name: Hystrix
               args:
                 name: GateWayHystrix

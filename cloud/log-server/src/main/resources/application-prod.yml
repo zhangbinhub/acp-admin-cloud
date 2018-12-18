@@ -18,12 +18,6 @@ management:
 spring:
   thymeleaf:
     cache: false
-  # ==== zipkin 链路监控，需要时放开注释
-  zipkin:
-    base-url: http://localhost:9411/
-  sleuth:
-    sampler:
-      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
   cloud:
     stream:
       default-binder: kafka
@@ -95,6 +89,6 @@ security:
       client-id: client
       client-secret: client
     resource:
-      token-info-uri: http://127.0.0.1:8770/oauth/2.0/oauth/check_token
-      user-info-uri:  http://127.0.0.1:8770/oauth/2.0/user
+      token-info-uri: http://127.0.0.1:8770/api/oauth/check_token
+      user-info-uri:  http://127.0.0.1:8770/api/oauth/user
       prefer-token-info: false
