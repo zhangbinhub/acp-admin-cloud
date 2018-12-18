@@ -31,7 +31,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                 .authorities("ROLE_ADMIN")
                 .scopes("ALL")
-                .accessTokenValiditySeconds(600)
+                .accessTokenValiditySeconds(86400)
                 .refreshTokenValiditySeconds(86400)
                 .and()
                 .withClient("client")
@@ -39,7 +39,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                 .authorities("ROLE_ADMIN")
                 .scopes("ALL")
-                .accessTokenValiditySeconds(600)
+                .accessTokenValiditySeconds(86400)
                 .refreshTokenValiditySeconds(86400);
         try {
             clientDetailsService = builder.build();
