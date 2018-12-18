@@ -12,4 +12,6 @@ include 'cloud:log-server'
 findProject(':cloud:log-server')?.name = 'log-server'
 include 'cloud:oauth-server'
 findProject(':cloud:oauth-server')?.name = 'oauth-server'
+include 'cloud:acp-admin-dependencies'
+findProject(':cloud:acp-admin-dependencies')?.name = 'acp-admin-dependencies'
 

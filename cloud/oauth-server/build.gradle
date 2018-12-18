@@ -13,7 +13,7 @@ dependencyManagement {
     }
 }
 dependencies {
-    compile fileTree(dir: "$rootDir/libs", include: "*.jar")
+    compile project(":cloud:acp-admin-dependencies")
 
     compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
