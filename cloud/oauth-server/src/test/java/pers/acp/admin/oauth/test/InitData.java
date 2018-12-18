@@ -137,7 +137,7 @@ class InitData extends BaseTest {
         user.setStatus(1);
         user.setSort(0);
         user.getRoleSet().add(role);
-        user = userRepository.save(user);
+        userRepository.save(user);
     }
 
 }
