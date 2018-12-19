@@ -59,13 +59,13 @@ public class Application {
     private String id;
 
     @Column(nullable = false)
-    private String appname = "";
+    private String appname;
 
     @Column(nullable = false)
-    private String secret = "";
+    private String secret;
 
     @Column(nullable = false)
-    private boolean covert = false;
+    private boolean covert = true;
 
     @Column(nullable = false)
     private int sort = 1;

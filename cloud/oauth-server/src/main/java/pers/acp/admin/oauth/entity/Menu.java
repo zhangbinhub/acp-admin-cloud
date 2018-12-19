@@ -126,7 +126,7 @@ public class Menu {
     private String appid;
 
     @Column(nullable = false)
-    private String name = "";
+    private String name;
 
     private String iconClass;
 
@@ -138,7 +138,7 @@ public class Menu {
     private String parentid;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Column(nullable = false)
     private boolean covert = true;

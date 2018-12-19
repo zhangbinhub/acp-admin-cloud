@@ -73,10 +73,10 @@ public class ModuleFunc {
     private String moduleid;
 
     @Column(nullable = false)
-    private String name = "";
+    private String name;
 
     @Column(length = 100, nullable = false)
-    private String code = "";
+    private String code;
 
     @Column(nullable = false)
     private boolean covert = true;

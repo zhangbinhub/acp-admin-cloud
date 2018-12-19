@@ -96,7 +96,7 @@ public class Role {
     private String appid;
 
     @Column(nullable = false)
-    private String name = "";
+    private String name;
 
     @Column(length = 100, nullable = false)
     private String code;

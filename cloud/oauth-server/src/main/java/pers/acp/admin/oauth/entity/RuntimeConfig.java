@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_runtimeconfig", indexes = {
-        @Index(columnList = "confname,status")
+        @Index(columnList = "confname,enabled")
 })
 public class RuntimeConfig {
 
@@ -46,20 +46,20 @@ public class RuntimeConfig {
         this.confdes = confdes;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public int getType() {
-        return type;
+    public boolean isCovert() {
+        return covert;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setCovert(boolean covert) {
+        this.covert = covert;
     }
 
     @Id
@@ -69,16 +69,16 @@ public class RuntimeConfig {
     private String id;
 
     @Column(length = 100, nullable = false)
-    private String confname = "";
+    private String confname;
 
     private String confvalue = "";
 
     private String confdes = "";
 
     @Column(nullable = false)
-    private int status = 1;
+    private boolean enabled = true;
 
     @Column(nullable = false)
-    private int type = 1;
+    private boolean covert = true;
 
 }

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.repo.*;
-import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;
 
 /**
@@ -37,7 +36,7 @@ class InitData extends BaseTest {
     void doInit() {
         Application application = new Application();
         application.setAppname("Acp-Admin");
-        application.setSecret(CommonTools.getUuid());
+        application.setSecret("E0D3024D-9A22-41EE-AC0F-FC6B56E367AE");
         application.setCovert(false);
         application.setSort(0);
         application = applicationRepository.save(application);
@@ -134,6 +133,7 @@ class InitData extends BaseTest {
         user.setName("超级管理员");
         user.setLoginno("admin");
         user.setPassword(SHA256Utils.encrypt(SHA256Utils.encrypt("888888") + "admin"));
+        user.setMobile("13888888888");
         user.setLevels(0);
         user.setEnabled(true);
         user.setSort(0);

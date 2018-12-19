@@ -109,16 +109,16 @@ public class User {
     private String id;
 
     @Column(nullable = false)
-    private String name = "";
+    private String name;
 
     @Column(length = 50, unique = true, nullable = false)
-    private String loginno = "";
+    private String loginno;
 
     @Column(nullable = false)
-    private String password = "";
+    private String password;
 
     @Column(length = 20, unique = true, nullable = false)
-    private String mobile = "";
+    private String mobile;
 
     @Column(nullable = false)
     private int levels;
