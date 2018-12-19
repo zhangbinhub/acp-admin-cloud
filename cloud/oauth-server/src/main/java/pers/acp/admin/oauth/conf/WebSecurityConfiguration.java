@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import pers.acp.core.CommonTools;
 import pers.acp.admin.oauth.component.UserPasswordEncoder;
-import pers.acp.admin.oauth.domain.SecurityUserDetailsService;
+import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
 
 /**
  * @author zhangbin by 11/04/2018 15:16

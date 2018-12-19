@@ -11,9 +11,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import pers.acp.admin.oauth.domain.SecurityClientDetailsService;
-import pers.acp.admin.oauth.domain.SecurityTokenService;
-import pers.acp.admin.oauth.domain.SecurityUserDetailsService;
+import pers.acp.admin.oauth.domain.security.SecurityClientDetailsService;
+import pers.acp.admin.oauth.domain.security.SecurityTokenService;
+import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
 
 /**
  * @author zhangbin by 11/04/2018 14:34

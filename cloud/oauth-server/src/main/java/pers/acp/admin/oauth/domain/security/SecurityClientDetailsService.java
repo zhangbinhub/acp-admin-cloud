@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.domain;
+package pers.acp.admin.oauth.domain.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
