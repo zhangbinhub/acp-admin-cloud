@@ -1,13 +1,17 @@
 package pers.acp.admin.oauth.domain;
 
+import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
+import pers.acp.admin.oauth.entity.Application;
+import pers.acp.admin.oauth.repo.ApplicationRepository;
 import pers.acp.core.log.LogFactory;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * @author zhangbin by 11/04/2018 15:21
@@ -18,31 +22,37 @@ public class SecurityClientDetailsService implements ClientDetailsService {
 
     private final LogFactory log = LogFactory.getInstance(this.getClass());
 
+    private final ApplicationRepository applicationRepository;
+
     private ClientDetailsService clientDetailsService = null;
+
+    public SecurityClientDetailsService(ApplicationRepository applicationRepository) {
+        this.applicationRepository = applicationRepository;
+    }
 
     /**
      * 初始化客户端信息
      */
     @PostConstruct
     public void init() {
-        InMemoryClientDetailsServiceBuilder builder = new InMemoryClientDetailsServiceBuilder();
-        builder.withClient("test")
+        List<Application> applicationList = applicationRepository.findAll();
+        InMemoryClientDetailsServiceBuilder memoryClientDetailsServiceBuilder = new InMemoryClientDetailsServiceBuilder();
+        final ClientDetailsServiceBuilder.ClientBuilder[] builder = {memoryClientDetailsServiceBuilder.withClient("test")
                 .secret("test")
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                 .authorities("ROLE_ADMIN")
-                .scopes("ALL")
+                .scopes("test")
                 .accessTokenValiditySeconds(86400)
-                .refreshTokenValiditySeconds(86400)
-                .and()
-                .withClient("client")
-                .secret("client")
+                .refreshTokenValiditySeconds(86400)};
+        applicationList.forEach(application -> builder[0] = builder[0].and()
+                .withClient(application.getId())
+                .secret(application.getSecret())
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                .authorities("ROLE_ADMIN")
                 .scopes("ALL")
                 .accessTokenValiditySeconds(86400)
-                .refreshTokenValiditySeconds(86400);
+                .refreshTokenValiditySeconds(86400));
         try {
-            clientDetailsService = builder.build();
+            clientDetailsService = memoryClientDetailsServiceBuilder.build();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

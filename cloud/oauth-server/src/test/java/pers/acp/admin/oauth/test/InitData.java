@@ -8,7 +8,7 @@ import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.repo.*;
 import pers.acp.core.CommonTools;
-import pers.acp.core.security.MD5Utils;
+import pers.acp.core.security.SHA256Utils;
 
 /**
  * @author zhang by 18/12/2018
@@ -38,7 +38,7 @@ class InitData extends BaseTest {
         Application application = new Application();
         application.setAppname("Acp-Admin");
         application.setSecret(CommonTools.getUuid());
-        application.setType(0);
+        application.setCovert(false);
         application.setSort(0);
         application = applicationRepository.save(application);
 
@@ -50,8 +50,8 @@ class InitData extends BaseTest {
         menu1.setPath("");
         menu1.setParentid(application.getId());
         menu1.setSort(0);
-        menu1.setStatus(1);
-        menu1.setType(0);
+        menu1.setEnabled(true);
+        menu1.setCovert(false);
         menu1.setOpentype(0);
         menu1.setDialogH(0);
         menu1.setDialogW(0);
@@ -65,8 +65,8 @@ class InitData extends BaseTest {
         menu2.setPath("/view/page/user/user");
         menu2.setParentid(menu1.getId());
         menu2.setSort(1);
-        menu2.setStatus(1);
-        menu2.setType(0);
+        menu2.setEnabled(true);
+        menu2.setCovert(false);
         menu2.setOpentype(0);
         menu2.setDialogH(0);
         menu2.setDialogW(0);
@@ -80,8 +80,8 @@ class InitData extends BaseTest {
         menu3.setPath("/view/page/department/department");
         menu3.setParentid(menu1.getId());
         menu3.setSort(2);
-        menu3.setStatus(1);
-        menu3.setType(0);
+        menu3.setEnabled(true);
+        menu3.setCovert(false);
         menu3.setOpentype(0);
         menu3.setDialogH(0);
         menu3.setDialogW(0);
@@ -95,8 +95,8 @@ class InitData extends BaseTest {
         menu4.setPath("");
         menu4.setParentid(application.getId());
         menu4.setSort(0);
-        menu4.setStatus(1);
-        menu4.setType(1);
+        menu4.setEnabled(true);
+        menu4.setCovert(false);
         menu4.setOpentype(0);
         menu4.setDialogH(0);
         menu4.setDialogW(0);
@@ -110,8 +110,8 @@ class InitData extends BaseTest {
         menu5.setPath("/view/page/demo/upload?_type=0");
         menu5.setParentid(menu4.getId());
         menu5.setSort(1);
-        menu5.setStatus(1);
-        menu5.setType(1);
+        menu5.setEnabled(true);
+        menu5.setCovert(true);
         menu5.setOpentype(0);
         menu5.setDialogH(0);
         menu5.setDialogW(0);
@@ -120,6 +120,7 @@ class InitData extends BaseTest {
         Role role = new Role();
         role.setAppid(application.getId());
         role.setName("超级管理员");
+        role.setCode("ADMIN");
         role.setLevels(0);
         role.setSort(0);
         role.getMenuSet().add(menu1);
@@ -132,9 +133,9 @@ class InitData extends BaseTest {
         User user = new User();
         user.setName("超级管理员");
         user.setLoginno("admin");
-        user.setPassword(MD5Utils.encrypt(MD5Utils.encrypt("888888") + "admin"));
+        user.setPassword(SHA256Utils.encrypt(SHA256Utils.encrypt("888888") + "admin"));
         user.setLevels(0);
-        user.setStatus(1);
+        user.setEnabled(true);
         user.setSort(0);
         user.getRoleSet().add(role);
         userRepository.save(user);

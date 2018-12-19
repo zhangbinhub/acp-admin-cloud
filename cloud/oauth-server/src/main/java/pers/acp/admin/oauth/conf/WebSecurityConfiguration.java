@@ -9,11 +9,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import pers.acp.core.CommonTools;
 import pers.acp.admin.oauth.component.UserPasswordEncoder;
-import pers.acp.admin.oauth.domain.SecurityClientDetailsService;
 import pers.acp.admin.oauth.domain.SecurityUserDetailsService;
 
 /**
@@ -28,20 +25,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserPasswordEncoder userPasswordEncoder;
 
+    private final SecurityUserDetailsService userDetailsService;
+
     @Autowired
-    public WebSecurityConfiguration(ServerProperties serverProperties, UserPasswordEncoder userPasswordEncoder) {
+    public WebSecurityConfiguration(ServerProperties serverProperties, UserPasswordEncoder userPasswordEncoder, SecurityUserDetailsService userDetailsService) {
         this.userPasswordEncoder = userPasswordEncoder;
         this.contextPath = CommonTools.isNullStr(serverProperties.getServlet().getContextPath()) ? "" : serverProperties.getServlet().getContextPath();
-    }
-
-    @Bean(name = "customerUserDetailsService")
-    public UserDetailsService userDetailsService() {
-        return new SecurityUserDetailsService();
-    }
-
-    @Bean(name = "customerClientDetailsService")
-    public ClientDetailsService clientDetailsService() {
-        return new SecurityClientDetailsService();
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -52,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(userPasswordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(userPasswordEncoder);
     }
 
     /**

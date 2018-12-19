@@ -52,12 +52,20 @@ public class Menu {
         this.parentid = parentid;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isCovert() {
+        return covert;
+    }
+
+    public void setCovert(boolean covert) {
+        this.covert = covert;
     }
 
     public int getSort() {
@@ -66,14 +74,6 @@ public class Menu {
 
     public void setSort(int sort) {
         this.sort = sort;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public int getOpentype() {
@@ -138,10 +138,10 @@ public class Menu {
     private String parentid;
 
     @Column(nullable = false)
-    private int status;
+    private boolean enabled;
 
     @Column(nullable = false)
-    private int type = 1;
+    private boolean covert = true;
 
     @Column(nullable = false)
     private int opentype = 0;

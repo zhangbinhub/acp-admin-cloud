@@ -62,12 +62,12 @@ public class User {
         this.levels = levels;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getPortrait() {
@@ -86,12 +86,12 @@ public class User {
         this.sort = sort;
     }
 
-    public Set<Department> getDepartmentSet() {
-        return departmentSet;
+    public Set<Organization> getOrganizationSet() {
+        return organizationSet;
     }
 
-    public void setDepartmentSet(Set<Department> departmentSet) {
-        this.departmentSet = departmentSet;
+    public void setOrganizationSet(Set<Organization> organizationSet) {
+        this.organizationSet = organizationSet;
     }
 
     public Set<Role> getRoleSet() {
@@ -124,7 +124,7 @@ public class User {
     private int levels;
 
     @Column(nullable = false)
-    private int status;
+    private boolean enabled;
 
     @Column(columnDefinition = "text")
     private String portrait;
@@ -132,13 +132,13 @@ public class User {
     @Column(nullable = false)
     private int sort;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinTable(name = "t_user_department_set",
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "t_user_organization_set",
             joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "departmentid", referencedColumnName = "id")})
-    private Set<Department> departmentSet = new HashSet<>();
+            inverseJoinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")})
+    private Set<Organization> organizationSet = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_user_role_set",
             joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")})

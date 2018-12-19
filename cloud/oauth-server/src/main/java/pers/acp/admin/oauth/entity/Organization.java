@@ -9,8 +9,8 @@ import javax.persistence.*;
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_department")
-public class Department {
+@Table(name = "t_organization")
+public class Organization {
 
     public String getId() {
         return id;

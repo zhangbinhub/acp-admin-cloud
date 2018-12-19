@@ -26,8 +26,8 @@ public class UserPasswordEncoder implements PasswordEncoder {
     /**
      * 匹配
      *
-     * @param rawPassword     原始密码
-     * @param encodedPassword 编码后的密码
+     * @param rawPassword     原始密码，客户端上送的值
+     * @param encodedPassword 编码后的密码，存储在服务器上的值，SecurityUserDetailsService 指定
      * @return 匹配结果
      */
     @Override

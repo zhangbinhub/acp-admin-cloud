@@ -52,12 +52,12 @@ public class ModuleFunc {
         this.code = code;
     }
 
-    public int getType() {
-        return type;
+    public boolean isCovert() {
+        return covert;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setCovert(boolean covert) {
+        this.covert = covert;
     }
 
     @Id
@@ -79,6 +79,6 @@ public class ModuleFunc {
     private String code = "";
 
     @Column(nullable = false)
-    private int type = 1;
+    private boolean covert = true;
 
 }
