@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -26,6 +27,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
 
     private ClientDetailsService clientDetailsService = null;
 
+    @Autowired
     public SecurityClientDetailsService(ApplicationRepository applicationRepository) {
         this.applicationRepository = applicationRepository;
     }
@@ -43,14 +45,14 @@ public class SecurityClientDetailsService implements ClientDetailsService {
                 .authorities("ROLE_ADMIN")
                 .scopes("test")
                 .accessTokenValiditySeconds(86400)
-                .refreshTokenValiditySeconds(86400)};
+                .refreshTokenValiditySeconds(2592000)};
         applicationList.forEach(application -> builder[0] = builder[0].and()
                 .withClient(application.getId())
                 .secret(application.getSecret())
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                 .scopes("ALL")
-                .accessTokenValiditySeconds(86400)
-                .refreshTokenValiditySeconds(86400));
+                .accessTokenValiditySeconds(application.getAccessTokenValiditySeconds())
+                .refreshTokenValiditySeconds(application.getRefreshTokenValiditySeconds()));
         try {
             clientDetailsService = memoryClientDetailsServiceBuilder.build();
         } catch (Exception e) {

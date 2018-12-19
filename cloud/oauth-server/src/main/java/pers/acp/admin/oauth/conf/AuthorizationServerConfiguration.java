@@ -1,7 +1,6 @@
 package pers.acp.admin.oauth.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,8 +10,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import pers.acp.admin.oauth.component.CustomerRedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import pers.acp.admin.oauth.domain.SecurityClientDetailsService;
+import pers.acp.admin.oauth.domain.SecurityTokenService;
 import pers.acp.admin.oauth.domain.SecurityUserDetailsService;
 
 /**
@@ -39,17 +39,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         this.connectionFactory = connectionFactory;
     }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.authenticationManager(authenticationManager)
-                .userDetailsService(securityUserDetailsService)//若无，refresh_token会有UserDetailsService is required错误
-//                .tokenStore(new InMemoryTokenStore());// token 默认持久化到内存
-                .tokenStore(tokenStore());// token 持久化到 redis
+    private SecurityTokenService securityTokenService() {
+//        TokenStore tokenStore = new InMemoryTokenStore(); // token 默认持久化到内存
+        TokenStore tokenStore = new RedisTokenStore(connectionFactory);
+        SecurityTokenService securityTokenService = new SecurityTokenService();
+        securityTokenService.setTokenStore(tokenStore);
+        securityTokenService.setAuthenticationManager(authenticationManager);
+        securityTokenService.setClientDetailsService(securityClientDetailsService);
+        return securityTokenService;
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        return new CustomerRedisTokenStore(connectionFactory);
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        endpoints.tokenServices(securityTokenService()).userDetailsService(securityUserDetailsService);
     }
 
     @Override

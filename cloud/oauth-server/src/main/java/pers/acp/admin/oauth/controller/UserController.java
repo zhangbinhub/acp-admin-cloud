@@ -9,7 +9,7 @@ import java.security.Principal;
  * @author zhangbin by 11/04/2018 16:04
  * @since JDK 11
  */
-@RestController
+@RestController()
 public class UserController {
 
     @RequestMapping("/oauth/user")

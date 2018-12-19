@@ -36,6 +36,22 @@ public class Application {
         this.secret = secret;
     }
 
+    public int getAccessTokenValiditySeconds() {
+        return accessTokenValiditySeconds;
+    }
+
+    public void setAccessTokenValiditySeconds(int accessTokenValiditySeconds) {
+        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
+    }
+
+    public int getRefreshTokenValiditySeconds() {
+        return refreshTokenValiditySeconds;
+    }
+
+    public void setRefreshTokenValiditySeconds(int refreshTokenValiditySeconds) {
+        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
+    }
+
     public boolean isCovert() {
         return covert;
     }
@@ -63,6 +79,12 @@ public class Application {
 
     @Column(nullable = false)
     private String secret;
+
+    @Column(nullable = false)
+    private int accessTokenValiditySeconds = 86400;
+
+    @Column(nullable = false)
+    private int refreshTokenValiditySeconds = 2592000;
 
     @Column(nullable = false)
     private boolean covert = true;
