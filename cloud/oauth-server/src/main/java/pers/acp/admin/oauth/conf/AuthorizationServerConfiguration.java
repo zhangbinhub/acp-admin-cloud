@@ -46,7 +46,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         SecurityTokenService securityTokenService = securityTokenService();
-//        TokenStore tokenStore = new InMemoryTokenStore(); // token 默认持久化到内存
         TokenStore tokenStore = new RedisTokenStore(connectionFactory);
         securityTokenService.setTokenStore(tokenStore);
         securityTokenService.setClientDetailsService(securityClientDetailsService);

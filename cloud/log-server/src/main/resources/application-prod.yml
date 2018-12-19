@@ -18,6 +18,8 @@ management:
 spring:
   thymeleaf:
     cache: false
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
   cloud:
     stream:
       default-binder: kafka
