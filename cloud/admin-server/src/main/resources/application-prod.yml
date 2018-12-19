@@ -20,6 +20,7 @@ spring:
     cache: false
   jackson:
     property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
   security:
     user:
       name: admin

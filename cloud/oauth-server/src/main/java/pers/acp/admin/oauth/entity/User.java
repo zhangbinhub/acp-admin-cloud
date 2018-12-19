@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -114,6 +115,7 @@ public class User {
     @Column(length = 50, unique = true, nullable = false)
     private String loginno;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

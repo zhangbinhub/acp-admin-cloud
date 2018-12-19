@@ -47,6 +47,7 @@ spring:
     cache: false
   jackson:
     property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
   redis:
     url: redis://127.0.0.1:6379
   # ==== zipkin 链路监控，需要时放开注释
