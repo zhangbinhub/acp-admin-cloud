@@ -18,14 +18,34 @@ management:
 spring:
   thymeleaf:
     cache: false
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
   redis:
     url: redis://127.0.0.1:6379
-  # ==== zipkin 链路监控，需要时放开注释
-  zipkin:
-    base-url: http://localhost:9411/
-  sleuth:
-    sampler:
-      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
 # ===============================
 # = Eureka Config
 # ===============================
@@ -44,5 +64,5 @@ eureka:
 security:
   oauth2:
     resource:
-      user-info-uri:  http://127.0.0.1:8770/oauth/2.0/user
+      user-info-uri:  http://127.0.0.1:8770/api/oauth/user
       prefer-token-info: false

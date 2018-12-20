@@ -92,22 +92,16 @@ gradle全局参数：
 
 |          url          |  描述                   |
 | --------------------- | ----------------------- | 
-| /oauth/authorize      | 验证 basic认证保护      |
-| /oauth/token          | 获取token的服务 url中没有client_id和client_secret的，走basic认证保护 |
-| /oauth/check_token    | 资源服务器用来校验token basic认证保护 |
-| /oauth/confirm_access | 用户授权 basic认证保护  |
-| /oauth/error          | 认证失败 无认证保护     |
+| /oauth/authorize      | 申请授权，basic认证保护      |
+| /oauth/token          | 获取token的服务，url中没有client_id和client_secret的，走basic认证保护 |
+| /oauth/check_token    | 资源服务器用来校验token，basic认证保护 |
+| /oauth/confirm_access | 授权确认，basic认证保护  |
+| /oauth/error          | 认证失败，无认证保护     |
 
 [查看认证过程](doc/oauth2.0认证.md)
 
 ##### 6. cloud:log-server
 日志服务，使用 kafka 作为日志消息队列
-##### 7. cloud:helloworld 
-原子服务，分别调用 hello 和 world
-##### 8. cloud:hello 
-原子服务
-##### 9. cloud:world 
-原子服务
 ### （二）基础中间件环境搭建
 基础中间件包括：redis、zookeeper、kafka、zoonavigator-api、zoonavigator-web、elasticsearch、zipkin、zipkin-dependencies、prometheus、grafana、setup_grafana_datasource
 > - 启动服务
@@ -153,3 +147,6 @@ gradle全局参数：
     （1）修改 yml kafka 相关配置
 ## 五、打包为 docker 镜像
 自行编写 dockerfile，使用命令单独执行或使用 docker-compose 批量执行，请自行百度
+## 六、系统初始化
+> - 执行 InitData 单元测试
+> - 执行时需将 pers.acp.admin.oauth.domain.SecurityClientDetailsService.init() 前的 @PostConstruct 注解暂时注释

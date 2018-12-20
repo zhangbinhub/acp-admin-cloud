@@ -1,0 +1,68 @@
+debug: true
+server:
+  port: 8999
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Spring Config
+# ===============================
+spring:
+  thymeleaf:
+    cache: false
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
+  redis:
+    url: redis://127.0.0.1:6379
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    resource:
+      user-info-uri:  http://127.0.0.1:8770/api/oauth/user
+      prefer-token-info: false

@@ -45,6 +45,9 @@ ribbon:
 spring:
   thymeleaf:
     cache: false
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
   redis:
     url: redis://127.0.0.1:6379
   # ==== zipkin 链路监控，需要时放开注释
@@ -62,9 +65,9 @@ spring:
         - id: server-oauth2
           uri: lb://server-oauth2
           predicates:
-            - Path=/oauth/2.0/**
+            - Path=/api/oauth/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
             - name: Hystrix
               args:
                 name: GateWayHystrix

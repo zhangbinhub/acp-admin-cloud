@@ -126,7 +126,7 @@ configure(allprojects) {
     }
 
     jar.manifest {
-        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Application Construction Platform (acp)')
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Acp Admin Cloud')
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {

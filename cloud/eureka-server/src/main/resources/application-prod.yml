@@ -18,11 +18,13 @@ management:
 spring:
   thymeleaf:
     cache: false
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    default-property-inclusion: non_null
 # ===============================
 # = Eureka Config
 # ===============================
 eureka:
-  environment: dev
   server:
     enable-self-preservation: true
     eviction-interval-timer-in-ms: 3000
