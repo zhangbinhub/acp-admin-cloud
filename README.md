@@ -22,8 +22,6 @@ gradle全局参数：
 - mavenCentralUrl：maven中央仓库地址
 - org.gradle.jvmargs：gradle执行时的jvm参数
 - javaVersion：jdk版本号
-- kotlinVersion：kotlin版本号
-- scalaVersion：scala版本号
     
 ##### 4.build.gradle
 公共构建脚本
