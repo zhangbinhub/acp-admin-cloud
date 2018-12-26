@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class RouteConfiguration {
 
-    private static final String ALLOWED_HEADERS = "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent";
+    private static final String ALLOWED_HEADERS = "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent,Process400";
 
     private static final String ALLOWED_METHODS = "*";
 
