@@ -50,8 +50,6 @@ class InitData extends BaseTest {
         menu1.setEnabled(true);
         menu1.setCovert(false);
         menu1.setOpentype(0);
-        menu1.setDialogH(0);
-        menu1.setDialogW(0);
         menu1 = menuRepository.save(menu1);
 
         Menu menu2 = new Menu();
@@ -64,8 +62,6 @@ class InitData extends BaseTest {
         menu2.setEnabled(true);
         menu2.setCovert(false);
         menu2.setOpentype(0);
-        menu2.setDialogH(0);
-        menu2.setDialogW(0);
         menu2 = menuRepository.save(menu2);
 
         Menu menu3 = new Menu();
@@ -78,8 +74,6 @@ class InitData extends BaseTest {
         menu3.setEnabled(true);
         menu3.setCovert(false);
         menu3.setOpentype(0);
-        menu3.setDialogH(0);
-        menu3.setDialogW(0);
         menu3 = menuRepository.save(menu3);
 
         Menu menu4 = new Menu();
@@ -91,8 +85,6 @@ class InitData extends BaseTest {
         menu4.setEnabled(true);
         menu4.setCovert(true);
         menu4.setOpentype(0);
-        menu4.setDialogH(0);
-        menu4.setDialogW(0);
         menu4 = menuRepository.save(menu4);
 
         Menu menu5 = new Menu();
@@ -105,8 +97,6 @@ class InitData extends BaseTest {
         menu5.setEnabled(true);
         menu5.setCovert(true);
         menu5.setOpentype(0);
-        menu5.setDialogH(0);
-        menu5.setDialogW(0);
         menu5 = menuRepository.save(menu5);
 
         Menu menu6 = new Menu();
@@ -118,8 +108,6 @@ class InitData extends BaseTest {
         menu6.setEnabled(true);
         menu6.setCovert(true);
         menu6.setOpentype(0);
-        menu6.setDialogH(0);
-        menu6.setDialogW(0);
         menu6 = menuRepository.save(menu6);
 
         Menu menu7 = new Menu();
@@ -132,8 +120,6 @@ class InitData extends BaseTest {
         menu7.setEnabled(true);
         menu7.setCovert(true);
         menu7.setOpentype(0);
-        menu7.setDialogH(0);
-        menu7.setDialogW(0);
         menu7 = menuRepository.save(menu7);
 
         Menu menu8 = new Menu();
@@ -146,8 +132,6 @@ class InitData extends BaseTest {
         menu8.setEnabled(true);
         menu8.setCovert(true);
         menu8.setOpentype(0);
-        menu8.setDialogH(0);
-        menu8.setDialogW(0);
         menu8 = menuRepository.save(menu8);
 
         Menu menu9 = new Menu();
@@ -159,9 +143,7 @@ class InitData extends BaseTest {
         menu9.setSort(2);
         menu9.setEnabled(true);
         menu9.setCovert(true);
-        menu9.setOpentype(2);
-        menu9.setDialogH(0);
-        menu9.setDialogW(0);
+        menu9.setOpentype(1);
         menu9 = menuRepository.save(menu9);
 
         Menu menu10 = new Menu();
@@ -173,9 +155,7 @@ class InitData extends BaseTest {
         menu10.setSort(2);
         menu10.setEnabled(true);
         menu10.setCovert(true);
-        menu10.setOpentype(1);
-        menu10.setDialogH(500);
-        menu10.setDialogW(800);
+        menu10.setOpentype(0);
         menu10 = menuRepository.save(menu10);
 
         Role role = new Role();

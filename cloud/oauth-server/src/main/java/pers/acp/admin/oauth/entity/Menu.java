@@ -94,22 +94,6 @@ public class Menu {
         this.iconType = iconType;
     }
 
-    public int getDialogW() {
-        return dialogW;
-    }
-
-    public void setDialogW(int dialogW) {
-        this.dialogW = dialogW;
-    }
-
-    public int getDialogH() {
-        return dialogH;
-    }
-
-    public void setDialogH(int dialogH) {
-        this.dialogH = dialogH;
-    }
-
     public List<Menu> getChildren() {
         return children;
     }
@@ -145,12 +129,6 @@ public class Menu {
 
     @Column(nullable = false)
     private int opentype = 0;
-
-    @Column
-    private int dialogW;
-
-    @Column
-    private int dialogH;
 
     @Column(nullable = false)
     private int sort;
