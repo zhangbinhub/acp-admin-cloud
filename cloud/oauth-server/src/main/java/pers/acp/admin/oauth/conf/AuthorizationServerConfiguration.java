@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsService;
 import pers.acp.admin.oauth.domain.security.SecurityTokenService;
@@ -23,7 +24,7 @@ import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    private final RedisConnectionFactory connectionFactory;
+//    private final RedisConnectionFactory connectionFactory;
 
     private final AuthenticationManager authenticationManager;
 
@@ -32,11 +33,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final SecurityClientDetailsService securityClientDetailsService;
 
     @Autowired
-    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, SecurityUserDetailsService securityUserDetailsService, SecurityClientDetailsService securityClientDetailsService, RedisConnectionFactory connectionFactory) {
+    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, SecurityUserDetailsService securityUserDetailsService, SecurityClientDetailsService securityClientDetailsService) {
         this.authenticationManager = authenticationManager;
         this.securityUserDetailsService = securityUserDetailsService;
         this.securityClientDetailsService = securityClientDetailsService;
-        this.connectionFactory = connectionFactory;
+//        this.connectionFactory = connectionFactory;
     }
 
     private SecurityTokenService securityTokenService() {
@@ -46,7 +47,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         SecurityTokenService securityTokenService = securityTokenService();
-        TokenStore tokenStore = new RedisTokenStore(connectionFactory);
+        // token 默认持久化到内存
+        TokenStore tokenStore = new InMemoryTokenStore();
+        // 持久化到 Redis
+//        TokenStore tokenStore = new RedisTokenStore(connectionFactory);
         securityTokenService.setTokenStore(tokenStore);
         securityTokenService.setClientDetailsService(securityClientDetailsService);
         endpoints.authenticationManager(authenticationManager)

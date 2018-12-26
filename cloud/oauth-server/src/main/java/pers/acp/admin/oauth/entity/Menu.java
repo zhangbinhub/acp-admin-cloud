@@ -84,20 +84,12 @@ public class Menu {
         this.opentype = opentype;
     }
 
-    public String getIconClass() {
-        return iconClass;
+    public String getIconType() {
+        return iconType;
     }
 
-    public void setIconClass(String iconClass) {
-        this.iconClass = iconClass;
-    }
-
-    public String getIconColor() {
-        return iconColor;
-    }
-
-    public void setIconColor(String iconColor) {
-        this.iconColor = iconColor;
+    public void setIconType(String iconType) {
+        this.iconType = iconType;
     }
 
     public int getDialogW() {
@@ -128,9 +120,7 @@ public class Menu {
     @Column(nullable = false)
     private String name;
 
-    private String iconClass;
-
-    private String iconColor;
+    private String iconType;
 
     private String path;
 
