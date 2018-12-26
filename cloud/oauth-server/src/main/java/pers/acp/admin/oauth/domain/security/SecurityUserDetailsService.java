@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.core.log.LogFactory;
@@ -41,6 +42,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException 找不到用户信息异常
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         pers.acp.admin.oauth.entity.User user = userRepository.findByLoginno(username).orElse(null);
         if (user == null) {

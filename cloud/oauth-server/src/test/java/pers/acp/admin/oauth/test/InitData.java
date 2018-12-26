@@ -87,7 +87,7 @@ class InitData extends BaseTest {
         menu4.setName("demo");
         menu4.setIconType("ios-apps");
         menu4.setParentid(application.getId());
-        menu4.setSort(0);
+        menu4.setSort(1);
         menu4.setEnabled(true);
         menu4.setCovert(true);
         menu4.setOpentype(0);
@@ -113,7 +113,6 @@ class InitData extends BaseTest {
         menu6.setAppid(application.getId());
         menu6.setName("多级菜单");
         menu6.setIconType("md-funnel");
-        menu6.setPath("/demo_upload");
         menu6.setParentid(menu4.getId());
         menu6.setSort(1);
         menu6.setEnabled(true);
@@ -157,7 +156,7 @@ class InitData extends BaseTest {
         menu9.setIconType("md-funnel");
         menu9.setPath("http://www.baidu.com");
         menu9.setParentid(menu4.getId());
-        menu9.setSort(1);
+        menu9.setSort(2);
         menu9.setEnabled(true);
         menu9.setCovert(true);
         menu9.setOpentype(2);
@@ -171,7 +170,7 @@ class InitData extends BaseTest {
         menu10.setIconType("md-funnel");
         menu10.setPath("/demo4?name=in%20dialog");
         menu10.setParentid(application.getId());
-        menu10.setSort(1);
+        menu10.setSort(2);
         menu10.setEnabled(true);
         menu10.setCovert(true);
         menu10.setOpentype(1);
@@ -197,6 +196,21 @@ class InitData extends BaseTest {
         role.getMenuSet().add(menu10);
         role = roleRepository.save(role);
 
+        Role role2 = new Role();
+        role2.setAppid(application.getId());
+        role2.setName("测试人员");
+        role2.setCode("TEST");
+        role2.setLevels(1);
+        role2.setSort(1);
+        role2.getMenuSet().add(menu4);
+        role2.getMenuSet().add(menu5);
+        role2.getMenuSet().add(menu6);
+        role2.getMenuSet().add(menu7);
+        role2.getMenuSet().add(menu8);
+        role2.getMenuSet().add(menu9);
+        role2.getMenuSet().add(menu10);
+        role2 = roleRepository.save(role2);
+
         User user = new User();
         user.setName("超级管理员");
         user.setLoginno("admin");
@@ -207,6 +221,7 @@ class InitData extends BaseTest {
         user.setEnabled(true);
         user.setSort(0);
         user.getRoleSet().add(role);
+        user.getRoleSet().add(role2);
         userRepository.save(user);
     }
 

@@ -3,6 +3,8 @@ package pers.acp.admin.oauth.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhangbin by 2018-1-17 16:59
@@ -108,6 +110,14 @@ public class Menu {
         this.dialogH = dialogH;
     }
 
+    public List<Menu> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Menu> children) {
+        this.children = children;
+    }
+
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -144,5 +154,8 @@ public class Menu {
 
     @Column(nullable = false)
     private int sort;
+
+    @Transient
+    private List<Menu> children = new ArrayList<>();
 
 }

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pers.acp.admin.oauth.domain.UserService;
+import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.springboot.core.exceptions.ServerException;
 
@@ -19,11 +19,11 @@ import java.security.Principal;
 @RequestMapping("/oauth")
 public class UserController {
 
-    private final UserService userService;
+    private final UserDomain userDomain;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserDomain userDomain) {
+        this.userDomain = userDomain;
     }
 
     @RequestMapping("/user")
@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/userinfo")
     public ResponseEntity<User> userinfo(Principal user) throws ServerException {
-        User userInfo = userService.findCurrUserInfo(user.getName());
+        User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
         } else {

@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -107,19 +108,22 @@ public class Role {
     @Column(nullable = false)
     private int sort;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_role_menu_set",
             joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "menuid", referencedColumnName = "id")})
     private Set<Menu> menuSet = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_role_module_set",
             joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "moduleid", referencedColumnName = "id")})
     private Set<Module> moduleSet = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_role_module_func_set",
             joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "funcid", referencedColumnName = "id")})
