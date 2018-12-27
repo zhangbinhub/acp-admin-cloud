@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_module_func", indexes = {@Index(columnList = "code,appid")})
+@ApiModel("功能信息")
 public class ModuleFunc {
 
     public String getId() {
@@ -64,21 +67,27 @@ public class ModuleFunc {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("功能ID")
     private String id;
 
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("应用ID")
     private String appid;
 
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("所属模块ID")
     private String moduleid;
 
     @Column(nullable = false)
+    @ApiModelProperty("功能名称")
     private String name;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty("功能编码")
     private String code;
 
     @Column(nullable = false)
+    @ApiModelProperty("是否可删除")
     private boolean covert = true;
 
 }

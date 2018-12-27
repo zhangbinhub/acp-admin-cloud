@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_application")
+@ApiModel("应用信息")
 public class Application {
 
     public String getId() {
@@ -72,23 +75,30 @@ public class Application {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("应用ID")
     private String id;
 
+    @ApiModelProperty("应用名称")
     @Column(nullable = false)
     private String appname;
 
+    @ApiModelProperty("密钥")
     @Column(nullable = false)
     private String secret;
 
+    @ApiModelProperty("token 有效期")
     @Column(nullable = false)
     private int accessTokenValiditySeconds = 86400;
 
+    @ApiModelProperty("refresh token 有效期")
     @Column(nullable = false)
     private int refreshTokenValiditySeconds = 2592000;
 
+    @ApiModelProperty("是否可删除")
     @Column(nullable = false)
     private boolean covert = true;
 
+    @ApiModelProperty("序号")
     @Column(nullable = false)
     private int sort = 1;
 

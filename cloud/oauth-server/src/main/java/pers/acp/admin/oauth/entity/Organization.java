@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_organization")
+@ApiModel("机构信息")
 public class Organization {
 
     public String getId() {
@@ -64,21 +67,27 @@ public class Organization {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("机构ID")
     private String id;
 
     @Column(nullable = false)
+    @ApiModelProperty("机构名称")
     private String name;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty("机构编码")
     private String code;
 
     @Column(nullable = false)
+    @ApiModelProperty("机构级别")
     private int levels;
 
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("上级机构ID")
     private String parentid = "";
 
     @Column(nullable = false)
+    @ApiModelProperty("序号")
     private int sort;
 
 }

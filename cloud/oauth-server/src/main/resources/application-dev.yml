@@ -1,4 +1,4 @@
-debug: true
+debug: false
 server:
   port: 8999
   tomcat:
@@ -16,6 +16,9 @@ management:
 # = Spring Config
 # ===============================
 spring:
+  devtools:
+    restart:
+      enabled: true
   thymeleaf:
     cache: false
   jackson:

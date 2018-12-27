@@ -38,7 +38,7 @@ public class MenuDomain extends BaseDomain {
                     .map(Role::getMenuSet)
                     .flatMap(Collection::parallelStream)
                     .filter(menu -> {
-                        if (menuIds.contains(menu.getId())) {
+                        if (menuIds.contains(menu.getId()) || !menu.isEnabled()) {
                             return false;
                         } else {
                             menuIds.add(menu.getId());

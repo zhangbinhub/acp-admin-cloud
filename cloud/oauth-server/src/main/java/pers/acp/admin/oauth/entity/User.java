@@ -1,6 +1,8 @@
 package pers.acp.admin.oauth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "t_user")
+@ApiModel("用户信息")
 public class User {
 
     public String getId() {
@@ -107,12 +110,15 @@ public class User {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("用户ID")
     private String id;
 
     @Column(nullable = false)
+    @ApiModelProperty("用户名称")
     private String name;
 
     @Column(length = 50, unique = true, nullable = false)
+    @ApiModelProperty("登录号")
     private String loginno;
 
     @JsonIgnore
@@ -120,30 +126,37 @@ public class User {
     private String password;
 
     @Column(length = 20, unique = true, nullable = false)
+    @ApiModelProperty("手机号")
     private String mobile;
 
     @Column(nullable = false)
+    @ApiModelProperty("用户级别")
     private int levels;
 
     @Column(nullable = false)
+    @ApiModelProperty("是否启用")
     private boolean enabled;
 
     @Column(columnDefinition = "text")
+    @ApiModelProperty("头像")
     private String portrait;
 
     @Column(nullable = false)
+    @ApiModelProperty("序号")
     private int sort;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_user_organization_set",
             joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")})
+    @ApiModelProperty("所属机构")
     private Set<Organization> organizationSet = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_user_role_set",
             joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")})
+    @ApiModelProperty("归属角色")
     private Set<Role> roleSet = new HashSet<>();
 
 }

@@ -1,6 +1,8 @@
 package pers.acp.admin.oauth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "t_role")
+@ApiModel("角色信息")
 public class Role {
 
     public String getId() {
@@ -91,21 +94,27 @@ public class Role {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("角色ID")
     private String id;
 
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("应用ID")
     private String appid;
 
     @Column(nullable = false)
+    @ApiModelProperty("角色名称")
     private String name;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty("角色编码")
     private String code;
 
     @Column(nullable = false)
+    @ApiModelProperty("角色级别")
     private int levels;
 
     @Column(nullable = false)
+    @ApiModelProperty("序号")
     private int sort;
 
     @JsonIgnore

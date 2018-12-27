@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "t_menu")
+@ApiModel("菜单信息")
 public class Menu {
 
     public String getId() {
@@ -106,34 +109,45 @@ public class Menu {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("菜单ID")
     private String id;
 
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("应用ID")
     private String appid;
 
     @Column(nullable = false)
+    @ApiModelProperty("菜单名称")
     private String name;
 
+    @ApiModelProperty("菜单图标")
     private String iconType;
 
+    @ApiModelProperty("链接路径")
     private String path;
 
     @Column(length = 36)
+    @ApiModelProperty("上级菜单ID")
     private String parentid;
 
     @Column(nullable = false)
+    @ApiModelProperty("菜单是否启用")
     private boolean enabled = true;
 
     @Column(nullable = false)
+    @ApiModelProperty("是否可删除")
     private boolean covert = true;
 
     @Column(nullable = false)
+    @ApiModelProperty("链接打开模式；0-内嵌，1-新标签页")
     private int opentype = 0;
 
     @Column(nullable = false)
+    @ApiModelProperty("序号")
     private int sort;
 
     @Transient
+    @ApiModelProperty("子菜单列表")
     private List<Menu> children = new ArrayList<>();
 
 }

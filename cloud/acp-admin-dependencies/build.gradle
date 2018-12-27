@@ -44,11 +44,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-devtools"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     // Swagger2
     compile "io.springfox:springfox-swagger2:$versions.swagger"
     compile "io.springfox:springfox-swagger-ui:$versions.swagger"
 
+    // log collection
     compile "org.jolokia:jolokia-core"
 }

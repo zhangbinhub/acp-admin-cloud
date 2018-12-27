@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Table(name = "t_runtimeconfig", indexes = {
         @Index(columnList = "confname,enabled")
 })
+@ApiModel("运行配置")
 public class RuntimeConfig {
 
     public String getId() {
@@ -66,19 +69,25 @@ public class RuntimeConfig {
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
+    @ApiModelProperty("配置ID")
     private String id;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty("名称")
     private String confname;
 
+    @ApiModelProperty("值")
     private String confvalue = "";
 
+    @ApiModelProperty("描述")
     private String confdes = "";
 
     @Column(nullable = false)
+    @ApiModelProperty("是否启用")
     private boolean enabled = true;
 
     @Column(nullable = false)
+    @ApiModelProperty("是否可删除")
     private boolean covert = true;
 
 }
