@@ -46,8 +46,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 contextPath + "/swagger-resources/configuration/ui",
                 contextPath + "/oauth/authorize",
                 contextPath + "/oauth/token",
-                contextPath + "/oauth/check_token",
-                contextPath + "/oauth/confirm_access",
                 contextPath + "/oauth/error").permitAll()
                 .anyRequest().authenticated();
     }

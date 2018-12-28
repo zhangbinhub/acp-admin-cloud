@@ -8,6 +8,6 @@ package pers.acp.admin.common.permission;
  */
 public interface Expression {
 
-    String adminOnly = "hasRole(" + RoleCode.ADMIN + ")";
+    String adminOnly = "hasRole('" + RoleCode.ADMIN + "')";
 
 }

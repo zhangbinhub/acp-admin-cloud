@@ -14,7 +14,6 @@ import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 
@@ -32,12 +31,6 @@ public class UserController {
     @Autowired
     public UserController(UserDomain userDomain) {
         this.userDomain = userDomain;
-    }
-
-    @ApiIgnore
-    @RequestMapping("/user")
-    public Principal user(Principal user) {
-        return user;
     }
 
     @ApiOperation(value = "获取用户信息",

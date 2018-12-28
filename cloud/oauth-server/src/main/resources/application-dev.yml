@@ -61,11 +61,3 @@ eureka:
     registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
-# ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    resource:
-      user-info-uri:  http://127.0.0.1:8770/api/oauth/user
-      prefer-token-info: false

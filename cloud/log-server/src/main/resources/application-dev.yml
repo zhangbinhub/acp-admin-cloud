@@ -52,28 +52,6 @@ spring:
           destination: test-log
           group: log-server-group
           content-type: application/json
-###### 多个 kafka 时配置
-#      binders:
-#        kafka1:
-#          type: kafka
-#          environment:
-#            spring:
-#              cloud:
-#                stream:
-#                  kafka:
-#                    binder:
-#                      brokers: name87:9094
-#                      zkNodes: name85:2181,name86:2181,name87:2181/kafka0101
-#        kafka2:
-#          type: kafka
-#          environment:
-#            spring:
-#              cloud:
-#                stream:
-#                  kafka:
-#                    binder:
-#                      brokers: name85:9094
-#                      zkNodes: name85:2181,name86:2181,name87:2181/kafkatest0101
 # ===============================
 # = Eureka Config
 # ===============================
@@ -96,5 +74,3 @@ security:
       client-secret: client
     resource:
       token-info-uri: http://127.0.0.1:8770/api/oauth/check_token
-      user-info-uri:  http://127.0.0.1:8770/api/oauth/user
-      prefer-token-info: false
