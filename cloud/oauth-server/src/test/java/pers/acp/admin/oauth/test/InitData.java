@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import pers.acp.admin.common.permission.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.repo.*;
@@ -161,7 +162,7 @@ class InitData extends BaseTest {
         Role role = new Role();
         role.setAppid(application.getId());
         role.setName("超级管理员");
-        role.setCode("ADMIN");
+        role.setCode(RoleCode.ADMIN);
         role.setLevels(0);
         role.setSort(0);
         role.getMenuSet().add(menu1);
@@ -179,7 +180,7 @@ class InitData extends BaseTest {
         Role role2 = new Role();
         role2.setAppid(application.getId());
         role2.setName("测试人员");
-        role2.setCode("TEST");
+        role2.setCode(RoleCode.TEST);
         role2.setLevels(1);
         role2.setSort(1);
         role2.getMenuSet().add(menu4);
@@ -192,7 +193,7 @@ class InitData extends BaseTest {
         role2 = roleRepository.save(role2);
 
         User user = new User();
-        user.setName("超级管理员");
+        user.setName("ZhangBin");
         user.setLoginno("admin");
         user.setPassword(SHA256Utils.encrypt(SHA256Utils.encrypt("888888") + "admin"));
         user.setMobile("13888888888");

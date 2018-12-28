@@ -49,7 +49,7 @@ public class MenuDomain extends BaseDomain {
             menuMap.forEach((id, menu) -> {
                 if (menuMap.containsKey(menu.getParentid())) {
                     menuMap.get(menu.getParentid()).getChildren().add(menu);
-                } else {
+                } else if (menu.getParentid().equals(menu.getAppid())) {
                     result.add(menu);
                 }
             });

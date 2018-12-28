@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=pers.acp.admin.common.AcpAdminAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=pers.acp.admin.atom.common.AcpAdminAtomAutoConfiguration

@@ -58,7 +58,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 contextPath + "/download",
                 contextPath + "/actuator",
                 contextPath + "/actuator/**",
-                contextPath + "/oauth/**").permitAll()
+                contextPath + "/oauth/authorize",
+                contextPath + "/oauth/token",
+                contextPath + "/oauth/check_token",
+                contextPath + "/oauth/confirm_access",
+                contextPath + "/oauth/error").permitAll()
                 .anyRequest().authenticated();
     }
 
