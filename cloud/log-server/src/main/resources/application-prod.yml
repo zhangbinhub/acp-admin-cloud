@@ -70,4 +70,4 @@ security:
       client-id: client
       client-secret: client
     resource:
-      token-info-uri: http://127.0.0.1:8770/api/oauth/check_token
+      token-info-uri: http://server-oauth2/oauth/check_token
