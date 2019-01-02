@@ -8,6 +8,9 @@ package pers.acp.admin.common.permission;
  */
 public interface Expression {
 
+    /**
+     * 超级管理员可执行权限
+     */
     String adminOnly = "hasRole('" + RoleCode.ADMIN + "')";
 
 }
