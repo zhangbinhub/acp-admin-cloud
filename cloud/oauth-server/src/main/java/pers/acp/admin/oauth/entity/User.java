@@ -74,12 +74,12 @@ public class User {
         this.enabled = enabled;
     }
 
-    public String getPortrait() {
-        return portrait;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setPortrait(String portrait) {
-        this.portrait = portrait;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getSort() {
@@ -139,7 +139,7 @@ public class User {
 
     @Column(columnDefinition = "text")
     @ApiModelProperty("头像")
-    private String portrait;
+    private String avatar;
 
     @Column(nullable = false)
     @ApiModelProperty("序号")
