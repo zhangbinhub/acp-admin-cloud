@@ -7,13 +7,17 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
+import pers.acp.admin.oauth.po.UserParam;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
+import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Objects;
 
 /**
  * @author zhangbin by 11/04/2018 16:04
@@ -52,14 +56,17 @@ public class UserController {
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     )
     @PatchMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> updateCurrUser(@RequestBody User user) throws ServerException {
-        User userInfo = userDomain.findUserById(user.getId());
+    public ResponseEntity<User> updateCurrUser(@RequestBody @Valid UserParam userParam, BindingResult bindingResult) throws ServerException {
+        if (bindingResult.hasErrors()) {
+            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        User userInfo = userDomain.findUserById(userParam.getId());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
         } else {
-            userInfo.setAvatar(user.getAvatar());
-            userInfo.setName(user.getName());
-            userInfo.setMobile(user.getMobile());
+            userInfo.setAvatar(userParam.getAvatar());
+            userInfo.setName(userParam.getName());
+            userInfo.setMobile(userParam.getMobile());
             return ResponseEntity.ok(userDomain.doSaveUser(userInfo));
         }
     }
