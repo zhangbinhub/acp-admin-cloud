@@ -1,9 +1,6 @@
 package pers.acp.admin.oauth.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.po.UserParam;
+import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
@@ -35,7 +33,7 @@ public class UserController {
         this.userDomain = userDomain;
     }
 
-    @ApiOperation(value = "获取用户信息",
+    @ApiOperation(value = "获取当前用户信息",
             notes = "根据当前登录的用户信息，并查询详细信息，包含用户基本信息、所属角色、所属机构")
     @ApiResponses(
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
@@ -51,11 +49,11 @@ public class UserController {
     }
 
     @ApiOperation(value = "更新当前用户信息",
-            notes = "根据当前登录的用户信息，更新头像、名称、手机")
+            notes = "1、根据当前登录的用户信息，更新头像、名称、手机；2、如果原密码和新密码均不为空，校验原密码并修改为新密码")
     @ApiResponses(
-            @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
+            @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     )
-    @PatchMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/userinfo", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> updateCurrUser(@RequestBody @Valid UserParam userParam, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -64,9 +62,19 @@ public class UserController {
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
         } else {
-            userInfo.setAvatar(userParam.getAvatar());
-            userInfo.setName(userParam.getName());
-            userInfo.setMobile(userParam.getMobile());
+            userInfo.setAvatar(Objects.requireNonNullElse(userParam.getAvatar(), ""));
+            userInfo.setName(Objects.requireNonNullElse(userParam.getName(), userInfo.getName()));
+            userInfo.setMobile(Objects.requireNonNullElse(userParam.getMobile(), userInfo.getMobile()));
+            if (!CommonTools.isNullStr(userParam.getOldPassword())) {
+                if (CommonTools.isNullStr(userParam.getPassword())) {
+                    throw new ServerException("新密码为空");
+                }
+                if (userInfo.getPassword().equalsIgnoreCase(userParam.getOldPassword())) {
+                    userInfo.setPassword(userParam.getPassword());
+                } else {
+                    throw new ServerException("原密码不正确");
+                }
+            }
             return ResponseEntity.ok(userDomain.doSaveUser(userInfo));
         }
     }

@@ -25,8 +25,4 @@ public class BaseDomain {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User doSaveUser(User user) {
-        return userRepository.save(user);
-    }
-
 }
