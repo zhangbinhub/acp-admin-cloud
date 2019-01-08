@@ -21,4 +21,12 @@ public class BaseDomain {
         return userRepository.findByLoginno(loginNo).orElse(null);
     }
 
+    public User findUserById(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User doSaveUser(User user) {
+        return userRepository.save(user);
+    }
+
 }

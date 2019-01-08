@@ -7,9 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -45,6 +43,24 @@ public class UserController {
             throw new ServerException("找不到用户信息");
         } else {
             return ResponseEntity.ok(userInfo);
+        }
+    }
+
+    @ApiOperation(value = "更新当前用户信息",
+            notes = "根据当前登录的用户信息，更新头像、名称、手机")
+    @ApiResponses(
+            @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
+    )
+    @PatchMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<User> updateCurrUser(@RequestBody User user) throws ServerException {
+        User userInfo = userDomain.findUserById(user.getId());
+        if (userInfo == null) {
+            throw new ServerException("找不到用户信息");
+        } else {
+            userInfo.setAvatar(user.getAvatar());
+            userInfo.setName(user.getName());
+            userInfo.setMobile(user.getMobile());
+            return ResponseEntity.ok(userDomain.doSaveUser(userInfo));
         }
     }
 
