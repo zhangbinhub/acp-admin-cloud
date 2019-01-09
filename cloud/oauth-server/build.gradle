@@ -14,7 +14,8 @@ dependencyManagement {
 }
 dependencies {
     compile project(":cloud:acp-admin-dependencies")
-
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    
     compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
     compile "org.springframework.cloud:spring-cloud-starter-oauth2"
