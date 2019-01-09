@@ -35,7 +35,7 @@ public class MenuController {
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
 //    @PreAuthorize(Expression.adminOnly)
     @GetMapping(value = "/menulist", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Menu>> userinfo(Principal user) {
+    public ResponseEntity<List<Menu>> menuList(Principal user) {
         return ResponseEntity.ok(menuDomain.getMenuList(user.getName()));
     }
 
