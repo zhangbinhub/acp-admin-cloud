@@ -54,11 +54,11 @@ public class UserController {
             @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     )
     @RequestMapping(value = "/userinfo", method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> updateCurrUser(@RequestBody @Valid UserParam userParam, BindingResult bindingResult) throws ServerException {
+    public ResponseEntity<User> updateCurrUser(Principal user, @RequestBody @Valid UserParam userParam, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        User userInfo = userDomain.findUserById(userParam.getId());
+        User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
         } else {
