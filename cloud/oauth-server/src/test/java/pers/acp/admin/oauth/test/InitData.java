@@ -113,6 +113,18 @@ class InitData extends BaseTest {
         orgConfig.setOpentype(0);
         orgConfig = menuRepository.save(orgConfig);
 
+        Menu paramConfig = new Menu();
+        paramConfig.setAppid(application.getId());
+        paramConfig.setName("运行参数配置");
+        paramConfig.setIconType("md-build");
+        paramConfig.setPath("/paramconfig");
+        paramConfig.setParentid(sysConfig.getId());
+        paramConfig.setSort(5);
+        paramConfig.setEnabled(true);
+        paramConfig.setCovert(false);
+        paramConfig.setOpentype(0);
+        paramConfig = menuRepository.save(paramConfig);
+
         Menu demo = new Menu();
         demo.setAppid(application.getId());
         demo.setName("demo");
@@ -207,6 +219,7 @@ class InitData extends BaseTest {
         roleAdmin.getMenuSet().add(authConfig);
         roleAdmin.getMenuSet().add(userConfig);
         roleAdmin.getMenuSet().add(orgConfig);
+        roleAdmin.getMenuSet().add(paramConfig);
         roleAdmin.getMenuSet().add(demo);
         roleAdmin.getMenuSet().add(demoUpload);
         roleAdmin.getMenuSet().add(demoChildren);
