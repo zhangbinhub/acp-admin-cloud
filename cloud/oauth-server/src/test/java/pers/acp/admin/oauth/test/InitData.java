@@ -80,7 +80,7 @@ class InitData extends BaseTest {
         Menu authConfig = new Menu();
         authConfig.setAppid(application.getId());
         authConfig.setName("权限配置");
-        authConfig.setIconType("md-lock");
+        authConfig.setIconType("md-key");
         authConfig.setPath("/authconfig");
         authConfig.setParentid(sysConfig.getId());
         authConfig.setSort(2);
