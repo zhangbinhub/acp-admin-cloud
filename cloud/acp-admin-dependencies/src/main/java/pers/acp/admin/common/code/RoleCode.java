@@ -1,13 +1,16 @@
-package pers.acp.admin.common.permission;
+package pers.acp.admin.common.code;
 
 /**
  * 角色编码
  * 新建角色时，需要向该接口中增加对应的编码
+ * 系统中配置的角色编码不应包含前缀prefix
  *
  * @author zhang by 28/12/2018
  * @since JDK 11
  */
 public interface RoleCode {
+
+    String prefix = "ROLE_";
 
     /**
      * 超级管理员

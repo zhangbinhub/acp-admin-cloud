@@ -1,15 +1,17 @@
 package pers.acp.admin.common.permission;
 
+import pers.acp.admin.common.code.RoleCode;
+
 /**
  * 定义权限表达式
  *
- * @author zhang by 28/12/2018
+ * @author zhang by 11/01/2019
  * @since JDK 11
  */
-public interface Expression {
+public interface BaseExpression {
 
     /**
-     * 超级管理员可执行权限
+     * 仅超级管理员可执行
      */
     String adminOnly = "hasRole('" + RoleCode.ADMIN + "')";
 

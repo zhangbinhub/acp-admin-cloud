@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.permission.RoleCode;
+import pers.acp.admin.common.code.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.repo.*;

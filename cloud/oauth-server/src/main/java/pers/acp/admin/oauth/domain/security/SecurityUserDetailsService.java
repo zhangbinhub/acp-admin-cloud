@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.acp.admin.common.code.RoleCode;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.core.log.LogFactory;
@@ -51,7 +52,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getRoleSet().forEach(role -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getCode())); //角色编码
+            grantedAuthorities.add(new SimpleGrantedAuthority(RoleCode.prefix + role.getCode())); //角色编码
             role.getModuleSet().forEach(module -> {
                 grantedAuthorities.add(new SimpleGrantedAuthority(module.getCode())); //模块编码
             });

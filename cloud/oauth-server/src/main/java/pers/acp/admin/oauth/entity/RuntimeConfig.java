@@ -72,7 +72,7 @@ public class RuntimeConfig {
     @ApiModelProperty("配置ID")
     private String id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, unique = true, nullable = false)
     @ApiModelProperty("名称")
     private String confname;
 

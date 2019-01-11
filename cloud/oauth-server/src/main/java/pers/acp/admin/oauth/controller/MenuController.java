@@ -5,11 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pers.acp.admin.common.permission.Expression;
 import pers.acp.admin.oauth.constant.ApiPrefix;
 import pers.acp.admin.oauth.domain.MenuDomain;
 import pers.acp.admin.oauth.entity.Menu;
@@ -21,7 +19,7 @@ import java.util.List;
  * @author zhang by 26/12/2018
  * @since JDK 11
  */
-@RestController()
+@RestController
 @RequestMapping(ApiPrefix.basePath)
 @Api("菜单信息")
 public class MenuController {
@@ -34,7 +32,6 @@ public class MenuController {
     }
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
-//    @PreAuthorize(Expression.adminOnly)
     @GetMapping(value = ApiPrefix.currMenu, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Menu>> menuList(Principal user) {
         return ResponseEntity.ok(menuDomain.getMenuList(user.getName()));

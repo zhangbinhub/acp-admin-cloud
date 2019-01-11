@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
  * @since JDK 11
  */
 @ApiModel("更新当前用户信息参数")
-public class UserParam {
+public class UserInfoPO {
 
     public String getName() {
         return name;
