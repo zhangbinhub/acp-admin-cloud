@@ -21,28 +21,28 @@ public class ParamPO {
         this.id = id;
     }
 
-    public String getConfname() {
-        return confname;
+    public String getName() {
+        return name;
     }
 
-    public void setConfname(String confname) {
-        this.confname = confname;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getConfvalue() {
-        return confvalue;
+    public String getValue() {
+        return value;
     }
 
-    public void setConfvalue(String confvalue) {
-        this.confvalue = confvalue;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getConfdes() {
-        return confdes;
+    public String getConfigDes() {
+        return configDes;
     }
 
-    public void setConfdes(String confdes) {
-        this.confdes = confdes;
+    public void setConfigDes(String configDes) {
+        this.configDes = configDes;
     }
 
     public Boolean getEnabled() {
@@ -61,18 +61,18 @@ public class ParamPO {
         this.queryParam = queryParam;
     }
 
-    @ApiModelProperty(value = "配置ID")
+    @ApiModelProperty(value = "配置ID，更新时必填")
     private String id;
 
     @ApiModelProperty(value = "名称，查询时可为空", required = true, position = 1)
     @NotBlank(message = "参数名称不能为空")
-    private String confname;
+    private String name;
 
     @ApiModelProperty(value = "值", position = 2)
-    private String confvalue = "";
+    private String value = "";
 
     @ApiModelProperty(value = "描述", position = 3)
-    private String confdes = "";
+    private String configDes = "";
 
     @ApiModelProperty(value = "是否启用", position = 4)
     private Boolean enabled;

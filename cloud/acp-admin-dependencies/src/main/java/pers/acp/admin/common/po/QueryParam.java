@@ -45,17 +45,17 @@ public class QueryParam {
     }
 
     @ApiModelProperty(value = "当前页号", required = true, position = 1)
-    private int currPage;
+    private int currPage = 1;
 
     @ApiModelProperty(value = "每页记录数", required = true, position = 2)
-    private int pageSize;
+    private int pageSize = 10;
 
-    @ApiModelProperty(value = "排序列名", required = true, position = 3)
+    @ApiModelProperty(value = "排序列名，多列以“,”分隔", required = true, position = 3)
     @NotBlank(message = "排序列名不能为空")
     private String orderName;
 
     @ApiModelProperty(value = "排序方式", allowableValues = "asc,desc", required = true, position = 4)
     @NotBlank(message = "排序方式不能为空")
-    private String orderCommond;
+    private String orderCommond = "desc";
 
 }

@@ -3,19 +3,25 @@ package pers.acp.admin.oauth.controller;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.permission.ParamConfigExpression;
+import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.constant.ApiPrefix;
-import pers.acp.admin.oauth.domain.ParamDomain;
+import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.ParamPO;
+import pers.acp.core.CommonTools;
+import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author zhang by 11/01/2019
@@ -26,11 +32,11 @@ import java.util.List;
 @Api("运行参数配置")
 public class ParamController {
 
-    private final ParamDomain paramDomain;
+    private final RuntimeConfigDomain runtimeConfigDomain;
 
     @Autowired
-    public ParamController(ParamDomain paramDomain) {
-        this.paramDomain = paramDomain;
+    public ParamController(RuntimeConfigDomain runtimeConfigDomain) {
+        this.runtimeConfigDomain = runtimeConfigDomain;
     }
 
     @ApiOperation(value = "新建参数信息",
@@ -41,9 +47,12 @@ public class ParamController {
     })
     @PreAuthorize(ParamConfigExpression.paramAdd)
     @PutMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO paramPO) {
-        // todo
-        return null;
+    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO paramPO, BindingResult bindingResult) throws ServerException {
+        if (bindingResult.hasErrors()) {
+            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        paramPO.setEnabled(paramPO.getEnabled() == null ? true : paramPO.getEnabled());
+        return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfigDomain.doCreate(paramPO));
     }
 
     @ApiOperation(value = "删除指定的参数信息",
@@ -56,9 +65,11 @@ public class ParamController {
     })
     @PreAuthorize(ParamConfigExpression.paramDelete)
     @DeleteMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> delete(@RequestBody List<String> paramIdList) {
-        // todo
-        return null;
+    public ResponseEntity<InfoVO> delete(@RequestBody List<String> paramIdList) {
+        runtimeConfigDomain.doDelete(paramIdList);
+        InfoVO infoVO = new InfoVO();
+        infoVO.setMessage("删除成功");
+        return ResponseEntity.ok(infoVO);
     }
 
     @ApiOperation(value = "更新指定的参数信息",
@@ -68,9 +79,15 @@ public class ParamController {
     })
     @PreAuthorize(ParamConfigExpression.paramUpdate)
     @PatchMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> update(@RequestBody @Valid ParamPO paramPO) {
-        //todo
-        return null;
+    public ResponseEntity<RuntimeConfig> update(@RequestBody @Valid ParamPO paramPO, BindingResult bindingResult) throws ServerException {
+        if (bindingResult.hasErrors()) {
+            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        if (CommonTools.isNullStr(paramPO.getId())) {
+            throw new ServerException("配置ID不能为空");
+        }
+        paramPO.setEnabled(paramPO.getEnabled() == null ? true : paramPO.getEnabled());
+        return ResponseEntity.ok(runtimeConfigDomain.doUpdate(paramPO));
     }
 
     @ApiOperation(value = "查询参数信息列表",
@@ -80,9 +97,11 @@ public class ParamController {
     })
     @PreAuthorize(ParamConfigExpression.paramQuery)
     @PostMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO paramPO) {
-        // todo
-        return null;
+    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO paramPO) throws ServerException {
+        if (paramPO.getQueryParam() == null) {
+            throw new ServerException("分页查询参数不能为空");
+        }
+        return ResponseEntity.ok(runtimeConfigDomain.doQuery(paramPO));
     }
 
     @ApiOperation(value = "获取参数信息",
@@ -94,9 +113,13 @@ public class ParamController {
             @ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVO.class)
     })
     @GetMapping(value = ApiPrefix.paramConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> find(@PathVariable String name) {
-        // todo
-        return null;
+    public ResponseEntity<RuntimeConfig> find(@PathVariable String name) throws ServerException {
+        RuntimeConfig runtimeConfig = runtimeConfigDomain.findByName(name);
+        if (runtimeConfig == null) {
+            throw new ServerException("找不到参数信息");
+        } else {
+            return ResponseEntity.ok(runtimeConfig);
+        }
     }
 
 }

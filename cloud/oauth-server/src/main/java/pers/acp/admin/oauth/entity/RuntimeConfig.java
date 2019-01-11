@@ -12,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_runtimeconfig", indexes = {
-        @Index(columnList = "confname,enabled")
+        @Index(columnList = "name,enabled")
 })
 @ApiModel("运行配置")
 public class RuntimeConfig {
@@ -25,28 +25,28 @@ public class RuntimeConfig {
         this.id = id;
     }
 
-    public String getConfname() {
-        return confname;
+    public String getName() {
+        return name;
     }
 
-    public void setConfname(String confname) {
-        this.confname = confname;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getConfvalue() {
-        return confvalue;
+    public String getValue() {
+        return value;
     }
 
-    public void setConfvalue(String confvalue) {
-        this.confvalue = confvalue;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getConfdes() {
-        return confdes;
+    public String getConfigDes() {
+        return configDes;
     }
 
-    public void setConfdes(String confdes) {
-        this.confdes = confdes;
+    public void setConfigDes(String configDes) {
+        this.configDes = configDes;
     }
 
     public boolean isEnabled() {
@@ -74,13 +74,13 @@ public class RuntimeConfig {
 
     @Column(length = 100, unique = true, nullable = false)
     @ApiModelProperty("名称")
-    private String confname;
+    private String name;
 
     @ApiModelProperty("值")
-    private String confvalue = "";
+    private String value = "";
 
     @ApiModelProperty("描述")
-    private String confdes = "";
+    private String configDes = "";
 
     @Column(nullable = false)
     @ApiModelProperty("是否启用")
