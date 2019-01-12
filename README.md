@@ -1,9 +1,12 @@
 # acp-admin-cloud
 ###### v1.0.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”
+## 相关组件版本及官方文档
+- [Spring Boot 2.1.2.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Greenwich.RC2](http://projects.spring.io/spring-cloud)
 ## 一、环境要求
 - jdk 11
-- gradle 5.0
+- gradle 5.1.1
 
 ## 二、gralde 配置及使用
 ### （一）配置文件
@@ -35,7 +38,7 @@ gradle全局参数：
 
 ### （三）升级命令
 ``
-    gradlew wrapper --gradle-version=4.10.2 --distribution-type=all
+    gradlew wrapper --gradle-version=5.1.1 --distribution-type=all
 ``
 
 ## 三、工程说明
