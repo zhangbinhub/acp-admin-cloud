@@ -80,7 +80,7 @@ public class RuntimeConfigDomain extends BaseDomain {
                 predicateList.add(criteriaBuilder.like(root.get("value").as(String.class), "%" + paramPO.getValue() + "%"));
             }
             if (paramPO.getEnabled() != null) {
-                predicateList.add(criteriaBuilder.equal(root.get("enabled").as(Boolean.class), paramPO.getEnabled()));
+                predicateList.add(criteriaBuilder.equal(root.get("enabled"), paramPO.getEnabled()));
             }
             return criteriaBuilder.and(predicateList.toArray(new Predicate[]{}));
         }, buildPageRequest(paramPO.getQueryParam()));

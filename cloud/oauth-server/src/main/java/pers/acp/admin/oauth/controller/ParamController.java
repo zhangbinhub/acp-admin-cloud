@@ -79,10 +79,7 @@ public class ParamController {
     })
     @PreAuthorize(ParamConfigExpression.paramUpdate)
     @PatchMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> update(@RequestBody @Valid ParamPO paramPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<RuntimeConfig> update(@RequestBody ParamPO paramPO) throws ServerException {
         if (CommonTools.isNullStr(paramPO.getId())) {
             throw new ServerException("配置ID不能为空");
         }

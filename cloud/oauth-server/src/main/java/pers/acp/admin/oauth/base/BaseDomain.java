@@ -30,11 +30,15 @@ public class BaseDomain {
     }
 
     protected PageRequest buildPageRequest(QueryParam queryParam) {
-        Sort.Direction direction = Sort.Direction.DESC;
-        if (queryParam.getOrderCommond().equalsIgnoreCase("asc")) {
-            direction = Sort.Direction.ASC;
+        if (CommonTools.isNullStr(queryParam.getOrderName())) {
+            return PageRequest.of(queryParam.getCurrPage() - 1, queryParam.getPageSize());
+        } else {
+            Sort.Direction direction = Sort.Direction.DESC;
+            if (queryParam.getOrderCommond().equalsIgnoreCase("asc")) {
+                direction = Sort.Direction.ASC;
+            }
+            return PageRequest.of(queryParam.getCurrPage() - 1, queryParam.getPageSize(), direction, CommonTools.toCamel(queryParam.getOrderName()).split(","));
         }
-        return PageRequest.of(queryParam.getCurrPage() - 1, queryParam.getPageSize(), direction, CommonTools.toCamel(queryParam.getOrderName()).split(","));
     }
 
 }
