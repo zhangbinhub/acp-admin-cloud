@@ -9,6 +9,10 @@ package pers.acp.admin.common.code;
  */
 public interface ModuleCode {
 
+    String sysConfig = "sys_config";
+
     String paramConfig = "param_config";
+
+    String appConfig = "app_config";
 
 }

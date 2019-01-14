@@ -63,14 +63,6 @@ public class Application {
         this.covert = covert;
     }
 
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
-
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -97,9 +89,5 @@ public class Application {
     @ApiModelProperty("是否可删除")
     @Column(nullable = false)
     private boolean covert = true;
-
-    @ApiModelProperty("序号")
-    @Column(nullable = false)
-    private int sort = 1;
 
 }

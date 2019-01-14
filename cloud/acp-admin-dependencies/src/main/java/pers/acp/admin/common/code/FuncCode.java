@@ -17,4 +17,14 @@ public interface FuncCode {
 
     String paramQuery = "param_query";
 
+    String appAdd = "app_add";
+
+    String appDelete = "app_delete";
+
+    String appUpdate = "app_update";
+
+    String appQuery = "app_query";
+
+    String appUpdateSecret = "app_update_secret";
+
 }

@@ -55,18 +55,17 @@ public class ParamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfigDomain.doCreate(paramPO));
     }
 
-    @ApiOperation(value = "删除指定的参数信息",
-            notes = "可更新参数值、描述、状态")
+    @ApiOperation(value = "删除指定的参数信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "paramIdList", value = "参数id", required = true, paramType = "body", allowMultiple = true, dataType = "String")
+            @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
     })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramDelete)
     @DeleteMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> delete(@RequestBody List<String> paramIdList) {
-        runtimeConfigDomain.doDelete(paramIdList);
+    public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
+        runtimeConfigDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -75,7 +74,7 @@ public class ParamController {
     @ApiOperation(value = "更新指定的参数信息",
             notes = "可更新参数值、描述、状态")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "参数校验不通过；找不到参数信息；", response = ErrorVO.class)
+            @ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramUpdate)
     @PatchMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
