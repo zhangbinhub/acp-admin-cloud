@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
-import pers.acp.core.log.LogFactory;
+import pers.acp.springcloud.common.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -21,14 +21,15 @@ import java.util.List;
 @Service
 public class SecurityClientDetailsService implements ClientDetailsService {
 
-    private final LogFactory log = LogFactory.getInstance(this.getClass());
+    private final LogInstance logInstance;
 
     private final ApplicationRepository applicationRepository;
 
     private ClientDetailsService clientDetailsService = null;
 
     @Autowired
-    public SecurityClientDetailsService(ApplicationRepository applicationRepository) {
+    public SecurityClientDetailsService(LogInstance logInstance, ApplicationRepository applicationRepository) {
+        this.logInstance = logInstance;
         this.applicationRepository = applicationRepository;
     }
 
@@ -56,7 +57,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
         try {
             clientDetailsService = memoryClientDetailsServiceBuilder.build();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            logInstance.error(e.getMessage(), e);
         }
     }
 

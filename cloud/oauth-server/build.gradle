@@ -13,12 +13,11 @@ dependencyManagement {
     }
 }
 dependencies {
-    compile project(":cloud:acp-admin-dependencies")
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    
+    compile(project(":cloud:acp-admin-cloud-dependencies")) {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-stream-kafka'
+    }
+
     compile "org.springframework.boot:spring-boot-starter-data-redis"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
-    compile "org.springframework.cloud:spring-cloud-starter-oauth2"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
 

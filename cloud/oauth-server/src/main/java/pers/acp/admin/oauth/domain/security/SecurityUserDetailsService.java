@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.common.code.RoleCode;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
-import pers.acp.core.log.LogFactory;
 import pers.acp.core.security.SHA256Utils;
+import pers.acp.springcloud.common.log.LogInstance;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -26,12 +26,13 @@ import java.util.Set;
 @Service
 public class SecurityUserDetailsService implements UserDetailsService {
 
-    private final LogFactory log = LogFactory.getInstance(this.getClass());
+    private final LogInstance logInstance;
 
     private final UserRepository userRepository;
 
     @Autowired
-    public SecurityUserDetailsService(UserRepository userRepository) {
+    public SecurityUserDetailsService(LogInstance logInstance, UserRepository userRepository) {
+        this.logInstance = logInstance;
         this.userRepository = userRepository;
     }
 
@@ -47,7 +48,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         pers.acp.admin.oauth.entity.User user = userRepository.findByLoginno(username).orElse(null);
         if (user == null) {
-            log.error("无此用户：" + username);
+            logInstance.error("无此用户：" + username);
             throw new UsernameNotFoundException("无此用户：" + username);
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

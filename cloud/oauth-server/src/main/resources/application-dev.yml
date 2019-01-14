@@ -1,6 +1,4 @@
 debug: false
-swagger:
-  enabled: true
 server:
   port: 8999
   tomcat:
@@ -63,3 +61,9 @@ eureka:
     registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
+acp:
+  swagger:
+    enabled: true
+  cloud:
+    oauth:
+      oauth-server: true

@@ -58,3 +58,7 @@ eureka:
     registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
+acp:
+  cloud:
+    oauth:
+      oauth-server: true
