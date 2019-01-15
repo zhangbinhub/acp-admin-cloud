@@ -54,11 +54,8 @@ public class SecurityUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getRoleSet().forEach(role -> {
             grantedAuthorities.add(new SimpleGrantedAuthority(RoleCode.prefix + role.getCode())); //角色编码
-            role.getModuleSet().forEach(module -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(module.getCode())); //模块编码
-            });
-            role.getModuleFuncSet().forEach(moduleFunc -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(moduleFunc.getCode())); //功能编码
+            role.getModuleFuncSet().forEach(module -> {
+                grantedAuthorities.add(new SimpleGrantedAuthority(module.getCode())); //模块功能编码
             });
         });
         return new User(user.getLoginno(),

@@ -9,7 +9,7 @@ import pers.acp.admin.common.code.ModuleCode;
 import pers.acp.admin.common.code.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
-import pers.acp.admin.oauth.entity.Module;
+import pers.acp.admin.oauth.entity.ModuleFunc;
 import pers.acp.admin.oauth.repo.*;
 import pers.acp.core.security.SHA256Utils;
 
@@ -30,9 +30,6 @@ class InitData extends BaseTest {
 
     @Autowired
     private MenuRepository menuRepository;
-
-    @Autowired
-    private ModuleRepository moduleRepository;
 
     @Autowired
     private ModuleFuncRepository moduleFuncRepository;
@@ -268,25 +265,25 @@ class InitData extends BaseTest {
     }
 
     private void initModuleAndFunc(Application application, Role... roles) {
-        Module sysConfig = new Module();
+        ModuleFunc sysConfig = new ModuleFunc();
         sysConfig.setAppid(application.getId());
         sysConfig.setParentid(application.getId());
         sysConfig.setName("系统配置");
         sysConfig.setCode(ModuleCode.sysConfig);
         sysConfig.setCovert(false);
-        sysConfig = moduleRepository.save(sysConfig);
+        sysConfig = moduleFuncRepository.save(sysConfig);
 
-        Module paramConfig = new Module();
+        ModuleFunc paramConfig = new ModuleFunc();
         paramConfig.setAppid(application.getId());
         paramConfig.setParentid(sysConfig.getId());
         paramConfig.setName("运行参数配置");
         paramConfig.setCode(ModuleCode.paramConfig);
         paramConfig.setCovert(false);
-        paramConfig = moduleRepository.save(paramConfig);
+        paramConfig = moduleFuncRepository.save(paramConfig);
 
         ModuleFunc paramAdd = new ModuleFunc();
         paramAdd.setAppid(application.getId());
-        paramAdd.setModuleid(paramConfig.getId());
+        paramAdd.setParentid(paramConfig.getId());
         paramAdd.setName("新增");
         paramAdd.setCode(FuncCode.paramAdd);
         paramAdd.setCovert(false);
@@ -294,7 +291,7 @@ class InitData extends BaseTest {
 
         ModuleFunc paramDelete = new ModuleFunc();
         paramDelete.setAppid(application.getId());
-        paramDelete.setModuleid(paramConfig.getId());
+        paramDelete.setParentid(paramConfig.getId());
         paramDelete.setName("删除");
         paramDelete.setCode(FuncCode.paramDelete);
         paramDelete.setCovert(false);
@@ -302,7 +299,7 @@ class InitData extends BaseTest {
 
         ModuleFunc paramUpdate = new ModuleFunc();
         paramUpdate.setAppid(application.getId());
-        paramUpdate.setModuleid(paramConfig.getId());
+        paramUpdate.setParentid(paramConfig.getId());
         paramUpdate.setName("更新");
         paramUpdate.setCode(FuncCode.paramUpdate);
         paramUpdate.setCovert(false);
@@ -310,23 +307,23 @@ class InitData extends BaseTest {
 
         ModuleFunc paramQuery = new ModuleFunc();
         paramQuery.setAppid(application.getId());
-        paramQuery.setModuleid(paramConfig.getId());
+        paramQuery.setParentid(paramConfig.getId());
         paramQuery.setName("查询");
         paramQuery.setCode(FuncCode.paramQuery);
         paramQuery.setCovert(false);
         paramQuery = moduleFuncRepository.save(paramQuery);
 
-        Module appConfig = new Module();
+        ModuleFunc appConfig = new ModuleFunc();
         appConfig.setAppid(application.getId());
         appConfig.setParentid(sysConfig.getId());
         appConfig.setName("应用配置");
         appConfig.setCode(ModuleCode.appConfig);
         appConfig.setCovert(false);
-        appConfig = moduleRepository.save(appConfig);
+        appConfig = moduleFuncRepository.save(appConfig);
 
         ModuleFunc appAdd = new ModuleFunc();
         appAdd.setAppid(application.getId());
-        appAdd.setModuleid(appConfig.getId());
+        appAdd.setParentid(appConfig.getId());
         appAdd.setName("新增");
         appAdd.setCode(FuncCode.appAdd);
         appAdd.setCovert(false);
@@ -334,7 +331,7 @@ class InitData extends BaseTest {
 
         ModuleFunc appDelete = new ModuleFunc();
         appDelete.setAppid(application.getId());
-        appDelete.setModuleid(appConfig.getId());
+        appDelete.setParentid(appConfig.getId());
         appDelete.setName("删除");
         appDelete.setCode(FuncCode.appDelete);
         appDelete.setCovert(false);
@@ -342,7 +339,7 @@ class InitData extends BaseTest {
 
         ModuleFunc appUpdate = new ModuleFunc();
         appUpdate.setAppid(application.getId());
-        appUpdate.setModuleid(appConfig.getId());
+        appUpdate.setParentid(appConfig.getId());
         appUpdate.setName("更新");
         appUpdate.setCode(FuncCode.appUpdate);
         appUpdate.setCovert(false);
@@ -350,7 +347,7 @@ class InitData extends BaseTest {
 
         ModuleFunc appQuery = new ModuleFunc();
         appQuery.setAppid(application.getId());
-        appQuery.setModuleid(appConfig.getId());
+        appQuery.setParentid(appConfig.getId());
         appQuery.setName("查询");
         appQuery.setCode(FuncCode.appQuery);
         appQuery.setCovert(false);
@@ -358,20 +355,20 @@ class InitData extends BaseTest {
 
         ModuleFunc appUpdateSecret = new ModuleFunc();
         appUpdateSecret.setAppid(application.getId());
-        appUpdateSecret.setModuleid(appConfig.getId());
+        appUpdateSecret.setParentid(appConfig.getId());
         appUpdateSecret.setName("更新密钥");
         appUpdateSecret.setCode(FuncCode.appUpdateSecret);
         appUpdateSecret.setCovert(false);
         appUpdateSecret = moduleFuncRepository.save(appUpdateSecret);
 
         for (Role role : roles) {
-            role.getModuleSet().add(sysConfig);
-            role.getModuleSet().add(paramConfig);
+            role.getModuleFuncSet().add(sysConfig);
+            role.getModuleFuncSet().add(paramConfig);
             role.getModuleFuncSet().add(paramAdd);
             role.getModuleFuncSet().add(paramDelete);
             role.getModuleFuncSet().add(paramUpdate);
             role.getModuleFuncSet().add(paramQuery);
-            role.getModuleSet().add(appConfig);
+            role.getModuleFuncSet().add(appConfig);
             role.getModuleFuncSet().add(appAdd);
             role.getModuleFuncSet().add(appDelete);
             role.getModuleFuncSet().add(appUpdate);

@@ -74,14 +74,6 @@ public class Role {
         this.menuSet = menuSet;
     }
 
-    public Set<Module> getModuleSet() {
-        return moduleSet;
-    }
-
-    public void setModuleSet(Set<Module> moduleSet) {
-        this.moduleSet = moduleSet;
-    }
-
     public Set<ModuleFunc> getModuleFuncSet() {
         return moduleFuncSet;
     }
@@ -126,16 +118,9 @@ public class Role {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinTable(name = "t_role_module_set",
-            joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "moduleid", referencedColumnName = "id")})
-    private Set<Module> moduleSet = new HashSet<>();
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_role_module_func_set",
             joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "funcid", referencedColumnName = "id")})
+            inverseJoinColumns = {@JoinColumn(name = "moduleid", referencedColumnName = "id")})
     private Set<ModuleFunc> moduleFuncSet = new HashSet<>();
 
 }
