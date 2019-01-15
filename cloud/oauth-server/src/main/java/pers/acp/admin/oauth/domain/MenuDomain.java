@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * @since JDK 11
  */
 @Service
+@Transactional(readOnly = true)
 public class MenuDomain extends BaseDomain {
 
     private final MenuRepository menuRepository;
@@ -28,7 +29,6 @@ public class MenuDomain extends BaseDomain {
         this.menuRepository = menuRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<Menu> getMenuList(String loginNo) {
         List<Menu> result = new ArrayList<>();
         User user = findCurrUserInfo(loginNo);

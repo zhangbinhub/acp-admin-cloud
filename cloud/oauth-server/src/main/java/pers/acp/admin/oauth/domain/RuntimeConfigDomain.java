@@ -23,6 +23,7 @@ import java.util.Optional;
  * @since JDK 11
  */
 @Service
+@Transactional(readOnly = true)
 public class RuntimeConfigDomain extends BaseDomain {
 
     private final RuntimeConfigRepository runtimeConfigRepository;

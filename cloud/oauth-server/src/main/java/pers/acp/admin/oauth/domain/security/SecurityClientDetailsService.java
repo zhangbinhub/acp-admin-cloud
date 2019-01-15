@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
 import pers.acp.springcloud.common.log.LogInstance;
@@ -37,6 +38,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
      * 初始化客户端信息
      */
     @PostConstruct
+    @Transactional(readOnly = true)
     public void init() {
         List<Application> applicationList = applicationRepository.findAll();
         InMemoryClientDetailsServiceBuilder memoryClientDetailsServiceBuilder = new InMemoryClientDetailsServiceBuilder();
