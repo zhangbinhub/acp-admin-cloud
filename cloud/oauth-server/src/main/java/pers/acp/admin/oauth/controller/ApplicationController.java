@@ -103,7 +103,7 @@ public class ApplicationController {
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appUpdateSecret)
-    @GetMapping(value = ApiPrefix.appConfig + "/updatesecret/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = ApiPrefix.appConfig + ApiPrefix.updateSecret + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Application> updateSecret(@PathVariable String appId) throws ServerException {
         if (CommonTools.isNullStr(appId)) {
             throw new ServerException("ID不能为空");

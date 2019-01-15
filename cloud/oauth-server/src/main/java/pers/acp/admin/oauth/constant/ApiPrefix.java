@@ -14,6 +14,8 @@ public interface ApiPrefix {
 
     String appConfig = "/app";
 
+    String updateSecret = "/updatesecret";
+
     String roleConfig = "/role";
 
     String authConfig = "/auth";
