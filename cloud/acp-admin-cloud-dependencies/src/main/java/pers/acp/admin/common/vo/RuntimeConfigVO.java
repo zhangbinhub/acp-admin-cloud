@@ -10,14 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("运行配置信息")
 public class RuntimeConfigVO {
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -50,17 +42,6 @@ public class RuntimeConfigVO {
         this.enabled = enabled;
     }
 
-    public boolean isCovert() {
-        return covert;
-    }
-
-    public void setCovert(boolean covert) {
-        this.covert = covert;
-    }
-
-    @ApiModelProperty("配置ID")
-    private String id;
-
     @ApiModelProperty("名称")
     private String name;
 
@@ -72,8 +53,5 @@ public class RuntimeConfigVO {
 
     @ApiModelProperty("是否启用")
     private boolean enabled = true;
-
-    @ApiModelProperty("是否可删除")
-    private boolean covert = true;
 
 }

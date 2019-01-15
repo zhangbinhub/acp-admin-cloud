@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.po;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import pers.acp.admin.common.po.QueryParam;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
  * @author zhang by 13/01/2019
  * @since JDK 11
  */
+@ApiModel("应用配置参数")
 public class ApplicationPO {
 
     public String getId() {
