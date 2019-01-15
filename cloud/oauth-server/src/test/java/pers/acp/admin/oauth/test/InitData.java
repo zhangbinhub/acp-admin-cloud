@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.code.FuncCode;
-import pers.acp.admin.common.code.ModuleCode;
-import pers.acp.admin.common.code.RoleCode;
+import pers.acp.admin.common.constant.ModuleFuncCode;
+import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
@@ -269,7 +268,7 @@ class InitData extends BaseTest {
         sysConfig.setAppid(application.getId());
         sysConfig.setParentid(application.getId());
         sysConfig.setName("系统配置");
-        sysConfig.setCode(ModuleCode.sysConfig);
+        sysConfig.setCode(ModuleFuncCode.sysConfig);
         sysConfig.setCovert(false);
         sysConfig = moduleFuncRepository.save(sysConfig);
 
@@ -277,7 +276,7 @@ class InitData extends BaseTest {
         paramConfig.setAppid(application.getId());
         paramConfig.setParentid(sysConfig.getId());
         paramConfig.setName("运行参数配置");
-        paramConfig.setCode(ModuleCode.paramConfig);
+        paramConfig.setCode(ModuleFuncCode.paramConfig);
         paramConfig.setCovert(false);
         paramConfig = moduleFuncRepository.save(paramConfig);
 
@@ -285,7 +284,7 @@ class InitData extends BaseTest {
         paramAdd.setAppid(application.getId());
         paramAdd.setParentid(paramConfig.getId());
         paramAdd.setName("新增");
-        paramAdd.setCode(FuncCode.paramAdd);
+        paramAdd.setCode(ModuleFuncCode.paramAdd);
         paramAdd.setCovert(false);
         paramAdd = moduleFuncRepository.save(paramAdd);
 
@@ -293,7 +292,7 @@ class InitData extends BaseTest {
         paramDelete.setAppid(application.getId());
         paramDelete.setParentid(paramConfig.getId());
         paramDelete.setName("删除");
-        paramDelete.setCode(FuncCode.paramDelete);
+        paramDelete.setCode(ModuleFuncCode.paramDelete);
         paramDelete.setCovert(false);
         paramDelete = moduleFuncRepository.save(paramDelete);
 
@@ -301,7 +300,7 @@ class InitData extends BaseTest {
         paramUpdate.setAppid(application.getId());
         paramUpdate.setParentid(paramConfig.getId());
         paramUpdate.setName("更新");
-        paramUpdate.setCode(FuncCode.paramUpdate);
+        paramUpdate.setCode(ModuleFuncCode.paramUpdate);
         paramUpdate.setCovert(false);
         paramUpdate = moduleFuncRepository.save(paramUpdate);
 
@@ -309,7 +308,7 @@ class InitData extends BaseTest {
         paramQuery.setAppid(application.getId());
         paramQuery.setParentid(paramConfig.getId());
         paramQuery.setName("查询");
-        paramQuery.setCode(FuncCode.paramQuery);
+        paramQuery.setCode(ModuleFuncCode.paramQuery);
         paramQuery.setCovert(false);
         paramQuery = moduleFuncRepository.save(paramQuery);
 
@@ -317,7 +316,7 @@ class InitData extends BaseTest {
         appConfig.setAppid(application.getId());
         appConfig.setParentid(sysConfig.getId());
         appConfig.setName("应用配置");
-        appConfig.setCode(ModuleCode.appConfig);
+        appConfig.setCode(ModuleFuncCode.appConfig);
         appConfig.setCovert(false);
         appConfig = moduleFuncRepository.save(appConfig);
 
@@ -325,7 +324,7 @@ class InitData extends BaseTest {
         appAdd.setAppid(application.getId());
         appAdd.setParentid(appConfig.getId());
         appAdd.setName("新增");
-        appAdd.setCode(FuncCode.appAdd);
+        appAdd.setCode(ModuleFuncCode.appAdd);
         appAdd.setCovert(false);
         appAdd = moduleFuncRepository.save(appAdd);
 
@@ -333,7 +332,7 @@ class InitData extends BaseTest {
         appDelete.setAppid(application.getId());
         appDelete.setParentid(appConfig.getId());
         appDelete.setName("删除");
-        appDelete.setCode(FuncCode.appDelete);
+        appDelete.setCode(ModuleFuncCode.appDelete);
         appDelete.setCovert(false);
         appDelete = moduleFuncRepository.save(appDelete);
 
@@ -341,7 +340,7 @@ class InitData extends BaseTest {
         appUpdate.setAppid(application.getId());
         appUpdate.setParentid(appConfig.getId());
         appUpdate.setName("更新");
-        appUpdate.setCode(FuncCode.appUpdate);
+        appUpdate.setCode(ModuleFuncCode.appUpdate);
         appUpdate.setCovert(false);
         appUpdate = moduleFuncRepository.save(appUpdate);
 
@@ -349,7 +348,7 @@ class InitData extends BaseTest {
         appQuery.setAppid(application.getId());
         appQuery.setParentid(appConfig.getId());
         appQuery.setName("查询");
-        appQuery.setCode(FuncCode.appQuery);
+        appQuery.setCode(ModuleFuncCode.appQuery);
         appQuery.setCovert(false);
         appQuery = moduleFuncRepository.save(appQuery);
 
@@ -357,7 +356,7 @@ class InitData extends BaseTest {
         appUpdateSecret.setAppid(application.getId());
         appUpdateSecret.setParentid(appConfig.getId());
         appUpdateSecret.setName("更新密钥");
-        appUpdateSecret.setCode(FuncCode.appUpdateSecret);
+        appUpdateSecret.setCode(ModuleFuncCode.appUpdateSecret);
         appUpdateSecret.setCovert(false);
         appUpdateSecret = moduleFuncRepository.save(appUpdateSecret);
 

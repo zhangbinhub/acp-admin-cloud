@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pers.acp.admin.oauth.constant.ApiPrefix;
+import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.po.UserInfoPO;
@@ -23,7 +23,7 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(ApiPrefix.basePath)
+@RequestMapping(OauthApi.oauthBasePath)
 @Api("用户信息")
 public class UserController {
 
@@ -39,7 +39,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
-    @GetMapping(value = ApiPrefix.currUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = OauthApi.currUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> userinfo(Principal user) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
@@ -54,7 +54,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     })
-    @RequestMapping(value = ApiPrefix.currUser, method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = OauthApi.currUser, method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> updateCurrUser(Principal user, @RequestBody @Valid UserInfoPO userInfoPO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());

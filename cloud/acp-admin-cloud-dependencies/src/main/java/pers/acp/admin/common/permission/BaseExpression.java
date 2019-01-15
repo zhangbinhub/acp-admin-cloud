@@ -1,6 +1,6 @@
 package pers.acp.admin.common.permission;
 
-import pers.acp.admin.common.code.RoleCode;
+import pers.acp.admin.common.constant.RoleCode;
 
 /**
  * 定义权限表达式

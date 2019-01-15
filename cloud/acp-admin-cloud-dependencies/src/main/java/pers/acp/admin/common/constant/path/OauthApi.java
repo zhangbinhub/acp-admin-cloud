@@ -1,12 +1,12 @@
-package pers.acp.admin.oauth.constant;
+package pers.acp.admin.common.constant.path;
 
 /**
  * @author zhang by 10/01/2019
  * @since JDK 11
  */
-public interface ApiPrefix {
+public interface OauthApi {
 
-    String basePath = "/oauth";
+    String oauthBasePath = "/oauth";
 
     String currUser = "/userinfo";
 
@@ -14,7 +14,7 @@ public interface ApiPrefix {
 
     String appConfig = "/app";
 
-    String updateSecret = "/updatesecret";
+    String updateSecret = appConfig + "/updatesecret";
 
     String roleConfig = "/role";
 

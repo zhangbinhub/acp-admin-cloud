@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author zhang by 15/01/2019
  * @since JDK 11
  */
-@ApiModel("运行配置")
+@ApiModel("运行配置信息")
 public class RuntimeConfigVO {
 
     public String getId() {

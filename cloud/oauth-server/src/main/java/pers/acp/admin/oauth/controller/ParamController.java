@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.permission.ParamConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
-import pers.acp.admin.oauth.constant.ApiPrefix;
+import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.ParamPO;
@@ -30,7 +30,7 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(ApiPrefix.basePath)
+@RequestMapping(OauthApi.oauthBasePath)
 @Api("运行参数配置")
 public class ParamController {
 
@@ -48,7 +48,7 @@ public class ParamController {
             @ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramAdd)
-    @PutMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO paramPO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -65,7 +65,7 @@ public class ParamController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramDelete)
-    @DeleteMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         runtimeConfigDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
@@ -79,7 +79,7 @@ public class ParamController {
             @ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramUpdate)
-    @PatchMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PatchMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfig> update(@RequestBody ParamPO paramPO) throws ServerException {
         if (CommonTools.isNullStr(paramPO.getId())) {
             throw new ServerException("配置ID不能为空");
@@ -94,7 +94,7 @@ public class ParamController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(ParamConfigExpression.paramQuery)
-    @PostMapping(value = ApiPrefix.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO paramPO) throws ServerException {
         if (paramPO.getQueryParam() == null) {
             throw new ServerException("分页查询参数不能为空");
@@ -110,7 +110,7 @@ public class ParamController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVO.class)
     })
-    @GetMapping(value = ApiPrefix.paramConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = OauthApi.paramConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfigVO> find(@PathVariable String name) throws ServerException {
         RuntimeConfig runtimeConfig = runtimeConfigDomain.findByName(name);
         if (runtimeConfig == null) {

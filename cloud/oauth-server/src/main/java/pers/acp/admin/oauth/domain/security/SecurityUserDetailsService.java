@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.code.RoleCode;
+import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;

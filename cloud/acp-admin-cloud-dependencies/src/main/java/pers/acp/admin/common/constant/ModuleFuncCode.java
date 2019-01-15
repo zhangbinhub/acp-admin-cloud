@@ -1,13 +1,14 @@
-package pers.acp.admin.common.code;
+package pers.acp.admin.common.constant;
 
 /**
- * 功能编码
- * 新建功能时，需要向该接口增加对应的编码
- *
- * @author zhang by 11/01/2019
+ * @author zhang by 15/01/2019
  * @since JDK 11
  */
-public interface FuncCode {
+public interface ModuleFuncCode {
+
+    String sysConfig = "sys_config";
+
+    String paramConfig = "param_config";
 
     String paramAdd = "param_add";
 
@@ -16,6 +17,8 @@ public interface FuncCode {
     String paramUpdate = "param_update";
 
     String paramQuery = "param_query";
+
+    String appConfig = "app_config";
 
     String appAdd = "app_add";
 

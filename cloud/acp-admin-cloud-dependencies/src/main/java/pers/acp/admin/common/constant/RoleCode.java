@@ -1,4 +1,4 @@
-package pers.acp.admin.common.code;
+package pers.acp.admin.common.constant;
 
 /**
  * 角色编码
