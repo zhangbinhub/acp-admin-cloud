@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.BaseDomain;
+import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.ParamPO;
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository;
@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional(readOnly = true)
-public class RuntimeConfigDomain extends BaseDomain {
+public class RuntimeConfigDomain extends OauthBaseDomain {
 
     private final RuntimeConfigRepository runtimeConfigRepository;
 

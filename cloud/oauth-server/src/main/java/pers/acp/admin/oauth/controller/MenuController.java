@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.MenuDomain;
 import pers.acp.admin.oauth.entity.Menu;
@@ -22,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(OauthApi.oauthBasePath)
 @Api("菜单信息")
-public class MenuController {
+public class MenuController extends BaseController {
 
     private final MenuDomain menuDomain;
 

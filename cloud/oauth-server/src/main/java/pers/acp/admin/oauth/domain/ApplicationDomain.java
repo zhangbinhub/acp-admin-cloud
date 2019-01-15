@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.BaseDomain;
+import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional(readOnly = true)
-public class ApplicationDomain extends BaseDomain {
+public class ApplicationDomain extends OauthBaseDomain {
 
     private final ApplicationRepository applicationRepository;
 

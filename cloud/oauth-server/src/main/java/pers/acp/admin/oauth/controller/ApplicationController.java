@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.constant.path.OauthApi;
@@ -30,7 +31,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping(OauthApi.oauthBasePath)
 @Api("应用信息")
-public class ApplicationController {
+public class ApplicationController extends BaseController {
 
     private final ApplicationDomain applicationDomain;
 

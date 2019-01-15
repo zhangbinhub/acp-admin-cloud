@@ -3,7 +3,7 @@ package pers.acp.admin.oauth.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.BaseDomain;
+import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Menu;
 import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.entity.User;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional(readOnly = true)
-public class MenuDomain extends BaseDomain {
+public class MenuDomain extends OauthBaseDomain {
 
     private final MenuRepository menuRepository;
 

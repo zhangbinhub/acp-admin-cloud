@@ -19,8 +19,6 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-redis"
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'junit'
     }

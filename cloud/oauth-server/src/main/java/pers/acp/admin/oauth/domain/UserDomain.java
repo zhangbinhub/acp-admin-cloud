@@ -3,7 +3,7 @@ package pers.acp.admin.oauth.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.BaseDomain;
+import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.repo.UserRepository;
 
@@ -13,7 +13,7 @@ import pers.acp.admin.oauth.repo.UserRepository;
  */
 @Service
 @Transactional(readOnly = true)
-public class UserDomain extends BaseDomain {
+public class UserDomain extends OauthBaseDomain {
 
     @Autowired
     public UserDomain(UserRepository userRepository) {
