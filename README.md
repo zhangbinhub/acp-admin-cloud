@@ -150,4 +150,3 @@ gradle全局参数：
 自行编写 dockerfile，使用命令单独执行或使用 docker-compose 批量执行，请自行百度
 ## 六、系统初始化
 > - 执行 InitData 单元测试
-> - 执行时需将 pers.acp.admin.oauth.domain.SecurityClientDetailsService.init() 前的 @PostConstruct 注解暂时注释
