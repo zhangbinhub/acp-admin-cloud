@@ -21,7 +21,7 @@ import java.util.List;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(OauthApi.oauthBasePath)
+@RequestMapping(OauthApi.basePath)
 @Api("菜单信息")
 public class MenuController extends BaseController {
 

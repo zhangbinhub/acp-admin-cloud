@@ -29,7 +29,7 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(OauthApi.oauthBasePath)
+@RequestMapping(OauthApi.basePath)
 @Api("应用信息")
 public class ApplicationController extends BaseController {
 

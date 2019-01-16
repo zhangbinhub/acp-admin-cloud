@@ -8,15 +8,15 @@ public interface ModuleFuncCode {
 
     String sysConfig = "sys_config";
 
-    String paramConfig = "param_config";
+    String runtimeConfig = "runtime_config";
 
-    String paramAdd = "param_add";
+    String runtimeAdd = "runtime_add";
 
-    String paramDelete = "param_delete";
+    String runtimeDelete = "runtime_delete";
 
-    String paramUpdate = "param_update";
+    String runtimeUpdate = "runtime_update";
 
-    String paramQuery = "param_query";
+    String runtimeQuery = "runtime_query";
 
     String appConfig = "app_config";
 
@@ -29,5 +29,45 @@ public interface ModuleFuncCode {
     String appQuery = "app_query";
 
     String appUpdateSecret = "app_update_secret";
+
+    String orgConfig = "org_config";
+
+    String orgAdd = "org_add";
+
+    String orgDelete = "org_delete";
+
+    String orgUpdate = "org_update";
+
+    String orgQuery = "org_query";
+
+    String roleConfig = "role_config";
+
+    String roleAdd = "role_add";
+
+    String roleDelete = "role_delete";
+
+    String roleUpdate = "role_update";
+
+    String roleQuery = "role_query";
+
+    String authConfig = "auth_config";
+
+    String authAdd = "auth_add";
+
+    String authDelete = "auth_delete";
+
+    String authUpdate = "auth_update";
+
+    String authQuery = "auth_query";
+
+    String userConfig = "user_config";
+
+    String userAdd = "user_add";
+
+    String userDelete = "user_delete";
+
+    String userUpdate = "user_update";
+
+    String userQuery = "user_query";
 
 }

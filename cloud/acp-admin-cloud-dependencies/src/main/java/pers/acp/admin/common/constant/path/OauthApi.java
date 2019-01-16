@@ -6,7 +6,7 @@ package pers.acp.admin.common.constant.path;
  */
 public interface OauthApi {
 
-    String oauthBasePath = "/oauth";
+    String basePath = "/oauth";
 
     String currUser = "/userinfo";
 
@@ -18,12 +18,16 @@ public interface OauthApi {
 
     String roleConfig = "/role";
 
+    String roleCodes = roleConfig + "/rulecodes";
+
     String authConfig = "/auth";
+
+    String moduleFuncCodes = authConfig + "/modulefunccodes";
 
     String userConfig = "/user";
 
     String orgConfig = "/org";
 
-    String paramConfig = "/param";
+    String runtimeConfig = "/runtime";
 
 }

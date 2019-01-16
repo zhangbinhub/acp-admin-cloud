@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
-import pers.acp.admin.common.permission.ParamConfigExpression;
+import pers.acp.admin.common.permission.RuntimeConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.common.constant.path.OauthApi;
@@ -31,14 +31,14 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(OauthApi.oauthBasePath)
+@RequestMapping(OauthApi.basePath)
 @Api("运行参数配置")
-public class ParamController extends BaseController {
+public class RuntiimeController extends BaseController {
 
     private final RuntimeConfigDomain runtimeConfigDomain;
 
     @Autowired
-    public ParamController(RuntimeConfigDomain runtimeConfigDomain) {
+    public RuntiimeController(RuntimeConfigDomain runtimeConfigDomain) {
         this.runtimeConfigDomain = runtimeConfigDomain;
     }
 
@@ -48,14 +48,14 @@ public class ParamController extends BaseController {
             @ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig.class),
             @ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO.class)
     })
-    @PreAuthorize(ParamConfigExpression.paramAdd)
-    @PutMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO paramPO, BindingResult bindingResult) throws ServerException {
+    @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
+    @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO runtimePO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        paramPO.setEnabled(paramPO.getEnabled() == null ? true : paramPO.getEnabled());
-        return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfigDomain.doCreate(paramPO));
+        runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
+        return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfigDomain.doCreate(runtimePO));
     }
 
     @ApiOperation(value = "删除指定的参数信息")
@@ -65,8 +65,8 @@ public class ParamController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PreAuthorize(ParamConfigExpression.paramDelete)
-    @DeleteMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize(RuntimeConfigExpression.runtimeDelete)
+    @DeleteMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         runtimeConfigDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
@@ -79,14 +79,14 @@ public class ParamController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO.class)
     })
-    @PreAuthorize(ParamConfigExpression.paramUpdate)
-    @PatchMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> update(@RequestBody ParamPO paramPO) throws ServerException {
-        if (CommonTools.isNullStr(paramPO.getId())) {
+    @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
+    @PatchMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RuntimeConfig> update(@RequestBody ParamPO runtimePO) throws ServerException {
+        if (CommonTools.isNullStr(runtimePO.getId())) {
             throw new ServerException("配置ID不能为空");
         }
-        paramPO.setEnabled(paramPO.getEnabled() == null ? true : paramPO.getEnabled());
-        return ResponseEntity.ok(runtimeConfigDomain.doUpdate(paramPO));
+        runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
+        return ResponseEntity.ok(runtimeConfigDomain.doUpdate(runtimePO));
     }
 
     @ApiOperation(value = "查询参数信息列表",
@@ -94,13 +94,13 @@ public class ParamController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PreAuthorize(ParamConfigExpression.paramQuery)
-    @PostMapping(value = OauthApi.paramConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO paramPO) throws ServerException {
-        if (paramPO.getQueryParam() == null) {
+    @PreAuthorize(RuntimeConfigExpression.runtimeQuery)
+    @PostMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO runtimePO) throws ServerException {
+        if (runtimePO.getQueryParam() == null) {
             throw new ServerException("分页查询参数不能为空");
         }
-        return ResponseEntity.ok(runtimeConfigDomain.doQuery(paramPO));
+        return ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimePO));
     }
 
     @ApiOperation(value = "获取参数信息",
@@ -111,7 +111,7 @@ public class ParamController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVO.class)
     })
-    @GetMapping(value = OauthApi.paramConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = OauthApi.runtimeConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfigVO> find(@PathVariable String name) throws ServerException {
         RuntimeConfig runtimeConfig = runtimeConfigDomain.findByName(name);
         if (runtimeConfig == null) {

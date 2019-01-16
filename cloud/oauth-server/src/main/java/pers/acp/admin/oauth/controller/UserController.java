@@ -24,7 +24,7 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(OauthApi.oauthBasePath)
+@RequestMapping(OauthApi.basePath)
 @Api("用户信息")
 public class UserController extends BaseController {
 
