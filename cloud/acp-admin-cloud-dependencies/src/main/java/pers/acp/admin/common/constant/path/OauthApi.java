@@ -20,9 +20,11 @@ public interface OauthApi {
 
     String roleCodes = roleConfig + "/rulecodes";
 
-    String authConfig = "/auth";
+    String menuConfig = "/menu";
 
-    String moduleFuncCodes = authConfig + "/modulefunccodes";
+    String moduleFuncConfig = "/modulefunc";
+
+    String moduleFuncCodes = "/modulefunccodes";
 
     String userConfig = "/user";
 

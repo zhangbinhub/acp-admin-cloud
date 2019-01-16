@@ -15,11 +15,12 @@ import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.common.permission.AuthConfigExpression;
 import pers.acp.admin.oauth.domain.MenuDomain;
 import pers.acp.admin.oauth.domain.ModuleFuncDomain;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.admin.oauth.entity.Menu;
 import pers.acp.springcloud.common.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,12 @@ public class AuthController extends BaseController {
     @GetMapping(value = OauthApi.moduleFuncCodes, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<String>> getModuleFuncCode() {
         return ResponseEntity.ok(moduleFuncCodeList);
+    }
+
+    @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
+    @GetMapping(value = OauthApi.currMenu, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Menu>> menuList(Principal user) {
+        return ResponseEntity.ok(menuDomain.getMenuList(user.getName()));
     }
 
 }
