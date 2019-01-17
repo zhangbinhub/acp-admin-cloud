@@ -78,7 +78,11 @@ public class OrganizationDomain extends OauthBaseDomain {
     @Transactional
     public void doDelete(String loginNo, List<String> idList) throws ServerException {
         if (isNotPermit(loginNo, idList.toArray(new String[]{}))) {
-            throw new ServerException("没有权限做此操作，请联系系统管理员");
+            throw new ServerException("没有权限做此操作，请联系系统管理员；存在下级机构，不允许删除；");
+        }
+        List<Organization> organizationList = organizationRepository.findByParentidIn(idList);
+        if (!organizationList.isEmpty()) {
+            throw new ServerException("存在下级机构，不允许删除");
         }
         organizationRepository.deleteByIdIn(idList);
     }

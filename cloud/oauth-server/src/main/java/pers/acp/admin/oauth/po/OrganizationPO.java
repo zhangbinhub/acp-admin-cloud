@@ -70,7 +70,7 @@ public class OrganizationPO {
     private String name;
 
     @ApiModelProperty(value = "机构编码", position = 2)
-    private String code;
+    private String code = "";
 
     @ApiModelProperty(value = "上级机构ID", required = true, position = 3)
     @NotBlank(message = "上级机构ID不能为空")

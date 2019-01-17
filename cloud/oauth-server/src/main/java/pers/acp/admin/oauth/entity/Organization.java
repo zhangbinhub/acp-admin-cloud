@@ -89,7 +89,7 @@ public class Organization {
 
     @Column(length = 100, nullable = false)
     @ApiModelProperty("机构编码")
-    private String code;
+    private String code = "";
 
     @Column(length = 36, nullable = false)
     @ApiModelProperty("上级机构ID")

@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface OrganizationRepository extends OauthBaseRepository<Organization, String> {
 
+    List<Organization> findByParentidIn(List<String> idList);
+
     void deleteByIdIn(List<String> idList);
 
 }
