@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  * @since JDK 11
  */
 @ApiModel("运行配置参数")
-public class ParamPO {
+public class RuntimePO {
 
     public String getId() {
         return id;

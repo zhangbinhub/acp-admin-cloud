@@ -17,6 +17,7 @@ import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -47,6 +48,21 @@ public class UserController extends BaseController {
             throw new ServerException("找不到用户信息");
         } else {
             return ResponseEntity.ok(userInfo);
+        }
+    }
+
+    @ApiOperation(value = "获取可管理的用户信息列表",
+            notes = "根据当前登录的用户信息，获取可管理的用户信息列表")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
+    })
+    @GetMapping(value = OauthApi.modifiableUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<User>> modifiableUser(Principal user) throws ServerException {
+        User userInfo = userDomain.findCurrUserInfo(user.getName());
+        if (userInfo == null) {
+            throw new ServerException("找不到用户信息");
+        } else {
+            return ResponseEntity.ok(userDomain.findModifiableUserList(userInfo));
         }
     }
 

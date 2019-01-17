@@ -10,6 +10,8 @@ public interface OauthApi {
 
     String currUser = "/userinfo";
 
+    String modifiableUser = "/moduserlist";
+
     String currMenu = "/menulist";
 
     String appConfig = "/app";

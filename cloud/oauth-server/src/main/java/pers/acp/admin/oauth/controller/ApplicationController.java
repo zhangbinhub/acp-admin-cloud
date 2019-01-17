@@ -100,6 +100,9 @@ public class ApplicationController extends BaseController {
     }
 
     @ApiOperation(value = "更新应用密钥")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "appId", value = "应用id", required = true, paramType = "path", dataType = "String")
+    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })

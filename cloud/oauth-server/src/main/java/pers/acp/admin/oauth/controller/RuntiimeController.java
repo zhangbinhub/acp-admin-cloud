@@ -17,7 +17,7 @@ import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
-import pers.acp.admin.oauth.po.ParamPO;
+import pers.acp.admin.oauth.po.RuntimePO;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -50,7 +50,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid ParamPO runtimePO, BindingResult bindingResult) throws ServerException {
+    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -81,7 +81,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
     @PatchMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> update(@RequestBody ParamPO runtimePO) throws ServerException {
+    public ResponseEntity<RuntimeConfig> update(@RequestBody RuntimePO runtimePO) throws ServerException {
         if (CommonTools.isNullStr(runtimePO.getId())) {
             throw new ServerException("配置ID不能为空");
         }
@@ -96,7 +96,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeQuery)
     @PostMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody ParamPO runtimePO) throws ServerException {
+    public ResponseEntity<Page<RuntimeConfig>> query(@RequestBody RuntimePO runtimePO) throws ServerException {
         if (runtimePO.getQueryParam() == null) {
             throw new ServerException("分页查询参数不能为空");
         }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
-import pers.acp.admin.oauth.po.ParamPO;
+import pers.acp.admin.oauth.po.RuntimePO;
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
@@ -39,30 +39,30 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
     }
 
     @Transactional
-    public RuntimeConfig doCreate(ParamPO paramPO) throws ServerException {
-        Optional<RuntimeConfig> runtimeConfigOptional = runtimeConfigRepository.findByName(paramPO.getName());
+    public RuntimeConfig doCreate(RuntimePO runtimePO) throws ServerException {
+        Optional<RuntimeConfig> runtimeConfigOptional = runtimeConfigRepository.findByName(runtimePO.getName());
         if (runtimeConfigOptional.isPresent()) {
             throw new ServerException("参数信息已存在");
         }
         RuntimeConfig runtimeConfig = new RuntimeConfig();
-        runtimeConfig.setName(paramPO.getName());
-        runtimeConfig.setValue(paramPO.getValue());
-        runtimeConfig.setConfigDes(paramPO.getConfigDes());
-        runtimeConfig.setEnabled(paramPO.getEnabled());
+        runtimeConfig.setName(runtimePO.getName());
+        runtimeConfig.setValue(runtimePO.getValue());
+        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
+        runtimeConfig.setEnabled(runtimePO.getEnabled());
         runtimeConfig.setCovert(true);
         return runtimeConfigRepository.save(runtimeConfig);
     }
 
     @Transactional
-    public RuntimeConfig doUpdate(ParamPO paramPO) throws ServerException {
-        Optional<RuntimeConfig> runtimeConfigOptional = runtimeConfigRepository.findById(paramPO.getId());
+    public RuntimeConfig doUpdate(RuntimePO runtimePO) throws ServerException {
+        Optional<RuntimeConfig> runtimeConfigOptional = runtimeConfigRepository.findById(runtimePO.getId());
         if (runtimeConfigOptional.isEmpty()) {
             throw new ServerException("找不到参数信息");
         }
         RuntimeConfig runtimeConfig = runtimeConfigOptional.get();
-        runtimeConfig.setValue(paramPO.getValue());
-        runtimeConfig.setConfigDes(paramPO.getConfigDes());
-        runtimeConfig.setEnabled(paramPO.getEnabled());
+        runtimeConfig.setValue(runtimePO.getValue());
+        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
+        runtimeConfig.setEnabled(runtimePO.getEnabled());
         return runtimeConfigRepository.save(runtimeConfig);
     }
 
@@ -71,20 +71,20 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         runtimeConfigRepository.deleteByIdInAndCovert(idList, true);
     }
 
-    public Page<RuntimeConfig> doQuery(ParamPO paramPO) {
+    public Page<RuntimeConfig> doQuery(RuntimePO runtimePO) {
         return runtimeConfigRepository.findAll((Specification<RuntimeConfig>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            if (!CommonTools.isNullStr(paramPO.getName())) {
-                predicateList.add(criteriaBuilder.like(root.get("name").as(String.class), "%" + paramPO.getName() + "%"));
+            if (!CommonTools.isNullStr(runtimePO.getName())) {
+                predicateList.add(criteriaBuilder.like(root.get("name").as(String.class), "%" + runtimePO.getName() + "%"));
             }
-            if (!CommonTools.isNullStr(paramPO.getValue())) {
-                predicateList.add(criteriaBuilder.like(root.get("value").as(String.class), "%" + paramPO.getValue() + "%"));
+            if (!CommonTools.isNullStr(runtimePO.getValue())) {
+                predicateList.add(criteriaBuilder.like(root.get("value").as(String.class), "%" + runtimePO.getValue() + "%"));
             }
-            if (paramPO.getEnabled() != null) {
-                predicateList.add(criteriaBuilder.equal(root.get("enabled"), paramPO.getEnabled()));
+            if (runtimePO.getEnabled() != null) {
+                predicateList.add(criteriaBuilder.equal(root.get("enabled"), runtimePO.getEnabled()));
             }
             return criteriaBuilder.and(predicateList.toArray(new Predicate[]{}));
-        }, buildPageRequest(paramPO.getQueryParam()));
+        }, buildPageRequest(runtimePO.getQueryParam()));
     }
 
 }

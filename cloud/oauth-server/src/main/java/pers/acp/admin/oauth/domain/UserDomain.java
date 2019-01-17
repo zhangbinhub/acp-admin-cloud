@@ -7,6 +7,8 @@ import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.repo.UserRepository;
 
+import java.util.List;
+
 /**
  * @author zhang by 19/12/2018
  * @since JDK 11
@@ -23,6 +25,10 @@ public class UserDomain extends OauthBaseDomain {
     @Transactional
     public User doSaveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public List<User> findModifiableUserList(User currUser) {
+        return userRepository.findByLevelsGreaterThan(currUser.getLevels());
     }
 
 }

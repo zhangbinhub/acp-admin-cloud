@@ -10,4 +10,7 @@ import java.util.List;
  * @since JDK 11
  */
 public interface OrganizationRepository extends OauthBaseRepository<Organization, String> {
+
+    void deleteByIdIn(List<String> idList);
+
 }

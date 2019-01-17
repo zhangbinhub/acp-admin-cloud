@@ -3,6 +3,7 @@ package pers.acp.admin.oauth.repo;
 import pers.acp.admin.oauth.base.OauthBaseRepository;
 import pers.acp.admin.oauth.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,5 +13,9 @@ import java.util.Optional;
 public interface UserRepository extends OauthBaseRepository<User, String> {
 
     Optional<User> findByLoginno(String loginno);
+
+    List<User> findByIdIn(List<String> idList);
+
+    List<User> findByLevelsGreaterThan(int currLevels);
 
 }
