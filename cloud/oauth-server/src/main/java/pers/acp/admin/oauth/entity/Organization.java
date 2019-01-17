@@ -1,10 +1,15 @@
 package pers.acp.admin.oauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author zhangbin by 2018-1-17 16:39
@@ -39,14 +44,6 @@ public class Organization {
         this.code = code;
     }
 
-    public int getLevels() {
-        return levels;
-    }
-
-    public void setLevels(int levels) {
-        this.levels = levels;
-    }
-
     public String getParentid() {
         return parentid;
     }
@@ -61,6 +58,22 @@ public class Organization {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public List<Organization> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Organization> children) {
+        this.children = children;
+    }
+
+    public Set<User> getUserSet() {
+        return userSet;
+    }
+
+    public void setUserSet(Set<User> userSet) {
+        this.userSet = userSet;
     }
 
     @Id
@@ -78,10 +91,6 @@ public class Organization {
     @ApiModelProperty("机构编码")
     private String code;
 
-    @Column(nullable = false)
-    @ApiModelProperty("机构级别")
-    private int levels;
-
     @Column(length = 36, nullable = false)
     @ApiModelProperty("上级机构ID")
     private String parentid = "";
@@ -89,5 +98,17 @@ public class Organization {
     @Column(nullable = false)
     @ApiModelProperty("序号")
     private int sort;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "t_user_organization_set",
+            joinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
+    @ApiModelProperty("关联用户")
+    private Set<User> userSet = new HashSet<>();
+
+    @Transient
+    @ApiModelProperty("子机构列表")
+    private List<Organization> children = new ArrayList<>();
 
 }

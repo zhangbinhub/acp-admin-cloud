@@ -98,6 +98,14 @@ public class User {
         this.organizationSet = organizationSet;
     }
 
+    public Set<Organization> getOrganizationMngSet() {
+        return organizationMngSet;
+    }
+
+    public void setOrganizationMngSet(Set<Organization> organizationMngSet) {
+        this.organizationMngSet = organizationMngSet;
+    }
+
     public Set<Role> getRoleSet() {
         return roleSet;
     }
@@ -153,10 +161,17 @@ public class User {
     private Set<Organization> organizationSet = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "t_user_organization_mng_set",
+            joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")})
+    @ApiModelProperty("可管理的机构")
+    private Set<Organization> organizationMngSet = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "t_user_role_set",
             joinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")})
-    @ApiModelProperty("归属角色")
+    @ApiModelProperty("所属角色")
     private Set<Role> roleSet = new HashSet<>();
 
 }
