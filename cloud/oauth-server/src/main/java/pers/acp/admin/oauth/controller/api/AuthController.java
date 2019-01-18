@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller;
+package pers.acp.admin.oauth.controller.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,6 @@ import pers.acp.springcloud.common.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +68,8 @@ public class AuthController extends BaseController {
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = OauthApi.currMenu, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Menu>> menuList(Principal user) {
-        return ResponseEntity.ok(menuDomain.getMenuList(user.getName()));
+    public ResponseEntity<List<Menu>> menuList(OAuth2Authentication user) {
+        return ResponseEntity.ok(menuDomain.getMenuList(user.getOAuth2Request().getClientId(), user.getName()));
     }
 
 }

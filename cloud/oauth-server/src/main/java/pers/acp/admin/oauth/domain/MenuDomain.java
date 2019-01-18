@@ -29,12 +29,22 @@ public class MenuDomain extends OauthBaseDomain {
         this.menuRepository = menuRepository;
     }
 
-    public List<Menu> getMenuList(String loginNo) {
+    private void sortMenuList(List<Menu> menuList) {
+        menuList.forEach(menu -> {
+            if (!menu.getChildren().isEmpty()) {
+                sortMenuList(menu.getChildren());
+            }
+        });
+        menuList.sort(Comparator.comparingInt(Menu::getSort));
+    }
+
+    public List<Menu> getMenuList(String appId, String loginNo) {
         List<Menu> result = new ArrayList<>();
         User user = findCurrUserInfo(loginNo);
         if (user != null) {
             Set<String> menuIds = new HashSet<>();
             Map<String, Menu> menuMap = user.getRoleSet().stream()
+                    .filter(role -> role.getAppid().equals(appId))
                     .map(Role::getMenuSet)
                     .flatMap(Collection::parallelStream)
                     .filter(menu -> {
@@ -56,15 +66,6 @@ public class MenuDomain extends OauthBaseDomain {
         }
         sortMenuList(result);
         return result;
-    }
-
-    private void sortMenuList(List<Menu> menuList) {
-        menuList.forEach(menu -> {
-            if (!menu.getChildren().isEmpty()) {
-                sortMenuList(menu.getChildren());
-            }
-        });
-        menuList.sort(Comparator.comparingInt(Menu::getSort));
     }
 
 }

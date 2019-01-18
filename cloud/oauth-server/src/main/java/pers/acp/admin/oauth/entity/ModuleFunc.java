@@ -78,7 +78,7 @@ public class ModuleFunc {
     @ApiModelProperty("模块名称")
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, unique = true, nullable = false)
     @ApiModelProperty("模块编码")
     private String code;
 

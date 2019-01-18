@@ -40,15 +40,15 @@ public interface ModuleFuncCode {
 
     String orgQuery = "org_query";
 
-    String roleConfig = "role_config";
+    String roleConfig = "roleconf_config";
 
-    String roleAdd = "role_add";
+    String roleAdd = "roleconf_add";
 
-    String roleDelete = "role_delete";
+    String roleDelete = "roleconf_delete";
 
-    String roleUpdate = "role_update";
+    String roleUpdate = "roleconf_update";
 
-    String roleQuery = "role_query";
+    String roleQuery = "roleconf_query";
 
     String authConfig = "auth_config";
 

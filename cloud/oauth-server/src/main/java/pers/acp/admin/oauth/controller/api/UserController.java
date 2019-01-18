@@ -1,9 +1,10 @@
-package pers.acp.admin.oauth.controller;
+package pers.acp.admin.oauth.controller.api;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
@@ -16,7 +17,6 @@ import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,7 +42,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
     @GetMapping(value = OauthApi.currUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> userinfo(Principal user) throws ServerException {
+    public ResponseEntity<User> userinfo(OAuth2Authentication user) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
@@ -57,7 +57,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
     @GetMapping(value = OauthApi.modifiableUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<User>> modifiableUser(Principal user) throws ServerException {
+    public ResponseEntity<List<User>> modifiableUser(OAuth2Authentication user) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
@@ -72,7 +72,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     })
     @RequestMapping(value = OauthApi.currUser, method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> updateCurrUser(Principal user, @RequestBody @Valid UserInfoPO userInfoPO, BindingResult bindingResult) throws ServerException {
+    public ResponseEntity<User> updateCurrUser(OAuth2Authentication user, @RequestBody @Valid UserInfoPO userInfoPO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }

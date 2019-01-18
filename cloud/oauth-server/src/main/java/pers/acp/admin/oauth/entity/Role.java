@@ -105,7 +105,7 @@ public class Role {
     @ApiModelProperty("角色名称")
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, unique = true, nullable = false)
     @ApiModelProperty("角色编码")
     private String code;
 

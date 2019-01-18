@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller;
+package pers.acp.admin.oauth.controller.api;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
@@ -21,7 +22,6 @@ import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,7 +55,7 @@ public class OrgController extends BaseController {
     })
     @PreAuthorize(OrgConfigExpression.orgAdd)
     @PutMapping(value = OauthApi.orgConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Organization> add(Principal user, @RequestBody @Valid OrganizationPO organizationPO, BindingResult bindingResult) throws ServerException {
+    public ResponseEntity<Organization> add(OAuth2Authentication user, @RequestBody @Valid OrganizationPO organizationPO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -71,7 +71,7 @@ public class OrgController extends BaseController {
     })
     @PreAuthorize(OrgConfigExpression.orgDelete)
     @DeleteMapping(value = OauthApi.orgConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> delete(Principal user, @RequestBody List<String> idList) throws ServerException {
+    public ResponseEntity<InfoVO> delete(OAuth2Authentication user, @RequestBody List<String> idList) throws ServerException {
         organizationDomain.doDelete(user.getName(), idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
@@ -85,7 +85,7 @@ public class OrgController extends BaseController {
     })
     @PreAuthorize(OrgConfigExpression.orgUpdate)
     @PatchMapping(value = OauthApi.orgConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Organization> update(Principal user, @RequestBody @Valid OrganizationPO organizationPO) throws ServerException {
+    public ResponseEntity<Organization> update(OAuth2Authentication user, @RequestBody @Valid OrganizationPO organizationPO) throws ServerException {
         if (CommonTools.isNullStr(organizationPO.getId())) {
             throw new ServerException("ID不能为空");
         }
