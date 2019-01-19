@@ -104,7 +104,6 @@ public class Organization {
     @JoinTable(name = "t_user_organization_set",
             joinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
-    @ApiModelProperty("关联用户")
     private Set<User> userSet = new HashSet<>();
 
     @Transient

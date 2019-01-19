@@ -122,7 +122,6 @@ public class Role {
     @JoinTable(name = "t_user_role_set",
             joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
-    @ApiModelProperty("关联用户")
     private Set<User> userSet = new HashSet<>();
 
     @JsonIgnore
