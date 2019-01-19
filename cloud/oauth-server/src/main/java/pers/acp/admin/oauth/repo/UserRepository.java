@@ -14,8 +14,6 @@ public interface UserRepository extends OauthBaseRepository<User, String> {
 
     Optional<User> findByLoginno(String loginno);
 
-    List<User> findByIdIn(List<String> idList);
-
     List<User> findByLevelsGreaterThan(int currLevels);
 
 }

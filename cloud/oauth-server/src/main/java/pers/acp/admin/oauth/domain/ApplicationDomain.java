@@ -84,4 +84,8 @@ public class ApplicationDomain extends OauthBaseDomain {
         }, buildPageRequest(applicationPO.getQueryParam()));
     }
 
+    public List<Application> getAppList() {
+        return applicationRepository.findAllByOrderByAppnameAsc();
+    }
+
 }

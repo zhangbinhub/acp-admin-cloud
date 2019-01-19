@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pers.acp.admin.common.base.BaseController;
@@ -17,6 +18,9 @@ import pers.acp.admin.common.permission.AuthConfigExpression;
 import pers.acp.admin.oauth.domain.MenuDomain;
 import pers.acp.admin.oauth.domain.ModuleFuncDomain;
 import pers.acp.admin.oauth.entity.Menu;
+import pers.acp.admin.oauth.entity.ModuleFunc;
+import pers.acp.core.CommonTools;
+import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
 
 import javax.annotation.PostConstruct;
@@ -68,8 +72,28 @@ public class AuthController extends BaseController {
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = OauthApi.currMenu, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Menu>> menuList(OAuth2Authentication user) {
+    public ResponseEntity<List<Menu>> currMenuList(OAuth2Authentication user) {
         return ResponseEntity.ok(menuDomain.getMenuList(user.getOAuth2Request().getClientId(), user.getName()));
+    }
+
+    @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表")
+    @PreAuthorize(AuthConfigExpression.authConfig)
+    @GetMapping(value = OauthApi.menuList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Menu>> menuList(@PathVariable String appId) throws ServerException {
+        if (CommonTools.isNullStr(appId)) {
+            throw new ServerException("应用ID不能为空");
+        }
+        return ResponseEntity.ok(menuDomain.getMenuListByAppId(appId));
+    }
+
+    @ApiOperation(value = "获取指定应用下的模块功能列表", notes = "查询指定应用的模块功能列表")
+    @PreAuthorize(AuthConfigExpression.authConfig)
+    @GetMapping(value = OauthApi.moduleFuncList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<ModuleFunc>> moduleFuncList(@PathVariable String appId) throws ServerException {
+        if (CommonTools.isNullStr(appId)) {
+            throw new ServerException("应用ID不能为空");
+        }
+        return ResponseEntity.ok(moduleFuncDomain.getModuleFuncList(appId));
     }
 
 }

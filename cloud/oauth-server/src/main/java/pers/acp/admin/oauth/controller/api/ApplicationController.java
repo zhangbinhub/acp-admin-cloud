@@ -99,6 +99,12 @@ public class ApplicationController extends BaseController {
         return ResponseEntity.ok(applicationDomain.doQuery(applicationPO));
     }
 
+    @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")
+    @GetMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Application>> appList() {
+        return ResponseEntity.ok(applicationDomain.getAppList());
+    }
+
     @ApiOperation(value = "更新应用密钥")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用id", required = true, paramType = "path", dataType = "String")

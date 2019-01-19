@@ -76,7 +76,7 @@ public class OrganizationPO {
     @NotBlank(message = "上级机构ID不能为空")
     private String parentid;
 
-    @ApiModelProperty(value = "序号", position = 4)
+    @ApiModelProperty(value = "序号", required = true, position = 4)
     private int sort;
 
     @ApiModelProperty(value = "关联用户ID", position = 5)

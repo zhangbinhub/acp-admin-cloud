@@ -13,4 +13,6 @@ public interface ApplicationRepository extends OauthBaseRepository<Application, 
 
     void deleteByIdInAndCovert(List<String> idList, boolean covert);
 
+    List<Application> findAllByOrderByAppnameAsc();
+
 }

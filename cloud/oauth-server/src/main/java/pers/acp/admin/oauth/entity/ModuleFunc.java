@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhangbin by 2018-1-17 17:10
@@ -63,6 +65,14 @@ public class ModuleFunc {
         this.covert = covert;
     }
 
+    public List<ModuleFunc> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ModuleFunc> children) {
+        this.children = children;
+    }
+
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -89,5 +99,9 @@ public class ModuleFunc {
     @Column(nullable = false)
     @ApiModelProperty("是否可删除")
     private boolean covert = true;
+
+    @Transient
+    @ApiModelProperty("子功能列表")
+    private List<ModuleFunc> children = new ArrayList<>();
 
 }

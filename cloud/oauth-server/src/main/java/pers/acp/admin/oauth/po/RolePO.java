@@ -90,23 +90,22 @@ public class RolePO {
     @ApiModelProperty("角色ID，更新时必填")
     private String id;
 
-    @ApiModelProperty(value = "应用ID", position = 1)
-    @NotBlank(message = "应用ID不能为空")
+    @ApiModelProperty(value = "应用ID，更新时可不填", required = true, position = 1)
     private String appid;
 
-    @ApiModelProperty(value = "角色名称", position = 2)
+    @ApiModelProperty(value = "角色名称", required = true, position = 2)
     @NotBlank(message = "角色名称不能为空")
     private String name;
 
-    @ApiModelProperty(value = "角色编码", position = 3)
+    @ApiModelProperty(value = "角色编码", required = true, position = 3)
     @NotBlank(message = "角色编码不能为空")
     private String code;
 
-    @ApiModelProperty(value = "角色级别", position = 4)
+    @ApiModelProperty(value = "角色级别", required = true, position = 4)
     @Min(value = 1, message = "角色级别数值最小为 1")
     private int levels = 1;
 
-    @ApiModelProperty(value = "序号", position = 5)
+    @ApiModelProperty(value = "序号", required = true, position = 5)
     private int sort = 0;
 
     @ApiModelProperty(value = "关联用户ID", position = 5)

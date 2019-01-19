@@ -13,6 +13,11 @@ public interface RoleCode {
     String prefix = "ROLE_";
 
     /**
+     * 新建角色时默认值
+     */
+    String OTHER = "OTHER";
+
+    /**
      * 超级管理员
      */
     String ADMIN = "ADMIN";

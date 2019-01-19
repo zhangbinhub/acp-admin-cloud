@@ -38,19 +38,17 @@ public class OrganizationDomain extends OauthBaseDomain {
         organization.setCode(organizationPO.getCode());
         organization.setSort(organizationPO.getSort());
         organization.setParentid(organizationPO.getParentid());
-        organization.setUserSet(new HashSet<>(userRepository.findByIdIn(organizationPO.getUserIds())));
+        organization.setUserSet(new HashSet<>(userRepository.findAllById(organizationPO.getUserIds())));
         return organizationRepository.save(organization);
     }
 
-    private void sortOrganizationList(List<Organization> organizationList) {
-        organizationList.forEach(organization -> {
-            if (!organization.getChildren().isEmpty()) {
-                sortOrganizationList(organization.getChildren());
-            }
-        });
-        organizationList.sort(Comparator.comparingInt(Organization::getSort));
-    }
-
+    /**
+     * 是否有编辑权限
+     *
+     * @param loginNo 登录帐号
+     * @param orgIds  机构ID
+     * @return true|false
+     */
     private boolean isNotPermit(String loginNo, String... orgIds) {
         User user = findCurrUserInfo(loginNo);
         if (user != null) {
@@ -102,18 +100,14 @@ public class OrganizationDomain extends OauthBaseDomain {
 
     public List<Organization> getOrgList() {
         List<Organization> result = new ArrayList<>();
-        List<Organization> organizationList = organizationRepository.findAll();
-        if (organizationList.size() > 0) {
-            Map<String, Organization> organizationMap = organizationList.stream().collect(Collectors.toMap(Organization::getId, menu -> menu));
-            organizationMap.forEach((id, organization) -> {
-                if (organizationMap.containsKey(organization.getParentid())) {
-                    organizationMap.get(organization.getParentid()).getChildren().add(organization);
-                } else {
-                    result.add(organization);
-                }
-            });
-        }
-        sortOrganizationList(result);
+        Map<String, Organization> organizationMap = organizationRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Organization::getId, menu -> menu));
+        organizationMap.forEach((id, organization) -> {
+            if (organizationMap.containsKey(organization.getParentid())) {
+                organizationMap.get(organization.getParentid()).getChildren().add(organization);
+            } else {
+                result.add(organization);
+            }
+        });
         return result;
     }
 

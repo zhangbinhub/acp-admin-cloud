@@ -68,4 +68,17 @@ public class MenuDomain extends OauthBaseDomain {
         return result;
     }
 
+    public List<Menu> getMenuListByAppId(String appId) {
+        List<Menu> result = new ArrayList<>();
+        Map<String, Menu> menuMap = menuRepository.findByAppidOrderBySortAsc(appId).stream().collect(Collectors.toMap(Menu::getId, menu -> menu));
+        menuMap.forEach((id, menu) -> {
+            if (menuMap.containsKey(menu.getParentid())) {
+                menuMap.get(menu.getParentid()).getChildren().add(menu);
+            } else {
+                result.add(menu);
+            }
+        });
+        return result;
+    }
+
 }
