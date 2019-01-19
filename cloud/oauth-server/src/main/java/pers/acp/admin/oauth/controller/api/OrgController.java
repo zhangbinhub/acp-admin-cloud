@@ -99,7 +99,7 @@ public class OrgController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
-    @PreAuthorize(OrgConfigExpression.orgConfig)
+    @PreAuthorize(OrgConfigExpression.orgQuery)
     @GetMapping(value = OauthApi.orgConfig + "/{orgId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<OrganizationVO> orgInfo(@PathVariable String orgId) throws ServerException {
         if (CommonTools.isNullStr(orgId)) {

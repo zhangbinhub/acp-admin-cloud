@@ -73,7 +73,7 @@ public class RoleController extends BaseController {
     }
 
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")
-    @PreAuthorize(RoleConfigExpression.roleConfig)
+    @PreAuthorize(RoleConfigExpression.roleQuery)
     @GetMapping(value = OauthApi.roleConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Role>> roleList() {
         return ResponseEntity.ok(roleDomain.getRoleList());
@@ -130,6 +130,9 @@ public class RoleController extends BaseController {
         if (!roleCodeList.contains(rolePO.getCode())) {
             throw new ServerException("角色编码非法，请重新输入");
         }
+        if (CommonTools.isNullStr(rolePO.getId())) {
+            throw new ServerException("ID不能为空");
+        }
         return ResponseEntity.ok(roleDomain.doUpdate(user.getName(), rolePO));
     }
 
@@ -140,7 +143,7 @@ public class RoleController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
-    @PreAuthorize(RoleConfigExpression.roleConfig)
+    @PreAuthorize(RoleConfigExpression.roleQuery)
     @GetMapping(value = OauthApi.roleConfig + "/{roleId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RoleVO> orgInfo(@PathVariable String roleId) throws ServerException {
         if (CommonTools.isNullStr(roleId)) {
