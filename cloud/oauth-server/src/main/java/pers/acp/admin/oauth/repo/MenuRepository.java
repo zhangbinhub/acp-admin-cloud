@@ -11,6 +11,10 @@ import java.util.List;
  */
 public interface MenuRepository extends OauthBaseRepository<Menu, String> {
 
+    List<Menu> findAllByOrderBySortAsc();
+
     List<Menu> findByAppidOrderBySortAsc(String appId);
+
+    void deleteByIdInAndCovert(List<String> idList, boolean covert);
 
 }

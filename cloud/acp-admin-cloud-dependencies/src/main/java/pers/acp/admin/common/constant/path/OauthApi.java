@@ -24,6 +24,10 @@ public interface OauthApi {
 
     String authConfig = "/auth";
 
+    String menuConfig = authConfig + "/menu";
+
+    String moduleFuncConfig = authConfig + "/modulefunc";
+
     String moduleFuncCodes = authConfig + "/modulefunccodes";
 
     String menuList = authConfig + "/menulist";

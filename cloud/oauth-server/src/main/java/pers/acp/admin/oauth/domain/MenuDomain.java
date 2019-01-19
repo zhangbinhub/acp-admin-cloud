@@ -7,8 +7,12 @@ import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Menu;
 import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.entity.User;
+import pers.acp.admin.oauth.po.MenuPO;
 import pers.acp.admin.oauth.repo.MenuRepository;
+import pers.acp.admin.oauth.repo.RoleRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
+import pers.acp.admin.oauth.vo.MenuVO;
+import pers.acp.springboot.core.exceptions.ServerException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,11 +25,14 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class MenuDomain extends OauthBaseDomain {
 
+    private final RoleRepository roleRepository;
+
     private final MenuRepository menuRepository;
 
     @Autowired
-    public MenuDomain(UserRepository userRepository, MenuRepository menuRepository) {
+    public MenuDomain(UserRepository userRepository, RoleRepository roleRepository, MenuRepository menuRepository) {
         super(userRepository);
+        this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
     }
 
@@ -79,6 +86,65 @@ public class MenuDomain extends OauthBaseDomain {
             }
         });
         return result;
+    }
+
+    public List<Menu> getAllMenuList() {
+        return menuRepository.findAllByOrderBySortAsc();
+    }
+
+    private Menu doSave(Menu menu, MenuPO menuPO) {
+        menu.setPath(menuPO.getPath());
+        menu.setEnabled(menuPO.isEnabled());
+        menu.setIconType(menuPO.getIconType());
+        menu.setName(menuPO.getName());
+        menu.setParentid(menuPO.getParentid());
+        menu.setOpentype(menuPO.getOpentype());
+        menu.setSort(menuPO.getSort());
+        menu.setRoleSet(new HashSet<>(roleRepository.findAllById(menuPO.getRoleIds())));
+        menu.setCovert(true);
+        return menuRepository.save(menu);
+    }
+
+    @Transactional
+    public Menu doCreate(MenuPO menuPO) {
+        Menu menu = new Menu();
+        menu.setAppid(menuPO.getAppid());
+        return doSave(menu, menuPO);
+    }
+
+    @Transactional
+    public void doDelete(List<String> idList) {
+        menuRepository.deleteByIdInAndCovert(idList, true);
+    }
+
+    @Transactional
+    public Menu doUpdate(MenuPO menuPO) throws ServerException {
+        Optional<Menu> menuOptional = menuRepository.findById(menuPO.getId());
+        if (menuOptional.isEmpty()) {
+            throw new ServerException("找不到菜单信息");
+        }
+        Menu menu = menuOptional.get();
+        return doSave(menu, menuPO);
+    }
+
+    public MenuVO getMenuInfo(String menuId) throws ServerException {
+        Optional<Menu> menuOptional = menuRepository.findById(menuId);
+        if (menuOptional.isEmpty()) {
+            throw new ServerException("找不到菜单信息");
+        }
+        Menu menu = menuOptional.get();
+        MenuVO menuVO = new MenuVO();
+        menuVO.setId(menu.getId());
+        menuVO.setAppid(menu.getAppid());
+        menuVO.setEnabled(menu.isEnabled());
+        menuVO.setIconType(menu.getIconType());
+        menuVO.setName(menu.getName());
+        menuVO.setOpentype(menu.getOpentype());
+        menuVO.setParentid(menu.getParentid());
+        menuVO.setPath(menu.getPath());
+        menuVO.setSort(menu.getSort());
+        menuVO.setRoleIds(menu.getRoleSet().stream().map(Role::getId).collect(Collectors.toList()));
+        return menuVO;
     }
 
 }

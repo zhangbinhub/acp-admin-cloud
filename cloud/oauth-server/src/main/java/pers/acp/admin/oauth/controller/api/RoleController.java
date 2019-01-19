@@ -15,7 +15,6 @@ import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.common.permission.RoleConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.RoleDomain;
-import pers.acp.admin.oauth.entity.Organization;
 import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.po.RolePO;
 import pers.acp.admin.oauth.vo.RoleVO;
@@ -83,7 +82,7 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "新建角色信息",
             notes = "名称、编码、应用ID、级别、序号、关联用户、关联菜单、关联模块功能")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "创建成功", response = Organization.class),
+            @ApiResponse(code = 201, message = "创建成功", response = Role.class),
             @ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO.class)
     })
     @PreAuthorize(RoleConfigExpression.roleAdd)
