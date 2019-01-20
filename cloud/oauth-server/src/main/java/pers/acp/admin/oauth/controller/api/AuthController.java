@@ -129,7 +129,7 @@ public class AuthController extends BaseController {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         if (CommonTools.isNullStr(menuPO.getAppid())) {
-            throw new ServerException("应用ID不能为空");
+            throw new ServerException("应用ID不能为空，请检查");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPO));
     }
@@ -143,11 +143,11 @@ public class AuthController extends BaseController {
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ModuleFunc> addModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
         if (CommonTools.isNullStr(moduleFuncPO.getAppid())) {
             throw new ServerException("应用ID不能为空");
+        }
+        if (bindingResult.hasErrors()) {
+            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPO));
     }

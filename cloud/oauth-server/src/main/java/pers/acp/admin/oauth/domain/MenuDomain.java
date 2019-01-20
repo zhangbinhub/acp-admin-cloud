@@ -36,13 +36,14 @@ public class MenuDomain extends OauthBaseDomain {
         this.menuRepository = menuRepository;
     }
 
-    private void sortMenuList(List<Menu> menuList) {
+    private List<Menu> sortMenuList(List<Menu> menuList) {
         menuList.forEach(menu -> {
             if (!menu.getChildren().isEmpty()) {
                 sortMenuList(menu.getChildren());
             }
         });
         menuList.sort(Comparator.comparingInt(Menu::getSort));
+        return menuList;
     }
 
     public List<Menu> getMenuList(String appId, String loginNo) {
@@ -71,16 +72,15 @@ public class MenuDomain extends OauthBaseDomain {
                 }
             });
         }
-        sortMenuList(result);
-        return result;
+        return sortMenuList(result);
     }
 
     public List<Menu> getMenuListByAppId(String appId) {
-        return formatToTreeList(menuRepository.findByAppidOrderBySortAsc(appId).stream().collect(Collectors.toMap(Menu::getId, menu -> menu)));
+        return sortMenuList(formatToTreeList(menuRepository.findByAppid(appId).stream().collect(Collectors.toMap(Menu::getId, menu -> menu))));
     }
 
     public List<Menu> getAllMenuList() {
-        return formatToTreeList(menuRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Menu::getId, menu -> menu)));
+        return sortMenuList(formatToTreeList(menuRepository.findAll().stream().collect(Collectors.toMap(Menu::getId, menu -> menu))));
     }
 
     private Menu doSave(Menu menu, MenuPO menuPO) {

@@ -20,6 +20,8 @@ public interface OauthApi {
 
     String roleConfig = "/role";
 
+    String roleList = roleConfig + "/rolelist";
+
     String roleCodes = roleConfig + "/rolecodes";
 
     String authConfig = "/auth";

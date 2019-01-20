@@ -35,12 +35,22 @@ public class ModuleFuncDomain extends OauthBaseDomain {
         this.moduleFuncRepository = moduleFuncRepository;
     }
 
+    private List<ModuleFunc> sortModuleFuncList(List<ModuleFunc> moduleFuncList) {
+        moduleFuncList.forEach(organization -> {
+            if (!organization.getChildren().isEmpty()) {
+                sortModuleFuncList(organization.getChildren());
+            }
+        });
+        moduleFuncList.sort(Comparator.comparing(ModuleFunc::getCode));
+        return moduleFuncList;
+    }
+
     public List<ModuleFunc> getModuleFuncListByAppId(String appId) {
-        return formatToTreeList(moduleFuncRepository.findByAppidOrderByCodeAsc(appId).stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc)));
+        return sortModuleFuncList(formatToTreeList(moduleFuncRepository.findByAppid(appId).stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc))));
     }
 
     public List<ModuleFunc> getAllModuleFuncList() {
-        return formatToTreeList(moduleFuncRepository.findAllByOrderByCodeAsc().stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc)));
+        return sortModuleFuncList(formatToTreeList(moduleFuncRepository.findAll().stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc))));
     }
 
     private ModuleFunc doSave(ModuleFunc moduleFunc, ModuleFuncPO moduleFuncPO) {

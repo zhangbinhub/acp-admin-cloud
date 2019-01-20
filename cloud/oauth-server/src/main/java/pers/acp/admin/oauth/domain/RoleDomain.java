@@ -67,6 +67,10 @@ public class RoleDomain extends OauthBaseDomain {
         return roleRepository.findAllByOrderBySortAsc();
     }
 
+    public List<Role> getRoleListByAppId(String appId) {
+        return roleRepository.findByAppidOrderBySortAsc(appId);
+    }
+
     private Role doSave(Role role, RolePO rolePO) {
         role.setName(rolePO.getName());
         role.setCode(rolePO.getCode());

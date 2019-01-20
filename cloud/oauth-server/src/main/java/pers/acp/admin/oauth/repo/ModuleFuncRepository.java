@@ -11,9 +11,7 @@ import java.util.List;
  */
 public interface ModuleFuncRepository extends OauthBaseRepository<ModuleFunc, String> {
 
-    List<ModuleFunc> findAllByOrderByCodeAsc();
-
-    List<ModuleFunc> findByAppidOrderByCodeAsc(String appId);
+    List<ModuleFunc> findByAppid(String appId);
 
     void deleteByIdInAndCovert(List<String> idList, boolean covert);
 

@@ -33,6 +33,16 @@ public class OrganizationDomain extends OauthBaseDomain {
         this.organizationRepository = organizationRepository;
     }
 
+    private List<Organization> sortOrganizationList(List<Organization> organizationList) {
+        organizationList.forEach(organization -> {
+            if (!organization.getChildren().isEmpty()) {
+                sortOrganizationList(organization.getChildren());
+            }
+        });
+        organizationList.sort(Comparator.comparingInt(Organization::getSort));
+        return organizationList;
+    }
+
     private Organization doSave(Organization organization, OrganizationPO organizationPO) {
         organization.setName(organizationPO.getName());
         organization.setCode(organizationPO.getCode());
@@ -99,7 +109,7 @@ public class OrganizationDomain extends OauthBaseDomain {
     }
 
     public List<Organization> getOrgList() {
-        return formatToTreeList(organizationRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Organization::getId, organization -> organization)));
+        return sortOrganizationList(formatToTreeList(organizationRepository.findAll().stream().collect(Collectors.toMap(Organization::getId, organization -> organization))));
     }
 
     public OrganizationVO getOrgInfo(String orgId) throws ServerException {

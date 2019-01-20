@@ -11,8 +11,6 @@ import java.util.List;
  */
 public interface OrganizationRepository extends OauthBaseRepository<Organization, String> {
 
-    List<Organization> findAllByOrderBySortAsc();
-
     List<Organization> findByParentidIn(List<String> idList);
 
     void deleteByIdIn(List<String> idList);
