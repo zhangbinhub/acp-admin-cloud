@@ -99,16 +99,7 @@ public class OrganizationDomain extends OauthBaseDomain {
     }
 
     public List<Organization> getOrgList() {
-        List<Organization> result = new ArrayList<>();
-        Map<String, Organization> organizationMap = organizationRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Organization::getId, menu -> menu));
-        organizationMap.forEach((id, organization) -> {
-            if (organizationMap.containsKey(organization.getParentid())) {
-                organizationMap.get(organization.getParentid()).getChildren().add(organization);
-            } else {
-                result.add(organization);
-            }
-        });
-        return result;
+        return formartOrgList(organizationRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Organization::getId, organization -> organization)));
     }
 
     public OrganizationVO getOrgInfo(String orgId) throws ServerException {
@@ -125,6 +116,18 @@ public class OrganizationDomain extends OauthBaseDomain {
         organizationVO.setSort(organization.getSort());
         organizationVO.setUserIds(organization.getUserSet().stream().map(User::getId).collect(Collectors.toList()));
         return organizationVO;
+    }
+
+    private List<Organization> formartOrgList(Map<String, Organization> organizationMap) {
+        List<Organization> result = new ArrayList<>();
+        organizationMap.forEach((id, organization) -> {
+            if (organizationMap.containsKey(organization.getParentid())) {
+                organizationMap.get(organization.getParentid()).getChildren().add(organization);
+            } else {
+                result.add(organization);
+            }
+        });
+        return result;
     }
 
 }

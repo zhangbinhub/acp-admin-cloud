@@ -76,20 +76,11 @@ public class MenuDomain extends OauthBaseDomain {
     }
 
     public List<Menu> getMenuListByAppId(String appId) {
-        List<Menu> result = new ArrayList<>();
-        Map<String, Menu> menuMap = menuRepository.findByAppidOrderBySortAsc(appId).stream().collect(Collectors.toMap(Menu::getId, menu -> menu));
-        menuMap.forEach((id, menu) -> {
-            if (menuMap.containsKey(menu.getParentid())) {
-                menuMap.get(menu.getParentid()).getChildren().add(menu);
-            } else {
-                result.add(menu);
-            }
-        });
-        return result;
+        return formatMenuList(menuRepository.findByAppidOrderBySortAsc(appId).stream().collect(Collectors.toMap(Menu::getId, menu -> menu)));
     }
 
     public List<Menu> getAllMenuList() {
-        return menuRepository.findAllByOrderBySortAsc();
+        return formatMenuList(menuRepository.findAllByOrderBySortAsc().stream().collect(Collectors.toMap(Menu::getId, menu -> menu)));
     }
 
     private Menu doSave(Menu menu, MenuPO menuPO) {
@@ -145,6 +136,18 @@ public class MenuDomain extends OauthBaseDomain {
         menuVO.setSort(menu.getSort());
         menuVO.setRoleIds(menu.getRoleSet().stream().map(Role::getId).collect(Collectors.toList()));
         return menuVO;
+    }
+
+    private List<Menu> formatMenuList(Map<String, Menu> menuMap) {
+        List<Menu> result = new ArrayList<>();
+        menuMap.forEach((id, menu) -> {
+            if (menuMap.containsKey(menu.getParentid())) {
+                menuMap.get(menu.getParentid()).getChildren().add(menu);
+            } else {
+                result.add(menu);
+            }
+        });
+        return result;
     }
 
 }

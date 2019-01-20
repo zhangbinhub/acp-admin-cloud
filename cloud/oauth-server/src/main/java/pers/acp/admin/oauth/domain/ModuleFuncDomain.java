@@ -36,20 +36,11 @@ public class ModuleFuncDomain extends OauthBaseDomain {
     }
 
     public List<ModuleFunc> getModuleFuncListByAppId(String appId) {
-        List<ModuleFunc> result = new ArrayList<>();
-        Map<String, ModuleFunc> moduleFuncMap = moduleFuncRepository.findByAppidOrderByCodeAsc(appId).stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc));
-        moduleFuncMap.forEach((id, moduleFunc) -> {
-            if (moduleFuncMap.containsKey(moduleFunc.getParentid())) {
-                moduleFuncMap.get(moduleFunc.getParentid()).getChildren().add(moduleFunc);
-            } else {
-                result.add(moduleFunc);
-            }
-        });
-        return result;
+        return formatModuleFuncList(moduleFuncRepository.findByAppidOrderByCodeAsc(appId).stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc)));
     }
 
     public List<ModuleFunc> getAllModuleFuncList() {
-        return moduleFuncRepository.findAllByOrderByCodeAsc();
+        return formatModuleFuncList(moduleFuncRepository.findAllByOrderByCodeAsc().stream().collect(Collectors.toMap(ModuleFunc::getId, moduleFunc -> moduleFunc)));
     }
 
     private ModuleFunc doSave(ModuleFunc moduleFunc, ModuleFuncPO moduleFuncPO) {
@@ -97,6 +88,18 @@ public class ModuleFuncDomain extends OauthBaseDomain {
         moduleFuncVO.setParentid(moduleFunc.getParentid());
         moduleFuncVO.setRoleIds(moduleFunc.getRoleSet().stream().map(Role::getId).collect(Collectors.toList()));
         return moduleFuncVO;
+    }
+
+    private List<ModuleFunc> formatModuleFuncList(Map<String, ModuleFunc> moduleFuncMap) {
+        List<ModuleFunc> result = new ArrayList<>();
+        moduleFuncMap.forEach((id, moduleFunc) -> {
+            if (moduleFuncMap.containsKey(moduleFunc.getParentid())) {
+                moduleFuncMap.get(moduleFunc.getParentid()).getChildren().add(moduleFunc);
+            } else {
+                result.add(moduleFunc);
+            }
+        });
+        return result;
     }
 
 }
