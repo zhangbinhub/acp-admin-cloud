@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
+import pers.acp.admin.oauth.base.OauthBaseTreeEntity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "t_module_func", indexes = {@Index(columnList = "code,appid")})
 @ApiModel("模块功能信息")
-public class ModuleFunc {
+public class ModuleFunc extends OauthBaseTreeEntity<ModuleFunc> {
 
     public String getId() {
         return id;
@@ -52,14 +51,6 @@ public class ModuleFunc {
         this.code = code;
     }
 
-    public String getParentid() {
-        return parentid;
-    }
-
-    public void setParentid(String parentid) {
-        this.parentid = parentid;
-    }
-
     public boolean isCovert() {
         return covert;
     }
@@ -74,14 +65,6 @@ public class ModuleFunc {
 
     public void setRoleSet(Set<Role> roleSet) {
         this.roleSet = roleSet;
-    }
-
-    public List<ModuleFunc> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<ModuleFunc> children) {
-        this.children = children;
     }
 
     @Id
@@ -103,10 +86,6 @@ public class ModuleFunc {
     @ApiModelProperty("模块编码")
     private String code;
 
-    @Column(length = 36, nullable = false)
-    @ApiModelProperty("上级ID")
-    private String parentid = "";
-
     @Column(nullable = false)
     @ApiModelProperty("是否可删除")
     private boolean covert = true;
@@ -117,9 +96,5 @@ public class ModuleFunc {
             joinColumns = {@JoinColumn(name = "moduleid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")})
     private Set<Role> roleSet = new HashSet<>();
-
-    @Transient
-    @ApiModelProperty("子功能列表")
-    private List<ModuleFunc> children = new ArrayList<>();
 
 }
