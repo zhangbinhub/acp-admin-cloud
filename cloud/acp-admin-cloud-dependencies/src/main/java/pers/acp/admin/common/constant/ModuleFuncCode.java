@@ -6,6 +6,8 @@ package pers.acp.admin.common.constant;
  */
 public interface ModuleFuncCode {
 
+    String other = "other";
+
     String sysConfig = "sys_config";
 
     String runtimeConfig = "runtime_config";

@@ -63,6 +63,7 @@ public class MenuDomain extends OauthBaseDomain {
                             return true;
                         }
                     })
+                    .filter(menu -> menu.getAppid().equals(appId))
                     .collect(Collectors.toMap(Menu::getId, menu -> menu));
             menuMap.forEach((id, menu) -> {
                 if (menuMap.containsKey(menu.getParentid())) {
