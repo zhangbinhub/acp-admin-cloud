@@ -13,6 +13,8 @@ public interface ModuleFuncRepository extends OauthBaseRepository<ModuleFunc, St
 
     List<ModuleFunc> findByAppid(String appId);
 
+    List<ModuleFunc> findByParentidIn(List<String> idList);
+
     void deleteByIdInAndCovert(List<String> idList, boolean covert);
 
 }

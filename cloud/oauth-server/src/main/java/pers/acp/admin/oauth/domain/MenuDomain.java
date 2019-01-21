@@ -93,7 +93,6 @@ public class MenuDomain extends OauthBaseDomain {
         menu.setOpentype(menuPO.getOpentype());
         menu.setSort(menuPO.getSort());
         menu.setRoleSet(new HashSet<>(roleRepository.findAllById(menuPO.getRoleIds())));
-        menu.setCovert(true);
         return menuRepository.save(menu);
     }
 
@@ -101,11 +100,16 @@ public class MenuDomain extends OauthBaseDomain {
     public Menu doCreate(MenuPO menuPO) {
         Menu menu = new Menu();
         menu.setAppid(menuPO.getAppid());
+        menu.setCovert(true);
         return doSave(menu, menuPO);
     }
 
     @Transactional
-    public void doDelete(List<String> idList) {
+    public void doDelete(List<String> idList) throws ServerException {
+        List<Menu> menuList = menuRepository.findByParentidIn(idList);
+        if (!menuList.isEmpty()) {
+            throw new ServerException("存在下级菜单，不允许删除");
+        }
         menuRepository.deleteByIdInAndCovert(idList, true);
     }
 

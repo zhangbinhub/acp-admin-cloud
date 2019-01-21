@@ -58,7 +58,6 @@ public class ModuleFuncDomain extends OauthBaseDomain {
         moduleFunc.setCode(moduleFuncPO.getCode());
         moduleFunc.setParentid(moduleFuncPO.getParentid());
         moduleFunc.setRoleSet(new HashSet<>(roleRepository.findAllById(moduleFuncPO.getRoleIds())));
-        moduleFunc.setCovert(true);
         return moduleFuncRepository.save(moduleFunc);
     }
 
@@ -66,11 +65,16 @@ public class ModuleFuncDomain extends OauthBaseDomain {
     public ModuleFunc doCreate(ModuleFuncPO moduleFuncPO) {
         ModuleFunc moduleFunc = new ModuleFunc();
         moduleFunc.setAppid(moduleFuncPO.getAppid());
+        moduleFunc.setCovert(true);
         return doSave(moduleFunc, moduleFuncPO);
     }
 
     @Transactional
-    public void doDelete(List<String> idList) {
+    public void doDelete(List<String> idList) throws ServerException {
+        List<ModuleFunc> menuList = moduleFuncRepository.findByParentidIn(idList);
+        if (!menuList.isEmpty()) {
+            throw new ServerException("存在下级模块功能，不允许删除");
+        }
         moduleFuncRepository.deleteByIdInAndCovert(idList, true);
     }
 

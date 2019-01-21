@@ -157,11 +157,11 @@ public class AuthController extends BaseController {
             @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
     })
     @ApiResponses({
-            @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
+            @ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> deleteMenu(@RequestBody List<String> idList) {
+    public ResponseEntity<InfoVO> deleteMenu(@RequestBody List<String> idList) throws ServerException {
         menuDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
@@ -173,11 +173,11 @@ public class AuthController extends BaseController {
             @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
     })
     @ApiResponses({
-            @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
+            @ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> deleteModuleFunc(@RequestBody List<String> idList) {
+    public ResponseEntity<InfoVO> deleteModuleFunc(@RequestBody List<String> idList) throws ServerException {
         moduleFuncDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");

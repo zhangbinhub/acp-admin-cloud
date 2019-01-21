@@ -13,6 +13,8 @@ public interface MenuRepository extends OauthBaseRepository<Menu, String> {
 
     List<Menu> findByAppid(String appId);
 
+    List<Menu> findByParentidIn(List<String> idList);
+
     void deleteByIdInAndCovert(List<String> idList, boolean covert);
 
 }
