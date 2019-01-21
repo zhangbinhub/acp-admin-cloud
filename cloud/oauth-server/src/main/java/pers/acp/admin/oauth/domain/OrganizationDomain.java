@@ -3,10 +3,8 @@ package pers.acp.admin.oauth.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Organization;
-import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.po.OrganizationPO;
 import pers.acp.admin.oauth.repo.OrganizationRepository;
@@ -62,11 +60,7 @@ public class OrganizationDomain extends OauthBaseDomain {
     private boolean isNotPermit(String loginNo, String... orgIds) {
         User user = findCurrUserInfo(loginNo);
         if (user != null) {
-            return !user.getRoleSet().stream()
-                    .map(Role::getCode)
-                    .collect(Collectors.toList())
-                    .contains(RoleCode.ADMIN)
-                    && !user.getOrganizationMngSet().stream()
+            return !isAdmin(user) && !user.getOrganizationMngSet().stream()
                     .map(Organization::getId)
                     .collect(Collectors.toList())
                     .containsAll(Arrays.asList(orgIds));
@@ -110,6 +104,11 @@ public class OrganizationDomain extends OauthBaseDomain {
 
     public List<Organization> getOrgList() {
         return sortOrganizationList(formatToTreeList(organizationRepository.findAll().stream().collect(Collectors.toMap(Organization::getId, organization -> organization))));
+    }
+
+    public List<Organization> getModOrgList(String loginNo) {
+        User user = findCurrUserInfo(loginNo);
+        return new ArrayList<>(user.getOrganizationMngSet());
     }
 
     public OrganizationVO getOrgInfo(String orgId) throws ServerException {

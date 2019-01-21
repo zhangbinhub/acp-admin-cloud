@@ -1,5 +1,6 @@
 package pers.acp.admin.common.permission;
 
+import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.common.constant.RoleCode;
 
 /**
@@ -14,5 +15,10 @@ public interface BaseExpression {
      * 仅超级管理员可执行
      */
     String adminOnly = "hasRole('" + RoleCode.ADMIN + "')";
+
+    /**
+     * 拥有系统配置权限
+     */
+    String sysConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.sysConfig + "')";
 
 }

@@ -82,7 +82,7 @@ public class AuthController extends BaseController {
         return ResponseEntity.ok(menuDomain.getMenuList(user.getOAuth2Request().getClientId(), user.getName()));
     }
 
-    @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表")
+    @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = OauthApi.menuList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Menu>> menuList(@PathVariable String appId) throws ServerException {
@@ -92,7 +92,7 @@ public class AuthController extends BaseController {
         return ResponseEntity.ok(menuDomain.getMenuListByAppId(appId));
     }
 
-    @ApiOperation(value = "获取指定应用下的模块功能列表", notes = "查询指定应用的模块功能列表")
+    @ApiOperation(value = "获取指定应用下的模块功能列表", notes = "查询指定应用的模块功能列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = OauthApi.moduleFuncList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<ModuleFunc>> moduleFuncList(@PathVariable String appId) throws ServerException {

@@ -15,6 +15,8 @@ public interface RoleRepository extends OauthBaseRepository<Role, String> {
 
     List<Role> findByAppidOrderBySortAsc(String appId);
 
+    List<Role> findByAppidAndLevelsGreaterThanOrderBySortAsc(String appId, int level);
+
     void deleteByIdIn(List<String> idList);
 
 }

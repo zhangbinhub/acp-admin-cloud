@@ -18,6 +18,7 @@ import pers.acp.springboot.core.exceptions.ServerException;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,32 +44,18 @@ public class RoleDomain extends OauthBaseDomain {
         this.moduleFuncRepository = moduleFuncRepository;
     }
 
-    /**
-     * 获取指定用户所属角色中最高级别
-     *
-     * @param loginNo 登录账号
-     * @return 级别
-     */
-    private int getCurrUserMinLevel(String loginNo) {
-        User user = findCurrUserInfo(loginNo);
-        if (user != null) {
-            final int[] level = {Integer.MAX_VALUE};
-            user.getRoleSet().forEach(role -> {
-                if (level[0] > role.getLevels()) {
-                    level[0] = role.getLevels();
-                }
-            });
-            return level[0];
-        }
-        return Integer.MAX_VALUE;
-    }
-
     public List<Role> getRoleList() {
         return roleRepository.findAllByOrderBySortAsc();
     }
 
-    public List<Role> getRoleListByAppId(String appId) {
-        return roleRepository.findByAppidOrderBySortAsc(appId);
+    public List<Role> getRoleListByAppId(String loginNo, String appId) {
+        User user = findCurrUserInfo(loginNo);
+        if (isAdmin(user)) {
+            return roleRepository.findByAppidOrderBySortAsc(appId);
+        } else {
+            int currLevel = getUserMinLevel(appId, user);
+            return roleRepository.findByAppidAndLevelsGreaterThanOrderBySortAsc(appId, currLevel);
+        }
     }
 
     private Role doSave(Role role, RolePO rolePO) {
@@ -84,9 +71,12 @@ public class RoleDomain extends OauthBaseDomain {
 
     @Transactional
     public Role doCreate(RolePO rolePO, String loginNo) throws ServerException {
-        int currLevel = getCurrUserMinLevel(loginNo);
-        if (currLevel >= rolePO.getLevels()) {
-            throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
+        User user = findCurrUserInfo(loginNo);
+        if (!isAdmin(user)) {
+            int currLevel = getUserMinLevel(rolePO.getAppid(), user);
+            if (currLevel >= rolePO.getLevels()) {
+                throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
+            }
         }
         Role role = new Role();
         role.setAppid(rolePO.getAppid());
@@ -95,11 +85,14 @@ public class RoleDomain extends OauthBaseDomain {
 
     @Transactional
     public void doDelete(String loginNo, List<String> idList) throws ServerException {
-        int currLevel = getCurrUserMinLevel(loginNo);
-        List<Role> roleList = roleRepository.findAllById(idList);
-        for (Role role : roleList) {
-            if (currLevel >= role.getLevels()) {
-                throw new ServerException("没有权限做此操作，请联系系统管理员");
+        User user = findCurrUserInfo(loginNo);
+        if (!isAdmin(user)) {
+            Map<String, Integer> userMinLevel = getUserMinLevel(user);
+            List<Role> roleList = roleRepository.findAllById(idList);
+            for (Role role : roleList) {
+                if (!userMinLevel.containsKey(role.getAppid()) || userMinLevel.get(role.getAppid()) >= role.getLevels()) {
+                    throw new ServerException("没有权限做此操作，请联系系统管理员");
+                }
             }
         }
         roleRepository.deleteByIdIn(idList);
@@ -107,17 +100,20 @@ public class RoleDomain extends OauthBaseDomain {
 
     @Transactional
     public Role doUpdate(String loginNo, RolePO rolePO) throws ServerException {
-        int currLevel = getCurrUserMinLevel(loginNo);
-        if (currLevel > 0 && currLevel >= rolePO.getLevels()) {
-            throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
-        }
+        User user = findCurrUserInfo(loginNo);
         Optional<Role> roleOptional = roleRepository.findById(rolePO.getId());
         if (roleOptional.isEmpty()) {
             throw new ServerException("找不到角色信息");
         }
         Role role = roleOptional.get();
-        if (currLevel > 0 && currLevel >= role.getLevels()) {
-            throw new ServerException("没有权限做此操作，请联系系统管理员");
+        if (!isAdmin(user)) {
+            int currLevel = getUserMinLevel(rolePO.getAppid(), user);
+            if (currLevel > 0 && currLevel >= rolePO.getLevels()) {
+                throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
+            }
+            if (currLevel > 0 && currLevel >= role.getLevels()) {
+                throw new ServerException("没有权限做此操作，请联系系统管理员");
+            }
         }
         return doSave(role, rolePO);
     }

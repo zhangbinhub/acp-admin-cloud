@@ -47,6 +47,12 @@ public class OrgController extends BaseController {
         return ResponseEntity.ok(organizationDomain.getOrgList());
     }
 
+    @ApiOperation(value = "获取可编辑的机构列表", notes = "查询所有可编辑的机构列表")
+    @GetMapping(value = OauthApi.modifiableOrg, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Organization>> modOrgList(OAuth2Authentication user) {
+        return ResponseEntity.ok(organizationDomain.getModOrgList(user.getName()));
+    }
+
     @ApiOperation(value = "新建机构信息",
             notes = "名称、编码、上级ID、序号、关联用户")
     @ApiResponses({

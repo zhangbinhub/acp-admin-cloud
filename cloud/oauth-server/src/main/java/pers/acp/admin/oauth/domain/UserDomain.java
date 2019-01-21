@@ -27,8 +27,13 @@ public class UserDomain extends OauthBaseDomain {
         return userRepository.save(user);
     }
 
-    public List<User> findModifiableUserList(User currUser) {
-        return userRepository.findByLevelsGreaterThan(currUser.getLevels());
+    public List<User> findModifiableUserList(String loginNo) {
+        User user = findCurrUserInfo(loginNo);
+        if (isAdmin(user)) {
+            return userRepository.findAll();
+        } else {
+            return userRepository.findByLevelsGreaterThan(user.getLevels());
+        }
     }
 
 }

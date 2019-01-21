@@ -4,11 +4,13 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.path.OauthApi;
+import pers.acp.admin.common.permission.UserConfigExpression;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.po.UserInfoPO;
@@ -56,14 +58,10 @@ public class UserController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
+    @PreAuthorize(UserConfigExpression.sysConfig)
     @GetMapping(value = OauthApi.modifiableUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<User>> modifiableUser(OAuth2Authentication user) throws ServerException {
-        User userInfo = userDomain.findCurrUserInfo(user.getName());
-        if (userInfo == null) {
-            throw new ServerException("找不到用户信息");
-        } else {
-            return ResponseEntity.ok(userDomain.findModifiableUserList(userInfo));
-        }
+    public ResponseEntity<List<User>> modifiableUser(OAuth2Authentication user) {
+        return ResponseEntity.ok(userDomain.findModifiableUserList(user.getName()));
     }
 
     @ApiOperation(value = "更新当前用户信息",

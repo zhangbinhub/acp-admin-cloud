@@ -72,14 +72,14 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok(roleCodeList);
     }
 
-    @ApiOperation(value = "获取指定应用下的角色列表", notes = "查询指定应用的角色列表")
-    @PreAuthorize(RoleConfigExpression.roleQuery)
+    @ApiOperation(value = "获取指定应用下可编辑的角色列表", notes = "查询指定应用下可编辑的角色列表")
+    @PreAuthorize(RoleConfigExpression.sysConfig)
     @GetMapping(value = OauthApi.roleList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Role>> getRoleList(@PathVariable String appId) throws ServerException {
+    public ResponseEntity<List<Role>> getRoleList(OAuth2Authentication user, @PathVariable String appId) throws ServerException {
         if (CommonTools.isNullStr(appId)) {
             throw new ServerException("应用ID不能为空，请重新输入");
         }
-        return ResponseEntity.ok(roleDomain.getRoleListByAppId(appId));
+        return ResponseEntity.ok(roleDomain.getRoleListByAppId(user.getName(), appId));
     }
 
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")

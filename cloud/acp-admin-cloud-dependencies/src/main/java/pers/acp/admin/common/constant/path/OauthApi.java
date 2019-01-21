@@ -12,6 +12,8 @@ public interface OauthApi {
 
     String modifiableUser = "/moduserlist";
 
+    String modifiableOrg = "/modorglist";
+
     String currMenu = "/menulist";
 
     String appConfig = "/app";
