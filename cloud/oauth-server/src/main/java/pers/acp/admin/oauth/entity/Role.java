@@ -82,6 +82,14 @@ public class Role {
         this.moduleFuncSet = moduleFuncSet;
     }
 
+    public Set<User> getUserSet() {
+        return userSet;
+    }
+
+    public void setUserSet(Set<User> userSet) {
+        this.userSet = userSet;
+    }
+
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -108,6 +116,13 @@ public class Role {
     @Column(nullable = false)
     @ApiModelProperty("序号")
     private int sort;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "t_user_role_set",
+            joinColumns = {@JoinColumn(name = "roleid", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
+    private Set<User> userSet = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})

@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.code.FuncCode;
-import pers.acp.admin.common.code.ModuleCode;
-import pers.acp.admin.common.code.RoleCode;
+import pers.acp.admin.common.constant.ModuleFuncCode;
+import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
@@ -152,17 +151,17 @@ class InitData extends BaseTest {
         orgConfig.setOpentype(0);
         orgConfig = menuRepository.save(orgConfig);
 
-        Menu paramConfig = new Menu();
-        paramConfig.setAppid(application.getId());
-        paramConfig.setName("运行参数配置");
-        paramConfig.setIconType("md-build");
-        paramConfig.setPath("/paramconfig");
-        paramConfig.setParentid(sysConfig.getId());
-        paramConfig.setSort(5);
-        paramConfig.setEnabled(true);
-        paramConfig.setCovert(false);
-        paramConfig.setOpentype(0);
-        paramConfig = menuRepository.save(paramConfig);
+        Menu runtimeConfig = new Menu();
+        runtimeConfig.setAppid(application.getId());
+        runtimeConfig.setName("运行参数配置");
+        runtimeConfig.setIconType("md-build");
+        runtimeConfig.setPath("/runtimeconfig");
+        runtimeConfig.setParentid(sysConfig.getId());
+        runtimeConfig.setSort(5);
+        runtimeConfig.setEnabled(true);
+        runtimeConfig.setCovert(false);
+        runtimeConfig.setOpentype(0);
+        runtimeConfig = menuRepository.save(runtimeConfig);
 
         Menu demo = new Menu();
         demo.setAppid(application.getId());
@@ -179,12 +178,12 @@ class InitData extends BaseTest {
         demoUpload.setAppid(application.getId());
         demoUpload.setName("上传");
         demoUpload.setIconType("md-cloud-upload");
-        demoUpload.setPath("/demo_upload");
+        demoUpload.setPath("https://www.iviewui.com/components/upload");
         demoUpload.setParentid(demo.getId());
         demoUpload.setSort(0);
         demoUpload.setEnabled(true);
         demoUpload.setCovert(true);
-        demoUpload.setOpentype(0);
+        demoUpload.setOpentype(1);
         demoUpload = menuRepository.save(demoUpload);
 
         Menu demoChildren = new Menu();
@@ -253,7 +252,7 @@ class InitData extends BaseTest {
             role.getMenuSet().add(authConfig);
             role.getMenuSet().add(userConfig);
             role.getMenuSet().add(orgConfig);
-            role.getMenuSet().add(paramConfig);
+            role.getMenuSet().add(runtimeConfig);
             role.getMenuSet().add(demo);
             role.getMenuSet().add(demoUpload);
             role.getMenuSet().add(demoChildren);
@@ -269,55 +268,55 @@ class InitData extends BaseTest {
         sysConfig.setAppid(application.getId());
         sysConfig.setParentid(application.getId());
         sysConfig.setName("系统配置");
-        sysConfig.setCode(ModuleCode.sysConfig);
+        sysConfig.setCode(ModuleFuncCode.sysConfig);
         sysConfig.setCovert(false);
         sysConfig = moduleFuncRepository.save(sysConfig);
 
-        ModuleFunc paramConfig = new ModuleFunc();
-        paramConfig.setAppid(application.getId());
-        paramConfig.setParentid(sysConfig.getId());
-        paramConfig.setName("运行参数配置");
-        paramConfig.setCode(ModuleCode.paramConfig);
-        paramConfig.setCovert(false);
-        paramConfig = moduleFuncRepository.save(paramConfig);
+        ModuleFunc runtimeConfig = new ModuleFunc();
+        runtimeConfig.setAppid(application.getId());
+        runtimeConfig.setParentid(sysConfig.getId());
+        runtimeConfig.setName("运行参数配置");
+        runtimeConfig.setCode(ModuleFuncCode.runtimeConfig);
+        runtimeConfig.setCovert(false);
+        runtimeConfig = moduleFuncRepository.save(runtimeConfig);
 
-        ModuleFunc paramAdd = new ModuleFunc();
-        paramAdd.setAppid(application.getId());
-        paramAdd.setParentid(paramConfig.getId());
-        paramAdd.setName("新增");
-        paramAdd.setCode(FuncCode.paramAdd);
-        paramAdd.setCovert(false);
-        paramAdd = moduleFuncRepository.save(paramAdd);
+        ModuleFunc runtimeAdd = new ModuleFunc();
+        runtimeAdd.setAppid(application.getId());
+        runtimeAdd.setParentid(runtimeConfig.getId());
+        runtimeAdd.setName("新增");
+        runtimeAdd.setCode(ModuleFuncCode.runtimeAdd);
+        runtimeAdd.setCovert(false);
+        runtimeAdd = moduleFuncRepository.save(runtimeAdd);
 
-        ModuleFunc paramDelete = new ModuleFunc();
-        paramDelete.setAppid(application.getId());
-        paramDelete.setParentid(paramConfig.getId());
-        paramDelete.setName("删除");
-        paramDelete.setCode(FuncCode.paramDelete);
-        paramDelete.setCovert(false);
-        paramDelete = moduleFuncRepository.save(paramDelete);
+        ModuleFunc runtimeDelete = new ModuleFunc();
+        runtimeDelete.setAppid(application.getId());
+        runtimeDelete.setParentid(runtimeConfig.getId());
+        runtimeDelete.setName("删除");
+        runtimeDelete.setCode(ModuleFuncCode.runtimeDelete);
+        runtimeDelete.setCovert(false);
+        runtimeDelete = moduleFuncRepository.save(runtimeDelete);
 
-        ModuleFunc paramUpdate = new ModuleFunc();
-        paramUpdate.setAppid(application.getId());
-        paramUpdate.setParentid(paramConfig.getId());
-        paramUpdate.setName("更新");
-        paramUpdate.setCode(FuncCode.paramUpdate);
-        paramUpdate.setCovert(false);
-        paramUpdate = moduleFuncRepository.save(paramUpdate);
+        ModuleFunc runtimeUpdate = new ModuleFunc();
+        runtimeUpdate.setAppid(application.getId());
+        runtimeUpdate.setParentid(runtimeConfig.getId());
+        runtimeUpdate.setName("更新");
+        runtimeUpdate.setCode(ModuleFuncCode.runtimeUpdate);
+        runtimeUpdate.setCovert(false);
+        runtimeUpdate = moduleFuncRepository.save(runtimeUpdate);
 
-        ModuleFunc paramQuery = new ModuleFunc();
-        paramQuery.setAppid(application.getId());
-        paramQuery.setParentid(paramConfig.getId());
-        paramQuery.setName("查询");
-        paramQuery.setCode(FuncCode.paramQuery);
-        paramQuery.setCovert(false);
-        paramQuery = moduleFuncRepository.save(paramQuery);
+        ModuleFunc runtimeQuery = new ModuleFunc();
+        runtimeQuery.setAppid(application.getId());
+        runtimeQuery.setParentid(runtimeConfig.getId());
+        runtimeQuery.setName("查询");
+        runtimeQuery.setCode(ModuleFuncCode.runtimeQuery);
+        runtimeQuery.setCovert(false);
+        runtimeQuery = moduleFuncRepository.save(runtimeQuery);
 
         ModuleFunc appConfig = new ModuleFunc();
         appConfig.setAppid(application.getId());
         appConfig.setParentid(sysConfig.getId());
         appConfig.setName("应用配置");
-        appConfig.setCode(ModuleCode.appConfig);
+        appConfig.setCode(ModuleFuncCode.appConfig);
         appConfig.setCovert(false);
         appConfig = moduleFuncRepository.save(appConfig);
 
@@ -325,7 +324,7 @@ class InitData extends BaseTest {
         appAdd.setAppid(application.getId());
         appAdd.setParentid(appConfig.getId());
         appAdd.setName("新增");
-        appAdd.setCode(FuncCode.appAdd);
+        appAdd.setCode(ModuleFuncCode.appAdd);
         appAdd.setCovert(false);
         appAdd = moduleFuncRepository.save(appAdd);
 
@@ -333,7 +332,7 @@ class InitData extends BaseTest {
         appDelete.setAppid(application.getId());
         appDelete.setParentid(appConfig.getId());
         appDelete.setName("删除");
-        appDelete.setCode(FuncCode.appDelete);
+        appDelete.setCode(ModuleFuncCode.appDelete);
         appDelete.setCovert(false);
         appDelete = moduleFuncRepository.save(appDelete);
 
@@ -341,7 +340,7 @@ class InitData extends BaseTest {
         appUpdate.setAppid(application.getId());
         appUpdate.setParentid(appConfig.getId());
         appUpdate.setName("更新");
-        appUpdate.setCode(FuncCode.appUpdate);
+        appUpdate.setCode(ModuleFuncCode.appUpdate);
         appUpdate.setCovert(false);
         appUpdate = moduleFuncRepository.save(appUpdate);
 
@@ -349,7 +348,7 @@ class InitData extends BaseTest {
         appQuery.setAppid(application.getId());
         appQuery.setParentid(appConfig.getId());
         appQuery.setName("查询");
-        appQuery.setCode(FuncCode.appQuery);
+        appQuery.setCode(ModuleFuncCode.appQuery);
         appQuery.setCovert(false);
         appQuery = moduleFuncRepository.save(appQuery);
 
@@ -357,23 +356,203 @@ class InitData extends BaseTest {
         appUpdateSecret.setAppid(application.getId());
         appUpdateSecret.setParentid(appConfig.getId());
         appUpdateSecret.setName("更新密钥");
-        appUpdateSecret.setCode(FuncCode.appUpdateSecret);
+        appUpdateSecret.setCode(ModuleFuncCode.appUpdateSecret);
         appUpdateSecret.setCovert(false);
         appUpdateSecret = moduleFuncRepository.save(appUpdateSecret);
 
+        ModuleFunc roleConfig = new ModuleFunc();
+        roleConfig.setAppid(application.getId());
+        roleConfig.setParentid(sysConfig.getId());
+        roleConfig.setName("角色配置");
+        roleConfig.setCode(ModuleFuncCode.roleConfig);
+        roleConfig.setCovert(false);
+        roleConfig = moduleFuncRepository.save(roleConfig);
+
+        ModuleFunc roleAdd = new ModuleFunc();
+        roleAdd.setAppid(application.getId());
+        roleAdd.setParentid(roleConfig.getId());
+        roleAdd.setName("新增");
+        roleAdd.setCode(ModuleFuncCode.roleAdd);
+        roleAdd.setCovert(false);
+        roleAdd = moduleFuncRepository.save(roleAdd);
+
+        ModuleFunc roleDelete = new ModuleFunc();
+        roleDelete.setAppid(application.getId());
+        roleDelete.setParentid(roleConfig.getId());
+        roleDelete.setName("删除");
+        roleDelete.setCode(ModuleFuncCode.roleDelete);
+        roleDelete.setCovert(false);
+        roleDelete = moduleFuncRepository.save(roleDelete);
+
+        ModuleFunc roleUpdate = new ModuleFunc();
+        roleUpdate.setAppid(application.getId());
+        roleUpdate.setParentid(roleConfig.getId());
+        roleUpdate.setName("更新");
+        roleUpdate.setCode(ModuleFuncCode.roleUpdate);
+        roleUpdate.setCovert(false);
+        roleUpdate = moduleFuncRepository.save(roleUpdate);
+
+        ModuleFunc roleQuery = new ModuleFunc();
+        roleQuery.setAppid(application.getId());
+        roleQuery.setParentid(roleConfig.getId());
+        roleQuery.setName("查询");
+        roleQuery.setCode(ModuleFuncCode.roleQuery);
+        roleQuery.setCovert(false);
+        roleQuery = moduleFuncRepository.save(roleQuery);
+
+        ModuleFunc orgConfig = new ModuleFunc();
+        orgConfig.setAppid(application.getId());
+        orgConfig.setParentid(sysConfig.getId());
+        orgConfig.setName("机构配置");
+        orgConfig.setCode(ModuleFuncCode.orgConfig);
+        orgConfig.setCovert(false);
+        orgConfig = moduleFuncRepository.save(orgConfig);
+
+        ModuleFunc orgAdd = new ModuleFunc();
+        orgAdd.setAppid(application.getId());
+        orgAdd.setParentid(orgConfig.getId());
+        orgAdd.setName("新增");
+        orgAdd.setCode(ModuleFuncCode.orgAdd);
+        orgAdd.setCovert(false);
+        orgAdd = moduleFuncRepository.save(orgAdd);
+
+        ModuleFunc orgDelete = new ModuleFunc();
+        orgDelete.setAppid(application.getId());
+        orgDelete.setParentid(orgConfig.getId());
+        orgDelete.setName("删除");
+        orgDelete.setCode(ModuleFuncCode.orgDelete);
+        orgDelete.setCovert(false);
+        orgDelete = moduleFuncRepository.save(orgDelete);
+
+        ModuleFunc orgUpdate = new ModuleFunc();
+        orgUpdate.setAppid(application.getId());
+        orgUpdate.setParentid(orgConfig.getId());
+        orgUpdate.setName("更新");
+        orgUpdate.setCode(ModuleFuncCode.orgUpdate);
+        orgUpdate.setCovert(false);
+        orgUpdate = moduleFuncRepository.save(orgUpdate);
+
+        ModuleFunc orgQuery = new ModuleFunc();
+        orgQuery.setAppid(application.getId());
+        orgQuery.setParentid(orgConfig.getId());
+        orgQuery.setName("查询");
+        orgQuery.setCode(ModuleFuncCode.orgQuery);
+        orgQuery.setCovert(false);
+        orgQuery = moduleFuncRepository.save(orgQuery);
+
+        ModuleFunc authConfig = new ModuleFunc();
+        authConfig.setAppid(application.getId());
+        authConfig.setParentid(sysConfig.getId());
+        authConfig.setName("权限配置");
+        authConfig.setCode(ModuleFuncCode.authConfig);
+        authConfig.setCovert(false);
+        authConfig = moduleFuncRepository.save(authConfig);
+
+        ModuleFunc authAdd = new ModuleFunc();
+        authAdd.setAppid(application.getId());
+        authAdd.setParentid(authConfig.getId());
+        authAdd.setName("新增");
+        authAdd.setCode(ModuleFuncCode.authAdd);
+        authAdd.setCovert(false);
+        authAdd = moduleFuncRepository.save(authAdd);
+
+        ModuleFunc authDelete = new ModuleFunc();
+        authDelete.setAppid(application.getId());
+        authDelete.setParentid(authConfig.getId());
+        authDelete.setName("删除");
+        authDelete.setCode(ModuleFuncCode.authDelete);
+        authDelete.setCovert(false);
+        authDelete = moduleFuncRepository.save(authDelete);
+
+        ModuleFunc authUpdate = new ModuleFunc();
+        authUpdate.setAppid(application.getId());
+        authUpdate.setParentid(authConfig.getId());
+        authUpdate.setName("更新");
+        authUpdate.setCode(ModuleFuncCode.authUpdate);
+        authUpdate.setCovert(false);
+        authUpdate = moduleFuncRepository.save(authUpdate);
+
+        ModuleFunc authQuery = new ModuleFunc();
+        authQuery.setAppid(application.getId());
+        authQuery.setParentid(authConfig.getId());
+        authQuery.setName("查询");
+        authQuery.setCode(ModuleFuncCode.authQuery);
+        authQuery.setCovert(false);
+        authQuery = moduleFuncRepository.save(authQuery);
+
+        ModuleFunc userConfig = new ModuleFunc();
+        userConfig.setAppid(application.getId());
+        userConfig.setParentid(sysConfig.getId());
+        userConfig.setName("用户配置");
+        userConfig.setCode(ModuleFuncCode.userConfig);
+        userConfig.setCovert(false);
+        userConfig = moduleFuncRepository.save(userConfig);
+
+        ModuleFunc userAdd = new ModuleFunc();
+        userAdd.setAppid(application.getId());
+        userAdd.setParentid(userConfig.getId());
+        userAdd.setName("新增");
+        userAdd.setCode(ModuleFuncCode.userAdd);
+        userAdd.setCovert(false);
+        userAdd = moduleFuncRepository.save(userAdd);
+
+        ModuleFunc userDelete = new ModuleFunc();
+        userDelete.setAppid(application.getId());
+        userDelete.setParentid(userConfig.getId());
+        userDelete.setName("删除");
+        userDelete.setCode(ModuleFuncCode.userDelete);
+        userDelete.setCovert(false);
+        userDelete = moduleFuncRepository.save(userDelete);
+
+        ModuleFunc userUpdate = new ModuleFunc();
+        userUpdate.setAppid(application.getId());
+        userUpdate.setParentid(userConfig.getId());
+        userUpdate.setName("更新");
+        userUpdate.setCode(ModuleFuncCode.userUpdate);
+        userUpdate.setCovert(false);
+        userUpdate = moduleFuncRepository.save(userUpdate);
+
+        ModuleFunc userQuery = new ModuleFunc();
+        userQuery.setAppid(application.getId());
+        userQuery.setParentid(userConfig.getId());
+        userQuery.setName("查询");
+        userQuery.setCode(ModuleFuncCode.userQuery);
+        userQuery.setCovert(false);
+        userQuery = moduleFuncRepository.save(userQuery);
+
         for (Role role : roles) {
             role.getModuleFuncSet().add(sysConfig);
-            role.getModuleFuncSet().add(paramConfig);
-            role.getModuleFuncSet().add(paramAdd);
-            role.getModuleFuncSet().add(paramDelete);
-            role.getModuleFuncSet().add(paramUpdate);
-            role.getModuleFuncSet().add(paramQuery);
+            role.getModuleFuncSet().add(runtimeConfig);
+            role.getModuleFuncSet().add(runtimeAdd);
+            role.getModuleFuncSet().add(runtimeDelete);
+            role.getModuleFuncSet().add(runtimeUpdate);
+            role.getModuleFuncSet().add(runtimeQuery);
             role.getModuleFuncSet().add(appConfig);
             role.getModuleFuncSet().add(appAdd);
             role.getModuleFuncSet().add(appDelete);
             role.getModuleFuncSet().add(appUpdate);
             role.getModuleFuncSet().add(appQuery);
             role.getModuleFuncSet().add(appUpdateSecret);
+            role.getModuleFuncSet().add(roleConfig);
+            role.getModuleFuncSet().add(roleAdd);
+            role.getModuleFuncSet().add(roleDelete);
+            role.getModuleFuncSet().add(roleUpdate);
+            role.getModuleFuncSet().add(roleQuery);
+            role.getModuleFuncSet().add(orgConfig);
+            role.getModuleFuncSet().add(orgAdd);
+            role.getModuleFuncSet().add(orgDelete);
+            role.getModuleFuncSet().add(orgUpdate);
+            role.getModuleFuncSet().add(orgQuery);
+            role.getModuleFuncSet().add(authConfig);
+            role.getModuleFuncSet().add(authAdd);
+            role.getModuleFuncSet().add(authDelete);
+            role.getModuleFuncSet().add(authUpdate);
+            role.getModuleFuncSet().add(authQuery);
+            role.getModuleFuncSet().add(userConfig);
+            role.getModuleFuncSet().add(userAdd);
+            role.getModuleFuncSet().add(userDelete);
+            role.getModuleFuncSet().add(userUpdate);
+            role.getModuleFuncSet().add(userQuery);
         }
     }
 

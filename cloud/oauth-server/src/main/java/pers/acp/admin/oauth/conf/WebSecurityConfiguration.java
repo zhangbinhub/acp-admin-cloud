@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import pers.acp.core.CommonTools;
 import pers.acp.admin.oauth.component.UserPasswordEncoder;
 import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
+import pers.acp.springcloud.common.constant.ConfigurationOrder;
 
 /**
  * @author zhangbin by 11/04/2018 15:16
@@ -19,6 +21,7 @@ import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
  */
 @Configuration
 @EnableWebSecurity
+@Order(ConfigurationOrder.resourceServerConfiguration + 1)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final String contextPath;

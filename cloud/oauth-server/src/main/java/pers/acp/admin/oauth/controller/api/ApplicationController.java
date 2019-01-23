@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller;
+package pers.acp.admin.oauth.controller.api;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
-import pers.acp.admin.oauth.constant.ApiPrefix;
+import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.ApplicationDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
@@ -28,9 +29,9 @@ import java.util.Objects;
  * @since JDK 11
  */
 @RestController
-@RequestMapping(ApiPrefix.basePath)
+@RequestMapping(OauthApi.basePath)
 @Api("应用信息")
-public class ApplicationController {
+public class ApplicationController extends BaseController {
 
     private final ApplicationDomain applicationDomain;
 
@@ -46,7 +47,7 @@ public class ApplicationController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appAdd)
-    @PutMapping(value = ApiPrefix.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Application> add(@RequestBody @Valid ApplicationPO applicationPO, BindingResult bindingResult) throws ServerException {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -62,7 +63,7 @@ public class ApplicationController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appDelete)
-    @DeleteMapping(value = ApiPrefix.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         applicationDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
@@ -76,7 +77,7 @@ public class ApplicationController {
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appUpdate)
-    @PatchMapping(value = ApiPrefix.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PatchMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Application> update(@RequestBody ApplicationPO applicationPO) throws ServerException {
         if (CommonTools.isNullStr(applicationPO.getId())) {
             throw new ServerException("ID不能为空");
@@ -90,7 +91,7 @@ public class ApplicationController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appQuery)
-    @PostMapping(value = ApiPrefix.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Page<Application>> query(@RequestBody ApplicationPO applicationPO) throws ServerException {
         if (applicationPO.getQueryParam() == null) {
             throw new ServerException("分页查询参数不能为空");
@@ -98,12 +99,21 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationDomain.doQuery(applicationPO));
     }
 
+    @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")
+    @GetMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Application>> appList() {
+        return ResponseEntity.ok(applicationDomain.getAppList());
+    }
+
     @ApiOperation(value = "更新应用密钥")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "appId", value = "应用id", required = true, paramType = "path", dataType = "String")
+    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(AppConfigExpression.appUpdateSecret)
-    @GetMapping(value = ApiPrefix.appConfig + "/updatesecret/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = OauthApi.updateSecret + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Application> updateSecret(@PathVariable String appId) throws ServerException {
         if (CommonTools.isNullStr(appId)) {
             throw new ServerException("ID不能为空");

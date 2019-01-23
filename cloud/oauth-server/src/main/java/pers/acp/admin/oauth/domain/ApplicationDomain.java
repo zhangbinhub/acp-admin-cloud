@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.BaseDomain;
+import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
@@ -23,7 +23,8 @@ import java.util.Optional;
  * @since JDK 11
  */
 @Service
-public class ApplicationDomain extends BaseDomain {
+@Transactional(readOnly = true)
+public class ApplicationDomain extends OauthBaseDomain {
 
     private final ApplicationRepository applicationRepository;
 
@@ -81,6 +82,10 @@ public class ApplicationDomain extends BaseDomain {
             }
             return criteriaBuilder.and(predicateList.toArray(new Predicate[]{}));
         }, buildPageRequest(applicationPO.getQueryParam()));
+    }
+
+    public List<Application> getAppList() {
+        return applicationRepository.findAllByOrderByAppnameAsc();
     }
 
 }

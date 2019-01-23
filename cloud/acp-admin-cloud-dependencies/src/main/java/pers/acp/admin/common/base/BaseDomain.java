@@ -1,33 +1,15 @@
-package pers.acp.admin.oauth.base;
+package pers.acp.admin.common.base;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import pers.acp.admin.common.po.QueryParam;
-import pers.acp.admin.oauth.entity.User;
-import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 
 /**
- * @author zhang by 26/12/2018
+ * @author zhang by 15/01/2019
  * @since JDK 11
  */
 public class BaseDomain {
-
-    protected final UserRepository userRepository;
-
-    @Autowired
-    public BaseDomain(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public User findCurrUserInfo(String loginNo) {
-        return userRepository.findByLoginno(loginNo).orElse(null);
-    }
-
-    public User findUserById(String id) {
-        return userRepository.findById(id).orElse(null);
-    }
 
     protected PageRequest buildPageRequest(QueryParam queryParam) {
         if (CommonTools.isNullStr(queryParam.getOrderName())) {
