@@ -77,7 +77,7 @@ public class OrganizationPO {
     private String parentid;
 
     @ApiModelProperty(value = "序号", required = true, position = 4)
-    private int sort;
+    private int sort = 0;
 
     @ApiModelProperty(value = "关联用户ID", position = 5)
     private List<String> userIds = new ArrayList<>();

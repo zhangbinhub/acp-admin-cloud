@@ -5,14 +5,14 @@ ext {
 versions += [
         jupiter         : "5.3.2",
 
-        commons_text    : "1.5",
+        commons_text    : "1.6",
         commons_lang3   : "3.8.1",
         dom4j           : "1.6.1",
         bouncycastle    : "1.60",
         slf4j           : "1.7.25",
         logback         : "1.2.3",
-        xstream         : "1.4.10",
-        jackson_databind: "2.9.7",
+        xstream         : "1.4.11.1",
+        jackson_databind: "2.9.8",
 
         hikaricp        : "3.2.0",
         mysql           : "8.0.13",
@@ -22,7 +22,7 @@ versions += [
 
         jaxb_runtime    : "2.3.1",
         spring_boot     : "2.1.2.RELEASE",
-        spring_cloud    : "Greenwich.RC2",
+        spring_cloud    : "Greenwich.RELEASE",
         swagger         : "2.9.2",
 
         mina            : "2.0.19",

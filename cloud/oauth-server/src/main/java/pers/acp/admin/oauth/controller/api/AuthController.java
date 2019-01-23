@@ -128,9 +128,6 @@ public class AuthController extends BaseController {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        if (CommonTools.isNullStr(menuPO.getAppid())) {
-            throw new ServerException("应用ID不能为空，请检查");
-        }
         return ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPO));
     }
 
@@ -143,9 +140,6 @@ public class AuthController extends BaseController {
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ModuleFunc> addModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO, BindingResult bindingResult) throws ServerException {
-        if (CommonTools.isNullStr(moduleFuncPO.getAppid())) {
-            throw new ServerException("应用ID不能为空");
-        }
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -195,9 +189,6 @@ public class AuthController extends BaseController {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        if (CommonTools.isNullStr(menuPO.getId())) {
-            throw new ServerException("ID不能为空");
-        }
         return ResponseEntity.ok(menuDomain.doUpdate(menuPO));
     }
 
@@ -214,9 +205,6 @@ public class AuthController extends BaseController {
         }
         if (!moduleFuncCodeList.contains(moduleFuncPO.getCode())) {
             throw new ServerException("模块功能编码非法，请重新输入");
-        }
-        if (CommonTools.isNullStr(moduleFuncPO.getId())) {
-            throw new ServerException("ID不能为空");
         }
         return ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPO));
     }

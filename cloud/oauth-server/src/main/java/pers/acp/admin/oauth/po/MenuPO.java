@@ -100,6 +100,7 @@ public class MenuPO {
     private String id;
 
     @ApiModelProperty(value = "应用ID", required = true, position = 1)
+    @NotBlank(message = "应用ID不能为空")
     private String appid;
 
     @ApiModelProperty(value = "菜单名称", required = true, position = 2)

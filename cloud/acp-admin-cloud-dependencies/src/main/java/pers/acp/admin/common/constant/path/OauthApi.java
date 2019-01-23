@@ -40,6 +40,8 @@ public interface OauthApi {
 
     String userConfig = "/user";
 
+    String userResetPwd = userConfig + "/resetpwd";
+
     String orgConfig = "/org";
 
     String runtimeConfig = "/runtime";

@@ -53,12 +53,11 @@ public class OrganizationDomain extends OauthBaseDomain {
     /**
      * 是否有编辑权限
      *
-     * @param loginNo 登录帐号
-     * @param orgIds  机构ID
+     * @param user   当前登录用户
+     * @param orgIds 机构ID
      * @return true|false
      */
-    private boolean isNotPermit(String loginNo, String... orgIds) {
-        User user = findCurrUserInfo(loginNo);
+    private boolean isNotPermit(User user, String... orgIds) {
         if (user != null) {
             return !isAdmin(user) && !user.getOrganizationMngSet().stream()
                     .map(Organization::getId)
@@ -68,13 +67,29 @@ public class OrganizationDomain extends OauthBaseDomain {
         return true;
     }
 
+    /**
+     * 是否有编辑权限
+     *
+     * @param loginNo 登录帐号
+     * @param orgIds  机构ID
+     * @return true|false
+     */
+    private boolean isNotPermit(String loginNo, String... orgIds) {
+        User user = findCurrUserInfo(loginNo);
+        return isNotPermit(user, orgIds);
+    }
+
     @Transactional
     public Organization doCreate(String loginNo, OrganizationPO organizationPO) throws ServerException {
-        if (isNotPermit(loginNo, organizationPO.getParentid())) {
+        User user = findCurrUserInfo(loginNo);
+        if (isNotPermit(user, organizationPO.getParentid())) {
             throw new ServerException("没有权限做此操作，请联系系统管理员");
         }
         Organization organization = new Organization();
-        return doSave(organization, organizationPO);
+        organization = doSave(organization, organizationPO);
+        user.getOrganizationMngSet().add(organization);
+        userRepository.save(user);
+        return organization;
     }
 
     @Transactional

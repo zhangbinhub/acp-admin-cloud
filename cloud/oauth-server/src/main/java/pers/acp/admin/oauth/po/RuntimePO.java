@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import pers.acp.admin.common.po.QueryParam;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author zhang by 11/01/2019
@@ -75,6 +76,7 @@ public class RuntimePO {
     private String configDes = "";
 
     @ApiModelProperty(value = "是否启用", position = 4)
+    @NotNull(message = "是否启用不能为空")
     private Boolean enabled;
 
     @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)

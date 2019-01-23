@@ -55,7 +55,7 @@ public class OauthBaseDomain extends BaseDomain {
      * @param user  用户对象
      * @return 级别
      */
-    protected int getUserMinLevel(String appId, User user) {
+    protected int getRoleMinLevel(String appId, User user) {
         if (user != null) {
             final int[] level = {Integer.MAX_VALUE};
             user.getRoleSet().stream().filter(role -> role.getAppid().equals(appId)).forEach(role -> {
@@ -74,7 +74,7 @@ public class OauthBaseDomain extends BaseDomain {
      * @param user 用户对象
      * @return 级别
      */
-    protected Map<String, Integer> getUserMinLevel(User user) {
+    protected Map<String, Integer> getRoleMinLevel(User user) {
         Map<String, Integer> minMap = new HashMap<>();
         if (user != null) {
             user.getRoleSet().forEach(role -> {

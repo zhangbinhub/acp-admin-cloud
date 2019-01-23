@@ -14,6 +14,14 @@ public interface UserRepository extends OauthBaseRepository<User, String> {
 
     Optional<User> findByLoginno(String loginno);
 
+    Optional<User> findByMobile(String mobile);
+
+    Optional<User> findByLoginnoAndIdNot(String loginno, String userId);
+
+    Optional<User> findByMobileAndIdNot(String mobile, String userId);
+
     List<User> findByLevelsGreaterThan(int currLevels);
+
+    void deleteByIdIn(List<String> idList);
 
 }
