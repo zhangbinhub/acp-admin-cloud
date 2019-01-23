@@ -59,6 +59,14 @@ public class Organization extends OauthBaseTreeEntity<Organization> {
         this.userSet = userSet;
     }
 
+    public Set<User> getAdminUserSet() {
+        return adminUserSet;
+    }
+
+    public void setAdminUserSet(Set<User> adminUserSet) {
+        this.adminUserSet = adminUserSet;
+    }
+
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -84,5 +92,12 @@ public class Organization extends OauthBaseTreeEntity<Organization> {
             joinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
     private Set<User> userSet = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "t_user_organization_mng_set",
+            joinColumns = {@JoinColumn(name = "organizationid", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "userid", referencedColumnName = "id")})
+    private Set<User> adminUserSet = new HashSet<>();
 
 }
