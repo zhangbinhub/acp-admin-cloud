@@ -6,7 +6,7 @@ spring:
 info:
   app:
     name: ${spring.application.name}
-    version: 1.0.0
+    version: 1.1.0
   build:
     author: zhangbin
     active: ${spring.profiles.active}

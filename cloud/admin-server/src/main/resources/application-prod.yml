@@ -1,4 +1,4 @@
-debug: false
+debug: true
 server:
   port: 8090
   tomcat:
@@ -32,8 +32,8 @@ spring:
     admin:
       ui:
         resource-locations:
-        - "classpath:/META-INF/spring-boot-admin-server-ui/"
-        - "classpath:/static/"
+          - "classpath:/META-INF/spring-boot-admin-server-ui/"
+          - "classpath:/static/"
 # ===============================
 # = Eureka Config
 # ===============================
@@ -55,7 +55,7 @@ eureka:
 turbine:
   aggregator:
     clusterConfig: default # 指定聚合哪些集群，多个使用","分割，默认为default。可使用http://.../turbine.stream?cluster={clusterConfig之一}访问
-  appConfig: server-gateway,atomic-helloworld # 配置Eureka中的serviceId列表，表明监控哪些服务
+  appConfig: server-oauth2 # 配置Eureka中的serviceId列表，表明监控哪些服务
   clusterNameExpression: new String("default")
   # 1. clusterNameExpression指定集群名称，默认表达式appName；此时：turbine.aggregator.clusterConfig需要配置想要监控的应用名称
   # 2. 当clusterNameExpression: default时，turbine.aggregator.clusterConfig可以不写，因为默认就是default
