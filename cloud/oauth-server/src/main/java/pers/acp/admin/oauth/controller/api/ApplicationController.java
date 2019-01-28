@@ -14,6 +14,7 @@ import pers.acp.admin.common.permission.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.constant.path.OauthApi;
 import pers.acp.admin.oauth.domain.ApplicationDomain;
+import pers.acp.admin.oauth.domain.security.SecurityClientDetailsService;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
 import pers.acp.core.CommonTools;
@@ -33,10 +34,13 @@ import java.util.Objects;
 @Api("应用信息")
 public class ApplicationController extends BaseController {
 
+    private final SecurityClientDetailsService securityClientDetailsService;
+
     private final ApplicationDomain applicationDomain;
 
     @Autowired
-    public ApplicationController(ApplicationDomain applicationDomain) {
+    public ApplicationController(SecurityClientDetailsService securityClientDetailsService, ApplicationDomain applicationDomain) {
+        this.securityClientDetailsService = securityClientDetailsService;
         this.applicationDomain = applicationDomain;
     }
 
@@ -52,7 +56,9 @@ public class ApplicationController extends BaseController {
         if (bindingResult.hasErrors()) {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(applicationDomain.doCreate(applicationPO));
+        Application application = applicationDomain.doCreate(applicationPO);
+        securityClientDetailsService.loadClientInfo();
+        return ResponseEntity.status(HttpStatus.CREATED).body(application);
     }
 
     @ApiOperation(value = "删除指定的信息")
@@ -66,6 +72,7 @@ public class ApplicationController extends BaseController {
     @DeleteMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         applicationDomain.doDelete(idList);
+        securityClientDetailsService.loadClientInfo();
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -82,7 +89,9 @@ public class ApplicationController extends BaseController {
         if (CommonTools.isNullStr(applicationPO.getId())) {
             throw new ServerException("ID不能为空");
         }
-        return ResponseEntity.ok(applicationDomain.doUpdate(applicationPO));
+        Application application = applicationDomain.doUpdate(applicationPO);
+        securityClientDetailsService.loadClientInfo();
+        return ResponseEntity.ok(application);
     }
 
     @ApiOperation(value = "查询信息列表",
@@ -118,7 +127,9 @@ public class ApplicationController extends BaseController {
         if (CommonTools.isNullStr(appId)) {
             throw new ServerException("ID不能为空");
         }
-        return ResponseEntity.ok(applicationDomain.doUpdateSecret(appId));
+        Application application = applicationDomain.doUpdateSecret(appId);
+        securityClientDetailsService.loadClientInfo();
+        return ResponseEntity.ok(application);
     }
 
 }

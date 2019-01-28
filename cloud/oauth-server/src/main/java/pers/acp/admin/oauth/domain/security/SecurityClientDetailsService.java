@@ -20,6 +20,7 @@ import java.util.List;
  * @since JDK 11
  */
 @Service
+@Transactional(readOnly = true)
 public class SecurityClientDetailsService implements ClientDetailsService {
 
     private final LogInstance logInstance;
@@ -38,8 +39,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
      * 初始化客户端信息
      */
     @PostConstruct
-    @Transactional(readOnly = true)
-    public void init() {
+    public void loadClientInfo() {
         List<Application> applicationList = applicationRepository.findAll();
         InMemoryClientDetailsServiceBuilder memoryClientDetailsServiceBuilder = new InMemoryClientDetailsServiceBuilder();
         final ClientDetailsServiceBuilder.ClientBuilder[] builder = {memoryClientDetailsServiceBuilder.withClient("test")
