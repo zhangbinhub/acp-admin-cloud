@@ -1,4 +1,4 @@
-debug: true
+debug: false
 server:
   port: 8090
   tomcat:
@@ -18,9 +18,6 @@ management:
 spring:
   thymeleaf:
     cache: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    default-property-inclusion: non_null
   security:
     user:
       name: admin
@@ -43,7 +40,7 @@ eureka:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
-    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.app.version}:${spring.profiles.active}
+    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.version}:${spring.profiles.active}
     metadata-map:
       user.name: ${spring.security.user.name}
       user.password: ${spring.security.user.password}
