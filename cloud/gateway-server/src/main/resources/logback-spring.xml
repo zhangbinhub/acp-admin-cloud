@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
 
-    <property name="LOG_HOME" value="logs/gatewayserver"/>
+    <property name="LOG_HOME" value="logs/gatewayserver/gatewayserver"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!--<logger name="pers.acp" level="DEBUG"/>-->

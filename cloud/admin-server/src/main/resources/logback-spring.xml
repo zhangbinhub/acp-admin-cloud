@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
 
-    <property name="LOG_HOME" value="logs/adminserver"/>
+    <property name="LOG_HOME" value="logs/adminserver/adminserver"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!--<logger name="pers.acp" level="DEBUG"/>-->
