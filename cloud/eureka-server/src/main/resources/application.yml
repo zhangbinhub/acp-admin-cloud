@@ -2,7 +2,7 @@ spring:
   profiles:
     active: prod
   application:
-    name: server-eureka
+    name: eureka-server
 info:
   version: 1.1.0
   app-name: ${spring.application.name}
