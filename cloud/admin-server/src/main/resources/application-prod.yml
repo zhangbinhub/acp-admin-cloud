@@ -1,11 +1,20 @@
 debug: false
 server:
+  address: 127.0.0.1
   port: 8090
   tomcat:
     max-threads: 1000
     uri-encoding: UTF-8
+# ===============================
+# = Log To File Config
+# ===============================
 logging:
-  path: logs/adminserver
+  path: logs/admin-server
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+  file:
+    max-size: 5MB
+    max-history: 30
 management:
   endpoints:
     web:
@@ -38,7 +47,7 @@ spring:
 # ===============================
 eureka:
   instance:
-    ip-address: 127.0.0.1
+    ip-address: ${server.address}
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15

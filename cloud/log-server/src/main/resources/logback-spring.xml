@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
 
-    <property name="LOG_HOME" value="logs/log-server/log-server"/>
-
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!--<logger name="pers.acp" level="DEBUG"/>-->
 
-    <!-- 控制台日志：输出全部日志到控制台 -->
-    <!-- 根据spring配置文件中活动中的环境来启用或禁用配置，name属性指定 -->
-    <!-- 例如：name="staging" name="dev | staging" name="!production" -->
-    <springProfile name="!prod">
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>
-                    [%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n
-                </pattern>
-                <charset>UTF8</charset>
-            </encoder>
-        </appender>
-    </springProfile>
+    <property name="LOG_HOME" value="logs/log-server"/>
 
     <!-- 输出到文件：根据时间拆分为多个文件 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -30,40 +16,15 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/log-server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/log-server.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 64 MB -->
                 <maxFileSize>5 MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
 
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
-        </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
-    </appender>
-
-    <!-- ALL类型的日志输出到文件：根据时间拆分为多个文件 -->
-    <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
-            <charset>UTF8</charset>
-        </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/ALL-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
@@ -88,8 +49,43 @@
         <appender-ref ref="ASYNC"/>
     </root>
 
+    <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ALL.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+        <prudent>true</prudent>
+    </appender>
+
+    <appender name="ALL-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>127.0.0.1:9601</destination>
+        <!-- encoder必须配置,有多种可选 -->
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
+            <customFields>{"appname":"log_server_all"}</customFields>
+        </encoder>
+    </appender>
+
     <logger name="ALL" level="INFO" additivity="false">
         <appender-ref ref="ALL"/>
+        <appender-ref ref="ALL-LOGSTASH"/>
     </logger>
 
     <jmxConfigurator/>

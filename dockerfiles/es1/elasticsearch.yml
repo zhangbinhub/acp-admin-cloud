@@ -1,0 +1,18 @@
+# 集群的名字，默认是docker-cluster
+cluster.name: elastic-cluster
+#node.name: es1
+#node.master: true
+#node.data: true
+# 如果你确定是单机模式，请设置为1
+discovery.zen.minimum_master_nodes: 1
+http.port: 9200
+network.host: 0.0.0.0
+# 如果你系统没有关闭交换分区，请把该参数设置为true
+bootstrap.memory_lock: true
+# 单节点模式 single-node
+discovery.type: single-node
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+xpack.security.enabled: false
+#network.publish_host: master-ip
+#discovery.zen.ping.unicast.hosts: ["master-ip"]
