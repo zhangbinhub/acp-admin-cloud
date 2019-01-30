@@ -69,16 +69,84 @@ gradle全局参数：
 | ./server.sh stop      | 停止应用                |
 | ./server.sh restart   | 重启应用                |
 
-## 五、系统初始化
+## 五、基础中间件环境搭建
+基础中间件包括：redis、zookeeper、kafka、kafka-manager、elasticsearch、kibana、logstash、zipkin、zipkin-dependencies、zoonavigator-api、zoonavigator-web、prometheus、grafana、setup_grafana_datasource
+> - 启动服务
+> 
+> 命令模式进入dockerfile目录，执行启动命令
+> ```bash
+> docker-compose -f docker-compose-base.yml up -d
+> ```
+> - 停止服务
+> 
+> 命令模式进入dockerfile目录，执行启动命令
+> ```bash
+> docker-compose -f docker-compose-base.yml stop
+> ```
+> - 停止并删除容器实例
+> 
+> 命令模式进入dockerfile目录，执行启动命令
+> ```bash
+> docker-compose -f docker-compose-base.yml down
+> ```
+> - docker-compose 文件：cloud/dockerfile/docker-compose-base.yml
+> - elasticsearch 的插件安装：
+>    - docker exec -it [容器Id] /bin/sh
+>    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.5.4/elasticsearch-analysis-ik-6.5.4.zip
+>    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v6.5.4/elasticsearch-analysis-pinyin-6.5.4.zip
+##### 1. zipkin
+http://127.0.0.1:9411
+![Architecture diagram](doc/images/zipkin.png)
+##### 2. kafka-manager
+http://127.0.0.1:9000
+![Architecture diagram](doc/images/kafka-manager.png)
+##### 3. zoonavigator
+http://127.0.0.1:8004
+![Architecture diagram](doc/images/zoonavigator.png)
+##### 4. prometheus
+http://127.0.0.1:9090
+![Architecture diagram](doc/images/prometheus.png)
+##### 5. kibana
+http://127.0.0.1:5601
+![Architecture diagram](doc/images/kibana.png)
+
+## 六、系统初始化
 ### （一）数据库
 > - 执行 InitData 单元测试
 
 ## 六、服务列表
-###（一）eureka-server
+### （一）. admin-server 
+###### 1 可视化监控，监控服务状态、信息聚合
+|          url          |  描述                   |
+| --------------------- | ----------------------- | 
+| /                     | 后台监控管理首页        |
+| /hystrix              | 断路信息监控            |
+###### 2 zipkin 链路追踪（需依赖 kafka）
+- 服务端
+> 从SpringCloud2.0 以后，官方已经不支持自定义服务，官方只提供编译好的jar包供用户使用。可以自行使用多种方式部署zipkin服务，并采用elasticsearch作为zipkin的数据存储器。
+- 客户端
+> - 依赖 cloud:acp-spring-cloud-starter-common
+> - 增加 zipkin 相关配置
+> ```yaml
+> spring:
+>   zipkin:
+>     sender:
+>       type: kafka
+>   sleuth:
+>     sampler:
+>       probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+> ```
+### （二）eureka-server
+服务注册发现
+
+|          url          |  描述                   |
+| --------------------- | ----------------------- | 
+| /                     | 服务状态监控界面        |
 > 服务注册发现（支持高可用eureka集群）
 >（1）无需改动代码
 >（2）修改 yml 配置即可
 ### （二）gateway-server
 > 网关服务、修改 yml 进行路由配置
 ### （三）oauth-server
-> 统一认证服务
+> - 统一认证服务
+> - 提供全套权限体系接口
