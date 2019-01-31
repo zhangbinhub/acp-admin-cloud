@@ -6,6 +6,37 @@
 - [Spring Boot 2.1.2.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.RELEASE](http://projects.spring.io/spring-cloud)
 
+## 技术栈
+- apache httpclient
+- mina
+- xstream
+- hibernate
+- jackson
+- poi
+- freemarker
+- flying-saucer-pdf-itext5
+- swagger2
+- junit5
+- spring-cloud
+    - spring-boot
+        - spring-aop
+        - spring-data-jpa
+        - spring-security
+        - spring-security-oauth2
+        - spring-data-redis
+        - spring-boot-actuator
+    - spring-data-redis-reactive
+    - spring-boot-admin-server
+    - spring-cloud-netflix-eureka-server
+    - spring-cloud-netflix-eureka-client
+    - spring-cloud-netflix-hystrix
+    - spring-cloud-netflix-dashboard
+    - spring-cloud-netflix-turbine
+    - spring-cloud-gateway
+    - spring-cloud-stream-binder-kafka
+    - spring-cloud-openfeign
+    - spring-cloud-sleuth-zipkin
+
 ## 总体架构
 ![Architecture diagram](doc/images/总体架构.jpg)
 

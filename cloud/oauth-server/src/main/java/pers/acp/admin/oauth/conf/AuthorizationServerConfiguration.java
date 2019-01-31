@@ -24,7 +24,7 @@ import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-//    private final RedisConnectionFactory connectionFactory;
+    private final RedisConnectionFactory connectionFactory;
 
     private final AuthenticationManager authenticationManager;
 
@@ -33,11 +33,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final SecurityClientDetailsService securityClientDetailsService;
 
     @Autowired
-    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, SecurityUserDetailsService securityUserDetailsService, SecurityClientDetailsService securityClientDetailsService) {
+    public AuthorizationServerConfiguration(RedisConnectionFactory connectionFactory, AuthenticationManager authenticationManager, SecurityUserDetailsService securityUserDetailsService, SecurityClientDetailsService securityClientDetailsService) {
+        this.connectionFactory = connectionFactory;
         this.authenticationManager = authenticationManager;
         this.securityUserDetailsService = securityUserDetailsService;
         this.securityClientDetailsService = securityClientDetailsService;
-//        this.connectionFactory = connectionFactory;
     }
 
     private SecurityTokenService securityTokenService() {
@@ -48,9 +48,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         SecurityTokenService securityTokenService = securityTokenService();
         // token 默认持久化到内存
-        TokenStore tokenStore = new InMemoryTokenStore();
+//        TokenStore tokenStore = new InMemoryTokenStore();
         // 持久化到 Redis
-//        TokenStore tokenStore = new RedisTokenStore(connectionFactory);
+        TokenStore tokenStore = new RedisTokenStore(connectionFactory);
         securityTokenService.setTokenStore(tokenStore);
         securityTokenService.setClientDetailsService(securityClientDetailsService);
         endpoints.authenticationManager(authenticationManager)

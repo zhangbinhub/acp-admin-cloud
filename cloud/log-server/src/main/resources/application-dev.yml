@@ -50,7 +50,6 @@ spring:
             headerMode: raw
           # topic
           destination: app-log
-          group: app-log-group
           content-type: application/json
         # 与@StreamListener注解中的value一致，是绑定的渠道名
         log_input:
@@ -83,7 +82,13 @@ eureka:
 security:
   oauth2:
     client:
-      client-id: client
-      client-secret: client
+      client-id: dbd1458a-19fb-11e9-894e-d8c49792dd7b
+      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
     resource:
       token-info-uri: http://server-oauth2/oauth/check_token
+acp:
+  swagger:
+    enabled: true
+  schedule:
+    crons:
+      LogFileBackUpTask: 0 0/1 * * * ?

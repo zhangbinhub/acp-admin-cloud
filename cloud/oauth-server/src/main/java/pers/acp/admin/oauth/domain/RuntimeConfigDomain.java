@@ -8,15 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.RuntimePO;
+import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhang by 11/01/2019
@@ -26,16 +29,29 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class RuntimeConfigDomain extends OauthBaseDomain {
 
+    private final ConcurrentHashMap<String, RuntimeConfig> runtimeConfigConcurrentHashMap = new ConcurrentHashMap<>();
+
     private final RuntimeConfigRepository runtimeConfigRepository;
 
+    private final UpdateConfigProducer updateConfigProducer;
+
     @Autowired
-    public RuntimeConfigDomain(UserRepository userRepository, RuntimeConfigRepository runtimeConfigRepository) {
+    public RuntimeConfigDomain(UserRepository userRepository, RuntimeConfigRepository runtimeConfigRepository, UpdateConfigProducer updateConfigProducer) {
         super(userRepository);
         this.runtimeConfigRepository = runtimeConfigRepository;
+        this.updateConfigProducer = updateConfigProducer;
+    }
+
+    @PostConstruct
+    public void loadRuntimeConfig() {
+        synchronized (this) {
+            runtimeConfigConcurrentHashMap.clear();
+            runtimeConfigRepository.findAll().forEach(runtimeConfig -> runtimeConfigConcurrentHashMap.put(runtimeConfig.getName(), runtimeConfig));
+        }
     }
 
     public RuntimeConfig findByName(String name) {
-        return runtimeConfigRepository.findByName(name).orElse(null);
+        return runtimeConfigConcurrentHashMap.get(name);
     }
 
     @Transactional
@@ -50,7 +66,9 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         runtimeConfig.setConfigDes(runtimePO.getConfigDes());
         runtimeConfig.setEnabled(runtimePO.getEnabled());
         runtimeConfig.setCovert(true);
-        return runtimeConfigRepository.save(runtimeConfig);
+        runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
+        updateConfigProducer.doNotifyUpdateRuntime();
+        return runtimeConfig;
     }
 
     @Transactional
@@ -61,14 +79,17 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         }
         RuntimeConfig runtimeConfig = runtimeConfigOptional.get();
         runtimeConfig.setValue(runtimePO.getValue());
-        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
         runtimeConfig.setEnabled(runtimePO.getEnabled());
-        return runtimeConfigRepository.save(runtimeConfig);
+        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
+        runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
+        updateConfigProducer.doNotifyUpdateRuntime();
+        return runtimeConfig;
     }
 
     @Transactional
     public void doDelete(List<String> idList) {
         runtimeConfigRepository.deleteByIdInAndCovert(idList, true);
+        updateConfigProducer.doNotifyUpdateRuntime();
     }
 
     public Page<RuntimeConfig> doQuery(RuntimePO runtimePO) {

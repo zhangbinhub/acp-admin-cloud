@@ -84,3 +84,9 @@ security:
       client-secret: client
     resource:
       token-info-uri: http://server-oauth2/oauth/check_token
+acp:
+  swagger:
+    enabled: true
+  schedule:
+    crons:
+      LogFileBackUpTask: 0 5 0 * * ?
