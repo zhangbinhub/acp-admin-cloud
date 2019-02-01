@@ -1,4 +1,4 @@
-package pers.acp.admin.common.constant.path;
+package pers.acp.admin.common.constant.path.oauth;
 
 /**
  * @author zhang by 18/01/2019

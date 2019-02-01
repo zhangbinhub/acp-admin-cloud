@@ -1,7 +1,6 @@
 package pers.acp.admin.oauth.controller.api;
 
 import io.swagger.annotations.*;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,10 +13,12 @@ import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.RuntimeConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
-import pers.acp.admin.common.constant.path.OauthApi;
+import pers.acp.admin.common.constant.path.oauth.OauthApi;
+import pers.acp.admin.oauth.controller.inner.InnerRuntimeController;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.RuntimePO;
+import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -35,11 +36,17 @@ import java.util.Objects;
 @Api("运行参数配置")
 public class RuntiimeController extends BaseController {
 
+    private final InnerRuntimeController innerRuntimeController;
+
     private final RuntimeConfigDomain runtimeConfigDomain;
 
+    private final UpdateConfigProducer updateConfigProducer;
+
     @Autowired
-    public RuntiimeController(RuntimeConfigDomain runtimeConfigDomain) {
+    public RuntiimeController(InnerRuntimeController innerRuntimeController, RuntimeConfigDomain runtimeConfigDomain, UpdateConfigProducer updateConfigProducer) {
+        this.innerRuntimeController = innerRuntimeController;
         this.runtimeConfigDomain = runtimeConfigDomain;
+        this.updateConfigProducer = updateConfigProducer;
     }
 
     @ApiOperation(value = "新建参数信息",
@@ -55,7 +62,9 @@ public class RuntiimeController extends BaseController {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
-        return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfigDomain.doCreate(runtimePO));
+        RuntimeConfig runtimeConfig = runtimeConfigDomain.doCreate(runtimePO);
+        updateConfigProducer.doNotifyUpdateRuntime();
+        return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfig);
     }
 
     @ApiOperation(value = "删除指定的参数信息")
@@ -69,6 +78,7 @@ public class RuntiimeController extends BaseController {
     @DeleteMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         runtimeConfigDomain.doDelete(idList);
+        updateConfigProducer.doNotifyUpdateRuntime();
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -86,7 +96,9 @@ public class RuntiimeController extends BaseController {
             throw new ServerException("配置ID不能为空");
         }
         runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
-        return ResponseEntity.ok(runtimeConfigDomain.doUpdate(runtimePO));
+        RuntimeConfig runtimeConfig = runtimeConfigDomain.doUpdate(runtimePO);
+        updateConfigProducer.doNotifyUpdateRuntime();
+        return ResponseEntity.ok(runtimeConfig);
     }
 
     @ApiOperation(value = "查询参数信息列表",
@@ -113,14 +125,7 @@ public class RuntiimeController extends BaseController {
     })
     @GetMapping(value = OauthApi.runtimeConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfigVO> find(@PathVariable String name) throws ServerException {
-        RuntimeConfig runtimeConfig = runtimeConfigDomain.findByName(name);
-        if (runtimeConfig == null) {
-            throw new ServerException("找不到参数信息");
-        } else {
-            RuntimeConfigVO runtimeConfigVO = new RuntimeConfigVO();
-            BeanUtils.copyProperties(runtimeConfig, runtimeConfigVO);
-            return ResponseEntity.ok(runtimeConfigVO);
-        }
+        return innerRuntimeController.find(name);
     }
 
 }

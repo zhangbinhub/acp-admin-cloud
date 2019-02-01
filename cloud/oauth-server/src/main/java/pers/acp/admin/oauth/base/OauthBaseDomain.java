@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @since JDK 11
  */
 @Transactional(readOnly = true)
-public class OauthBaseDomain extends BaseDomain {
+public abstract class OauthBaseDomain extends BaseDomain {
 
     protected final UserRepository userRepository;
 

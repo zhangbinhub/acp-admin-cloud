@@ -1,6 +1,8 @@
 package pers.acp.admin.oauth.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -8,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.RuntimePO;
-import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
@@ -26,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since JDK 11
  */
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Transactional(readOnly = true)
 public class RuntimeConfigDomain extends OauthBaseDomain {
 
@@ -33,13 +35,10 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
 
     private final RuntimeConfigRepository runtimeConfigRepository;
 
-    private final UpdateConfigProducer updateConfigProducer;
-
     @Autowired
-    public RuntimeConfigDomain(UserRepository userRepository, RuntimeConfigRepository runtimeConfigRepository, UpdateConfigProducer updateConfigProducer) {
+    public RuntimeConfigDomain(UserRepository userRepository, RuntimeConfigRepository runtimeConfigRepository) {
         super(userRepository);
         this.runtimeConfigRepository = runtimeConfigRepository;
-        this.updateConfigProducer = updateConfigProducer;
     }
 
     @PostConstruct
@@ -67,7 +66,6 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         runtimeConfig.setEnabled(runtimePO.getEnabled());
         runtimeConfig.setCovert(true);
         runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
-        updateConfigProducer.doNotifyUpdateRuntime();
         return runtimeConfig;
     }
 
@@ -82,14 +80,12 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         runtimeConfig.setEnabled(runtimePO.getEnabled());
         runtimeConfig.setConfigDes(runtimePO.getConfigDes());
         runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
-        updateConfigProducer.doNotifyUpdateRuntime();
         return runtimeConfig;
     }
 
     @Transactional
     public void doDelete(List<String> idList) {
         runtimeConfigRepository.deleteByIdInAndCovert(idList, true);
-        updateConfigProducer.doNotifyUpdateRuntime();
     }
 
     public Page<RuntimeConfig> doQuery(RuntimePO runtimePO) {

@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pers.acp.admin.common.base.BaseController;
-import pers.acp.admin.common.constant.path.OauthInnerApi;
+import pers.acp.admin.common.constant.path.CommonPath;
+import pers.acp.admin.common.constant.path.oauth.OauthInnerApi;
 
 /**
  * @author zhang by 16/01/2019
  * @since JDK 11
  */
 @RestController
-@RequestMapping
+@RequestMapping(CommonPath.innerBasePath)
 @Api("权限信息")
 public class InnerAuthController extends BaseController {
 

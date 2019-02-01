@@ -2,7 +2,6 @@ package pers.acp.admin.log.conf;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pers.acp.core.CommonTools;
 
 /**
  * @author zhang by 30/01/2019

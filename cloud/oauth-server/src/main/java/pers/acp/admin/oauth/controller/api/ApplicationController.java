@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
-import pers.acp.admin.common.constant.path.OauthApi;
+import pers.acp.admin.common.constant.path.oauth.OauthApi;
 import pers.acp.admin.oauth.domain.ApplicationDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
+import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -35,9 +36,12 @@ public class ApplicationController extends BaseController {
 
     private final ApplicationDomain applicationDomain;
 
+    private final UpdateConfigProducer updateConfigProducer;
+
     @Autowired
-    public ApplicationController(ApplicationDomain applicationDomain) {
+    public ApplicationController(ApplicationDomain applicationDomain, UpdateConfigProducer updateConfigProducer) {
         this.applicationDomain = applicationDomain;
+        this.updateConfigProducer = updateConfigProducer;
     }
 
     @ApiOperation(value = "新建应用信息",
@@ -53,6 +57,7 @@ public class ApplicationController extends BaseController {
             throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         Application application = applicationDomain.doCreate(applicationPO);
+        updateConfigProducer.doNotifyUpdateApp();
         return ResponseEntity.status(HttpStatus.CREATED).body(application);
     }
 
@@ -67,6 +72,7 @@ public class ApplicationController extends BaseController {
     @DeleteMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
         applicationDomain.doDelete(idList);
+        updateConfigProducer.doNotifyUpdateApp();
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -84,6 +90,7 @@ public class ApplicationController extends BaseController {
             throw new ServerException("ID不能为空");
         }
         Application application = applicationDomain.doUpdate(applicationPO);
+        updateConfigProducer.doNotifyUpdateApp();
         return ResponseEntity.ok(application);
     }
 
@@ -121,6 +128,7 @@ public class ApplicationController extends BaseController {
             throw new ServerException("ID不能为空");
         }
         Application application = applicationDomain.doUpdateSecret(appId);
+        updateConfigProducer.doNotifyUpdateApp();
         return ResponseEntity.ok(application);
     }
 

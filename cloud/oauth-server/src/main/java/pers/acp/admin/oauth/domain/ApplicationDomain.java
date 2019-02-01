@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
-import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
@@ -29,13 +28,10 @@ public class ApplicationDomain extends OauthBaseDomain {
 
     private final ApplicationRepository applicationRepository;
 
-    private final UpdateConfigProducer updateConfigProducer;
-
     @Autowired
-    public ApplicationDomain(UserRepository userRepository, ApplicationRepository applicationRepository, UpdateConfigProducer updateConfigProducer) {
+    public ApplicationDomain(UserRepository userRepository, ApplicationRepository applicationRepository) {
         super(userRepository);
         this.applicationRepository = applicationRepository;
-        this.updateConfigProducer = updateConfigProducer;
     }
 
     @Transactional
@@ -47,7 +43,6 @@ public class ApplicationDomain extends OauthBaseDomain {
         application.setRefreshTokenValiditySeconds(applicationPO.getRefreshTokenValiditySeconds());
         application.setCovert(true);
         application = applicationRepository.save(application);
-        updateConfigProducer.doNotifyUpdateApp();
         return application;
     }
 
@@ -62,7 +57,6 @@ public class ApplicationDomain extends OauthBaseDomain {
         application.setAccessTokenValiditySeconds(applicationPO.getAccessTokenValiditySeconds());
         application.setRefreshTokenValiditySeconds(applicationPO.getRefreshTokenValiditySeconds());
         application = applicationRepository.save(application);
-        updateConfigProducer.doNotifyUpdateApp();
         return application;
     }
 
@@ -75,14 +69,12 @@ public class ApplicationDomain extends OauthBaseDomain {
         Application application = applicaitonOptional.get();
         application.setSecret(CommonTools.getUuid());
         application = applicationRepository.save(application);
-        updateConfigProducer.doNotifyUpdateApp();
         return application;
     }
 
     @Transactional
     public void doDelete(List<String> idList) {
         applicationRepository.deleteByIdInAndCovert(idList, true);
-        updateConfigProducer.doNotifyUpdateApp();
     }
 
     public Page<Application> doQuery(ApplicationPO applicationPO) {

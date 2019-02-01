@@ -11,7 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.ModuleFuncCode;
-import pers.acp.admin.common.constant.path.OauthApi;
+import pers.acp.admin.common.constant.path.oauth.OauthApi;
 import pers.acp.admin.common.permission.AuthConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.MenuDomain;
