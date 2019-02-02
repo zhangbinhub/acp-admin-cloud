@@ -110,8 +110,6 @@ ribbon:
     enabled: true
     clients: oauth2-server
 acp:
-  swagger:
-    enabled: true
   schedule:
     crons:
       LogFileBackUpTask: 0 5 0 * * ?

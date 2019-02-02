@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.conf;
+package pers.acp.admin.log.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class CustomerSwaggerConfiguration extends BaseSwaggerConfiguration {
 
     @Bean
     public Docket createRestApi() {
-        return buildDocket("pers.acp.admin.oauth.controller", "Oauth Server RESTful API");
+        return buildDocket("pers.acp.admin.log.controller", "Log Server RESTful API");
     }
 
 }

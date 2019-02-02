@@ -45,11 +45,11 @@ public class UserDomain extends OauthBaseDomain {
         this.roleRepository = roleRepository;
     }
 
-    private void validatePermit(String loginNo, UserPO userPO, Set<Role> roleSetPO) throws ServerException {
+    private void validatePermit(String loginNo, UserPO userPO, Set<Role> roleSetPO, boolean isCreate) throws ServerException {
         User currUserInfo = findCurrUserInfo(loginNo);
         if (!isAdmin(currUserInfo)) {
-            if (currUserInfo.getLevels() > userPO.getLevels()) {
-                throw new ServerException("不能修改级别比自身大或相等的用户信息");
+            if (currUserInfo.getLevels() >= userPO.getLevels()) {
+                throw new ServerException("不能编辑级别比自身大的用户信息");
             }
             for (Organization organization : currUserInfo.getOrganizationMngSet()) {
                 if (!userPO.getOrgIds().contains(organization.getId())) {
@@ -63,6 +63,12 @@ public class UserDomain extends OauthBaseDomain {
             for (Role role : roleSetPO) {
                 if (!roleMinLevel.containsKey(role.getAppid()) || roleMinLevel.get(role.getAppid()) >= role.getLevels()) {
                     throw new ServerException("没有权限编辑角色【" + role.getName() + "】，请联系系统管理员");
+                }
+            }
+        } else {
+            if (isCreate) {
+                if (currUserInfo.getLevels() >= userPO.getLevels()) {
+                    throw new ServerException("不能创建级别比自身大的用户");
                 }
             }
         }
@@ -100,7 +106,7 @@ public class UserDomain extends OauthBaseDomain {
     @Transactional
     public User doCreate(String loginNo, UserPO userPO) throws ServerException {
         Set<Role> roleSet = new HashSet<>(roleRepository.findAllById(userPO.getRoleIds()));
-        validatePermit(loginNo, userPO, roleSet);
+        validatePermit(loginNo, userPO, roleSet, true);
         User checkUser = userRepository.findByLoginno(userPO.getLoginno()).orElse(null);
         if (checkUser != null) {
             throw new ServerException("登录账号已存在，请重新输入");
@@ -119,7 +125,7 @@ public class UserDomain extends OauthBaseDomain {
     @Transactional
     public User doUpdate(String loginNo, UserPO userPO) throws ServerException {
         Set<Role> roleSet = new HashSet<>(roleRepository.findAllById(userPO.getRoleIds()));
-        validatePermit(loginNo, userPO, roleSet);
+        validatePermit(loginNo, userPO, roleSet, false);
         Optional<User> userOptional = userRepository.findById(userPO.getId());
         if (userOptional.isEmpty()) {
             throw new ServerException("找不到用户信息");
@@ -150,7 +156,7 @@ public class UserDomain extends OauthBaseDomain {
         User user = userOptional.get();
         User currUserInfo = findCurrUserInfo(loginNo);
         if (!isAdmin(currUserInfo)) {
-            if (currUserInfo.getLevels() > user.getLevels()) {
+            if (currUserInfo.getLevels() >= user.getLevels()) {
                 throw new ServerException("不能修改级别比自身大或相等的用户信息");
             }
         }

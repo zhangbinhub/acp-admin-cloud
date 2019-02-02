@@ -10,10 +10,10 @@ import pers.acp.admin.log.feign.Oauth;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
 import pers.acp.core.exceptions.TimerException;
-import pers.acp.core.log.LogFactory;
 import pers.acp.file.FileOperation;
 import pers.acp.springboot.core.base.BaseSpringBootScheduledTask;
 import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.springcloud.common.log.LogInstance;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,14 +27,15 @@ import java.util.List;
 @Component("LogFileBackUpTask")
 public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
 
-    private final LogFactory log = LogFactory.getInstance(this.getClass());
+    private final LogInstance logInstance;
 
     private final LogServerCustomerConfiguration logServerCustomerConfiguration;
 
     private final Oauth oauth;
 
     @Autowired
-    public LogFileBackUpTask(LogServerCustomerConfiguration logServerCustomerConfiguration, Oauth oauth) {
+    public LogFileBackUpTask(LogInstance logInstance, LogServerCustomerConfiguration logServerCustomerConfiguration, Oauth oauth) {
+        this.logInstance = logInstance;
         this.logServerCustomerConfiguration = logServerCustomerConfiguration;
         this.oauth = oauth;
         setTaskName("日志文件备份任务");
@@ -42,7 +43,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
 
     @Override
     public boolean beforeExcuteFun() {
-        log.info("开始执行日志文件备份");
+        logInstance.info("开始执行日志文件备份");
         return true;
     }
 
@@ -58,25 +59,25 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
             }
             File[] files = fold.listFiles(pathname -> pathname.getName().contains(logFileDate));
             if (files != null && files.length > 0) {
-                log.info(logFileFold + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.length + " 个");
+                logInstance.info(logFileFold + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.length + " 个");
                 String zipFilePath = logFileFold + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + LogBackUp.EXTENSION;
                 List<String> fileNames = new ArrayList<>();
                 for (File file : files) {
                     fileNames.add(file.getAbsolutePath());
                 }
-                log.info("开始执行文件压缩...");
+                logInstance.info("开始执行文件压缩...");
                 zipFilePath = FileOperation.filesToZIP(fileNames.toArray(new String[]{}), zipFilePath, true);
                 if (!CommonTools.isNullStr(zipFilePath)) {
-                    log.info("文件压缩完成，压缩文件为：" + zipFilePath);
+                    logInstance.info("文件压缩完成，压缩文件为：" + zipFilePath);
                 } else {
-                    log.info("文件压缩失败！");
+                    logInstance.info("文件压缩失败！");
                 }
             } else {
-                log.info(logFileFold + " 路径下没有 " + logFileDate + " 的日志文件");
+                logInstance.info(logFileFold + " 路径下没有 " + logFileDate + " 的日志文件");
             }
             doClearBackUpFiles();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            logInstance.error(e.getMessage(), e);
         }
         return true;
     }
@@ -89,7 +90,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
     private void doClearBackUpFiles() throws TimerException {
         RuntimeConfigVO runtimeConfigVO = oauth.findRuntimeByName(RuntimeName.logServerBackUpMaxHistory);
         int maxHistory = Integer.valueOf(runtimeConfigVO.getValue());
-        log.info("开始清理历史备份文件，最大保留天数：" + maxHistory);
+        logInstance.info("开始清理历史备份文件，最大保留天数：" + maxHistory);
         List<String> filterNames = new ArrayList<>();
         Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
         for (int i = 0; i < maxHistory; i++) {
@@ -105,7 +106,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                 }
             }
         }
-        log.info("清理历史备份文件完成！");
+        logInstance.info("清理历史备份文件完成！");
     }
 
 }

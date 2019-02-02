@@ -7,12 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.common.constant.path.oauth.OauthApi;
-import pers.acp.admin.common.permission.AuthConfigExpression;
+import pers.acp.admin.common.permission.oauth.AuthConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.MenuDomain;
 import pers.acp.admin.oauth.domain.ModuleFuncDomain;
@@ -29,15 +29,18 @@ import pers.acp.springcloud.common.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author zhang by 16/01/2019
  * @since JDK 11
  */
+@Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
 @Api("权限信息")
@@ -124,10 +127,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Menu> addMenu(@RequestBody @Valid MenuPO menuPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Menu> addMenu(@RequestBody @Valid MenuPO menuPO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPO));
     }
 
@@ -139,23 +139,18 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ModuleFunc> addModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<ModuleFunc> addModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPO));
     }
 
     @ApiOperation(value = "删除指定的菜单信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> deleteMenu(@RequestBody List<String> idList) throws ServerException {
+    public ResponseEntity<InfoVO> deleteMenu(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
+                                             @RequestBody List<String> idList) throws ServerException {
         menuDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
@@ -163,15 +158,13 @@ public class AuthController extends BaseController {
     }
 
     @ApiOperation(value = "删除指定的模块功能信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> deleteModuleFunc(@RequestBody List<String> idList) throws ServerException {
+    public ResponseEntity<InfoVO> deleteModuleFunc(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
+                                                   @RequestBody List<String> idList) throws ServerException {
         moduleFuncDomain.doDelete(idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
@@ -185,10 +178,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Menu> updateMenu(@RequestBody @Valid MenuPO menuPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Menu> updateMenu(@RequestBody @Valid MenuPO menuPO) throws ServerException {
         return ResponseEntity.ok(menuDomain.doUpdate(menuPO));
     }
 
@@ -199,10 +189,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ModuleFunc> updateModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<ModuleFunc> updateModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO) throws ServerException {
         if (!moduleFuncCodeList.contains(moduleFuncPO.getCode())) {
             throw new ServerException("模块功能编码非法，请重新输入");
         }
@@ -210,34 +197,24 @@ public class AuthController extends BaseController {
     }
 
     @ApiOperation(value = "获取菜单详细信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "menuId", value = "菜单id", required = true, paramType = "path", dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = OauthApi.menuConfig + "/{menuId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<MenuVO> menuInfo(@PathVariable String menuId) throws ServerException {
-        if (CommonTools.isNullStr(menuId)) {
-            throw new ServerException("ID不能为空");
-        }
+    public ResponseEntity<MenuVO> menuInfo(@ApiParam(value = "菜单id", required = true) @NotBlank(message = "菜单id不能为空")
+                                           @PathVariable String menuId) throws ServerException {
         return ResponseEntity.ok(menuDomain.getMenuInfo(menuId));
     }
 
     @ApiOperation(value = "获取模块功能详细信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "moduleFuncId", value = "模块功能id", required = true, paramType = "path", dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = OauthApi.moduleFuncConfig + "/{moduleFuncId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ModuleFuncVO> moduleFuncInfo(@PathVariable String moduleFuncId) throws ServerException {
-        if (CommonTools.isNullStr(moduleFuncId)) {
-            throw new ServerException("ID不能为空");
-        }
+    public ResponseEntity<ModuleFuncVO> moduleFuncInfo(@ApiParam(value = "模块功能id", required = true) @NotBlank(message = "模块功能id不能为空")
+                                                       @PathVariable String moduleFuncId) throws ServerException {
         return ResponseEntity.ok(moduleFuncDomain.getModuleFuncInfo(moduleFuncId));
     }
 

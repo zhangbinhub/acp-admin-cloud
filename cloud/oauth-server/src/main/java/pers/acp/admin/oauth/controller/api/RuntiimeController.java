@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
-import pers.acp.admin.common.permission.RuntimeConfigExpression;
+import pers.acp.admin.common.permission.oauth.RuntimeConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.common.constant.path.oauth.OauthApi;
@@ -24,13 +24,16 @@ import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author zhang by 11/01/2019
  * @since JDK 11
  */
+@Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
 @Api("运行参数配置")
@@ -57,10 +60,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
         runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doCreate(runtimePO);
         updateConfigProducer.doNotifyUpdateRuntime();
@@ -68,15 +68,13 @@ public class RuntiimeController extends BaseController {
     }
 
     @ApiOperation(value = "删除指定的参数信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeDelete)
     @DeleteMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> delete(@RequestBody List<String> idList) {
+    public ResponseEntity<InfoVO> delete(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
+                                         @RequestBody List<String> idList) {
         runtimeConfigDomain.doDelete(idList);
         updateConfigProducer.doNotifyUpdateRuntime();
         InfoVO infoVO = new InfoVO();
@@ -117,14 +115,12 @@ public class RuntiimeController extends BaseController {
 
     @ApiOperation(value = "获取参数信息",
             notes = "根据参数名称获取")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "name", value = "参数名称", required = true, paramType = "path", dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVO.class)
     })
     @GetMapping(value = OauthApi.runtimeConfig + "/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfigVO> find(@PathVariable String name) throws ServerException {
+    public ResponseEntity<RuntimeConfigVO> find(@ApiParam(value = "参数名称", required = true) @NotBlank(message = "参数名称不能为空")
+                                                @PathVariable String name) throws ServerException {
         return innerRuntimeController.find(name);
     }
 
