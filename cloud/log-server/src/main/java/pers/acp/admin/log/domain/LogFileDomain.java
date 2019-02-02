@@ -65,7 +65,11 @@ public class LogFileDomain {
         String foldPath = logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH.replace("\\", "/");
         File fold = new File(foldPath);
         validateFold(fold);
-        fileDownLoadHandle.downLoadFile(request, response, foldPath + File.separator + fileName, false, Collections.singletonList(foldPath + "/.*"));
+        String filePath = foldPath + File.separator + fileName;
+        if (!new File(filePath).exists()) {
+            throw new ServerException("文件[" + fileName + "]不存在");
+        }
+        fileDownLoadHandle.downLoadFile(request, response, filePath, false, Collections.singletonList(foldPath + "/.*"));
     }
 
 }
