@@ -8,11 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
-import pers.acp.admin.common.constant.path.OauthApi;
-import pers.acp.admin.common.permission.UserConfigExpression;
+import pers.acp.admin.common.constant.path.oauth.OauthApi;
+import pers.acp.admin.common.permission.oauth.UserConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.UserDomain;
 import pers.acp.admin.oauth.entity.User;
@@ -24,6 +24,8 @@ import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +33,7 @@ import java.util.Objects;
  * @author zhangbin by 11/04/2018 16:04
  * @since JDK 11
  */
+@Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
 @Api("用户信息")
@@ -64,10 +67,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     })
     @RequestMapping(value = OauthApi.currUser, method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> updateCurrUser(OAuth2Authentication user, @RequestBody @Valid UserInfoPO userInfoPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<User> updateCurrUser(OAuth2Authentication user, @RequestBody @Valid UserInfoPO userInfoPO) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
@@ -114,23 +114,19 @@ public class UserController extends BaseController {
     })
     @PreAuthorize(UserConfigExpression.userAdd)
     @PutMapping(value = OauthApi.userConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> add(OAuth2Authentication user, @RequestBody @Valid UserPO userPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<User> add(OAuth2Authentication user, @RequestBody @Valid UserPO userPO) throws ServerException {
         return ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.getName(), userPO));
     }
 
     @ApiOperation(value = "删除指定的用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "idList", value = "id列表", required = true, paramType = "body", allowMultiple = true, dataType = "String")
-    })
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO.class)
     })
     @PreAuthorize(UserConfigExpression.userDelete)
     @DeleteMapping(value = OauthApi.userConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> delete(OAuth2Authentication user, @RequestBody List<String> idList) throws ServerException {
+    public ResponseEntity<InfoVO> delete(OAuth2Authentication user,
+                                         @ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
+                                         @RequestBody List<String> idList) throws ServerException {
         userDomain.doDelete(user.getName(), idList);
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
@@ -144,10 +140,7 @@ public class UserController extends BaseController {
     })
     @PreAuthorize(UserConfigExpression.userUpdate)
     @PatchMapping(value = OauthApi.userConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> update(OAuth2Authentication user, @RequestBody @Valid UserPO userPO, BindingResult bindingResult) throws ServerException {
-        if (bindingResult.hasErrors()) {
-            throw new ServerException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<User> update(OAuth2Authentication user, @RequestBody @Valid UserPO userPO) throws ServerException {
         if (CommonTools.isNullStr(userPO.getId())) {
             throw new ServerException("ID不能为空");
         }

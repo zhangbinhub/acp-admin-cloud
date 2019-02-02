@@ -1,9 +1,20 @@
 debug: false
 server:
+  address: 127.0.0.1
   port: 8999
   tomcat:
     max-threads: 1000
     uri-encoding: UTF-8
+# ===============================
+# = Log To File Config
+# ===============================
+logging:
+  path: logs/oauth-server
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+  file:
+    max-size: 5MB
+    max-history: 30
 management:
   endpoints:
     web:
@@ -26,6 +37,44 @@ spring:
     default-property-inclusion: non_null
   redis:
     url: redis://127.0.0.1:6379
+  sleuth:
+    sampler:
+      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: 127.0.0.1:9092
+      bindings:
+        log_output:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: app-log
+          content-type: application/json
+        update_config_output:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: auth-config
+          content-type: application/json
+        update_config_input:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: auth-config
+          group: update-config-group
+          content-type: application/json
   # ===============================
   # = JPA / HIBERNATE
   # ===============================
@@ -54,9 +103,11 @@ spring:
 # ===============================
 eureka:
   instance:
+    ip-address: ${server.address}
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.version}:${spring.profiles.active}
   client:
     registry-fetch-interval-seconds: 5
     service-url:
@@ -67,3 +118,6 @@ acp:
   cloud:
     oauth:
       oauth-server: true
+    log-server:
+      enabled: true
+      log-type: AUTH

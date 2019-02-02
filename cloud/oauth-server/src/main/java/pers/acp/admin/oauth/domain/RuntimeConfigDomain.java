@@ -1,6 +1,8 @@
 package pers.acp.admin.oauth.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,18 +15,23 @@ import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhang by 11/01/2019
  * @since JDK 11
  */
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Transactional(readOnly = true)
 public class RuntimeConfigDomain extends OauthBaseDomain {
+
+    private final ConcurrentHashMap<String, RuntimeConfig> runtimeConfigConcurrentHashMap = new ConcurrentHashMap<>();
 
     private final RuntimeConfigRepository runtimeConfigRepository;
 
@@ -34,8 +41,16 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         this.runtimeConfigRepository = runtimeConfigRepository;
     }
 
+    @PostConstruct
+    public void loadRuntimeConfig() {
+        synchronized (this) {
+            runtimeConfigConcurrentHashMap.clear();
+            runtimeConfigRepository.findAll().forEach(runtimeConfig -> runtimeConfigConcurrentHashMap.put(runtimeConfig.getName(), runtimeConfig));
+        }
+    }
+
     public RuntimeConfig findByName(String name) {
-        return runtimeConfigRepository.findByName(name).orElse(null);
+        return runtimeConfigConcurrentHashMap.get(name);
     }
 
     @Transactional
@@ -50,7 +65,8 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         runtimeConfig.setConfigDes(runtimePO.getConfigDes());
         runtimeConfig.setEnabled(runtimePO.getEnabled());
         runtimeConfig.setCovert(true);
-        return runtimeConfigRepository.save(runtimeConfig);
+        runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
+        return runtimeConfig;
     }
 
     @Transactional
@@ -61,9 +77,10 @@ public class RuntimeConfigDomain extends OauthBaseDomain {
         }
         RuntimeConfig runtimeConfig = runtimeConfigOptional.get();
         runtimeConfig.setValue(runtimePO.getValue());
-        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
         runtimeConfig.setEnabled(runtimePO.getEnabled());
-        return runtimeConfigRepository.save(runtimeConfig);
+        runtimeConfig.setConfigDes(runtimePO.getConfigDes());
+        runtimeConfig = runtimeConfigRepository.save(runtimeConfig);
+        return runtimeConfig;
     }
 
     @Transactional

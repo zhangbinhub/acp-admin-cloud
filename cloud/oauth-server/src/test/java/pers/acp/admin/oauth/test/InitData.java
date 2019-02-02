@@ -6,6 +6,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.common.constant.RoleCode;
+import pers.acp.admin.common.enumeration.RuntimeInfoEnum;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
@@ -33,13 +34,16 @@ class InitData extends BaseTest {
     @Autowired
     private ModuleFuncRepository moduleFuncRepository;
 
+    @Autowired
+    private RuntimeConfigRepository runtimeConfigRepository;
+
     /**
      * 初始化数据，仅可执行一次
      */
     @Test
     @Transactional
     @Rollback(false)
-    void doInit() {
+    void doInitAll() {
         Application application = new Application();
         application.setAppname("Acp-Admin");
         application.setSecret("E0D3024D-9A22-41EE-AC0F-FC6B56E367AE");
@@ -77,6 +81,8 @@ class InitData extends BaseTest {
         user.getRoleSet().add(roleAdmin);
         user.getRoleSet().add(roleTest);
         userRepository.save(user);
+
+        initRuntimeConfig();
     }
 
     private void initMenus(Application application, Role... roles) {
@@ -554,6 +560,19 @@ class InitData extends BaseTest {
             role.getModuleFuncSet().add(userUpdate);
             role.getModuleFuncSet().add(userQuery);
         }
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void initRuntimeConfig() {
+        RuntimeConfig logServerBackUpMaxHistory = new RuntimeConfig();
+        logServerBackUpMaxHistory.setEnabled(RuntimeInfoEnum.logServerBackUpMaxHistory.isEnabled());
+        logServerBackUpMaxHistory.setName(RuntimeInfoEnum.logServerBackUpMaxHistory.getName());
+        logServerBackUpMaxHistory.setValue(RuntimeInfoEnum.logServerBackUpMaxHistory.getValue());
+        logServerBackUpMaxHistory.setConfigDes(RuntimeInfoEnum.logServerBackUpMaxHistory.getConfigDes());
+        logServerBackUpMaxHistory.setCovert(false);
+        runtimeConfigRepository.save(logServerBackUpMaxHistory);
     }
 
 }

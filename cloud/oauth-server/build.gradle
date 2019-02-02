@@ -13,10 +13,10 @@ dependencyManagement {
     }
 }
 dependencies {
-    compile(project(":cloud:acp-admin-cloud-dependencies")) {
-        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-stream-kafka'
-    }
-
+//    compile(project(":cloud:acp-admin-cloud-dependencies")) {
+//        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-stream-kafka'
+//    }
+    compile project(":cloud:acp-admin-cloud-dependencies")
     compile "org.springframework.boot:spring-boot-starter-data-redis"
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {

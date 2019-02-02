@@ -42,7 +42,8 @@ public class ApplicationDomain extends OauthBaseDomain {
         application.setAccessTokenValiditySeconds(applicationPO.getAccessTokenValiditySeconds());
         application.setRefreshTokenValiditySeconds(applicationPO.getRefreshTokenValiditySeconds());
         application.setCovert(true);
-        return applicationRepository.save(application);
+        application = applicationRepository.save(application);
+        return application;
     }
 
     @Transactional
@@ -55,7 +56,8 @@ public class ApplicationDomain extends OauthBaseDomain {
         application.setAppname(applicationPO.getAppname());
         application.setAccessTokenValiditySeconds(applicationPO.getAccessTokenValiditySeconds());
         application.setRefreshTokenValiditySeconds(applicationPO.getRefreshTokenValiditySeconds());
-        return applicationRepository.save(application);
+        application = applicationRepository.save(application);
+        return application;
     }
 
     @Transactional
@@ -66,7 +68,8 @@ public class ApplicationDomain extends OauthBaseDomain {
         }
         Application application = applicaitonOptional.get();
         application.setSecret(CommonTools.getUuid());
-        return applicationRepository.save(application);
+        application = applicationRepository.save(application);
+        return application;
     }
 
     @Transactional

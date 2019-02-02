@@ -3,6 +3,7 @@ package pers.acp.admin.oauth.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.Menu;
 import pers.acp.admin.oauth.entity.ModuleFunc;
@@ -72,11 +73,12 @@ public class RoleDomain extends OauthBaseDomain {
     @Transactional
     public Role doCreate(RolePO rolePO, String loginNo) throws ServerException {
         User user = findCurrUserInfo(loginNo);
-        if (!isAdmin(user)) {
-            int currLevel = getRoleMinLevel(rolePO.getAppid(), user);
-            if (currLevel >= rolePO.getLevels()) {
-                throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
-            }
+        int currLevel = getRoleMinLevel(rolePO.getAppid(), user);
+        if (currLevel >= rolePO.getLevels()) {
+            throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
+        }
+        if (rolePO.getCode().equals(RoleCode.ADMIN)) {
+            throw new ServerException("不允许创建超级管理员");
         }
         Role role = new Role();
         role.setAppid(rolePO.getAppid());
@@ -86,13 +88,11 @@ public class RoleDomain extends OauthBaseDomain {
     @Transactional
     public void doDelete(String loginNo, List<String> idList) throws ServerException {
         User user = findCurrUserInfo(loginNo);
-        if (!isAdmin(user)) {
-            Map<String, Integer> roleMinLevel = getRoleMinLevel(user);
-            List<Role> roleList = roleRepository.findAllById(idList);
-            for (Role role : roleList) {
-                if (!roleMinLevel.containsKey(role.getAppid()) || roleMinLevel.get(role.getAppid()) >= role.getLevels()) {
-                    throw new ServerException("没有权限做此操作，请联系系统管理员");
-                }
+        Map<String, Integer> roleMinLevel = getRoleMinLevel(user);
+        List<Role> roleList = roleRepository.findAllById(idList);
+        for (Role role : roleList) {
+            if (!roleMinLevel.containsKey(role.getAppid()) || roleMinLevel.get(role.getAppid()) >= role.getLevels()) {
+                throw new ServerException("没有权限做此操作");
             }
         }
         roleRepository.deleteByIdIn(idList);
@@ -105,14 +105,21 @@ public class RoleDomain extends OauthBaseDomain {
         if (roleOptional.isEmpty()) {
             throw new ServerException("找不到角色信息");
         }
+        int currLevel = getRoleMinLevel(rolePO.getAppid(), user);
         Role role = roleOptional.get();
         if (!isAdmin(user)) {
-            int currLevel = getRoleMinLevel(rolePO.getAppid(), user);
             if (currLevel > 0 && currLevel >= rolePO.getLevels()) {
                 throw new ServerException("没有权限做此操作，角色级别必须大于 " + currLevel);
             }
             if (currLevel > 0 && currLevel >= role.getLevels()) {
                 throw new ServerException("没有权限做此操作，请联系系统管理员");
+            }
+        } else {
+            if (!rolePO.getCode().equals(role.getCode()) && role.getCode().equals(RoleCode.ADMIN)) {
+                throw new ServerException("超级管理员编码不允许修改");
+            }
+            if (rolePO.getLevels() != role.getLevels() && role.getLevels() <= 0) {
+                throw new ServerException("不允许修改为超级管理员级别");
             }
         }
         return doSave(role, rolePO);

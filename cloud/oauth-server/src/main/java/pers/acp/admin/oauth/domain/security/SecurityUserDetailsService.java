@@ -24,6 +24,7 @@ import java.util.Set;
  * @since JDK 11
  */
 @Service
+@Transactional(readOnly = true)
 public class SecurityUserDetailsService implements UserDetailsService {
 
     private final LogInstance logInstance;
@@ -44,7 +45,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException 找不到用户信息异常
      */
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         pers.acp.admin.oauth.entity.User user = userRepository.findByLoginno(username).orElse(null);
         if (user == null) {

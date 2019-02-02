@@ -1,7 +1,8 @@
-package pers.acp.admin.common.permission;
+package pers.acp.admin.common.permission.oauth;
 
 import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.common.constant.RoleCode;
+import pers.acp.admin.common.permission.BaseExpression;
 
 /**
  * @author zhang by 13/01/2019

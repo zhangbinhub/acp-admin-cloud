@@ -62,119 +62,146 @@ services:
   ########################################################################################################################
   ## 以下是可选监控组建，暂时注释，本地资源不够了，具备条件调试时打开
 
-#  elasticsearch:
-#    image: elasticsearch:6.5.4
-#    container_name: elasticsearch
-#    restart: always
-#    networks:
-#      - elk
-#    ports:
-#      - 9200:9200
-#      - 9300:9300
-#    environment:
-#      - http.host=0.0.0.0
-#      - transport.host=127.0.0.1
-#      - http.cors.enabled=true
-#      - http.cors.allow-origin=*
-#      - xpack.security.enabled=false
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-#    volumes:
-#      - ./elasticsearch/data:/usr/share/elasticsearch/data
-#
-#  zipkin:
-#    image: openzipkin/zipkin
-#    container_name: zipkin
-#    restart: always
-#    networks:
-#      - elk
-#    ports:
-#      - 9411:9411
-#    environment:
-#      - KAFKA_ZOOKEEPER=zookeeper
-#      - STORAGE_TYPE=elasticsearch
-#      - ES_HOSTS=elasticsearch
-#    # Uncomment to enable scribe
-#    # - SCRIBE_ENABLED=true
-#    # Uncomment to enable self-tracing
-#    # - SELF_TRACING_ENABLED=true
-#    # Uncomment to enable debug logging
-#    # - JAVA_OPTS=-Dlogging.level.zipkin=DEBUG -Dlogging.level.zipkin2=DEBUG
-#    depends_on:
-#      - zookeeper
-#      - elasticsearch
-#
-#  zipkin-dependencies:
-#    image: openzipkin/zipkin-dependencies
-#    container_name: zipkin-dependencies
-#    restart: always
-#    networks:
-#      - elk
-#    environment:
-#      - STORAGE_TYPE=elasticsearch
-#      - ES_HOSTS=elasticsearch
-#      - ES_INDEX=zipkin
-#      - "JAVA_OPTS=-verbose:gc -Xms1g -Xmx1g"
-#    depends_on:
-#      - elasticsearch
-#
-#  zoonavigator-api:
-#    image: docker.io/elkozmon/zoonavigator-api
-#    environment:
-#      SERVER_HTTP_PORT: 9005
-#    networks:
-#      - elk
-#    restart: unless-stopped
-#    depends_on:
-#      - zookeeper
-#
-#  zoonavigator-web:
-#    image: docker.io/elkozmon/zoonavigator-web
-#    ports:
-#      - "8004:8000"
-#    networks:
-#      - elk
-#    environment:
-#      API_HOST: "zoonavigator-api"
-#      API_PORT: 9005
-#    restart: unless-stopped
-#    links:
-#      - zoonavigator-api
-#    depends_on:
-#      - zoonavigator-api
-#
-#  prometheus:
-#    image: prom/prometheus
-#    container_name: prometheus
-#    networks:
-#      - elk
-#    ports:
-#      - 9090:9090
-#    volumes:
-#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-#
-#  grafana:
-#    image: grafana/grafana
-#    container_name: grafana
-#    networks:
-#      - elk
-#    ports:
-#      - 3000:3000
-#    depends_on:
-#      - prometheus
-#    environment:
-#      - GF_AUTH_ANONYMOUS_ENABLED=true
-#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-#
-#  setup_grafana_datasource:
-#    image: appropriate/curl
-#    container_name: setup_grafana_datasource
-#    networks:
-#      - elk
-#    depends_on:
-#      - grafana
-#    volumes:
-#      - ./prometheus/create-datasource-and-dashboard.sh:/create.sh:ro
-#    command: /create.sh
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: always
+    networks:
+      - elk
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - TZ='Asia/Shanghai'
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./es1/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./es1/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.4
+    container_name: kibana
+    restart: always
+    networks:
+      - elk
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.4
+    container_name: logstash
+    restart: always
+    networks:
+      - elk
+    ports:
+      - "9601:9601"
+    volumes:
+      - ./logstash/config-dir:/config-dir
+    command: logstash -f /config-dir
+    environment:
+      XPACK_MONITORING_ENABLED: "true"
+      XPACK_MONITORING_ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    restart: always
+    networks:
+      - elk
+    ports:
+      - 9411:9411
+    environment:
+      - KAFKA_ZOOKEEPER=zookeeper
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=elasticsearch
+    # Uncomment to enable scribe
+    # - SCRIBE_ENABLED=true
+    # Uncomment to enable self-tracing
+    # - SELF_TRACING_ENABLED=true
+    # Uncomment to enable debug logging
+    # - JAVA_OPTS=-Dlogging.level.zipkin=DEBUG -Dlogging.level.zipkin2=DEBUG
+    depends_on:
+      - zookeeper
+      - elasticsearch
+
+  zipkin-dependencies:
+    image: openzipkin/zipkin-dependencies
+    container_name: zipkin-dependencies
+    restart: always
+    networks:
+      - elk
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=elasticsearch
+      - ES_INDEX=zipkin
+      - "JAVA_OPTS=-verbose:gc -Xms1g -Xmx1g"
+    depends_on:
+      - elasticsearch
+
+  zoonavigator-api:
+    image: docker.io/elkozmon/zoonavigator-api
+    environment:
+      SERVER_HTTP_PORT: 9005
+    networks:
+      - elk
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+
+  zoonavigator-web:
+    image: docker.io/elkozmon/zoonavigator-web
+    ports:
+      - "8004:8000"
+    networks:
+      - elk
+    environment:
+      API_HOST: "zoonavigator-api"
+      API_PORT: 9005
+    restart: unless-stopped
+    links:
+      - zoonavigator-api
+    depends_on:
+      - zoonavigator-api
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    networks:
+      - elk
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    networks:
+      - elk
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+
+  setup_grafana_datasource:
+    image: appropriate/curl
+    container_name: setup_grafana_datasource
+    networks:
+      - elk
+    depends_on:
+      - grafana
+    volumes:
+      - ./prometheus/create-datasource-and-dashboard.sh:/create.sh:ro
+    command: /create.sh
 networks:
   elk:

@@ -8,7 +8,6 @@ out/
 build/
 logs/
 elasticsearch/
-zk-kafka/
 
 # OSX
 #

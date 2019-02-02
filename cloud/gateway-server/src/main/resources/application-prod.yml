@@ -1,9 +1,20 @@
 debug: false
 server:
+  address: 127.0.0.1
   port: 8770
   tomcat:
     max-threads: 1000
     uri-encoding: UTF-8
+# ===============================
+# = Log To File Config
+# ===============================
+logging:
+  path: logs/gateway-server
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+  file:
+    max-size: 5MB
+    max-history: 30
 management:
   endpoints:
     web:
@@ -17,9 +28,11 @@ management:
 # ===============================
 eureka:
   instance:
+    ip-address: ${server.address}
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.version}:${spring.profiles.active}
   client:
     registry-fetch-interval-seconds: 5
     service-url:
@@ -56,8 +69,8 @@ spring:
     # ===============================
     gateway:
       routes:
-        - id: server-oauth2
-          uri: lb://server-oauth2
+        - id: oauth2-server-api
+          uri: lb://oauth2-server
           predicates:
             - Path=/api/oauth/**
           filters:
@@ -66,12 +79,22 @@ spring:
               args:
                 name: GateWayHystrix
                 fallbackUri: forward:/hystrixhandle
-        - id: server-oauth2-open
-          uri: lb://server-oauth2
+        - id: oauth2-server-open
+          uri: lb://oauth2-server
           predicates:
             - Path=/open/oauth/**
           filters:
             - RewritePath=/open/oauth/(?<segment1>.*),/open/$\{segment}
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: log-server-api
+          uri: lb://log-server
+          predicates:
+            - Path=/api/log/**
+          filters:
+            - StripPrefix=1
             - name: Hystrix
               args:
                 name: GateWayHystrix

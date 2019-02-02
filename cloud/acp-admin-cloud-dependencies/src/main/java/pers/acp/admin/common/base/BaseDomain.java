@@ -9,7 +9,7 @@ import pers.acp.core.CommonTools;
  * @author zhang by 15/01/2019
  * @since JDK 11
  */
-public class BaseDomain {
+public abstract class BaseDomain {
 
     protected PageRequest buildPageRequest(QueryParam queryParam) {
         if (CommonTools.isNullStr(queryParam.getOrderName())) {

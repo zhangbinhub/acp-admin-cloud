@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zhang by 19/12/2018
  * @since JDK 11
  */
+@Transactional(readOnly = true)
 public class SecurityTokenService extends DefaultTokenServices {
 
     private TokenStore tokenStore;

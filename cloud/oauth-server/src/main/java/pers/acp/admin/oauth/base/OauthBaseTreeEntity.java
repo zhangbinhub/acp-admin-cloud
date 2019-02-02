@@ -13,7 +13,7 @@ import java.util.List;
  * @since JDK 11
  */
 @MappedSuperclass
-public class OauthBaseTreeEntity<T extends OauthBaseTreeEntity> {
+public abstract class OauthBaseTreeEntity<T extends OauthBaseTreeEntity> {
 
     public String getParentid() {
         return parentid;
