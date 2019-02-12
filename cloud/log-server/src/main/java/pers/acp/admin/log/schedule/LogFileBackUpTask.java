@@ -55,17 +55,17 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
             Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
             for (int i = 0; i < maxHistory; i++) {
                 String logFileDate = CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT);
-                File fold = new File(logServerCustomerConfiguration.getLogFilePath());
-                String logFileFold = fold.getAbsolutePath();
-                String zipFilePath = logFileFold + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + LogBackUp.EXTENSION;
+                File logFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
+                String logFoldPath = logFold.getAbsolutePath();
+                String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + LogBackUp.EXTENSION;
                 File zipFile = new File(zipFilePath);
                 if (!zipFile.exists()) {
-                    if (!fold.exists() || !fold.isDirectory()) {
-                        throw new ServerException("路径 " + logFileFold + " 不存在或不是文件夹");
+                    if (!logFold.exists() || !logFold.isDirectory()) {
+                        throw new ServerException("路径 " + logFoldPath + " 不存在或不是文件夹");
                     }
-                    File[] files = fold.listFiles(pathname -> pathname.getName().contains(logFileDate));
+                    File[] files = logFold.listFiles(pathname -> pathname.getName().contains(logFileDate));
                     if (files != null && files.length > 0) {
-                        logInstance.info(logFileFold + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.length + " 个");
+                        logInstance.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.length + " 个");
                         List<String> fileNames = new ArrayList<>();
                         for (File file : files) {
                             fileNames.add(file.getAbsolutePath());
@@ -78,7 +78,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                             logInstance.info("文件压缩失败！");
                         }
                     } else {
-                        logInstance.info(logFileFold + " 路径下没有 " + logFileDate + " 的日志文件");
+                        logInstance.info(logFoldPath + " 路径下没有 " + logFileDate + " 的日志文件");
                     }
                 }
                 day = CalendarTools.getPrevDay(day);
@@ -110,10 +110,10 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件
-        File fold = new File(logServerCustomerConfiguration.getLogFilePath());
+        File fold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
         doDeleteFileForFold(fold, filterNames);
         // 清理历史备份压缩日志文件
-        File backUpFold = new File(logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH);
+        File backUpFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH));
         doDeleteFileForFold(backUpFold, filterNames);
         logInstance.info("清理历史备份文件完成！");
     }
