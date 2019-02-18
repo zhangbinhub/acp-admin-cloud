@@ -1,7 +1,10 @@
 ## 版本更新记录
 ##### v1.1.0
 > - 应用配置，进行增、删、改、更新密钥操作时候，在oauth中重新装载client信息，实时生效
-> - 更新 spring boot admin 至 2.1.2
+> - 更新 SpringBoot 至 2.1.3.RELEASE
+> - 更新核心库至 5.1.3
+> - 更新依赖包版本
+> - 更新 spring boot admin 至 2.1.3
 > - 更新 eureka 相关配置
 > - 集成 ELK 日志收集；集成链路分析服务 zipkin；集成各类监控服务；中间件均部署在docker，详细请看 docker-compose-base.yml 文件
 > - oauth 服务 token 持久化到 redis
