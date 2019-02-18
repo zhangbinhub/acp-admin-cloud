@@ -78,7 +78,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                             logInstance.info("文件压缩失败！");
                         }
                     } else {
-                        logInstance.info(logFoldPath + " 路径下没有 " + logFileDate + " 的日志文件");
+                        logInstance.debug(logFoldPath + " 路径下没有 " + logFileDate + " 的日志文件");
                     }
                 }
                 day = CalendarTools.getPrevDay(day);
@@ -102,19 +102,23 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         RuntimeConfigVO runtimeConfigVO = oauth.findRuntimeByName(RuntimeName.logServerBackUpMaxHistory);
         int maxHistory = Integer.valueOf(runtimeConfigVO.getValue());
         logInstance.info("开始清理历史备份文件，最大保留天数：" + maxHistory);
-        List<String> filterNames = new ArrayList<>();
-        Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
-        for (int i = 0; i < maxHistory; i++) {
-            filterNames.add(CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT));
-            filterNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT) + LogBackUp.EXTENSION);
+        List<String> filterLogFileNames = new ArrayList<>();
+        filterLogFileNames.add("spring.log");
+        filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1));
+        List<String> filterLogZipFileNames = new ArrayList<>();
+        // 保留当天和历史最大天数的文件
+        Calendar day = CalendarTools.getCalendar();
+        for (int i = 0; i <= maxHistory; i++) {
+            filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT));
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT) + LogBackUp.EXTENSION);
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件
         File fold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
-        doDeleteFileForFold(fold, filterNames);
+        doDeleteFileForFold(fold, filterLogFileNames);
         // 清理历史备份压缩日志文件
         File backUpFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH));
-        doDeleteFileForFold(backUpFold, filterNames);
+        doDeleteFileForFold(backUpFold, filterLogZipFileNames);
         logInstance.info("清理历史备份文件完成！");
     }
 
