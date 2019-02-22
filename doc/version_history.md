@@ -1,5 +1,6 @@
 ## 版本更新记录
 ##### v1.2.0
+> - [Upgrade] 更新 gradle 脚本
 ##### v1.1.0
 > - 应用配置，进行增、删、改、更新密钥操作时候，在oauth中重新装载client信息，实时生效
 > - 更新 SpringBoot 至 2.1.3.RELEASE

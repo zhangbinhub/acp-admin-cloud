@@ -8,6 +8,7 @@ out/
 build/
 logs/
 elasticsearch/
+gradle/deploy.gradle
 
 # OSX
 #
