@@ -1,3 +1,7 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
 spring:
   profiles:
     active: dev
@@ -11,3 +15,31 @@ info:
   build:
     author: zhangbin
     active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+# ===============================
+# = ACP Config
+# ===============================
+acp:
+  cloud:
+    oauth:
+      oauth-server: true
+    log-server:
+      enabled: true
+      log-type: AUTH

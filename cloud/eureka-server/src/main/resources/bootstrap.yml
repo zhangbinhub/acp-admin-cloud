@@ -1,8 +1,17 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
 spring:
   profiles:
     active: prod
   application:
     name: eureka-server
+  thymeleaf:
+    cache: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
 info:
   version: 1.1.0
   app-name: ${spring.application.name}
@@ -11,3 +20,24 @@ info:
   build:
     author: zhangbin
     active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 3000
+    response-cache-update-interval-ms: 3000
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: false
+    fetch-registry: false

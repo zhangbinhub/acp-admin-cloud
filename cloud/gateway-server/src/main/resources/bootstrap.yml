@@ -1,8 +1,17 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
 spring:
   profiles:
     active: prod
   application:
     name: gateway-server
+  thymeleaf:
+    cache: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
 info:
   version: 1.1.0
   app-name: ${spring.application.name}
@@ -11,3 +20,36 @@ info:
   build:
     author: zhangbin
     active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+# ===============================
+# = Ribbon Config
+# ===============================
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ServerListRefreshInterval: 5000
+  eager-load:
+    enabled: true
+    clients: log-server,oauth2-server
