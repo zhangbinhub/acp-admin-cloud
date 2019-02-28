@@ -41,6 +41,16 @@
 
 ## 总体架构
 ![Architecture diagram](doc/images/总体架构.jpg)
+#### 说明
+- 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
+- gateway server 根据制定的策略路由到指定服务
+- 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
+- 各深度定制开发的服务从 config server 中获取自定义配置信息
+- 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
+- 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
+- 各服务将链路互相调用的断路信息通过 admin server 进行监控
+- oauth server 将 token 信息持久化到 redis 进行统一认证管理
+- 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 
 ## 一、环境要求
 - jdk 11
@@ -136,19 +146,19 @@ ext {
 >    - docker exec -it [容器Id] /bin/sh
 >    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.5.4/elasticsearch-analysis-ik-6.5.4.zip
 >    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v6.5.4/elasticsearch-analysis-pinyin-6.5.4.zip
-##### 1. zipkin
+##### 1. zipkin 链路监控
 http://127.0.0.1:9411
 ![Architecture diagram](doc/images/zipkin.png)
-##### 2. kafka-manager
+##### 2. kafka-manager kafka队列监控
 http://127.0.0.1:9000
 ![Architecture diagram](doc/images/kafka-manager.png)
-##### 3. zoonavigator
+##### 3. zoonavigator zookeeper监控
 http://127.0.0.1:8004
 ![Architecture diagram](doc/images/zoonavigator.png)
-##### 4. prometheus
+##### 4. prometheus 通过从zipkin中收集的信息进行性能监控
 http://127.0.0.1:9090
 ![Architecture diagram](doc/images/prometheus.png)
-##### 5. kibana
+##### 5. kibana elasticsearch内容管理，进行统一日志检索
 http://127.0.0.1:5601
 ![Architecture diagram](doc/images/kibana.png)
 
