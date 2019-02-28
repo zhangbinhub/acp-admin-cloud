@@ -26,6 +26,9 @@ eureka:
 # = Spring Config
 # ===============================
 spring:
+  devtools:
+    restart:
+      enabled: true
   redis:
     url: redis://127.0.0.1:6379
   sleuth:
@@ -47,11 +50,30 @@ spring:
           # topic
           destination: app-log
           content-type: application/json
+        update_config_output:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: auth-config
+          content-type: application/json
+        update_config_input:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: auth-config
+          group: update-config-group
+          content-type: application/json
   # ===============================
   # = JPA / HIBERNATE
   # ===============================
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
       naming:
@@ -70,3 +92,6 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
+acp:
+  swagger:
+    enabled: true

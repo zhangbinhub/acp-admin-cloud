@@ -14,9 +14,5 @@ dependencyManagement {
 }
 dependencies {
     compile project(":cloud:acp-admin-cloud-dependencies")
-    compile "org.springframework.boot:spring-boot-starter-data-redis"
-
-    testCompile("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: 'junit'
-    }
+    compile "org.springframework.cloud:spring-cloud-config-server"
 }

@@ -36,6 +36,8 @@
     - spring-cloud-stream-binder-kafka
     - spring-cloud-openfeign
     - spring-cloud-sleuth-zipkin
+    - spring-cloud-config-server
+    - spring-cloud-bus-kafka
 
 ## 总体架构
 ![Architecture diagram](doc/images/总体架构.jpg)
@@ -186,12 +188,14 @@ http://127.0.0.1:5601
 >（1）无需改动代码
 >（2）修改 yml 配置即可
 ### （二）gateway-server
-> 网关服务、修改 yml 进行路由配置
-### （三）log-server
+> 网关服务，修改 yml 进行路由配置
+### （三）config-server
+> 配置中心，配置信息存放于数据库，并支持bus广播刷新所有服务配置信息
+### （四）log-server
 > - 统一日志服务
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
-### （四）oauth-server
+### （五）oauth-server
 > - 统一认证服务
 > - 提供全套权限体系接口

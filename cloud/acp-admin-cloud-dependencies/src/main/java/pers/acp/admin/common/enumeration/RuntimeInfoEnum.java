@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public enum RuntimeInfoEnum {
 
-    logServerBackUpMaxHistory(RuntimeName.logServerBackUpMaxHistory, "180", "日志服务备份文件最大保留天数", true);
+    ;
 
     public String getName() {
         return name;
