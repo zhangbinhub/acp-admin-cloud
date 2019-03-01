@@ -55,6 +55,9 @@ dependencies {
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
     compile "org.springframework.cloud:spring-cloud-starter-oauth2"
     compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
+    compile "org.springframework.cloud:spring-cloud-starter-bus-kafka"
+    compile "org.springframework.cloud:spring-cloud-starter-config"
+    compile "org.springframework.retry:spring-retry"
     // monitor : 服务间调用、断路器、链路追踪
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"

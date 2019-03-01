@@ -2,9 +2,6 @@ debug: false
 server:
   address: 127.0.0.1
   port: 8999
-  tomcat:
-    max-threads: 1000
-    uri-encoding: UTF-8
 # ===============================
 # = Log To File Config
 # ===============================
@@ -15,23 +12,20 @@ logging:
   file:
     max-size: 5MB
     max-history: 30
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    ip-address: ${server.address}
+    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
 # = Spring Config
 # ===============================
 spring:
-  thymeleaf:
-    cache: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    default-property-inclusion: non_null
   redis:
     url: redis://127.0.0.1:6379
   sleuth:
@@ -68,7 +62,7 @@ spring:
   # = DATA SOURCE
   # ===============================
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/acp-admin?role2autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
     username: root
     password: test
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -76,24 +70,3 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
-# ===============================
-# = Eureka Config
-# ===============================
-eureka:
-  instance:
-    ip-address: ${server.address}
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 15
-    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.version}:${spring.profiles.active}
-  client:
-    registry-fetch-interval-seconds: 5
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
-acp:
-  cloud:
-    oauth:
-      oauth-server: true
-    log-server:
-      enabled: true
-      log-type: AUTH

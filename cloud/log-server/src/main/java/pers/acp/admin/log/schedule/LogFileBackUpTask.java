@@ -2,11 +2,8 @@ package pers.acp.admin.log.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pers.acp.admin.common.constant.RuntimeName;
-import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
 import pers.acp.admin.log.constant.LogBackUp;
-import pers.acp.admin.log.feign.Oauth;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
 import pers.acp.core.exceptions.TimerException;
@@ -29,15 +26,12 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
 
     private final LogInstance logInstance;
 
-    private final LogServerCustomerConfiguration logServerCustomerConfiguration;
-
-    private final Oauth oauth;
+    private LogServerCustomerConfiguration logServerCustomerConfiguration;
 
     @Autowired
-    public LogFileBackUpTask(LogInstance logInstance, LogServerCustomerConfiguration logServerCustomerConfiguration, Oauth oauth) {
+    public LogFileBackUpTask(LogInstance logInstance, LogServerCustomerConfiguration logServerCustomerConfiguration) {
         this.logInstance = logInstance;
         this.logServerCustomerConfiguration = logServerCustomerConfiguration;
-        this.oauth = oauth;
         setTaskName("日志文件备份任务");
     }
 
@@ -50,10 +44,8 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
     @Override
     public Object excuteFun() {
         try {
-            RuntimeConfigVO runtimeConfigVO = oauth.findRuntimeByName(RuntimeName.logServerBackUpMaxHistory);
-            int maxHistory = Integer.valueOf(runtimeConfigVO.getValue());
             Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
-            for (int i = 0; i < maxHistory; i++) {
+            for (int i = 0; i < logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
                 String logFileDate = CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT);
                 File logFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
                 String logFoldPath = logFold.getAbsolutePath();
@@ -99,16 +91,14 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
     }
 
     private void doClearBackUpFiles() throws TimerException {
-        RuntimeConfigVO runtimeConfigVO = oauth.findRuntimeByName(RuntimeName.logServerBackUpMaxHistory);
-        int maxHistory = Integer.valueOf(runtimeConfigVO.getValue());
-        logInstance.info("开始清理历史备份文件，最大保留天数：" + maxHistory);
+        logInstance.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.getMaxHistoryDayNumber());
         List<String> filterLogFileNames = new ArrayList<>();
         filterLogFileNames.add("spring.log");
         filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1));
         List<String> filterLogZipFileNames = new ArrayList<>();
         // 保留当天和历史最大天数的文件
         Calendar day = CalendarTools.getCalendar();
-        for (int i = 0; i <= maxHistory; i++) {
+        for (int i = 0; i <= logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT));
             filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT) + LogBackUp.EXTENSION);
             day = CalendarTools.getPrevDay(day);

@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v1.1.0 [版本更新日志](doc/version_history.md)
+###### v1.2.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
@@ -36,9 +36,21 @@
     - spring-cloud-stream-binder-kafka
     - spring-cloud-openfeign
     - spring-cloud-sleuth-zipkin
+    - spring-cloud-config-server
+    - spring-cloud-bus-kafka
 
 ## 总体架构
 ![Architecture diagram](doc/images/总体架构.jpg)
+#### 说明
+- 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
+- gateway server 根据制定的策略路由到指定服务
+- 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
+- 各深度定制开发的服务从 config server 中获取自定义配置信息
+- 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
+- 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
+- 各服务将链路互相调用的断路信息通过 admin server 进行监控
+- oauth server 将 token 信息持久化到 redis 进行统一认证管理
+- 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 
 ## 一、环境要求
 - jdk 11
@@ -71,6 +83,15 @@ gradle全局参数：
 ### （二）自定义任务
 - clearPj 清理所有输出文件
 - release 编译、打包并输出
+- install 打包部署至本地 maven 仓库
+- uploadArchives 打包部署至远程 maven 仓库，需自行创建文件 gradle/deploy.gradle，配置对应的参数，文件内容参考如下：
+```groovy
+ext {
+    mavenUploadUrl = "http://localhost:8081/nexus/content/repositories/thirdparty"
+    mavenUserName = "admin"
+    mavenPassword = "admin123"
+}
+```
 
 ### （三）升级命令
 ``
@@ -125,19 +146,19 @@ gradle全局参数：
 >    - docker exec -it [容器Id] /bin/sh
 >    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.5.4/elasticsearch-analysis-ik-6.5.4.zip
 >    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v6.5.4/elasticsearch-analysis-pinyin-6.5.4.zip
-##### 1. zipkin
+##### 1. zipkin 链路监控
 http://127.0.0.1:9411
 ![Architecture diagram](doc/images/zipkin.png)
-##### 2. kafka-manager
+##### 2. kafka-manager kafka队列监控
 http://127.0.0.1:9000
 ![Architecture diagram](doc/images/kafka-manager.png)
-##### 3. zoonavigator
+##### 3. zoonavigator zookeeper监控
 http://127.0.0.1:8004
 ![Architecture diagram](doc/images/zoonavigator.png)
-##### 4. prometheus
+##### 4. prometheus 通过从zipkin中收集的信息进行性能监控
 http://127.0.0.1:9090
 ![Architecture diagram](doc/images/prometheus.png)
-##### 5. kibana
+##### 5. kibana elasticsearch内容管理，进行统一日志检索
 http://127.0.0.1:5601
 ![Architecture diagram](doc/images/kibana.png)
 
@@ -177,12 +198,14 @@ http://127.0.0.1:5601
 >（1）无需改动代码
 >（2）修改 yml 配置即可
 ### （二）gateway-server
-> 网关服务、修改 yml 进行路由配置
-### （三）log-server
+> 网关服务，修改 yml 进行路由配置
+### （三）config-server
+> 配置中心，配置信息存放于数据库，并支持bus广播刷新所有服务配置信息
+### （四）log-server
 > - 统一日志服务
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
-### （四）oauth-server
+### （五）oauth-server
 > - 统一认证服务
 > - 提供全套权限体系接口

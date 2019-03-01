@@ -5,7 +5,4 @@ package pers.acp.admin.common.constant;
  * @since JDK 11
  */
 public interface RuntimeName {
-
-    String logServerBackUpMaxHistory = "logServerBackUpMaxHistory";
-
 }

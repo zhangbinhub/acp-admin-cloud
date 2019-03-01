@@ -2,9 +2,6 @@ debug: false
 server:
   address: 127.0.0.1
   port: 8090
-  tomcat:
-    max-threads: 1000
-    uri-encoding: UTF-8
 # ===============================
 # = Log To File Config
 # ===============================
@@ -15,58 +12,24 @@ logging:
   file:
     max-size: 5MB
     max-history: 30
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-# ===============================
-# = Spring Config
-# ===============================
-spring:
-  thymeleaf:
-    cache: false
-  security:
-    user:
-      name: admin
-      password: 888888
-  # ===============================
-  # = Spring Boot Admin
-  # ===============================
-  boot:
-    admin:
-      ui:
-        resource-locations:
-          - "classpath:/META-INF/spring-boot-admin-server-ui/"
-          - "classpath:/static/"
 # ===============================
 # = Eureka Config
 # ===============================
 eureka:
   instance:
     ip-address: ${server.address}
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 15
-    instance-id: ${spring.application.name}(${eureka.instance.ip-address}:${server.port}):v${info.version}:${spring.profiles.active}
+    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
     metadata-map:
-      user.name: ${spring.security.user.name}
-      user.password: ${spring.security.user.password}
+      user.name: admin
+      user.password: 888888
   client:
-    registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
-# = Turbine Config
+# = Spring Config
 # ===============================
-turbine:
-  aggregator:
-    clusterConfig: default # 指定聚合哪些集群，多个使用","分割，默认为default。可使用http://.../turbine.stream?cluster={clusterConfig之一}访问
-  appConfig: server-oauth2 # 配置Eureka中的serviceId列表，表明监控哪些服务
-  clusterNameExpression: new String("default")
-  # 1. clusterNameExpression指定集群名称，默认表达式appName；此时：turbine.aggregator.clusterConfig需要配置想要监控的应用名称
-  # 2. 当clusterNameExpression: default时，turbine.aggregator.clusterConfig可以不写，因为默认就是default
-  # 3. 当clusterNameExpression: metadata['cluster']时，假设想要监控的应用配置了eureka.instance.metadata-map.cluster: ABC，则需要配置，同时turbine.aggregator.clusterConfig: ABC
+spring:
+  security:
+    user:
+      name: ${eureka.instance.metadata-map.user.name}
+      password: ${eureka.instance.metadata-map.user.password}
