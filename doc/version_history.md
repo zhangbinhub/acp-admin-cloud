@@ -2,9 +2,10 @@
 ##### v1.2.0
 > - [Upgrade] 更新 gradle 脚本
 > - [Upgrade] 规范 yml 配置文件
-> - [Upgrade] 增加配置中心服务
+> - [Upgrade] 增加配置中心服务，配置信息持久化到数据库
 > - [Upgrade] 日志服务从 oauth 服务获取运行时参数，改为从配置中心获取配置信息
 > - [Upgrade] 更新文档
+> - [Fix] 修复角色配置时角色级别控制
 ##### v1.1.0
 > - 应用配置，进行增、删、改、更新密钥操作时候，在oauth中重新装载client信息，实时生效
 > - 更新 SpringBoot 至 2.1.3.RELEASE

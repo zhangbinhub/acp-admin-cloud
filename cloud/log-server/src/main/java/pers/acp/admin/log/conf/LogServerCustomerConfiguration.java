@@ -37,7 +37,7 @@ public class LogServerCustomerConfiguration {
     /**
      * 日志最大保留天数，默认 180 天
      */
-    @Value("${acp-admin.log-server.max-history-day-number}")
+    @Value("${log-server.max-history-day-number}")
     private int maxHistoryDayNumber = 180;
 
 }

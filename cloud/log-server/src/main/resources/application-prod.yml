@@ -60,8 +60,8 @@ spring:
 security:
   oauth2:
     client:
-      client-id: client
-      client-secret: client
+      client-id: dbd1458a-19fb-11e9-894e-d8c49792dd7b
+      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
 acp:
   schedule:
     crons:

@@ -84,7 +84,7 @@ public class LogController extends BaseController {
                                         @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
                                         @PathVariable String fileName) throws ServerException {
         logFileDomain.doDownLoadFile(request, response, fileName);
-        return ResponseEntity.ok("下载成功");
+        return ResponseEntity.ok("下载文件成功：【" + fileName + "】");
     }
 
 }

@@ -56,4 +56,4 @@ eureka:
 security:
   oauth2:
     resource:
-      token-info-uri: http://server-oauth2/oauth/check_token
+      token-info-uri: http://oauth2-server/oauth/check_token

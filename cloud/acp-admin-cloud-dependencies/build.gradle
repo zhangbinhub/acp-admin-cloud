@@ -60,6 +60,7 @@ dependencies {
     compile "org.springframework.retry:spring-retry"
     // monitor : 服务间调用、断路器、链路追踪
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
+    compile "io.github.openfeign:feign-httpclient"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-zipkin"
 

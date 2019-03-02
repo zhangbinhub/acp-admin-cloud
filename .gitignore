@@ -3,6 +3,9 @@
 .gradle
 .svn
 .git
+*.iws
+*.ipr
+*.iml
 
 out/
 build/
