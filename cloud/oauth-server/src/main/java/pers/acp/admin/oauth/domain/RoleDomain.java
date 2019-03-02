@@ -119,7 +119,10 @@ public class RoleDomain extends OauthBaseDomain {
                 throw new ServerException("超级管理员编码不允许修改");
             }
             if (rolePO.getLevels() != role.getLevels() && role.getLevels() <= 0) {
-                throw new ServerException("不允许修改为超级管理员级别");
+                throw new ServerException("超级管理员级别不允许修改");
+            }
+            if (rolePO.getLevels() != role.getLevels() && rolePO.getLevels() <= 0) {
+                throw new ServerException("不允许修改为超级管理员级别[" + rolePO.getLevels() + "]");
             }
         }
         return doSave(role, rolePO);

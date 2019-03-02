@@ -102,7 +102,6 @@ public class RolePO {
     private String code;
 
     @ApiModelProperty(value = "角色级别", required = true, position = 4)
-    @Min(value = 1, message = "角色级别数值最小为 1")
     private int levels = 1;
 
     @ApiModelProperty(value = "序号", required = true, position = 5)
