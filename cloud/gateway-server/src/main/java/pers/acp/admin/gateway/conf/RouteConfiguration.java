@@ -37,12 +37,12 @@ public class RouteConfiguration {
             if (CorsUtils.isCorsRequest(request)) {
                 ServerHttpResponse response = ctx.getResponse();
                 HttpHeaders headers = response.getHeaders();
-                headers.add("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
-                headers.add("Access-Control-Allow-Methods", ALLOWED_METHODS);
-                headers.add("Access-Control-Max-Age", MAX_AGE);
-                headers.add("Access-Control-Allow-Headers", ALLOWED_HEADERS);
-                headers.add("Access-Control-Expose-Headers", ALLOWED_Expose);
-                headers.add("Access-Control-Allow-Credentials", "true");
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGIN);
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
+                headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, MAX_AGE);
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, ALLOWED_HEADERS);
+                headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, ALLOWED_Expose);
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
                 if (request.getMethod() == HttpMethod.OPTIONS) {
                     response.setStatusCode(HttpStatus.OK);
                     return Mono.empty();

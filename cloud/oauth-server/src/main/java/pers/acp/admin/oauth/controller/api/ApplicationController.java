@@ -84,7 +84,7 @@ public class ApplicationController extends BaseController {
     })
     @PreAuthorize(AppConfigExpression.appUpdate)
     @PatchMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Application> update(@RequestBody ApplicationPO applicationPO) throws ServerException {
+    public ResponseEntity<Application> update(@RequestBody @Valid ApplicationPO applicationPO) throws ServerException {
         if (CommonTools.isNullStr(applicationPO.getId())) {
             throw new ServerException("ID不能为空");
         }

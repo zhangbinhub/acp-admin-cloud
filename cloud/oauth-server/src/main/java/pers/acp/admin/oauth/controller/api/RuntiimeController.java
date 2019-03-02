@@ -61,7 +61,6 @@ public class RuntiimeController extends BaseController {
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
-        runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doCreate(runtimePO);
         updateConfigProducer.doNotifyUpdateRuntime();
         return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfig);
@@ -89,11 +88,10 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
     @PatchMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RuntimeConfig> update(@RequestBody RuntimePO runtimePO) throws ServerException {
+    public ResponseEntity<RuntimeConfig> update(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
         if (CommonTools.isNullStr(runtimePO.getId())) {
             throw new ServerException("配置ID不能为空");
         }
-        runtimePO.setEnabled(runtimePO.getEnabled() == null ? true : runtimePO.getEnabled());
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doUpdate(runtimePO);
         updateConfigProducer.doNotifyUpdateRuntime();
         return ResponseEntity.ok(runtimeConfig);

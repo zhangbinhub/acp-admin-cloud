@@ -2,7 +2,7 @@
 ##### v1.2.0
 > - [Upgrade] 更新 gradle 脚本
 > - [Upgrade] 规范 yml 配置文件
-> - [Upgrade] 增加配置中心服务
+> - [Upgrade] 增加配置中心服务，配置信息持久化到数据库
 > - [Upgrade] 日志服务从 oauth 服务获取运行时参数，改为从配置中心获取配置信息
 > - [Upgrade] 更新文档
 ##### v1.1.0

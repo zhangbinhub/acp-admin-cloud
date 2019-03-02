@@ -579,7 +579,7 @@ class InitData extends BaseTest {
         properties.setConfigApplication("log-server");
         properties.setConfigProfile("dev");
         properties.setConfigLabel("master");
-        properties.setConfigKey("acp-admin.log-server.max-history-day-number");
+        properties.setConfigKey("log-server.max-history-day-number");
         properties.setConfigValue("5");
         properties.setConfigDes("日志最大保留天数，默认 180 天");
         properties.setEnabled(true);
@@ -589,7 +589,7 @@ class InitData extends BaseTest {
         properties2.setConfigApplication("log-server");
         properties2.setConfigProfile("prod");
         properties2.setConfigLabel("master");
-        properties2.setConfigKey("acp-admin.log-server.max-history-day-number");
+        properties2.setConfigKey("log-server.max-history-day-number");
         properties2.setConfigValue("180");
         properties2.setConfigDes("日志最大保留天数，默认 180 天");
         properties2.setEnabled(true);

@@ -92,6 +92,30 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
+# ===============================
+# = Ribbon Config
+# ===============================
+feign:
+  client:
+    config:
+      config-server:
+        connectTimeout: 30000
+        readTimeout: 30000
+hystrix:
+  command:
+    "ConfigServer#busRefresh()":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    client:
+      client-id: dbd1458a-19fb-11e9-894e-d8c49792dd7b
+      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
 acp:
   swagger:
     enabled: true

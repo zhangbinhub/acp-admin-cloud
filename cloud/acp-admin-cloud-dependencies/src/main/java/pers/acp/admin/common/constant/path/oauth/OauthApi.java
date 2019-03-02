@@ -46,4 +46,8 @@ public interface OauthApi {
 
     String runtimeConfig = "/runtime";
 
+    String propertiesConfig = "/properties";
+
+    String propertiesRefresh = propertiesConfig + "/refresh";
+
 }

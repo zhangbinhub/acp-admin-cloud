@@ -50,6 +50,8 @@ hystrix:
             timeoutInMilliseconds: 60000
 ribbon:
   ServerListRefreshInterval: 5000
+  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
   eager-load:
     enabled: true
     clients: log-server,oauth2-server,config-server

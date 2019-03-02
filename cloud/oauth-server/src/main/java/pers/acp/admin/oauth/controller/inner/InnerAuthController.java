@@ -23,7 +23,7 @@ public class InnerAuthController extends BaseController {
 
     @ApiOperation(value = "获取当前用户权限信息", notes = "根据当前登录的用户token，返回所有授权信息")
     @GetMapping(value = OauthInnerApi.currOauth, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<OAuth2Authentication> menuList(OAuth2Authentication user) {
+    public ResponseEntity<OAuth2Authentication> currOauth(OAuth2Authentication user) {
         return ResponseEntity.ok(user);
     }
 
