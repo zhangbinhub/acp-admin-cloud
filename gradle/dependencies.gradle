@@ -25,6 +25,6 @@ versions += [
         spring_cloud    : "Greenwich.RELEASE",
         swagger         : "2.9.2",
 
-        mina            : "2.0.19",
+        netty           : "4.1.33.Final",
         httpclient      : "4.5.7"
 ]

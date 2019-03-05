@@ -33,7 +33,7 @@ dependencies {
     compile "org.postgresql:postgresql:$versions.postgresql"
 
     // tcp/udp
-    compile "org.apache.mina:mina-core:$versions.mina"
+    compile "io.netty:netty-all:$versions.netty"
 
     // http client
     compile "org.apache.httpcomponents:httpclient:$versions.httpclient"
