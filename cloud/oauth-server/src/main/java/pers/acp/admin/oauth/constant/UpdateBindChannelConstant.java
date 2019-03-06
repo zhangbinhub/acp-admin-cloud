@@ -4,7 +4,7 @@ package pers.acp.admin.oauth.constant;
  * @author zhang by 30/01/2019
  * @since JDK 11
  */
-public interface UpdateConfigConstant {
+public interface UpdateBindChannelConstant {
 
     String INPUT = "update_config_input";
 

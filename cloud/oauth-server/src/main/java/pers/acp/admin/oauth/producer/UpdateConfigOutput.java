@@ -2,7 +2,7 @@ package pers.acp.admin.oauth.producer;
 
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
-import pers.acp.admin.oauth.constant.UpdateConfigConstant;
+import pers.acp.admin.oauth.constant.UpdateBindChannelConstant;
 
 /**
  * @author zhang by 30/01/2019
@@ -10,7 +10,7 @@ import pers.acp.admin.oauth.constant.UpdateConfigConstant;
  */
 public interface UpdateConfigOutput {
 
-    @Output(UpdateConfigConstant.OUTPUT)
+    @Output(UpdateBindChannelConstant.OUTPUT)
     MessageChannel sendMessage();
 
 }

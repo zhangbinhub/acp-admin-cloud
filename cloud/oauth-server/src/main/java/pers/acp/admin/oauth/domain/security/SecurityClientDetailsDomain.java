@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class SecurityClientDetailsService implements ClientDetailsService {
+public class SecurityClientDetailsDomain implements ClientDetailsService {
 
     private final LogInstance logInstance;
 
@@ -30,7 +30,7 @@ public class SecurityClientDetailsService implements ClientDetailsService {
     private ClientDetailsService clientDetailsService = null;
 
     @Autowired
-    public SecurityClientDetailsService(LogInstance logInstance, ApplicationRepository applicationRepository) {
+    public SecurityClientDetailsDomain(LogInstance logInstance, ApplicationRepository applicationRepository) {
         this.logInstance = logInstance;
         this.applicationRepository = applicationRepository;
     }

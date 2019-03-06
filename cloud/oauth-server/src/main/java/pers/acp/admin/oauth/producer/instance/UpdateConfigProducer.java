@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
-import pers.acp.admin.oauth.constant.UpdateConfigConstant;
+import pers.acp.admin.oauth.constant.UpdateBindChannelConstant;
 import pers.acp.admin.oauth.producer.UpdateConfigOutput;
 
 /**
@@ -23,11 +23,11 @@ public class UpdateConfigProducer {
     }
 
     public void doNotifyUpdateApp() {
-        updateConfigOutput.sendMessage().send(MessageBuilder.withPayload(UpdateConfigConstant.UPDATE_APP).build());
+        updateConfigOutput.sendMessage().send(MessageBuilder.withPayload(UpdateBindChannelConstant.UPDATE_APP).build());
     }
 
     public void doNotifyUpdateRuntime() {
-        updateConfigOutput.sendMessage().send(MessageBuilder.withPayload(UpdateConfigConstant.UPDATE_RUNTIME).build());
+        updateConfigOutput.sendMessage().send(MessageBuilder.withPayload(UpdateBindChannelConstant.UPDATE_RUNTIME).build());
     }
 
 }

@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
-import pers.acp.admin.oauth.constant.UpdateConfigConstant;
+import pers.acp.admin.oauth.constant.UpdateBindChannelConstant;
 import pers.acp.admin.oauth.consumer.UpdateConfigInput;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
-import pers.acp.admin.oauth.domain.security.SecurityClientDetailsService;
+import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain;
 import pers.acp.springcloud.common.log.LogInstance;
 
 /**
@@ -20,28 +20,28 @@ public class UpdateConfigConsumer {
 
     private final LogInstance logInstance;
 
-    private final SecurityClientDetailsService securityClientDetailsService;
+    private final SecurityClientDetailsDomain securityClientDetailsDomain;
 
     private final RuntimeConfigDomain runtimeConfigDomain;
 
     @Autowired
-    public UpdateConfigConsumer(LogInstance logInstance, SecurityClientDetailsService securityClientDetailsService, RuntimeConfigDomain runtimeConfigDomain) {
+    public UpdateConfigConsumer(LogInstance logInstance, SecurityClientDetailsDomain securityClientDetailsDomain, RuntimeConfigDomain runtimeConfigDomain) {
         this.logInstance = logInstance;
-        this.securityClientDetailsService = securityClientDetailsService;
+        this.securityClientDetailsDomain = securityClientDetailsDomain;
         this.runtimeConfigDomain = runtimeConfigDomain;
     }
 
-    @StreamListener(UpdateConfigConstant.INPUT)
+    @StreamListener(UpdateBindChannelConstant.INPUT)
     public void process(String message) {
         logInstance.info("收到 kafka 消息：" + message);
         try {
             switch (message) {
-                case UpdateConfigConstant.UPDATE_APP:
+                case UpdateBindChannelConstant.UPDATE_APP:
                     logInstance.info("开始刷新client数据...");
-                    securityClientDetailsService.loadClientInfo();
+                    securityClientDetailsDomain.loadClientInfo();
                     logInstance.info("client数据刷新完成！");
                     break;
-                case UpdateConfigConstant.UPDATE_RUNTIME:
+                case UpdateBindChannelConstant.UPDATE_RUNTIME:
                     logInstance.info("开始刷新runtime数据...");
                     runtimeConfigDomain.loadRuntimeConfig();
                     logInstance.info("runtime数据刷新完成！");

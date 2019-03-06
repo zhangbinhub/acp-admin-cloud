@@ -25,14 +25,14 @@ import java.util.Set;
  */
 @Service
 @Transactional(readOnly = true)
-public class SecurityUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsDomain implements UserDetailsService {
 
     private final LogInstance logInstance;
 
     private final UserRepository userRepository;
 
     @Autowired
-    public SecurityUserDetailsService(LogInstance logInstance, UserRepository userRepository) {
+    public SecurityUserDetailsDomain(LogInstance logInstance, UserRepository userRepository) {
         this.logInstance = logInstance;
         this.userRepository = userRepository;
     }
