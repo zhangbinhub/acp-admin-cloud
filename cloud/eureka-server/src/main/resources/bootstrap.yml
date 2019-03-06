@@ -9,9 +9,6 @@ spring:
     name: eureka-server
   thymeleaf:
     cache: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    default-property-inclusion: non_null
 info:
   version: 1.2.0
   app-name: ${spring.application.name}

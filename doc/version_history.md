@@ -1,4 +1,7 @@
 ## 版本更新记录
+##### v1.3.0
+> - [Upgrade] 更新核心库，增加资源服务器自定义token异常和权限异常响应
+> - [Upgrade] json 转换及接口参数统一改为驼峰命名
 ##### v1.2.0
 > - [Upgrade] 更新 gradle 脚本
 > - [Upgrade] 规范 yml 配置文件

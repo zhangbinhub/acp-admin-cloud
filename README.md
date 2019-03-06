@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v1.2.0 [版本更新日志](doc/version_history.md)
+###### v1.3.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
@@ -101,7 +101,7 @@ ext {
 ## 三、工程说明
 - doc目录下的files文件夹，当需要用到时放到打包后的jar同目录下即可
 - 工程全局默认使用 UTF-8 字符集
-- libs 下面为 [acp](https://github.com/zhangbin1010/acp/tree/release-5.1.2) 核心模块包
+- libs 下面为 [acp](https://github.com/zhangbin1010/acp/tree/release-5.1.3) 核心模块包
 - cloud 目录下为基于 Spring Cloud 的一整套组件模块
 - gradle 目录下为相关配置文件
 - test 目录下为测试工程

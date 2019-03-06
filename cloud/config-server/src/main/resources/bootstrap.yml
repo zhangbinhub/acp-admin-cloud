@@ -51,9 +51,6 @@ spring:
     name: config-server
   thymeleaf:
     cache: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    default-property-inclusion: non_null
   zipkin:
     sender:
       type: kafka
