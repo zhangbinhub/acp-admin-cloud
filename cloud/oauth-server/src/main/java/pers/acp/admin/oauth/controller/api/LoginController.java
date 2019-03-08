@@ -54,6 +54,25 @@ public class LoginController extends BaseController {
         this.securityTokenService = securityTokenService;
     }
 
+    @ApiOperation(value = "注销当前用户")
+    @PostMapping(value = OauthApi.logOut, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<InfoVO> doLogOut(OAuth2Authentication user) throws ServerException {
+        try {
+            User userInfo = userDomain.findCurrUserInfo(user.getName());
+            if (userInfo != null) {
+                securityTokenService.removeTokensByAppIdAndLoginNo(user.getOAuth2Request().getClientId(), userInfo.getLoginno());
+                logInstance.info("用户[" + userInfo.getName() + "(" + userInfo.getLoginno() + ")]主动下线!");
+            } else {
+                logInstance.info("该用户登录已失效，无需主动下线!");
+            }
+            InfoVO infoVO = new InfoVO();
+            infoVO.setMessage("成功下线");
+            return ResponseEntity.ok(infoVO);
+        } catch (Exception e) {
+            throw new ServerException(e.getMessage());
+        }
+    }
+
     @ApiOperation(value = "获取各应用登录次数统计")
     @ApiResponses({
             @ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVO.class)
@@ -138,9 +157,9 @@ public class LoginController extends BaseController {
                                          @RequestBody List<String> idList) throws ServerException {
         try {
             for (String id : idList) {
-                User user = userDomain.getUserInfo(id);
-                securityTokenService.removeTokensByAppIdAndLoginNo(appId, user.getLoginno());
-                logInstance.info("用户[" + user.getName() + "(" + user.getLoginno() + ")]被管理员强制下线!");
+                User userInfo = userDomain.getUserInfo(id);
+                securityTokenService.removeTokensByAppIdAndLoginNo(appId, userInfo.getLoginno());
+                logInstance.info("用户[" + userInfo.getName() + "(" + userInfo.getLoginno() + ")]被管理员强制下线!");
             }
             InfoVO infoVO = new InfoVO();
             infoVO.setMessage("成功下线");
