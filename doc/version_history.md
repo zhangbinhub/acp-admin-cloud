@@ -3,6 +3,7 @@
 > - [Upgrade] 更新核心库，增加资源服务器自定义token异常和权限异常响应
 > - [Upgrade] json 转换及接口参数统一改为驼峰命名
 > - [Upgrade] 扩展 token 信息，加入自定义用户信息
+> - [Upgrade] 增加登录统计、在线用户统计、在线用户清理等接口
 ##### v1.2.0
 > - [Upgrade] 更新 gradle 脚本
 > - [Upgrade] 规范 yml 配置文件

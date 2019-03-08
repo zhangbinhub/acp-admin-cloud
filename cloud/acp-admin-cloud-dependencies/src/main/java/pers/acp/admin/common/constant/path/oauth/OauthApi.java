@@ -50,4 +50,8 @@ public interface OauthApi {
 
     String propertiesRefresh = propertiesConfig + "/refresh";
 
+    String loginInfo = "/logininfo";
+
+    String onlineInfo = "/onlineinfo";
+
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
@@ -43,6 +44,11 @@ public class UserDomain extends OauthBaseDomain {
         super(userRepository);
         this.organizationRepository = organizationRepository;
         this.roleRepository = roleRepository;
+    }
+
+    public boolean isAdmin(OAuth2Authentication user) {
+        User currUserInfo = findCurrUserInfo(user.getName());
+        return isAdmin(currUserInfo);
     }
 
     private void validatePermit(String loginNo, UserPO userPO, Set<Role> roleSetPO, boolean isCreate) throws ServerException {

@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain;
-import pers.acp.admin.oauth.domain.security.SecurityTokenDomain;
+import pers.acp.admin.oauth.token.SecurityTokenService;
 import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain;
 
 /**
@@ -26,24 +26,24 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     private final SecurityClientDetailsDomain securityClientDetailsDomain;
 
-    private final SecurityTokenDomain securityTokenDomain;
+    private final SecurityTokenService securityTokenService;
 
     @Autowired
-    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, SecurityUserDetailsDomain securityUserDetailsDomain, SecurityClientDetailsDomain securityClientDetailsDomain, SecurityTokenDomain securityTokenDomain) {
+    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, SecurityUserDetailsDomain securityUserDetailsDomain, SecurityClientDetailsDomain securityClientDetailsDomain, SecurityTokenService securityTokenService) {
         this.authenticationManager = authenticationManager;
         this.securityUserDetailsDomain = securityUserDetailsDomain;
         this.securityClientDetailsDomain = securityClientDetailsDomain;
-        this.securityTokenDomain = securityTokenDomain;
+        this.securityTokenService = securityTokenService;
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        securityTokenDomain.setClientDetailsService(securityClientDetailsDomain);
+        securityTokenService.setClientDetailsService(securityClientDetailsDomain);
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(securityUserDetailsDomain)
-                .tokenServices(securityTokenDomain)
-                .tokenEnhancer(securityTokenDomain.getSecurityTokenEnhancerDomain())
-                .tokenStore(securityTokenDomain.getTokenStore());
+                .tokenServices(securityTokenService)
+                .tokenEnhancer(securityTokenService.getSecurityTokenEnhancer())
+                .tokenStore(securityTokenService.getTokenStore());
     }
 
     @Override

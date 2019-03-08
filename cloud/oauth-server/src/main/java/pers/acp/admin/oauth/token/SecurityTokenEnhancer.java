@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.domain.security;
+package pers.acp.admin.oauth.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -21,12 +21,12 @@ import java.util.Map;
  */
 @Service
 @Transactional(readOnly = true)
-public class SecurityTokenEnhancerDomain implements TokenEnhancer {
+public class SecurityTokenEnhancer implements TokenEnhancer {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public SecurityTokenEnhancerDomain(UserRepository userRepository) {
+    public SecurityTokenEnhancer(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
