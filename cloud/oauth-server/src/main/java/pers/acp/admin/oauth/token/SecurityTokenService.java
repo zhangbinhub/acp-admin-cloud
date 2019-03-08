@@ -16,6 +16,7 @@ import pers.acp.admin.oauth.constant.TokenConstant;
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis;
 import pers.acp.admin.oauth.vo.LoginLogVO;
 import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.springcloud.common.log.LogInstance;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +45,8 @@ public class SecurityTokenService extends DefaultTokenServices {
         return new InMemoryTokenStore();
     }
 
+    private final LogInstance logInstance;
+
     private final RedisConnectionFactory connectionFactory;
 
     private final SecurityTokenStore tokenStore;
@@ -53,7 +56,8 @@ public class SecurityTokenService extends DefaultTokenServices {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public SecurityTokenService(RedisConnectionFactory connectionFactory, SecurityTokenEnhancer securityTokenEnhancer, ObjectMapper objectMapper) {
+    public SecurityTokenService(LogInstance logInstance, RedisConnectionFactory connectionFactory, SecurityTokenEnhancer securityTokenEnhancer, ObjectMapper objectMapper) {
+        this.logInstance = logInstance;
         this.connectionFactory = connectionFactory;
         this.securityTokenEnhancer = securityTokenEnhancer;
         this.objectMapper = objectMapper;
@@ -68,19 +72,12 @@ public class SecurityTokenService extends DefaultTokenServices {
     @Transactional
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
-        if (existingAccessToken != null) {
-            OAuth2RefreshToken refreshToken = existingAccessToken.getRefreshToken();
-            if (refreshToken != null) {
-                tokenStore.removeRefreshToken(refreshToken);
-            }
-            tokenStore.removeAccessToken(existingAccessToken);
-        }
+        removeToken(tokenStore.getAccessToken(authentication));
         OAuth2AccessToken oAuth2AccessToken = super.createAccessToken(authentication);
         try {
             tokenStore.storeLoginNum(authentication.getOAuth2Request().getClientId(), oAuth2AccessToken.getAdditionalInformation().get(TokenConstant.USER_INFO_ID).toString());
         } catch (Exception e) {
-
+            logInstance.error(e.getMessage(), e);
         }
         return oAuth2AccessToken;
     }
@@ -126,21 +123,37 @@ public class SecurityTokenService extends DefaultTokenServices {
         return tokenStore.findTokensByClientId(appId);
     }
 
+    @Transactional
+    public void removeToken(OAuth2Authentication user) {
+        removeToken(tokenStore.getAccessToken(user));
+    }
+
+    /**
+     * 删除token
+     *
+     * @param oAuth2AccessToken token
+     */
+    @Transactional
+    public void removeToken(OAuth2AccessToken oAuth2AccessToken) {
+        if (oAuth2AccessToken != null) {
+            OAuth2RefreshToken refreshToken = oAuth2AccessToken.getRefreshToken();
+            if (refreshToken != null) {
+                tokenStore.removeRefreshToken(refreshToken);
+            }
+            tokenStore.removeAccessToken(oAuth2AccessToken);
+        }
+    }
+
     /**
      * 删除指定token
      *
      * @param appId   应用id
      * @param loginNo 登录账号
      */
+    @Transactional
     public void removeTokensByAppIdAndLoginNo(String appId, String loginNo) {
         Collection<OAuth2AccessToken> tokenCollection = getTokensByAppIdAndLoginNo(appId, loginNo);
-        tokenCollection.forEach(accessToken -> {
-            OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
-            if (refreshToken != null) {
-                tokenStore.removeRefreshToken(refreshToken);
-            }
-            tokenStore.removeAccessToken(accessToken);
-        });
+        tokenCollection.forEach(this::removeToken);
     }
 
     public List<LoginLogVO> getLoginLogList(String appId) throws ServerException {

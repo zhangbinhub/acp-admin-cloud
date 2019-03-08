@@ -58,13 +58,8 @@ public class LoginController extends BaseController {
     @PostMapping(value = OauthApi.logOut, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> doLogOut(OAuth2Authentication user) throws ServerException {
         try {
-            User userInfo = userDomain.findCurrUserInfo(user.getName());
-            if (userInfo != null) {
-                securityTokenService.removeTokensByAppIdAndLoginNo(user.getOAuth2Request().getClientId(), userInfo.getLoginno());
-                logInstance.info("用户[" + userInfo.getName() + "(" + userInfo.getLoginno() + ")]主动下线!");
-            } else {
-                logInstance.info("该用户登录已失效，无需主动下线!");
-            }
+            securityTokenService.removeToken(user);
+            logInstance.info("用户[loginNo=" + user.getName() + "]主动下线!");
             InfoVO infoVO = new InfoVO();
             infoVO.setMessage("成功下线");
             return ResponseEntity.ok(infoVO);

@@ -12,9 +12,11 @@ import pers.acp.admin.oauth.entity.Organization;
 import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.entity.User;
 import pers.acp.admin.oauth.po.UserPO;
+import pers.acp.admin.oauth.repo.ApplicationRepository;
 import pers.acp.admin.oauth.repo.OrganizationRepository;
 import pers.acp.admin.oauth.repo.RoleRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
+import pers.acp.admin.oauth.token.SecurityTokenService;
 import pers.acp.admin.oauth.vo.UserVO;
 import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;
@@ -35,15 +37,21 @@ public class UserDomain extends OauthBaseDomain {
 
     private static String DEFAULT_PASSWORD = "000000";
 
+    private final ApplicationRepository applicationRepository;
+
     private final OrganizationRepository organizationRepository;
 
     private final RoleRepository roleRepository;
 
+    private final SecurityTokenService securityTokenService;
+
     @Autowired
-    public UserDomain(UserRepository userRepository, OrganizationRepository organizationRepository, RoleRepository roleRepository) {
+    public UserDomain(UserRepository userRepository, ApplicationRepository applicationRepository, OrganizationRepository organizationRepository, RoleRepository roleRepository, SecurityTokenService securityTokenService) {
         super(userRepository);
+        this.applicationRepository = applicationRepository;
         this.organizationRepository = organizationRepository;
         this.roleRepository = roleRepository;
+        this.securityTokenService = securityTokenService;
     }
 
     public boolean isAdmin(OAuth2Authentication user) {
@@ -148,13 +156,14 @@ public class UserDomain extends OauthBaseDomain {
         if (!user.getLoginno().equals(userPO.getLoginno())) {
             user.setLoginno(userPO.getLoginno());
             user.setPassword(SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPO.getLoginno()));
+            removeToken(userPO.getLoginno());
         }
         user.setRoleSet(roleSet);
         return doSave(user, userPO);
     }
 
     @Transactional
-    public User doUpdatePwd(String loginNo, String userId) throws ServerException {
+    public void doUpdatePwd(String loginNo, String userId) throws ServerException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new ServerException("找不到用户信息");
@@ -167,7 +176,8 @@ public class UserDomain extends OauthBaseDomain {
             }
         }
         user.setPassword(SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + user.getLoginno()));
-        return userRepository.save(user);
+        userRepository.save(user);
+        removeToken(loginNo);
     }
 
     @Transactional
@@ -176,8 +186,8 @@ public class UserDomain extends OauthBaseDomain {
         if (idList.contains(user.getId())) {
             throw new ServerException("不能删除自己");
         }
+        List<User> userList = userRepository.findAllById(idList);
         if (!isAdmin(user)) {
-            List<User> userList = userRepository.findAllById(idList);
             for (User item : userList) {
                 if (user.getLevels() >= item.getLevels()) {
                     throw new ServerException("没有权限做此操作，请联系系统管理员");
@@ -185,6 +195,11 @@ public class UserDomain extends OauthBaseDomain {
             }
         }
         userRepository.deleteByIdIn(idList);
+        userList.forEach(userInfo -> removeToken(userInfo.getLoginno()));
+    }
+
+    private void removeToken(String loginNo) {
+        applicationRepository.findAllByOrderByAppnameAsc().forEach(application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.getId(), loginNo));
     }
 
     public Page<UserVO> doQuery(UserPO userPO) {
