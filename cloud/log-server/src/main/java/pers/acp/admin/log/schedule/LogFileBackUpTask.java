@@ -2,6 +2,7 @@ package pers.acp.admin.log.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
 import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.core.CalendarTools;
@@ -46,7 +47,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         try {
             Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
             for (int i = 0; i < logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
-                String logFileDate = CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT);
+                String logFileDate = CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT);
                 File logFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
                 String logFoldPath = logFold.getAbsolutePath();
                 String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + LogBackUp.EXTENSION;
@@ -99,8 +100,8 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         // 保留当天和历史最大天数的文件
         Calendar day = CalendarTools.getCalendar();
         for (int i = 0; i <= logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
-            filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT));
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), LogBackUp.DATE_FORMAT) + LogBackUp.EXTENSION);
+            filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT) + LogBackUp.EXTENSION);
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件

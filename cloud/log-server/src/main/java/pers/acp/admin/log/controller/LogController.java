@@ -8,9 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
+import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.common.constant.path.log.LogApi;
 import pers.acp.admin.common.permission.log.LogFileExpression;
-import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.admin.log.domain.LogFileDomain;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -65,8 +65,8 @@ public class LogController extends BaseController {
             if (end.compareTo(nowDay) >= 0) {
                 throw new ServerException("结束日期必须早于当前");
             }
-            return ResponseEntity.ok(logFileDomain.fileList(CommonTools.getDateTimeString(start, LogBackUp.DATE_FORMAT),
-                    CommonTools.getDateTimeString(end, LogBackUp.DATE_FORMAT)));
+            return ResponseEntity.ok(logFileDomain.fileList(CommonTools.getDateTimeString(start, CommonConstant.DATE_FORMAT),
+                    CommonTools.getDateTimeString(end, CommonConstant.DATE_FORMAT)));
         } catch (Exception e) {
             logInstance.error(e.getMessage(), e);
             throw new ServerException(e.getMessage());

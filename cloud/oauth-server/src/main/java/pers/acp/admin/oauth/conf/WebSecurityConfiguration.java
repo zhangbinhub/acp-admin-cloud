@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import pers.acp.core.CommonTools;
 import pers.acp.admin.oauth.component.UserPasswordEncoder;
-import pers.acp.admin.oauth.domain.security.SecurityUserDetailsService;
+import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain;
 import pers.acp.springcloud.common.constant.ConfigurationOrder;
 
 /**
@@ -28,10 +28,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserPasswordEncoder userPasswordEncoder;
 
-    private final SecurityUserDetailsService userDetailsService;
+    private final SecurityUserDetailsDomain userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(ServerProperties serverProperties, UserPasswordEncoder userPasswordEncoder, SecurityUserDetailsService userDetailsService) {
+    public WebSecurityConfiguration(ServerProperties serverProperties, UserPasswordEncoder userPasswordEncoder, SecurityUserDetailsDomain userDetailsService) {
         this.userPasswordEncoder = userPasswordEncoder;
         this.contextPath = CommonTools.isNullStr(serverProperties.getServlet().getContextPath()) ? "" : serverProperties.getServlet().getContextPath();
         this.userDetailsService = userDetailsService;

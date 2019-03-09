@@ -101,22 +101,22 @@ public class UserVO {
     @ApiModelProperty("用户ID")
     private String id;
 
-    @ApiModelProperty(value = "用户名称", required = true, position = 1)
+    @ApiModelProperty(value = "用户名称", position = 1)
     private String name;
 
-    @ApiModelProperty(value = "登录号", required = true, position = 2)
+    @ApiModelProperty(value = "登录号", position = 2)
     private String loginno;
 
-    @ApiModelProperty(value = "手机号", required = true, position = 3)
+    @ApiModelProperty(value = "手机号", position = 3)
     private String mobile;
 
-    @ApiModelProperty(value = "用户级别", required = true, position = 4)
+    @ApiModelProperty(value = "用户级别", position = 4)
     private int levels;
 
-    @ApiModelProperty(value = "是否启用", required = true, position = 5)
+    @ApiModelProperty(value = "是否启用", position = 5)
     private boolean enabled;
 
-    @ApiModelProperty(value = "序号", required = true, position = 6)
+    @ApiModelProperty(value = "序号", position = 6)
     private int sort;
 
     @ApiModelProperty(value = "所属机构", position = 7)

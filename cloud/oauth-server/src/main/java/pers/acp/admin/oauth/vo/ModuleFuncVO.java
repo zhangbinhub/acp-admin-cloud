@@ -65,18 +65,18 @@ public class ModuleFuncVO {
     @ApiModelProperty("ID")
     private String id;
 
-    @ApiModelProperty(value = "应用ID", required = true, position = 1)
+    @ApiModelProperty(value = "应用ID", position = 1)
     private String appid;
 
-    @ApiModelProperty(value = "模块名称", required = true, position = 2)
+    @ApiModelProperty(value = "模块名称", position = 2)
     @NotBlank(message = "模块名称不能为空")
     private String name;
 
-    @ApiModelProperty(value = "模块编码", required = true, position = 3)
+    @ApiModelProperty(value = "模块编码", position = 3)
     @NotBlank(message = "模块编码不能为空")
     private String code;
 
-    @ApiModelProperty(value = "上级ID", required = true, position = 4)
+    @ApiModelProperty(value = "上级ID", position = 4)
     @NotBlank(message = "上级ID不能为空")
     private String parentid;
 

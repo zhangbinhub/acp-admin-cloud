@@ -91,4 +91,8 @@ public class ApplicationDomain extends OauthBaseDomain {
         return applicationRepository.findAllByOrderByAppnameAsc();
     }
 
+    public Application getApp(String appId) {
+        return applicationRepository.findById(appId).orElse(null);
+    }
+
 }

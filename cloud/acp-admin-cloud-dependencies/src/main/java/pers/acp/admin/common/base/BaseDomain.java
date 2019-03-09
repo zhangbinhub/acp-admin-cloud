@@ -19,7 +19,7 @@ public abstract class BaseDomain {
             if (queryParam.getOrderCommond().equalsIgnoreCase("asc")) {
                 direction = Sort.Direction.ASC;
             }
-            return PageRequest.of(queryParam.getCurrPage() - 1, queryParam.getPageSize(), direction, CommonTools.toCamel(queryParam.getOrderName()).split(","));
+            return PageRequest.of(queryParam.getCurrPage() - 1, queryParam.getPageSize(), direction, queryParam.getOrderName().split(","));
         }
     }
 

@@ -5,7 +5,7 @@ server:
     max-threads: 1000
     uri-encoding: UTF-8
 info:
-  version: 1.2.0
+  version: 1.3.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -51,9 +51,6 @@ spring:
     name: config-server
   thymeleaf:
     cache: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    default-property-inclusion: non_null
   zipkin:
     sender:
       type: kafka

@@ -10,8 +10,6 @@ public interface LogBackUp {
 
     String BACK_UP_PATH = File.separator + "backup";
 
-    String DATE_FORMAT = "yyyy-MM-dd";
-
     String ZIP_FILE_PREFIX = "log_";
 
     String EXTENSION = ".zip";
