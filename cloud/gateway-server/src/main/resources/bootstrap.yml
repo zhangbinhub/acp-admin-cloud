@@ -9,6 +9,32 @@ spring:
     name: gateway-server
   thymeleaf:
     cache: false
+  cloud:
+    # ===============================
+    # = GateWay Config
+    # ===============================
+    gateway:
+      routes:
+        - id: oauth2-server-api
+          uri: lb://oauth2-server
+          predicates:
+            - Path=/api/oauth/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: oauth2-server-open
+          uri: lb://oauth2-server
+          predicates:
+            - Path=/open/oauth/**
+          filters:
+            - RewritePath=/open/oauth/(?<segment1>.*),/open/$\{segment}
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
 info:
   version: 1.3.0
   app-name: ${spring.application.name}
