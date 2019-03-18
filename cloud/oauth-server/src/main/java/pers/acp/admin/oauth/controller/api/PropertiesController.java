@@ -108,9 +108,11 @@ public class PropertiesController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = OauthApi.propertiesRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> refresh() throws ServerException {
+    public ResponseEntity<InfoVO> refresh() throws ServerException {
         configServer.busRefresh();
-        return ResponseEntity.ok("请求成功，稍后所有服务将刷新配置信息");
+        InfoVO infoVO = new InfoVO();
+        infoVO.setMessage("请求成功，稍后所有服务将刷新配置信息");
+        return ResponseEntity.ok(infoVO);
     }
 
 }

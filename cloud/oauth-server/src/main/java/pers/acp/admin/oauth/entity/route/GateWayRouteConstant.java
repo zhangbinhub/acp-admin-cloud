@@ -8,4 +8,6 @@ public interface GateWayRouteConstant {
 
     String ROUTES_DEFINITION_KEY = "acp_cloud_gateway_routes_definition_key";
 
+    String ROUTES_LOCK_KEY = ROUTES_DEFINITION_KEY + "_lock";
+
 }

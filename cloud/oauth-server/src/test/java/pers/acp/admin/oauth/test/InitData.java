@@ -622,10 +622,7 @@ class InitData extends BaseTest {
     @Rollback(false)
     void initGateWayRoute() throws JsonProcessingException, URISyntaxException {
         List<GateWayFilterDefinition> filterDefinitionList = new ArrayList<>();
-        GateWayFilterDefinition gateWayFilterDefinition1 = new GateWayFilterDefinition();
-        gateWayFilterDefinition1.setName("StripPrefix");
-        gateWayFilterDefinition1.getArgs().put("key1", "1");
-        filterDefinitionList.add(gateWayFilterDefinition1);
+        filterDefinitionList.add(new GateWayFilterDefinition("StripPrefix=1"));
         GateWayFilterDefinition gateWayFilterDefinition2 = new GateWayFilterDefinition();
         gateWayFilterDefinition2.setName("Hystrix");
         gateWayFilterDefinition2.getArgs().put("name", "GateWayHystrix");
@@ -633,10 +630,7 @@ class InitData extends BaseTest {
         filterDefinitionList.add(gateWayFilterDefinition2);
 
         List<GateWayPredicateDefinition> predicateDefinitionList = new ArrayList<>();
-        GateWayPredicateDefinition gateWayPredicateDefinition = new GateWayPredicateDefinition();
-        gateWayPredicateDefinition.setName("Path");
-        gateWayPredicateDefinition.getArgs().put("key1", "/api/log/**");
-        predicateDefinitionList.add(gateWayPredicateDefinition);
+        predicateDefinitionList.add(new GateWayPredicateDefinition("Path=/api/log/**"));
 
         GateWayRoute gateWayRoute = new GateWayRoute();
         gateWayRoute.setRouteid("log-server-api");

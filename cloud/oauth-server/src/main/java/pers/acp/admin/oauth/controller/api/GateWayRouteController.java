@@ -108,10 +108,12 @@ public class GateWayRouteController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = OauthApi.gateWayRouteRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> refresh() throws ServerException {
+    public ResponseEntity<InfoVO> refresh() throws ServerException {
         gateWayRouteDomain.doRefresh();
         updateRouteProducer.doNotifyUpdateRoute();
-        return ResponseEntity.ok("请求成功，稍后网关将刷新路由配置信息");
+        InfoVO infoVO = new InfoVO();
+        infoVO.setMessage("刷新路由缓存成功，稍后网关将刷新路由配置信息");
+        return ResponseEntity.ok(infoVO);
     }
 
 }

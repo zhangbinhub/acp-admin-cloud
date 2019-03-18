@@ -1,9 +1,12 @@
 package pers.acp.admin.oauth.entity.route;
 
+import javax.validation.ValidationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
 
 /**
  * @author zhang by 17/03/2019
@@ -59,6 +62,26 @@ public class GateWayRouteDefinition {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public GateWayRouteDefinition() {}
+
+    public GateWayRouteDefinition(String text) {
+        int eqIdx = text.indexOf('=');
+        if (eqIdx <= 0) {
+            throw new ValidationException("Unable to parse RouteDefinition text '" + text + "'" +
+                    ", must be of the form name=value");
+        }
+
+        setId(text.substring(0, eqIdx));
+
+        String[] args = tokenizeToStringArray(text.substring(eqIdx+1), ",");
+
+        setUri(URI.create(args[0]));
+
+        for (int i=1; i < args.length; i++) {
+            this.predicates.add(new GateWayPredicateDefinition(args[i]));
+        }
     }
 
 }

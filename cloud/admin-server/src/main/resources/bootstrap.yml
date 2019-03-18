@@ -19,7 +19,7 @@ spring:
           - "classpath:/META-INF/spring-boot-admin-server-ui/"
           - "classpath:/static/"
 info:
-  version: 1.3.0
+  version: 1.4.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
