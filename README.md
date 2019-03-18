@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v1.3.0 [版本更新日志](doc/version_history.md)
+###### v1.4.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档

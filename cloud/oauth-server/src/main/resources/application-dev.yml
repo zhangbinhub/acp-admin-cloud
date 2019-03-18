@@ -50,6 +50,15 @@ spring:
           # topic
           destination: app-log
           content-type: application/json
+        update_route_output:
+          binder: kafka
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          # topic
+          destination: update-gateway-routes
+          content-type: application/json
         update_config_output:
           binder: kafka
           consumer:
@@ -67,7 +76,7 @@ spring:
             headerMode: raw
           # topic
           destination: auth-config
-          group: update-config-group
+          group: update-config-group-${server.address}-${server.port}
           content-type: application/json
   # ===============================
   # = JPA / HIBERNATE

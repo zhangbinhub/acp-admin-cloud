@@ -14,4 +14,8 @@ public interface UpdateBindChannelConstant {
 
     String UPDATE_RUNTIME = "update_runtime";
 
+    String UPDATE_GATEWAY_OUTPUT = "update_route_output";
+
+    String UPDATE_GATEWAY_ROUTES = "update_gateway_routes";
+
 }
