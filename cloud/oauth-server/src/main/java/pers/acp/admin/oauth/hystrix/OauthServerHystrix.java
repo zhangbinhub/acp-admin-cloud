@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.common.base.BaseFeignHystrix;
-import pers.acp.admin.oauth.feign.ConfigServer;
+import pers.acp.admin.oauth.feign.OauthServer;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
 
@@ -13,17 +13,17 @@ import pers.acp.springcloud.common.log.LogInstance;
  * @since JDK 11
  */
 @Component
-public class ConfigServerHystrix extends BaseFeignHystrix<ConfigServer> {
+public class OauthServerHystrix extends BaseFeignHystrix<OauthServer> {
 
     @Autowired
-    protected ConfigServerHystrix(LogInstance logInstance, ObjectMapper objectMapper) {
+    protected OauthServerHystrix(LogInstance logInstance, ObjectMapper objectMapper) {
         super(logInstance, objectMapper);
     }
 
     @Override
-    public ConfigServer create(Throwable cause) {
-        logInstance.error("调用 config-server 异常: " + cause.getMessage(), cause);
-        return new ConfigServer() {
+    public OauthServer create(Throwable cause) {
+        logInstance.error("调用 oauth2-server 异常: " + cause.getMessage(), cause);
+        return new OauthServer() {
             @Override
             public void busRefresh() throws ServerException {
                 String errMsg = "配置信息刷新失败";

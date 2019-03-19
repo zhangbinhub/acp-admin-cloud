@@ -13,6 +13,8 @@ dependencyManagement {
     }
 }
 dependencies {
-    compile project(":cloud:acp-admin-cloud-dependencies")
+    compile(project(":cloud:acp-admin-cloud-dependencies")) {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-bus-kafka'
+    }
     compile "org.springframework.cloud:spring-cloud-config-server"
 }

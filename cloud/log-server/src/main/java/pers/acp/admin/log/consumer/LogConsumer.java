@@ -31,7 +31,7 @@ public class LogConsumer {
         logInfo.setLogType(logType);
         // 每个日志类型启动一个线程池，池中仅有一个线程，保证每个类型的消息顺序处理
         ThreadPoolService threadPoolService = ThreadPoolService.getInstance(logType, 3000, 1);
-        threadPoolService.addTask(new BaseThreadTask("log") {
+        threadPoolService.addTask(new BaseThreadTask(logType + "_log") {
             @Override
             public boolean beforeExcuteFun() {
                 return true;
