@@ -14,11 +14,11 @@ import pers.acp.admin.common.permission.oauth.RuntimeConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.common.constant.path.oauth.OauthApi;
+import pers.acp.admin.oauth.bus.publish.RefreshEventPublish;
 import pers.acp.admin.oauth.controller.inner.InnerRuntimeController;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.RuntimePO;
-import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -43,13 +43,13 @@ public class RuntiimeController extends BaseController {
 
     private final RuntimeConfigDomain runtimeConfigDomain;
 
-    private final UpdateConfigProducer updateConfigProducer;
+    private final RefreshEventPublish refreshEventPublish;
 
     @Autowired
-    public RuntiimeController(InnerRuntimeController innerRuntimeController, RuntimeConfigDomain runtimeConfigDomain, UpdateConfigProducer updateConfigProducer) {
+    public RuntiimeController(InnerRuntimeController innerRuntimeController, RuntimeConfigDomain runtimeConfigDomain, RefreshEventPublish refreshEventPublish) {
         this.innerRuntimeController = innerRuntimeController;
         this.runtimeConfigDomain = runtimeConfigDomain;
-        this.updateConfigProducer = updateConfigProducer;
+        this.refreshEventPublish = refreshEventPublish;
     }
 
     @ApiOperation(value = "新建参数信息",
@@ -62,7 +62,7 @@ public class RuntiimeController extends BaseController {
     @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doCreate(runtimePO);
-        updateConfigProducer.doNotifyUpdateRuntime();
+        refreshEventPublish.doNotifyUpdateRuntime();
         return ResponseEntity.status(HttpStatus.CREATED).body(runtimeConfig);
     }
 
@@ -75,7 +75,7 @@ public class RuntiimeController extends BaseController {
     public ResponseEntity<InfoVO> delete(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
                                          @RequestBody List<String> idList) {
         runtimeConfigDomain.doDelete(idList);
-        updateConfigProducer.doNotifyUpdateRuntime();
+        refreshEventPublish.doNotifyUpdateRuntime();
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -93,7 +93,7 @@ public class RuntiimeController extends BaseController {
             throw new ServerException("配置ID不能为空");
         }
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doUpdate(runtimePO);
-        updateConfigProducer.doNotifyUpdateRuntime();
+        refreshEventPublish.doNotifyUpdateRuntime();
         return ResponseEntity.ok(runtimeConfig);
     }
 

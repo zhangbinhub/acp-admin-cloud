@@ -59,25 +59,6 @@ spring:
           # topic
           destination: update-gateway-routes
           content-type: application/json
-        update_config_output:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
-          # topic
-          destination: auth-config
-          content-type: application/json
-        update_config_input:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
-          # topic
-          destination: auth-config
-          group: update-config-group-${server.address}-${server.port}
-          content-type: application/json
   # ===============================
   # = JPA / HIBERNATE
   # ===============================
@@ -107,12 +88,12 @@ spring:
 feign:
   client:
     config:
-      config-server:
+      oauth2-server:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
   command:
-    "ConfigServer#busRefresh()":
+    "OauthServer#busRefresh()":
       execution:
         isolation:
           thread:
