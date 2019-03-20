@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pers.acp.admin.oauth.hystrix.ConfigServerHystrix;
+import pers.acp.admin.oauth.hystrix.OauthServerHystrix;
 import pers.acp.springboot.core.exceptions.ServerException;
 
 /**
@@ -13,8 +13,8 @@ import pers.acp.springboot.core.exceptions.ServerException;
  * @since JDK 11
  */
 @Component
-@FeignClient(value = "config-server", fallbackFactory = ConfigServerHystrix.class)
-public interface ConfigServer {
+@FeignClient(value = "oauth2-server", fallbackFactory = OauthServerHystrix.class)
+public interface OauthServer {
 
     /**
      * 刷新配置信息

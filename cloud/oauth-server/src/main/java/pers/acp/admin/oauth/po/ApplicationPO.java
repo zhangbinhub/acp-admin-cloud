@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import pers.acp.admin.common.po.QueryParam;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -54,7 +53,6 @@ public class ApplicationPO {
         this.queryParam = queryParam;
     }
 
-    @Id
     @ApiModelProperty("应用ID")
     private String id;
 

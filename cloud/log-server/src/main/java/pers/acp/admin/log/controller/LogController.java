@@ -11,6 +11,7 @@ import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.common.constant.path.log.LogApi;
 import pers.acp.admin.common.permission.log.LogFileExpression;
+import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.log.domain.LogFileDomain;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -80,11 +81,13 @@ public class LogController extends BaseController {
     })
     @PreAuthorize(LogFileExpression.adminOnly)
     @GetMapping(value = LogApi.logFile + "/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> query(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity<InfoVO> query(HttpServletRequest request, HttpServletResponse response,
                                         @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
                                         @PathVariable String fileName) throws ServerException {
         logFileDomain.doDownLoadFile(request, response, fileName);
-        return ResponseEntity.ok("下载文件成功：【" + fileName + "】");
+        InfoVO infoVO = new InfoVO();
+        infoVO.setMessage("下载文件成功：【" + fileName + "】");
+        return ResponseEntity.ok(infoVO);
     }
 
 }

@@ -5,12 +5,12 @@ import org.springframework.messaging.MessageChannel;
 import pers.acp.admin.oauth.constant.UpdateBindChannelConstant;
 
 /**
- * @author zhang by 30/01/2019
+ * @author zhang by 18/03/2019
  * @since JDK 11
  */
-public interface UpdateConfigOutput {
+public interface UpdateRouteOutput {
 
-    @Output(UpdateBindChannelConstant.OUTPUT)
+    @Output(UpdateBindChannelConstant.UPDATE_GATEWAY_OUTPUT)
     MessageChannel sendMessage();
 
 }

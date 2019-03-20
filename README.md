@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v1.3.0 [版本更新日志](doc/version_history.md)
+###### v1.4.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
@@ -43,14 +43,16 @@
 ![Architecture diagram](doc/images/总体架构.jpg)
 #### 说明
 - 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
-- gateway server 根据制定的策略路由到指定服务
+- gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地
+- oauth server 修改路由信息后更新至 redis ，通过 kafka 通知 gateway server 更新路由信息
+- oauth server 修改应用配置和参数配置后发送推送 bus 总线事件，广播通知对应服务更新缓存
 - 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
+- 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 - 各深度定制开发的服务从 config server 中获取自定义配置信息
 - 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
 - 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
 - 各服务将链路互相调用的断路信息通过 admin server 进行监控
 - oauth server 将 token 信息持久化到 redis 进行统一认证管理
-- 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 
 ## 一、环境要求
 - jdk 11
@@ -198,7 +200,8 @@ http://127.0.0.1:5601
 >（1）无需改动代码
 >（2）修改 yml 配置即可
 ### （二）gateway-server
-> 网关服务，修改 yml 进行路由配置
+> 网关服务，修改 yml
+> 动态路由信息保存在 redis
 ### （三）config-server
 > 配置中心，配置信息存放于数据库，并支持bus广播刷新所有服务配置信息
 ### （四）log-server

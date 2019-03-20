@@ -13,10 +13,10 @@ import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.oauth.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.common.constant.path.oauth.OauthApi;
+import pers.acp.admin.oauth.bus.publish.RefreshEventPublish;
 import pers.acp.admin.oauth.domain.ApplicationDomain;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.po.ApplicationPO;
-import pers.acp.admin.oauth.producer.instance.UpdateConfigProducer;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -39,12 +39,12 @@ public class ApplicationController extends BaseController {
 
     private final ApplicationDomain applicationDomain;
 
-    private final UpdateConfigProducer updateConfigProducer;
+    private final RefreshEventPublish refreshEventPublish;
 
     @Autowired
-    public ApplicationController(ApplicationDomain applicationDomain, UpdateConfigProducer updateConfigProducer) {
+    public ApplicationController(ApplicationDomain applicationDomain, RefreshEventPublish refreshEventPublish) {
         this.applicationDomain = applicationDomain;
-        this.updateConfigProducer = updateConfigProducer;
+        this.refreshEventPublish = refreshEventPublish;
     }
 
     @ApiOperation(value = "新建应用信息",
@@ -57,7 +57,7 @@ public class ApplicationController extends BaseController {
     @PutMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Application> add(@RequestBody @Valid ApplicationPO applicationPO) {
         Application application = applicationDomain.doCreate(applicationPO);
-        updateConfigProducer.doNotifyUpdateApp();
+        refreshEventPublish.doNotifyUpdateApp();
         return ResponseEntity.status(HttpStatus.CREATED).body(application);
     }
 
@@ -70,7 +70,7 @@ public class ApplicationController extends BaseController {
     public ResponseEntity<InfoVO> delete(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
                                          @RequestBody List<String> idList) {
         applicationDomain.doDelete(idList);
-        updateConfigProducer.doNotifyUpdateApp();
+        refreshEventPublish.doNotifyUpdateApp();
         InfoVO infoVO = new InfoVO();
         infoVO.setMessage("删除成功");
         return ResponseEntity.ok(infoVO);
@@ -88,7 +88,7 @@ public class ApplicationController extends BaseController {
             throw new ServerException("ID不能为空");
         }
         Application application = applicationDomain.doUpdate(applicationPO);
-        updateConfigProducer.doNotifyUpdateApp();
+        refreshEventPublish.doNotifyUpdateApp();
         return ResponseEntity.ok(application);
     }
 
@@ -121,7 +121,7 @@ public class ApplicationController extends BaseController {
     public ResponseEntity<Application> updateSecret(@ApiParam(value = "应用id", required = true) @NotBlank(message = "应用id不能为空")
                                                     @PathVariable String appId) throws ServerException {
         Application application = applicationDomain.doUpdateSecret(appId);
-        updateConfigProducer.doNotifyUpdateApp();
+        refreshEventPublish.doNotifyUpdateApp();
         return ResponseEntity.ok(application);
     }
 

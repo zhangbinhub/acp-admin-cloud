@@ -1,7 +1,10 @@
 package pers.acp.admin.oauth.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.common.constant.ModuleFuncCode;
@@ -9,14 +12,28 @@ import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
+import pers.acp.admin.oauth.entity.route.GateWayFilterDefinition;
+import pers.acp.admin.oauth.entity.route.GateWayPredicateDefinition;
+import pers.acp.admin.oauth.entity.route.GateWayRouteDefinition;
 import pers.acp.admin.oauth.repo.*;
 import pers.acp.core.security.SHA256Utils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhang by 18/12/2018
  * @since JDK 11
  */
 class InitData extends BaseTest {
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -39,13 +56,16 @@ class InitData extends BaseTest {
     @Autowired
     private PropertiesRepository propertiesRepository;
 
+    @Autowired
+    private GateWayRouteRepository gateWayRouteRepository;
+
     /**
      * 初始化数据，仅可执行一次
      */
     @Test
     @Transactional
     @Rollback(false)
-    void doInitAll() {
+    void doInitAll() throws Exception {
         Application application = new Application();
         application.setAppname("Acp-Admin");
         application.setSecret("E0D3024D-9A22-41EE-AC0F-FC6B56E367AE");
@@ -86,6 +106,7 @@ class InitData extends BaseTest {
 
         initProperties();
         initRuntimeConfig();
+        initGateWayRoute();
     }
 
     private void initMenus(Application application, Role... roles) {
@@ -594,6 +615,39 @@ class InitData extends BaseTest {
         properties2.setConfigDes("日志最大保留天数，默认 180 天");
         properties2.setEnabled(true);
         propertiesRepository.save(properties2);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void initGateWayRoute() throws JsonProcessingException, URISyntaxException {
+        List<GateWayFilterDefinition> filterDefinitionList = new ArrayList<>();
+        filterDefinitionList.add(new GateWayFilterDefinition("StripPrefix=1"));
+        GateWayFilterDefinition gateWayFilterDefinition2 = new GateWayFilterDefinition();
+        gateWayFilterDefinition2.setName("Hystrix");
+        gateWayFilterDefinition2.getArgs().put("name", "GateWayHystrix");
+        gateWayFilterDefinition2.getArgs().put("fallbackUri", "forward:/hystrixhandle");
+        filterDefinitionList.add(gateWayFilterDefinition2);
+
+        List<GateWayPredicateDefinition> predicateDefinitionList = new ArrayList<>();
+        predicateDefinitionList.add(new GateWayPredicateDefinition("Path=/api/log/**"));
+
+        GateWayRoute gateWayRoute = new GateWayRoute();
+        gateWayRoute.setRouteid("log-server-api");
+        gateWayRoute.setEnabled(true);
+        gateWayRoute.setUri("lb://log-server");
+        gateWayRoute.setPredicates(objectMapper.writeValueAsString(predicateDefinitionList));
+        gateWayRoute.setFilters(objectMapper.writeValueAsString(filterDefinitionList));
+        gateWayRouteRepository.save(gateWayRoute);
+
+//        GateWayRouteDefinition gateWayRouteDefinition = new GateWayRouteDefinition();
+//        gateWayRouteDefinition.setId(gateWayRoute.getRouteid());
+//        gateWayRouteDefinition.setUri(new URI(gateWayRoute.getUri()));
+//        gateWayRouteDefinition.setOrder(gateWayRoute.getOrderNum());
+//        gateWayRouteDefinition.setPredicates(predicateDefinitionList);
+//        gateWayRouteDefinition.setFilters(filterDefinitionList);
+//        redisConnectionFactory.getConnection().del(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes());
+//        redisConnectionFactory.getConnection().lPush(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes(), objectMapper.writeValueAsBytes(gateWayRouteDefinition));
     }
 
 }

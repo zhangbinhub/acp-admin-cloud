@@ -1,8 +1,7 @@
 package pers.acp.admin.oauth;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.cloud.stream.config.BindingServiceConfiguration;
+import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import pers.acp.springcloud.common.annotation.AcpCloudOauthServerApplication;
 
 /**
@@ -10,7 +9,7 @@ import pers.acp.springcloud.common.annotation.AcpCloudOauthServerApplication;
  * @since JDK 11
  */
 @AcpCloudOauthServerApplication
-@AutoConfigureBefore(BindingServiceConfiguration.class)
+@RemoteApplicationEventScan
 public class OauthServerApplication {
 
     public static void main(String[] args) {

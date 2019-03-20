@@ -15,7 +15,7 @@ import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.PropertiesDomain;
 import pers.acp.admin.oauth.entity.Properties;
-import pers.acp.admin.oauth.feign.ConfigServer;
+import pers.acp.admin.oauth.feign.OauthServer;
 import pers.acp.admin.oauth.po.PropertiesPO;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -38,12 +38,12 @@ public class PropertiesController extends BaseController {
 
     private final PropertiesDomain propertiesDomain;
 
-    private final ConfigServer configServer;
+    private final OauthServer oauthServer;
 
     @Autowired
-    public PropertiesController(PropertiesDomain propertiesDomain, ConfigServer configServer) {
+    public PropertiesController(PropertiesDomain propertiesDomain, OauthServer oauthServer) {
         this.propertiesDomain = propertiesDomain;
-        this.configServer = configServer;
+        this.oauthServer = oauthServer;
     }
 
     @ApiOperation(value = "新建参数信息",
@@ -108,9 +108,11 @@ public class PropertiesController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = OauthApi.propertiesRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> refresh() throws ServerException {
-        configServer.busRefresh();
-        return ResponseEntity.ok("请求成功，稍后所有服务将刷新配置信息");
+    public ResponseEntity<InfoVO> refresh() throws ServerException {
+        oauthServer.busRefresh();
+        InfoVO infoVO = new InfoVO();
+        infoVO.setMessage("请求成功，稍后所有服务将刷新配置信息");
+        return ResponseEntity.ok(infoVO);
     }
 
 }
