@@ -80,6 +80,7 @@ public class LogConsumer {
         message.append("[ ").append(CommonTools.strFillIn(logLevel.getName(), 5, 1, " ")).append(" ] ")
                 .append("[").append(logInfo.getServerName()).append("] ")
                 .append("[").append(logInfo.getServerIp()).append("] ")
+                .append("[").append(logInfo.getServerPort()).append("] ")
                 .append("[").append(logInfo.getClassName()).append("] ")
                 .append("[ ").append(logInfo.getLineno()).append(" ] - ")
                 .append(logInfo.getMessage());
