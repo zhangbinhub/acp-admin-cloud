@@ -108,7 +108,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         Calendar day = CalendarTools.getCalendar();
         for (int i = 0; i <= logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT) + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION);
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件
