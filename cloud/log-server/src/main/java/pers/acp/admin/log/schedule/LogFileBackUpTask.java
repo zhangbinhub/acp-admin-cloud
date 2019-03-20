@@ -1,6 +1,7 @@
 package pers.acp.admin.log.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
@@ -24,6 +25,12 @@ import java.util.List;
  */
 @Component("LogFileBackUpTask")
 public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
+
+    @Value("${server.address}")
+    private String serverIp;
+
+    @Value("${server.port}")
+    private int serverPort;
 
     private final LogInstance logInstance;
 
@@ -50,7 +57,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                 String logFileDate = CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT);
                 File logFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
                 String logFoldPath = logFold.getAbsolutePath();
-                String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + LogBackUp.EXTENSION;
+                String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION;
                 File zipFile = new File(zipFilePath);
                 if (!zipFile.exists()) {
                     if (!logFold.exists() || !logFold.isDirectory()) {
@@ -101,7 +108,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         Calendar day = CalendarTools.getCalendar();
         for (int i = 0; i <= logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT) + LogBackUp.EXTENSION);
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件
