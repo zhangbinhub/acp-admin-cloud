@@ -41,18 +41,30 @@
 
 ## 总体架构
 ![Architecture diagram](doc/images/总体架构.jpg)
+
 #### 说明
-- 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
-- gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地
-- oauth server 修改路由信息后更新至 redis ，通过 kafka 通知 gateway server 更新路由信息
-- oauth server 修改应用配置和参数配置后发送推送 bus 总线事件，广播通知对应服务更新缓存
-- 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
-- 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
-- 各深度定制开发的服务从 config server 中获取自定义配置信息
-- 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
-- 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
-- 各服务将链路互相调用的断路信息通过 admin server 进行监控
-- oauth server 将 token 信息持久化到 redis 进行统一认证管理
+> - 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
+> - gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地
+> - oauth server 修改路由信息后更新至 redis ，通过 kafka 通知 gateway server 更新路由信息
+> - oauth server 修改应用配置和参数配置后发送推送 bus 总线事件，广播通知对应服务更新缓存
+> - 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
+> - 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
+> - 各深度定制开发的服务从 config server 中获取自定义配置信息
+> - 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
+> - 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
+> - 各服务将链路互相调用的断路信息通过 admin server 进行监控
+> - oauth server 将 token 信息持久化到 redis 进行统一认证管理
+> - 前后端交互 HttpStatus Code 说明
+> 
+>     | HttpStatus | 描述 |
+>     | --- | --- | 
+>     | 200 | 请求成功 |
+>     | 201 | 资源创建成功 |
+>     | 400 | 业务错误 |
+>     | 401 | token（登录）失效 |
+>     | 403 | 权限不足 |
+>     | 404 | 找不到资源 |
+>     | 500 | 系统异常 |
 
 ## 一、环境要求
 - jdk 11
