@@ -181,7 +181,7 @@ http://127.0.0.1:5601
 > - 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
 
 ## 六、服务列表
-### （一）. admin-server 
+### （一）admin-server 
 ###### 1 可视化监控，监控服务状态、信息聚合
 |          url          |  描述                   |
 | --------------------- | ----------------------- | 
