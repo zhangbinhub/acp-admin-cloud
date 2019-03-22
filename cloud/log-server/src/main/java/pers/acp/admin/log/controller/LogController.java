@@ -81,7 +81,7 @@ public class LogController extends BaseController {
     })
     @PreAuthorize(LogFileExpression.adminOnly)
     @GetMapping(value = LogApi.logFile + "/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> query(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity<InfoVO> download(HttpServletRequest request, HttpServletResponse response,
                                         @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
                                         @PathVariable String fileName) throws ServerException {
         logFileDomain.doDownLoadFile(request, response, fileName);

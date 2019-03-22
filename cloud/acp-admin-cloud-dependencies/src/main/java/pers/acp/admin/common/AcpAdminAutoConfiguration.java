@@ -1,6 +1,5 @@
 package pers.acp.admin.common;
 
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +9,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("pers.acp.admin.common")
-@ServletComponentScan({"pers.acp.admin.common"})
 public class AcpAdminAutoConfiguration {
 }
