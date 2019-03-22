@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
 import pers.acp.admin.oauth.entity.route.GateWayFilterDefinition;
 import pers.acp.admin.oauth.entity.route.GateWayPredicateDefinition;
+import pers.acp.admin.oauth.entity.route.GateWayRouteConstant;
 import pers.acp.admin.oauth.entity.route.GateWayRouteDefinition;
 import pers.acp.admin.oauth.repo.*;
 import pers.acp.core.security.SHA256Utils;
@@ -640,14 +642,19 @@ class InitData extends BaseTest {
         gateWayRoute.setFilters(objectMapper.writeValueAsString(filterDefinitionList));
         gateWayRouteRepository.save(gateWayRoute);
 
-//        GateWayRouteDefinition gateWayRouteDefinition = new GateWayRouteDefinition();
-//        gateWayRouteDefinition.setId(gateWayRoute.getRouteid());
-//        gateWayRouteDefinition.setUri(new URI(gateWayRoute.getUri()));
-//        gateWayRouteDefinition.setOrder(gateWayRoute.getOrderNum());
-//        gateWayRouteDefinition.setPredicates(predicateDefinitionList);
-//        gateWayRouteDefinition.setFilters(filterDefinitionList);
-//        redisConnectionFactory.getConnection().del(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes());
-//        redisConnectionFactory.getConnection().lPush(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes(), objectMapper.writeValueAsBytes(gateWayRouteDefinition));
+        RedisConnection connection = redisConnectionFactory.getConnection();
+        try {
+            GateWayRouteDefinition gateWayRouteDefinition = new GateWayRouteDefinition();
+            gateWayRouteDefinition.setUri(new URI(gateWayRoute.getUri()));
+            gateWayRouteDefinition.setId(gateWayRoute.getRouteid());
+            gateWayRouteDefinition.setOrder(gateWayRoute.getOrderNum());
+            gateWayRouteDefinition.setPredicates(predicateDefinitionList);
+            gateWayRouteDefinition.setFilters(filterDefinitionList);
+            connection.del(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes());
+            connection.lPush(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes(), objectMapper.writeValueAsBytes(gateWayRouteDefinition));
+        } finally {
+            connection.close();
+        }
     }
 
 }

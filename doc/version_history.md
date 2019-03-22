@@ -1,5 +1,6 @@
 ## 版本更新记录
 ##### v1.4.0
+> - [Upgrade] acp-admin-cloud-dependencies 增加基于Redis的分布式锁封装 pers.acp.admin.common.lock.instanse.RedisDistributedLock
 > - [Upgrade] 网关服务增加动态路由配置
 > - [Upgrade] 增加网关动态路由配置及刷新接口
 > - [Upgrade] 配置中心取消 bus-kafka 依赖，广播刷新时配置中心不需要进行刷新；刷新接口调用 oauth2-server

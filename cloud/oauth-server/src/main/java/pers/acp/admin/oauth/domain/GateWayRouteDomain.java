@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.acp.admin.common.lock.DistributedLock;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.GateWayRoute;
 import pers.acp.admin.oauth.entity.route.GateWayFilterDefinition;
@@ -43,13 +43,16 @@ public class GateWayRouteDomain extends OauthBaseDomain {
 
     private final ObjectMapper objectMapper;
 
+    private final DistributedLock distributedLock;
+
     @Autowired
-    public GateWayRouteDomain(UserRepository userRepository, LogInstance logInstance, GateWayRouteRepository gateWayRouteRepository, RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
+    public GateWayRouteDomain(UserRepository userRepository, LogInstance logInstance, GateWayRouteRepository gateWayRouteRepository, RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper, DistributedLock distributedLock) {
         super(userRepository);
         this.logInstance = logInstance;
         this.gateWayRouteRepository = gateWayRouteRepository;
         this.redisConnectionFactory = redisConnectionFactory;
         this.objectMapper = objectMapper;
+        this.distributedLock = distributedLock;
     }
 
     private GateWayRoute doSave(GateWayRoute gateWayRoute, GateWayRoutePO gateWayRoutePO) {
@@ -98,11 +101,11 @@ public class GateWayRouteDomain extends OauthBaseDomain {
     @Transactional
     public void doRefresh() throws ServerException {
         List<GateWayRoute> gateWayRouteList = gateWayRouteRepository.findAllByEnabled(true);
-        RedisConnection connection = redisConnectionFactory.getConnection();
         logInstance.info("查询到启用的路由信息共 " + gateWayRouteList.size() + " 条");
+        RedisConnection connection = redisConnectionFactory.getConnection();
         try {
             String uuid = CommonTools.getUuid();
-            if (lock(connection, uuid)) {
+            if (distributedLock.getLock(GateWayRouteConstant.ROUTES_LOCK_KEY, uuid, 30000)) {
                 connection.del(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes());
                 logInstance.info("清理 Redis 缓存完成");
                 List<byte[]> gateWayRouteDefinitionList = new ArrayList<>();
@@ -117,42 +120,15 @@ public class GateWayRouteDomain extends OauthBaseDomain {
                 }
                 connection.lPush(GateWayRouteConstant.ROUTES_DEFINITION_KEY.getBytes(), gateWayRouteDefinitionList.toArray(new byte[][]{}));
                 logInstance.info("路由信息更新至 Redis，共 " + gateWayRouteDefinitionList.size() + " 条");
-                unLock(connection, uuid);
+                distributedLock.releaseLock(GateWayRouteConstant.ROUTES_LOCK_KEY, uuid);
             } else {
                 throw new ServerException("系统正在进行路由信息更新，请稍后重试");
             }
         } catch (Exception e) {
             throw new ServerException(e.getMessage());
+        } finally {
+            connection.close();
         }
-    }
-
-    /**
-     * 获取分布式锁
-     *
-     * @param connection redis连接对象
-     * @param request    内容
-     * @return true|false
-     */
-    private boolean lock(RedisConnection connection, String request) {
-        Object lock = connection.execute("set",
-                GateWayRouteConstant.ROUTES_LOCK_KEY.getBytes(),
-                request.getBytes(),
-                "NX".getBytes(),
-                "PX".getBytes(),
-                "30000".getBytes());
-        return lock != null;
-    }
-
-    /**
-     * 释放分布式锁
-     *
-     * @param connection redis连接对象
-     * @param request    内容
-     */
-    private void unLock(RedisConnection connection, String request) {
-        //lua script
-        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        connection.eval(script.getBytes(), ReturnType.INTEGER, 1, GateWayRouteConstant.ROUTES_LOCK_KEY.getBytes(), request.getBytes());
     }
 
 }

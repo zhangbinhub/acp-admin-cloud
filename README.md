@@ -44,7 +44,7 @@
 
 #### 说明
 > - 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
-> - gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地
+> - gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地；基于动态路由配置可根据实际情况扩展实现灰度发布
 > - oauth server 修改路由信息后更新至 redis ，通过 kafka 通知 gateway server 更新路由信息
 > - oauth server 修改应用配置和参数配置后发送推送 bus 总线事件，广播通知对应服务更新缓存
 > - 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
