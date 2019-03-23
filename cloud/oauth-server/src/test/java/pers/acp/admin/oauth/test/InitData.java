@@ -13,10 +13,10 @@ import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.entity.*;
 import pers.acp.admin.oauth.entity.ModuleFunc;
-import pers.acp.admin.oauth.entity.route.GateWayFilterDefinition;
-import pers.acp.admin.oauth.entity.route.GateWayPredicateDefinition;
-import pers.acp.admin.oauth.entity.route.GateWayRouteConstant;
-import pers.acp.admin.oauth.entity.route.GateWayRouteDefinition;
+import pers.acp.admin.oauth.route.GateWayFilterDefinition;
+import pers.acp.admin.oauth.route.GateWayPredicateDefinition;
+import pers.acp.admin.oauth.route.GateWayRouteConstant;
+import pers.acp.admin.oauth.route.GateWayRouteDefinition;
 import pers.acp.admin.oauth.repo.*;
 import pers.acp.core.security.SHA256Utils;
 
@@ -640,6 +640,7 @@ class InitData extends BaseTest {
         gateWayRoute.setUri("lb://log-server");
         gateWayRoute.setPredicates(objectMapper.writeValueAsString(predicateDefinitionList));
         gateWayRoute.setFilters(objectMapper.writeValueAsString(filterDefinitionList));
+        gateWayRoute.setRemarks("日志服务接口");
         gateWayRouteRepository.save(gateWayRoute);
 
         RedisConnection connection = redisConnectionFactory.getConnection();

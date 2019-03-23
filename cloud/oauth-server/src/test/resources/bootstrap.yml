@@ -1,0 +1,103 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: dev
+  application:
+    name: oauth2-server
+  thymeleaf:
+    cache: false
+  zipkin:
+    #    base-url: http://localhost:9411/
+    sender:
+      type: kafka
+  cloud:
+    config:
+      name: ${spring.application.name}     #对应{application}部分
+      profile: ${spring.profiles.active}   #对应{profile}部分
+      label: master                        #对应分支。如果配置中心使用的是本地存储，则该参数无用
+      discovery:
+        service-id: config-server          #指定配置中心的service-id，便于扩展为高可用配置集群。
+        enabled: true
+      fail-fast: true
+      retry:
+        initial-interval: 2000 #最初重试间隔
+        max-attempts: 1000 #最多重试次数
+        max-interval: 5000 #最长重试间隔
+        multiplier: 1.1 #每次重试失败后，重试间隔所增加的倍数
+info:
+  version: 1.4.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+# ===============================
+# = Ribbon Config
+# ===============================
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: full
+  httpclient:
+    enabled: true
+    connection-timeout: ${feign.client.config.default.connectTimeout}
+    max-connections: 1000
+    max-connections-per-route: 50
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 11000
+ribbon:
+  ServerListRefreshInterval: 5000
+  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  eager-load:
+    enabled: true
+    clients: config-server
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://oauth2-server/oauth/check_token
+# ===============================
+# = ACP Config
+# ===============================
+acp:
+  cloud:
+    oauth:
+      oauth-server: true
+    log-server:
+      enabled: true
+      log-type: AUTH

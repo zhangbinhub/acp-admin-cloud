@@ -71,6 +71,14 @@ public class GateWayRoutePO {
         this.enabled = enabled;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     public QueryParam getQueryParam() {
         return queryParam;
     }
@@ -102,6 +110,9 @@ public class GateWayRoutePO {
 
     @ApiModelProperty(value = "是否启用", required = true, position = 6)
     private Boolean enabled;
+
+    @ApiModelProperty(value = "备注", position = 7)
+    private String remarks;
 
     @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)
     private QueryParam queryParam;

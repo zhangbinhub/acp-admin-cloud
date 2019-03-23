@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.entity.route;
+package pers.acp.admin.oauth.route;
 
 /**
  * @author zhang by 18/03/2019
