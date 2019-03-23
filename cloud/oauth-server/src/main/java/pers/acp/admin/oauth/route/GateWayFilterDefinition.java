@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.entity.route;
+package pers.acp.admin.oauth.route;
 
 import javax.validation.ValidationException;
 import java.util.LinkedHashMap;

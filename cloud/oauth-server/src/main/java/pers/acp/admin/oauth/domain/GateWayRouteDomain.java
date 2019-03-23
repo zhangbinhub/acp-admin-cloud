@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.common.lock.DistributedLock;
 import pers.acp.admin.oauth.base.OauthBaseDomain;
 import pers.acp.admin.oauth.entity.GateWayRoute;
-import pers.acp.admin.oauth.entity.route.GateWayFilterDefinition;
-import pers.acp.admin.oauth.entity.route.GateWayPredicateDefinition;
-import pers.acp.admin.oauth.entity.route.GateWayRouteConstant;
-import pers.acp.admin.oauth.entity.route.GateWayRouteDefinition;
+import pers.acp.admin.oauth.route.GateWayFilterDefinition;
+import pers.acp.admin.oauth.route.GateWayPredicateDefinition;
+import pers.acp.admin.oauth.route.GateWayRouteConstant;
+import pers.acp.admin.oauth.route.GateWayRouteDefinition;
 import pers.acp.admin.oauth.po.GateWayRoutePO;
 import pers.acp.admin.oauth.repo.GateWayRouteRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
@@ -62,6 +62,7 @@ public class GateWayRouteDomain extends OauthBaseDomain {
         gateWayRoute.setFilters(gateWayRoutePO.getFilters());
         gateWayRoute.setEnabled(gateWayRoutePO.getEnabled());
         gateWayRoute.setOrderNum(gateWayRoutePO.getOrderNum());
+        gateWayRoute.setRemarks(gateWayRoutePO.getRemarks());
         return gateWayRouteRepository.save(gateWayRoute);
     }
 

@@ -71,6 +71,14 @@ public class GateWayRoute {
         this.enabled = enabled;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "guid")
     @GeneratedValue(generator = "idGenerator")
@@ -99,5 +107,8 @@ public class GateWayRoute {
 
     @ApiModelProperty("是否启用")
     private boolean enabled;
+
+    @ApiModelProperty("备注")
+    private String remarks;
 
 }
