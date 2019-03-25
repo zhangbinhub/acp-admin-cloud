@@ -35,27 +35,6 @@ spring:
       kafka:
         binder:
           brokers: 127.0.0.1:9092
-      bindings:
-        log_output:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
-          # topic
-          destination: app-log
-          content-type: application/json
-        # 与@StreamListener注解中的value一致，是绑定的渠道名
-        log_input:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
-          # topic
-          destination: app-log
-          group: app-log-group
-          content-type: application/json
 # ===============================
 # = Security Config
 # ===============================
