@@ -60,3 +60,7 @@ security:
   oauth2:
     resource:
       token-info-uri: http://oauth2-server/oauth/check_token
+acp:
+  cloud:
+    log-server:
+      enabled: true

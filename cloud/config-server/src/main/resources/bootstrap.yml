@@ -91,5 +91,3 @@ acp:
   cloud:
     oauth:
       resource-server: false
-    log-server:
-      enabled: false

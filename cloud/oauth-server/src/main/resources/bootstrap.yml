@@ -99,5 +99,6 @@ acp:
     oauth:
       oauth-server: true
     log-server:
-      enabled: true
-      log-type: AUTH
+      client:
+        enabled: true
+        log-type: AUTH
