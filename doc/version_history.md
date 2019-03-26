@@ -1,5 +1,6 @@
 ## 版本更新记录
 ##### v1.4.0
+> - [Upgrade] 升级gradle至5.3
 > - [Upgrade] 更新核心库至 5.1.3.1
 > - [Upgrade] acp-admin-cloud-dependencies 增加基于Redis的分布式锁封装 pers.acp.admin.common.lock.instanse.RedisDistributedLock
 > - [Upgrade] 网关服务增加动态路由配置
