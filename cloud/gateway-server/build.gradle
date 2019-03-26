@@ -12,6 +12,11 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
     }
 }
+bootJar {
+    manifest {
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Acp Admin Cloud')
+    }
+}
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"

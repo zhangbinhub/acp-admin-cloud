@@ -12,6 +12,11 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
     }
 }
+bootJar {
+    manifest {
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Acp Admin Cloud')
+    }
+}
 dependencies {
     compile(project(":cloud:acp-admin-cloud-dependencies")) {
         exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-bus-kafka'
