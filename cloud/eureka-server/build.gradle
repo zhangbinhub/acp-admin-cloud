@@ -12,6 +12,11 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
     }
 }
+bootJar {
+    manifest {
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Acp Admin Cloud')
+    }
+}
 dependencies {
     compile "org.glassfish.jaxb:jaxb-runtime:$versions.jaxb_runtime"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server"
