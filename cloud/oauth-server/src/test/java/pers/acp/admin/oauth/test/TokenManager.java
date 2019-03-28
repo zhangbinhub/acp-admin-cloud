@@ -1,10 +1,12 @@
 package pers.acp.admin.oauth.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import pers.acp.admin.oauth.BaseTest;
+import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis;
 
 /**
  * @author zhang by 19/12/2018
@@ -13,13 +15,16 @@ import pers.acp.admin.oauth.BaseTest;
 class TokenManager extends BaseTest {
 
     @Autowired
-    private RedisConnectionFactory connectionFactory;
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void removeToken() {
         String token = "efe5e360-2bea-4881-9581-35a8b23fa65b";
         String refreshToken = "";
-        RedisTokenStore redisTokenStore = new RedisTokenStore(connectionFactory);
+        SecurityTokenStoreRedis redisTokenStore = new SecurityTokenStoreRedis(redisTemplate, objectMapper);
         redisTokenStore.removeAccessToken(token);
         redisTokenStore.removeRefreshToken(refreshToken);
     }

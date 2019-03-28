@@ -8,8 +8,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.gateway.constant.GateWayConstant;
 import reactor.core.publisher.Flux;
@@ -32,13 +32,13 @@ public class RouteRedisRepository implements RouteDefinitionRepository {
 
     private final List<RouteDefinition> routes = new CopyOnWriteArrayList<>();
 
-    private final RedisConnectionFactory connectionFactory;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public RouteRedisRepository(RedisConnectionFactory connectionFactory, ObjectMapper objectMapper) {
-        this.connectionFactory = connectionFactory;
+    public RouteRedisRepository(RedisTemplate<Object, Object> redisTemplate, ObjectMapper objectMapper) {
+        this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
     }
 
@@ -47,18 +47,15 @@ public class RouteRedisRepository implements RouteDefinitionRepository {
         synchronized (this) {
             routes.clear();
             List<RouteDefinition> values = new ArrayList<>();
-            RedisConnection connection = connectionFactory.getConnection();
             try {
-                List<byte[]> routeList = connection.lRange(GateWayConstant.ROUTES_DEFINITION_KEY.getBytes(), 0, -1);
+                List<Object> routeList = redisTemplate.opsForList().range(GateWayConstant.ROUTES_DEFINITION_KEY, 0, -1);
                 if (routeList != null) {
-                    for (byte[] route : routeList) {
-                        values.add(objectMapper.readValue(route, RouteDefinition.class));
+                    for (Object route : routeList) {
+                        values.add(objectMapper.readValue((byte[]) route, RouteDefinition.class));
                     }
                 }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-            } finally {
-                connection.close();
             }
             log.debug("redis 中路由定义条数： {}， {}", values.size(), values);
             routes.addAll(values);

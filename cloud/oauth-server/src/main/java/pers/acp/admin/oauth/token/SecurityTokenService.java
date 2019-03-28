@@ -2,7 +2,8 @@ package pers.acp.admin.oauth.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -38,7 +39,7 @@ public class SecurityTokenService extends DefaultTokenServices {
     }
 
     private SecurityTokenStore redisTokenStore() {
-        return new SecurityTokenStoreRedis(connectionFactory, objectMapper);
+        return new SecurityTokenStoreRedis(redisTemplate, objectMapper);
     }
 
     private TokenStore inMemoryTokenStore() {
@@ -47,18 +48,18 @@ public class SecurityTokenService extends DefaultTokenServices {
 
     private final LogInstance logInstance;
 
-    private final RedisConnectionFactory connectionFactory;
-
     private final SecurityTokenStore tokenStore;
+
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     private final SecurityTokenEnhancer securityTokenEnhancer;
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public SecurityTokenService(LogInstance logInstance, RedisConnectionFactory connectionFactory, SecurityTokenEnhancer securityTokenEnhancer, ObjectMapper objectMapper) {
+    public SecurityTokenService(LogInstance logInstance, RedisTemplate<Object, Object> redisTemplate, SecurityTokenEnhancer securityTokenEnhancer, ObjectMapper objectMapper) {
         this.logInstance = logInstance;
-        this.connectionFactory = connectionFactory;
+        this.redisTemplate = redisTemplate;
         this.securityTokenEnhancer = securityTokenEnhancer;
         this.objectMapper = objectMapper;
         // 持久化到内存
