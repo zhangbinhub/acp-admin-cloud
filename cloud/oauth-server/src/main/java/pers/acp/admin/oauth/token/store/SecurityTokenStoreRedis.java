@@ -78,10 +78,6 @@ public class SecurityTokenStoreRedis implements TokenStore, SecurityTokenStore {
         return serializationStrategy.deserialize(value, cls);
     }
 
-    private String deserializeString(byte[] bytes) {
-        return serializationStrategy.deserializeString(bytes);
-    }
-
     private static String getApprovalKey(OAuth2Authentication authentication) {
         String userName = authentication.getUserAuthentication() == null ? ""
                 : authentication.getUserAuthentication().getName();
