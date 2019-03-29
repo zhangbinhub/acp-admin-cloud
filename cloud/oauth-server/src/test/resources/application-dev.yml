@@ -41,21 +41,7 @@ spring:
         binder:
           brokers: 127.0.0.1:9092
       bindings:
-        log_output:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
-          # topic
-          destination: app-log
-          content-type: application/json
         update_route_output:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
           # topic
           destination: update-gateway-routes
           content-type: application/json

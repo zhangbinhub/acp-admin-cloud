@@ -36,11 +36,6 @@ spring:
           brokers: 127.0.0.1:9092
       bindings:
         update_route_input:
-          binder: kafka
-          consumer:
-            headerMode: raw
-          producer:
-            headerMode: raw
           # topic
           destination: update-gateway-routes
           group: gateway-update-routes-group-${server.address}-${server.port}

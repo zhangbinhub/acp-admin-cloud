@@ -9,6 +9,7 @@
 > - [Upgrade] 配置中心取消 bus-kafka 依赖，广播刷新时配置中心不需要进行刷新；刷新接口调用 oauth2-server
 > - [Upgrade] 修改应用信息和运行参数配置时，通过bus广播更新缓存事件进行刷新
 > - [Upgrade] 优化日志服务，日志记录格式
+> - [Upgrade] 自定义 RedisTokenStore，规范 Redis 写法，兼容 Redis 集群
 > - [Fix] 优化日志备份，兼容分布式多实例
 ##### v1.3.0
 > - [Upgrade] 更新核心库，增加资源服务器自定义token异常和权限异常响应

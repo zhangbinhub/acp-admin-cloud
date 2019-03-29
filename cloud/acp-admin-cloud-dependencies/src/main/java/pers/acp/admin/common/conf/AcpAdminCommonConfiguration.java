@@ -3,7 +3,9 @@ package pers.acp.admin.common.conf;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisTemplate;
 import pers.acp.admin.common.lock.instanse.RedisDistributedLock;
 
 /**
@@ -14,9 +16,9 @@ import pers.acp.admin.common.lock.instanse.RedisDistributedLock;
 public class AcpAdminCommonConfiguration {
 
     @Bean
-    @ConditionalOnClass(RedisConnectionFactory.class)
-    public RedisDistributedLock redisDistributedLock(RedisConnectionFactory redisConnectionFactory) {
-        return new RedisDistributedLock(redisConnectionFactory);
+    @ConditionalOnClass(RedisConnection.class)
+    public RedisDistributedLock redisDistributedLock(RedisTemplate<Object, Object> redisTemplate) {
+        return new RedisDistributedLock(redisTemplate);
     }
 
 }
