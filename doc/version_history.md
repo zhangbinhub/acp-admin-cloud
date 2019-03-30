@@ -1,4 +1,7 @@
 ## 版本更新记录
+##### v1.4.1
+> - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR1
+> - [Upgrade] 更新核心库至 5.1.3.2
 ##### v1.4.0
 > - [Upgrade] 升级gradle至5.3
 > - [Upgrade] 优化gradle脚本
