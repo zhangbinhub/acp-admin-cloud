@@ -6,11 +6,14 @@ spring:
   profiles:
     active: dev
   application:
-    name: oauth2-server
+    name: file-server
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   zipkin:
-    #    base-url: http://localhost:9411/
     sender:
       type: kafka
   cloud:
@@ -54,50 +57,13 @@ eureka:
   client:
     registry-fetch-interval-seconds: 5
 # ===============================
-# = Ribbon Config
-# ===============================
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 10000
-        readTimeout: 10000
-        loggerLevel: full
-  httpclient:
-    enabled: true
-    connection-timeout: ${feign.client.config.default.connectTimeout}
-    max-connections: 1000
-    max-connections-per-route: 50
-  hystrix:
-    enabled: true
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 11000
-ribbon:
-  ServerListRefreshInterval: 5000
-  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
-  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
-  eager-load:
-    enabled: true
-    clients: config-server
-# ===============================
 # = Security Config
 # ===============================
 security:
   oauth2:
     resource:
       token-info-uri: http://oauth2-server/oauth/check_token
-# ===============================
-# = ACP Config
-# ===============================
 acp:
   cloud:
-    oauth:
-      oauth-server: true
     log-server:
       enabled: true
-      log-type: AUTH

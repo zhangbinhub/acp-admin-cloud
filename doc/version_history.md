@@ -1,7 +1,10 @@
 ## 版本更新记录
 ##### v1.4.2
 > - [Upgrade] 升级 Spring Boot 至 2.1.4.RELEASE
-> - [Upgrade] 更新核心库至 5.1.4
+> - [Upgrade] 更新核心库至 5.1.4.1
+> - [Upgrade] 移动 acp-admin-cloud-dependencies 中部分代码至具体的服务中
+> - [Upgrade] 增加 file-server，提供文件上传/下载接口
+> - [Upgrade] gateway-server 默认路由中添加文件服务
 ##### v1.4.1
 > - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR1
 > - [Upgrade] 更新核心库至 5.1.3.2
