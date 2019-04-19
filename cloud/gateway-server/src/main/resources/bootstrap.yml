@@ -36,15 +36,15 @@ spring:
                 name: GateWayHystrix
                 fallbackUri: forward:/hystrixhandle
         - id: file-server-api
-            uri: lb://file-server
-            predicates:
-              - Path=/api/file/**
-            filters:
-              - StripPrefix=1
-              - name: Hystrix
-                args:
-                  name: GateWayHystrix
-                  fallbackUri: forward:/hystrixhandle
+          uri: lb://file-server
+          predicates:
+            - Path=/api/file/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
 info:
   version: 1.4.2
   app-name: ${spring.application.name}

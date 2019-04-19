@@ -9,10 +9,6 @@ spring:
     name: file-server
   thymeleaf:
     cache: false
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 10MB
   zipkin:
     sender:
       type: kafka

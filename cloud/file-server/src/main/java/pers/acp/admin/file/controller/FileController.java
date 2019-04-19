@@ -115,14 +115,12 @@ public class FileController {
         }
     }
 
-    @ApiOperation(value = "日志文件下载",
-            notes = "下载指定的日志文件")
+    @ApiOperation(value = "文件下载")
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PostMapping(value = FileApi.downLoad + "/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = FileApi.downLoad, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> download(HttpServletRequest request, HttpServletResponse response,
-                                           @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
                                            @RequestBody @Valid FileDownLoadPO fileDownLoadPO) throws ServerException {
         fileDownLoadDomain.doDownLoadFile(request, response, fileDownLoadPO.getFilePath());
         InfoVO infoVO = new InfoVO();

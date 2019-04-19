@@ -25,7 +25,4 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
     }
     compile "net.logstash.logback:logstash-logback-encoder:$versions.logstash"
-    testCompile("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: 'junit'
-    }
 }

@@ -29,6 +29,10 @@ spring:
   devtools:
     restart:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   cloud:
     stream:
       default-binder: kafka
