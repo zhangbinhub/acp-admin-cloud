@@ -9,7 +9,6 @@ import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
 import pers.acp.core.exceptions.TimerException;
-import pers.acp.file.FileOperation;
 import pers.acp.springboot.core.base.BaseSpringBootScheduledTask;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
@@ -55,7 +54,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
             Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
             for (int i = 0; i < logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
                 String logFileDate = CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT);
-                File logFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
+                File logFold = new File(logServerCustomerConfiguration.getLogFilePath());
                 String logFoldPath = logFold.getAbsolutePath();
                 String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION;
                 File zipFile = new File(zipFilePath);
@@ -71,7 +70,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                             fileNames.add(file.getAbsolutePath());
                         }
                         logInstance.info("开始执行文件压缩...");
-                        zipFilePath = FileOperation.filesToZIP(fileNames.toArray(new String[]{}), zipFilePath, true);
+                        zipFilePath = CommonTools.filesToZIP(fileNames.toArray(new String[]{}), zipFilePath, true);
                         if (!CommonTools.isNullStr(zipFilePath)) {
                             logInstance.info("文件压缩完成，压缩文件为：" + zipFilePath);
                         } else {
@@ -112,10 +111,10 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件
-        File fold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath()));
+        File fold = new File(logServerCustomerConfiguration.getLogFilePath());
         doDeleteFileForFold(fold, filterLogFileNames);
         // 清理历史备份压缩日志文件
-        File backUpFold = new File(CommonTools.formatAbsPath(logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH));
+        File backUpFold = new File(logServerCustomerConfiguration.getLogFilePath() + LogBackUp.BACK_UP_PATH);
         doDeleteFileForFold(backUpFold, filterLogZipFileNames);
         logInstance.info("清理历史备份文件完成！");
     }

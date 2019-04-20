@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.RoleCode;
-import pers.acp.admin.common.constant.path.oauth.OauthApi;
-import pers.acp.admin.common.permission.oauth.RoleConfigExpression;
+import pers.acp.admin.oauth.constant.OauthApi;
+import pers.acp.admin.oauth.constant.RoleConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.oauth.domain.RoleDomain;
 import pers.acp.admin.oauth.entity.Role;
@@ -31,7 +31,6 @@ import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author zhang by 16/01/2019

@@ -1,4 +1,4 @@
-package pers.acp.admin.common.permission.log;
+package pers.acp.admin.log.constant;
 
 import pers.acp.admin.common.permission.BaseExpression;
 

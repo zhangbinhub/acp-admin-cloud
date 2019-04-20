@@ -1,4 +1,4 @@
-package pers.acp.admin.common.permission.oauth;
+package pers.acp.admin.oauth.constant;
 
 import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.common.constant.RoleCode;

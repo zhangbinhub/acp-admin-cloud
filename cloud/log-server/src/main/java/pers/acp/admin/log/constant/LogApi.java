@@ -1,4 +1,4 @@
-package pers.acp.admin.common.constant.path.log;
+package pers.acp.admin.log.constant;
 
 /**
  * @author zhang by 01/02/2019

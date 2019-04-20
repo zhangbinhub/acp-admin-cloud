@@ -80,5 +80,41 @@
         <appender-ref ref="AUTH-LOGSTASH"/>
     </logger>
 
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/FILE.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+        <prudent>true</prudent>
+    </appender>
+    <appender name="FILE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>127.0.0.1:9601</destination>
+        <!-- encoder必须配置,有多种可选 -->
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
+            <customFields>{"appname":"log_server_file"}</customFields>
+        </encoder>
+    </appender>
+    <logger name="FILE" level="INFO" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE-LOGSTASH"/>
+    </logger>
     <jmxConfigurator/>
 </configuration>
