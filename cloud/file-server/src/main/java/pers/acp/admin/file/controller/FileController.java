@@ -20,7 +20,6 @@ import pers.acp.springcloud.common.log.LogInstance;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.io.File;
 
 /**
@@ -43,6 +42,20 @@ public class FileController {
         this.fileDownLoadDomain = fileDownLoadDomain;
     }
 
+    private String formatPath(String filePath) {
+        if (CommonTools.isNullStr(filePath)) {
+            filePath = FileParams.upLoadPath;
+        }
+        String path = filePath.replace("\\", File.separator).replace("/", File.separator);
+        if (path.startsWith(File.separator)) {
+            path = path.substring(File.separator.length());
+        }
+        if (path.lastIndexOf(File.separator) < (path.length() - File.separator.length())) {
+            path += File.separator;
+        }
+        return path;
+    }
+
     @ApiOperation(value = "文件上传")
     @ApiResponses({
             @ApiResponse(code = 400, message = "上传失败", response = ErrorVO.class)
@@ -50,22 +63,20 @@ public class FileController {
     @PostMapping(value = FileApi.upLoad, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> upLoad(@RequestParam("file") MultipartFile file,
                                          @ApiParam(value = "文件路径")
-                                         @RequestParam String filePath,
+                                         @RequestParam(required = false) String filePath,
                                          @ApiParam(value = "上传文件名")
-                                         @RequestParam String destFileName) throws ServerException {
-        if (CommonTools.isNullStr(filePath)) {
-            filePath = FileParams.upLoadPath;
-        }
+                                         @RequestParam(required = false) String destFileName) throws ServerException {
+        String path = formatPath(filePath);
         String originFileName = file.getOriginalFilename();
         if (CommonTools.isNullStr(destFileName)) {
-            destFileName = originFileName + "_" + System.currentTimeMillis();
+            destFileName = System.currentTimeMillis() + "_" + originFileName;
         }
         if (file.isEmpty()) {
             throw new ServerException("请选择上传文件");
         }
-        if (doUpLoad(file, filePath, destFileName)) {
+        if (doUpLoad(file, path, destFileName)) {
             InfoVO infoVO = new InfoVO();
-            infoVO.setMessage(filePath + destFileName);
+            infoVO.setMessage(path.replace(File.separator, "/") + destFileName);
             return ResponseEntity.ok(infoVO);
         } else {
             throw new ServerException("文件上传失败【" + originFileName + "】");
@@ -79,20 +90,25 @@ public class FileController {
     @PostMapping(value = FileApi.upLoads, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> upLoad(@RequestParam("files") MultipartFile[] files,
                                          @ApiParam(value = "文件路径")
-                                         @RequestParam String filePath) {
-        if (CommonTools.isNullStr(filePath)) {
-            filePath = FileParams.upLoadPath;
-        }
+                                         @RequestParam(required = false) String filePath) {
+        String path = formatPath(filePath);
         StringBuilder resultPath = new StringBuilder();
-        for (MultipartFile file : files) {
+        int total = files.length;
+        for (int i = 0; i < total; i++) {
+            MultipartFile file = files[i];
             String originFileName = file.getOriginalFilename();
-            String destFileName = originFileName + "_" + System.currentTimeMillis();
+            String destFileName = System.currentTimeMillis() + "_" + originFileName;
             if (file.isEmpty()) {
                 logInstance.error("文件为空【" + file.getOriginalFilename() + "】");
                 break;
             }
-            if (doUpLoad(file, filePath, destFileName)) {
-                resultPath.append(filePath).append(destFileName);
+            if (doUpLoad(file, path, destFileName)) {
+                String result = path.replace(File.separator, "/") + destFileName;
+                if (i == total - 1) {
+                    resultPath.append(result);
+                } else {
+                    resultPath.append(result).append(",");
+                }
             } else {
                 logInstance.error("文件上传失败【" + originFileName + "】");
                 break;
@@ -105,9 +121,15 @@ public class FileController {
 
     private boolean doUpLoad(MultipartFile file, String filePath, String destFileName) {
         String destFileLocation = filePath + destFileName;
-        File destFile = new File(destFileLocation);
         try {
-            file.transferTo(destFile);
+            File destFile = new File(destFileLocation);
+            File fold = destFile.getParentFile();
+            if (!fold.exists()) {
+                if (!fold.mkdirs()) {
+                    throw new ServerException("创建路径失败：" + fold.getAbsolutePath());
+                }
+            }
+            file.transferTo(destFile.getAbsoluteFile());
             return true;
         } catch (Exception ex) {
             logInstance.error(ex.getMessage(), ex);

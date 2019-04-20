@@ -62,4 +62,6 @@ security:
 acp:
   cloud:
     log-server:
-      enabled: true
+      client:
+        enabled: true
+        log-type: FILE

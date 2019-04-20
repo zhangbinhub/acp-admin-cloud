@@ -210,12 +210,12 @@ class InitData extends BaseTest {
         demoUpload.setAppid(application.getId());
         demoUpload.setName("上传");
         demoUpload.setIconType("md-cloud-upload");
-        demoUpload.setPath("https://www.iviewui.com/components/upload");
+        demoUpload.setPath("/demoupload");
         demoUpload.setParentid(demo.getId());
         demoUpload.setSort(0);
         demoUpload.setEnabled(true);
         demoUpload.setCovert(true);
-        demoUpload.setOpentype(1);
+        demoUpload.setOpentype(0);
         demoUpload = menuRepository.save(demoUpload);
 
         Menu demoChildren = new Menu();

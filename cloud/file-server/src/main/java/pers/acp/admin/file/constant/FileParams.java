@@ -8,6 +8,6 @@ import java.io.File;
  */
 public interface FileParams {
 
-    String upLoadPath = File.separator + "file" + File.separator + "upload";
+    String upLoadPath = "file" + File.separator + "upload";
 
 }
