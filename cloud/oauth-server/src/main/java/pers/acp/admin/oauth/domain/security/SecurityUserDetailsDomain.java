@@ -15,7 +15,6 @@ import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;
 import pers.acp.springcloud.common.log.LogInstance;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,7 +58,7 @@ public class SecurityUserDetailsDomain implements UserDetailsService {
             });
         });
         return new User(user.getLoginno(),
-                SHA256Utils.encrypt(user.getPassword() + CommonTools.getDateTimeString(new Date(), "yyyyMMddHH")),
+                SHA256Utils.encrypt(user.getPassword() + CommonTools.getDateTimeString(null, "yyyyMMddHH")),
                 user.isEnabled(), true, true, true,
                 grantedAuthorities);
     }

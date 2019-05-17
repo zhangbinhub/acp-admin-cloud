@@ -1,7 +1,7 @@
 package pers.acp.admin.common.base;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
+import pers.acp.core.CalendarTools;
 
 /**
  * @author zhang by 15/01/2019
@@ -15,11 +15,9 @@ public abstract class BaseController {
      * @param time 时间
      * @return 日期对象
      */
-    protected Date longToDate(long time) {
-        Calendar calendarStart = Calendar.getInstance();
-        calendarStart.setTime(new Date(time));
-        calendarStart.set(calendarStart.get(Calendar.YEAR), calendarStart.get(Calendar.MONTH), calendarStart.get(Calendar.DATE), 0, 0, 0);
-        return calendarStart.getTime();
+    protected DateTime longToDate(long time) {
+        DateTime dateTime = CalendarTools.getCalendar(time);
+        return dateTime.withMillisOfDay(0);
     }
 
 }

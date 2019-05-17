@@ -1,5 +1,7 @@
 package pers.acp.admin.gateway.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +13,7 @@ import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import pers.acp.admin.gateway.domain.RouteDomain;
 import reactor.core.publisher.Mono;
 
 /**
@@ -29,6 +32,13 @@ public class RouteConfiguration {
     private static final String ALLOWED_Expose = "*";
 
     private static final String MAX_AGE = "18000L";
+
+    private final RouteDomain routeDomain;
+
+    @Autowired
+    public RouteConfiguration(RouteDomain routeDomain) {
+        this.routeDomain = routeDomain;
+    }
 
     @Bean
     public WebFilter corsFilter() {
@@ -49,6 +59,20 @@ public class RouteConfiguration {
                 }
             }
             return chain.filter(ctx);
+        };
+    }
+
+    @Bean
+    public GlobalFilter countFilter() {
+        return (exchange, chain) -> {
+            routeDomain.beforeRoute(exchange.getRequest());
+            return chain.filter(exchange)
+                    .then(Mono.just(exchange))
+                    .map(serverWebExchange -> {
+                        routeDomain.afterRoute(exchange.getResponse());
+                        return serverWebExchange;
+                    })
+                    .then();
         };
     }
 }

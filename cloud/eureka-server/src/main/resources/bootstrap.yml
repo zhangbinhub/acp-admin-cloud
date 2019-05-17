@@ -10,7 +10,7 @@ spring:
   thymeleaf:
     cache: false
 info:
-  version: 1.4.4
+  version: 1.4.3
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

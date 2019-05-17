@@ -1,10 +1,8 @@
 ## 版本更新记录
-##### v1.4.4
-> - [Upgrade] 更新文档
-> - [Upgrade] 更新核心库至 5.1.4.3
 ##### v1.4.3
 > - [Upgrade] 更新文档
-> - [Upgrade] 升级 gradle 至 5.4.1
+> - [Upgrade] 更新核心库至 5.1.4.3
+> - [Upgrade] 使用 joda-time 替换 jdk 日期时间及日历处理
 ##### v1.4.2
 > - [Upgrade] 升级 Spring Boot 至 2.1.4.RELEASE
 > - [Upgrade] 更新核心库至 5.1.4.2

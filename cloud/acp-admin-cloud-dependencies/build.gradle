@@ -15,6 +15,7 @@ dependencies {
 
     compile fileTree(dir: "$rootDir/libs", include: "*.jar")
 
+    compile "joda-time:joda-time:$versions.joda_time"
     compile "org.apache.commons:commons-text:$versions.commons_text"
     compile "org.apache.commons:commons-lang3:$versions.commons_lang3"
     compile "org.slf4j:slf4j-api:$versions.slf4j"

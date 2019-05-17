@@ -1,21 +1,21 @@
 package pers.acp.admin.log.schedule;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
 import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
 import pers.acp.core.exceptions.TimerException;
+import pers.acp.core.task.timer.container.Calculation;
 import pers.acp.springboot.core.base.BaseSpringBootScheduledTask;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -43,17 +43,17 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
     }
 
     @Override
-    public boolean beforeExcuteFun() {
+    public boolean beforeExecuteFun() {
         logInstance.info("开始执行日志文件备份");
         return true;
     }
 
     @Override
-    public Object excuteFun() {
+    public Object executeFun() {
         try {
-            Calendar day = CalendarTools.getPrevDay(CalendarTools.getCalendar());
+            DateTime day = CalendarTools.getPrevDay(CommonTools.getNowDateTime());
             for (int i = 0; i < logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
-                String logFileDate = CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT);
+                String logFileDate = CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT);
                 File logFold = new File(logServerCustomerConfiguration.getLogFilePath());
                 String logFoldPath = logFold.getAbsolutePath();
                 String zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION;
@@ -89,7 +89,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
     }
 
     @Override
-    public void afterExcuteFun(Object o) {
+    public void afterExecuteFun(Object o) {
         try {
             doClearBackUpFiles();
         } catch (Exception e) {
@@ -104,10 +104,10 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1));
         List<String> filterLogZipFileNames = new ArrayList<>();
         // 保留当天和历史最大天数的文件
-        Calendar day = CalendarTools.getCalendar();
+        DateTime day = CalendarTools.getPrevDay(CommonTools.getNowDateTime());
         for (int i = 0; i <= logServerCustomerConfiguration.getMaxHistoryDayNumber(); i++) {
-            filterLogFileNames.add(CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT));
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day.getTime(), CommonConstant.DATE_FORMAT) + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION);
+            filterLogFileNames.add(CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT));
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT) + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION);
             day = CalendarTools.getPrevDay(day);
         }
         // 清理历史日志文件

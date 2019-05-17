@@ -5,6 +5,7 @@ ext {
 versions += [
         jupiter         : "5.3.2",
 
+        joda_time       : "2.9.9",
         commons_text    : "1.6",
         commons_lang3   : "3.8.1",
         dom4j           : "1.6.1",
