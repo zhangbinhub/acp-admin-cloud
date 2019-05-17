@@ -1,7 +1,7 @@
 ## 版本更新记录
 ##### v1.4.3
 > - [Upgrade] 更新文档
-> - [Upgrade] 更新核心库至 5.1.4.3
+> - [Upgrade] 更新核心库至 5.1.5
 > - [Upgrade] 使用 joda-time 替换 jdk 日期时间及日历处理
 > - [Upgrade] 更新路由信息的 binding 和 topic 写入自动配置
 ##### v1.4.2
