@@ -11,8 +11,6 @@ import pers.acp.admin.oauth.producer.UpdateRouteOutput;
  * @author zhang by 18/03/2019
  * @since JDK 11
  */
-@Component
-@EnableBinding(UpdateRouteOutput.class)
 public class UpdateRouteProducer {
 
     private final UpdateRouteOutput updateRouteOutput;

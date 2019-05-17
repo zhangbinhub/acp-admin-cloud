@@ -22,16 +22,11 @@ public class RouteDomain {
     private final ThreadPoolExecutor executor;
 
     public RouteDomain() {
-        executor = new ThreadPoolExecutor(0, 100, 60000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        executor = new ThreadPoolExecutor(1, 1, 60000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 
     public void beforeRoute(ServerHttpRequest serverHttpRequest) {
         executor.execute(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             logger.info("请求开始...");
             logger.info(serverHttpRequest.getPath().value());
         });
