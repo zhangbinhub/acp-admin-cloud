@@ -7,8 +7,9 @@
 - [Spring Cloud Greenwich.SR1](http://projects.spring.io/spring-cloud)
 
 ## 技术栈
+- joda-time
 - apache httpclient
-- mina
+- netty
 - xstream
 - hibernate
 - jackson
