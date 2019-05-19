@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.log.constant.LogApi;
 import pers.acp.admin.log.constant.LogFileExpression;
-import pers.acp.admin.common.vo.InfoVO;
 import pers.acp.admin.log.domain.LogFileDomain;
 import pers.acp.core.CommonTools;
 import pers.acp.core.task.timer.container.Calculation;
@@ -80,14 +79,11 @@ public class LogController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(LogFileExpression.adminOnly)
-    @GetMapping(value = LogApi.logFile + "/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> download(HttpServletRequest request, HttpServletResponse response,
-                                           @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
-                                           @PathVariable String fileName) throws ServerException {
+    @GetMapping(value = LogApi.logFile + "/{fileName}", produces = MediaType.ALL_VALUE)
+    public void download(HttpServletRequest request, HttpServletResponse response,
+                         @ApiParam(value = "文件名称", required = true) @NotBlank(message = "文件名称不能为空")
+                         @PathVariable String fileName) throws ServerException {
         logFileDomain.doDownLoadFile(request, response, fileName);
-        InfoVO infoVO = new InfoVO();
-        infoVO.setMessage("下载文件成功：【" + fileName + "】");
-        return ResponseEntity.ok(infoVO);
     }
 
 }
