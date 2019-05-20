@@ -8,7 +8,6 @@ import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
 import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
-import pers.acp.core.exceptions.TimerException;
 import pers.acp.core.task.timer.container.Calculation;
 import pers.acp.springboot.core.base.BaseSpringBootScheduledTask;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -97,7 +96,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
         }
     }
 
-    private void doClearBackUpFiles() throws TimerException {
+    private void doClearBackUpFiles() {
         logInstance.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.getMaxHistoryDayNumber());
         List<String> filterLogFileNames = new ArrayList<>();
         filterLogFileNames.add("spring.log");
