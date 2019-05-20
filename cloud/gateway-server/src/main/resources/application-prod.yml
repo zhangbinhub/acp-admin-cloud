@@ -34,3 +34,26 @@ spring:
       kafka:
         binder:
           brokers: 127.0.0.1:9092
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred

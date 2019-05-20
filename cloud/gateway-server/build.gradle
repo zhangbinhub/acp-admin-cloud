@@ -18,6 +18,15 @@ bootJar {
     }
 }
 dependencies {
+    // sql data base connection
+    compile "com.zaxxer:HikariCP:$versions.hikaricp"
+    compile "mysql:mysql-connector-java:$versions.mysql"
+    compile "com.microsoft.sqlserver:mssql-jdbc:$versions.mssqljdbc"
+    compile "com.hynnet:oracle-driver-ojdbc:$versions.ojdbc"
+    compile "org.postgresql:postgresql:$versions.postgresql"
+
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"
     compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
