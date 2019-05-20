@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v1.4.3
 > - [Upgrade] 更新文档
+> - [Upgrade] 升级 gradle 至 5.4.1
 > - [Upgrade] 更新核心库至 5.1.5
 > - [Upgrade] 升级 Spring Boot 至 2.1.5.RELEASE
 > - [Upgrade] 升级 Spring Boot Admin 至 2.1.5
