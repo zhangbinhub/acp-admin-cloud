@@ -52,8 +52,8 @@
 > - 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 > - 各深度定制开发的服务从 config server 中获取自定义配置信息
 > - 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
-> - 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
-> - 各服务将链路互相调用的断路信息通过 admin server 进行监控
+> - 各服务将互相调用的链路信息通过 kafka 发送给 zipkin server
+> - 各服务将互相调用的断路信息通过 admin server 进行监控
 > - oauth server 将 token 信息持久化到 redis 进行统一认证管理
 > - 前后端交互 HttpStatus Code 说明
 > 
@@ -222,3 +222,5 @@ http://127.0.0.1:5601
 ### （五）oauth-server
 > - 统一认证服务
 > - 提供全套权限体系接口
+### （六）file-server
+> - 提供基本的文件上传、下载服务
