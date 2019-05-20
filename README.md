@@ -3,7 +3,7 @@
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
-- [Spring Boot 2.1.4.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.5.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR1](http://projects.spring.io/spring-cloud)
 
 ## 技术栈
