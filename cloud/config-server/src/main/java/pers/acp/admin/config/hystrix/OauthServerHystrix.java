@@ -1,10 +1,10 @@
-package pers.acp.admin.oauth.hystrix;
+package pers.acp.admin.config.hystrix;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.common.base.BaseFeignHystrix;
-import pers.acp.admin.oauth.feign.OauthServer;
+import pers.acp.admin.config.feign.OauthServer;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
 

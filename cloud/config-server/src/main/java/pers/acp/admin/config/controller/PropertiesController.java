@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller.api;
+package pers.acp.admin.config.controller;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.base.BaseController;
-import pers.acp.admin.oauth.constant.OauthApi;
 import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.common.vo.InfoVO;
-import pers.acp.admin.oauth.domain.PropertiesDomain;
-import pers.acp.admin.oauth.entity.Properties;
-import pers.acp.admin.oauth.feign.OauthServer;
-import pers.acp.admin.oauth.po.PropertiesPO;
+import pers.acp.admin.config.constant.ConfigApi;
+import pers.acp.admin.config.domain.PropertiesDomain;
+import pers.acp.admin.config.entity.Properties;
+import pers.acp.admin.config.feign.OauthServer;
+import pers.acp.admin.config.po.PropertiesPO;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springboot.core.vo.ErrorVO;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping(OauthApi.basePath)
+@RequestMapping(ConfigApi.basePath)
 @Api("服务配置信息")
 public class PropertiesController extends BaseController {
 
@@ -53,7 +53,7 @@ public class PropertiesController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO.class)
     })
     @PreAuthorize(BaseExpression.adminOnly)
-    @PutMapping(value = OauthApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Properties> add(@RequestBody @Valid PropertiesPO propertiesPO) throws ServerException {
         Properties properties = propertiesDomain.doCreate(propertiesPO);
         return ResponseEntity.status(HttpStatus.CREATED).body(properties);
@@ -64,7 +64,7 @@ public class PropertiesController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(BaseExpression.adminOnly)
-    @DeleteMapping(value = OauthApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
                                          @RequestBody List<String> idList) {
         propertiesDomain.doDelete(idList);
@@ -79,7 +79,7 @@ public class PropertiesController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO.class)
     })
     @PreAuthorize(BaseExpression.adminOnly)
-    @PatchMapping(value = OauthApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PatchMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Properties> update(@RequestBody @Valid PropertiesPO propertiesPO) throws ServerException {
         if (CommonTools.isNullStr(propertiesPO.getId())) {
             throw new ServerException("配置ID不能为空");
@@ -94,7 +94,7 @@ public class PropertiesController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
     @PreAuthorize(BaseExpression.adminOnly)
-    @PostMapping(value = OauthApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Page<Properties>> query(@RequestBody PropertiesPO propertiesPO) throws ServerException {
         if (propertiesPO.getQueryParam() == null) {
             throw new ServerException("分页查询参数不能为空");
@@ -107,7 +107,7 @@ public class PropertiesController extends BaseController {
             @ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO.class)
     })
     @PreAuthorize(BaseExpression.adminOnly)
-    @PostMapping(value = OauthApi.propertiesRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = ConfigApi.propertiesRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> refresh() throws ServerException {
         oauthServer.busRefresh();
         InfoVO infoVO = new InfoVO();

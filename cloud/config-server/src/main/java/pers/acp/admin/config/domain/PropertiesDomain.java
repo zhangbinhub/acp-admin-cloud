@@ -1,15 +1,14 @@
-package pers.acp.admin.oauth.domain;
+package pers.acp.admin.config.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.oauth.base.OauthBaseDomain;
-import pers.acp.admin.oauth.entity.Properties;
-import pers.acp.admin.oauth.po.PropertiesPO;
-import pers.acp.admin.oauth.repo.PropertiesRepository;
-import pers.acp.admin.oauth.repo.UserRepository;
+import pers.acp.admin.common.base.BaseDomain;
+import pers.acp.admin.config.entity.Properties;
+import pers.acp.admin.config.po.PropertiesPO;
+import pers.acp.admin.config.repo.PropertiesRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 
@@ -24,13 +23,12 @@ import java.util.Optional;
  */
 @Service
 @Transactional(readOnly = true)
-public class PropertiesDomain extends OauthBaseDomain {
+public class PropertiesDomain extends BaseDomain {
 
     private final PropertiesRepository propertiesRepository;
 
     @Autowired
-    public PropertiesDomain(UserRepository userRepository, PropertiesRepository propertiesRepository) {
-        super(userRepository);
+    public PropertiesDomain(PropertiesRepository propertiesRepository) {
         this.propertiesRepository = propertiesRepository;
     }
 

@@ -37,16 +37,13 @@ class InitData extends BaseTest {
     @Autowired
     private RuntimeConfigRepository runtimeConfigRepository;
 
-    @Autowired
-    private PropertiesRepository propertiesRepository;
-
     /**
      * 初始化数据，仅可执行一次
      */
     @Test
     @Transactional
     @Rollback(false)
-    void doInitAll() throws Exception {
+    void doInitAll() {
         Application application = new Application();
         application.setAppname("Acp-Admin");
         application.setSecret("E0D3024D-9A22-41EE-AC0F-FC6B56E367AE");
@@ -85,7 +82,6 @@ class InitData extends BaseTest {
         user.getRoleSet().add(roleTest);
         userRepository.save(user);
 
-        initProperties();
         initRuntimeConfig();
     }
 
@@ -570,31 +566,6 @@ class InitData extends BaseTest {
     @Transactional
     @Rollback(false)
     void initRuntimeConfig() {
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    void initProperties() {
-        Properties properties = new Properties();
-        properties.setConfigApplication("log-server");
-        properties.setConfigProfile("dev");
-        properties.setConfigLabel("master");
-        properties.setConfigKey("log-server.max-history-day-number");
-        properties.setConfigValue("5");
-        properties.setConfigDes("日志最大保留天数，默认 180 天");
-        properties.setEnabled(true);
-        propertiesRepository.save(properties);
-
-        Properties properties2 = new Properties();
-        properties2.setConfigApplication("log-server");
-        properties2.setConfigProfile("prod");
-        properties2.setConfigLabel("master");
-        properties2.setConfigKey("log-server.max-history-day-number");
-        properties2.setConfigValue("180");
-        properties2.setConfigDes("日志最大保留天数，默认 180 天");
-        properties2.setEnabled(true);
-        propertiesRepository.save(properties2);
     }
 
 }

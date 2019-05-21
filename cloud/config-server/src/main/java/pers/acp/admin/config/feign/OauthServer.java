@@ -1,11 +1,11 @@
-package pers.acp.admin.oauth.feign;
+package pers.acp.admin.config.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pers.acp.admin.oauth.hystrix.OauthServerHystrix;
+import pers.acp.admin.config.hystrix.OauthServerHystrix;
 import pers.acp.springboot.core.exceptions.ServerException;
 
 /**

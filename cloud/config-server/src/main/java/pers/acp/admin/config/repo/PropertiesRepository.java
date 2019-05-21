@@ -1,7 +1,7 @@
-package pers.acp.admin.oauth.repo;
+package pers.acp.admin.config.repo;
 
-import pers.acp.admin.oauth.base.OauthBaseRepository;
-import pers.acp.admin.oauth.entity.Properties;
+import pers.acp.admin.common.base.BaseRepository;
+import pers.acp.admin.config.entity.Properties;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author zhang by 28/02/2019
  * @since JDK 11
  */
-public interface PropertiesRepository extends OauthBaseRepository<Properties, String> {
+public interface PropertiesRepository extends BaseRepository<Properties, String> {
 
     /**
      * 定位一个可用的配置项
