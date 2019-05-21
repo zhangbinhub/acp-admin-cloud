@@ -3,12 +3,14 @@ package pers.acp.admin.gateway.conf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.config.BindingProperties;
 import org.springframework.cloud.stream.config.BindingServiceConfiguration;
 import org.springframework.cloud.stream.config.BindingServiceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,11 +25,12 @@ import org.springframework.web.server.WebFilterChain;
 import pers.acp.admin.gateway.constant.GateWayConstant;
 import pers.acp.admin.gateway.consumer.UpdateRouteInput;
 import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer;
-import pers.acp.admin.gateway.domain.RouteDomain;
+import pers.acp.admin.gateway.domain.RouteLogDomain;
 import pers.acp.admin.gateway.repo.RouteRedisRepository;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.Future;
 
 /**
  * @author zhang by 17/12/2018 00:41
@@ -52,13 +55,13 @@ public class RouteConfiguration {
 
     private final BindingServiceProperties bindings;
 
-    private final RouteDomain routeDomain;
+    private final RouteLogDomain routeLogDomain;
 
     @Autowired
-    public RouteConfiguration(Environment environment, BindingServiceProperties bindings, RouteDomain routeDomain) {
+    public RouteConfiguration(Environment environment, BindingServiceProperties bindings, RouteLogDomain routeLogDomain) {
         this.environment = environment;
         this.bindings = bindings;
-        this.routeDomain = routeDomain;
+        this.routeLogDomain = routeLogDomain;
     }
 
     @PostConstruct
@@ -103,13 +106,14 @@ public class RouteConfiguration {
     }
 
     @Bean
+    @Order(LoadBalancerClientFilter.LOAD_BALANCER_CLIENT_FILTER_ORDER + 100)
     public GlobalFilter countFilter() {
         return (exchange, chain) -> {
-            routeDomain.beforeRoute(exchange.getRequest());
+            Future<String> routeLogFuture = routeLogDomain.beforeRoute(exchange);
             return chain.filter(exchange)
                     .then(Mono.just(exchange))
                     .map(serverWebExchange -> {
-                        routeDomain.afterRoute(exchange.getResponse());
+                        routeLogDomain.afterRoute(exchange, routeLogFuture);
                         return serverWebExchange;
                     })
                     .then();
