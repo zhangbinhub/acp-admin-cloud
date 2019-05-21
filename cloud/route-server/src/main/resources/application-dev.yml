@@ -1,0 +1,75 @@
+debug: false
+server:
+  address: 127.0.0.1
+  port: 8771
+# ===============================
+# = Log To File Config
+# ===============================
+logging:
+  path: logs/route-server
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+  file:
+    max-size: 5MB
+    max-history: 30
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    ip-address: ${server.address}
+    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+# ===============================
+# = Spring Config
+# ===============================
+spring:
+  devtools:
+    restart:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: 127.0.0.1:9092
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    client:
+      client-id: dbd1458a-19fb-11e9-894e-d8c49792dd7b
+      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
+acp:
+  swagger:
+    enabled: true

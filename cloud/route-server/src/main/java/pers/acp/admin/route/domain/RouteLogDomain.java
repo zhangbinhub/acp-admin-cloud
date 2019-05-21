@@ -1,4 +1,4 @@
-package pers.acp.admin.gateway.domain;
+package pers.acp.admin.route.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +7,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ServerWebExchange;
+import pers.acp.admin.common.base.BaseDomain;
+import pers.acp.admin.route.entity.RouteLog;
+import pers.acp.admin.route.repo.RouteLogRepository;
 
 import java.net.URI;
 import java.util.LinkedHashSet;
@@ -22,17 +25,20 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @Transactional(readOnly = true)
-public class RouteLogDomain {
+public class RouteLogDomain extends BaseDomain {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final Environment environment;
 
+    private final RouteLogRepository routeLogRepository;
+
     private final ThreadPoolExecutor executor;
 
     @Autowired
-    public RouteLogDomain(Environment environment) {
+    public RouteLogDomain(Environment environment, RouteLogRepository routeLogRepository) {
         this.environment = environment;
+        this.routeLogRepository = routeLogRepository;
         executor = new ThreadPoolExecutor(1, 1, 60000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 

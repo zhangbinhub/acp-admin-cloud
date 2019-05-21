@@ -67,6 +67,17 @@ spring:
         binder:
           brokers: 127.0.0.1:9092
   # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
   # = DATA SOURCE
   # ===============================
   datasource:
@@ -74,6 +85,10 @@ spring:
     username: root
     password: test
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
 # ===============================
 # = Security Config
 # ===============================
@@ -90,4 +105,7 @@ security:
 acp:
   cloud:
     oauth:
-      resource-server: false
+      resource-server-security-path:
+        - /config
+        - /config/**
+      resource-server-permit-all-path: /**
