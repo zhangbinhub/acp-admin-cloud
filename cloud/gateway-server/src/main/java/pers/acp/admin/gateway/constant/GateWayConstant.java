@@ -16,4 +16,8 @@ public interface GateWayConstant {
 
     String UPDATE_GATEWAY_ROUTES = "update_gateway_routes";
 
+    String ROUTE_LOG_OUTPUT = "route_log_output";
+
+    String ROUTE_LOG_DESCRIPTION = "route-log";
+
 }

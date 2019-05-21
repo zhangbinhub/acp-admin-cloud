@@ -2,7 +2,7 @@ package pers.acp.admin.route.producer.instance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.support.MessageBuilder;
-import pers.acp.admin.route.constant.UpdateBindChannelConstant;
+import pers.acp.admin.route.constant.GateWayConstant;
 import pers.acp.admin.route.producer.UpdateRouteOutput;
 
 /**
@@ -19,7 +19,7 @@ public class UpdateRouteProducer {
     }
 
     public void doNotifyUpdateRoute() {
-        updateRouteOutput.sendMessage().send(MessageBuilder.withPayload(UpdateBindChannelConstant.UPDATE_GATEWAY_ROUTES).build());
+        updateRouteOutput.sendMessage().send(MessageBuilder.withPayload(GateWayConstant.UPDATE_GATEWAY_ROUTES).build());
     }
 
 }

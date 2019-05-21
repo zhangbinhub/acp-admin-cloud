@@ -26,11 +26,12 @@ import pers.acp.admin.gateway.constant.GateWayConstant;
 import pers.acp.admin.gateway.consumer.UpdateRouteInput;
 import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer;
 import pers.acp.admin.gateway.domain.RouteLogDomain;
+import pers.acp.admin.gateway.po.RouteLogPO;
+import pers.acp.admin.gateway.producer.RouteLogOutput;
 import pers.acp.admin.gateway.repo.RouteRedisRepository;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.util.concurrent.Future;
 
 /**
  * @author zhang by 17/12/2018 00:41
@@ -38,7 +39,7 @@ import java.util.concurrent.Future;
  */
 @Configuration
 @AutoConfigureBefore(BindingServiceConfiguration.class)
-@EnableBinding(UpdateRouteInput.class)
+@EnableBinding({UpdateRouteInput.class, RouteLogOutput.class})
 public class RouteConfiguration {
 
     private static final String ALLOWED_HEADERS = "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent,Process400,Process401,Process403";
@@ -66,6 +67,11 @@ public class RouteConfiguration {
 
     @PostConstruct
     public void init() {
+        initConsumer();
+        initProducer();
+    }
+
+    private void initConsumer() {
         BindingProperties inputBinding = this.bindings.getBindings().get(GateWayConstant.UPDATE_ROUTE_INPUT);
         if (inputBinding == null) {
             this.bindings.getBindings().put(GateWayConstant.UPDATE_ROUTE_INPUT, new BindingProperties());
@@ -76,6 +82,18 @@ public class RouteConfiguration {
         }
         input.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
         input.setGroup(GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + environment.getProperty("server.address") + "-" + environment.getProperty("server.port"));
+    }
+
+    private void initProducer() {
+        BindingProperties outputBinding = this.bindings.getBindings().get(GateWayConstant.ROUTE_LOG_OUTPUT);
+        if (outputBinding == null) {
+            this.bindings.getBindings().put(GateWayConstant.ROUTE_LOG_OUTPUT, new BindingProperties());
+        }
+        BindingProperties output = this.bindings.getBindings().get(GateWayConstant.ROUTE_LOG_OUTPUT);
+        if (output.getDestination() == null || output.getDestination().equals(GateWayConstant.ROUTE_LOG_OUTPUT)) {
+            output.setDestination(GateWayConstant.ROUTE_LOG_DESCRIPTION);
+        }
+        output.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
     }
 
     @Bean
@@ -109,14 +127,15 @@ public class RouteConfiguration {
     @Order(LoadBalancerClientFilter.LOAD_BALANCER_CLIENT_FILTER_ORDER + 100)
     public GlobalFilter countFilter() {
         return (exchange, chain) -> {
-            Future<String> routeLogFuture = routeLogDomain.beforeRoute(exchange);
+            RouteLogPO routeLogPO = routeLogDomain.beforeRoute(exchange);
             return chain.filter(exchange)
                     .then(Mono.just(exchange))
                     .map(serverWebExchange -> {
-                        routeLogDomain.afterRoute(exchange, routeLogFuture);
+                        routeLogDomain.afterRoute(exchange, routeLogPO);
                         return serverWebExchange;
                     })
                     .then();
         };
     }
+
 }
