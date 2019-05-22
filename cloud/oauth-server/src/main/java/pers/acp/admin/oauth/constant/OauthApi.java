@@ -46,14 +46,6 @@ public interface OauthApi {
 
     String runtimeConfig = "/runtime";
 
-    String propertiesConfig = "/properties";
-
-    String propertiesRefresh = propertiesConfig + "/refresh";
-
-    String gateWayRouteConfig = "/gatewayroute";
-
-    String gateWayRouteRefresh = gateWayRouteConfig + "/refresh";
-
     String logOut = "/logout";
 
     String loginInfo = "/logininfo";

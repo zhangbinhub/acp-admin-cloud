@@ -21,12 +21,12 @@ public class RoutePO {
         this.id = id;
     }
 
-    public String getRouteid() {
-        return routeid;
+    public String getRouteId() {
+        return routeId;
     }
 
-    public void setRouteid(String routeid) {
-        this.routeid = routeid;
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
     }
 
     public String getUri() {
@@ -90,7 +90,7 @@ public class RoutePO {
 
     @ApiModelProperty(value = "路由ID", required = true, position = 1)
     @NotBlank(message = "路由ID不能为空")
-    private String routeid;
+    private String routeId;
 
     @ApiModelProperty(value = "路由URI", required = true, position = 2)
     @NotBlank(message = "路由URI不能为空")

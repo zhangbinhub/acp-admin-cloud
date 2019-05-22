@@ -23,12 +23,12 @@ public class Route {
         this.id = id;
     }
 
-    public String getRouteid() {
-        return routeid;
+    public String getRouteId() {
+        return routeId;
     }
 
-    public void setRouteid(String routeid) {
-        this.routeid = routeid;
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
     }
 
     public String getUri() {
@@ -88,7 +88,7 @@ public class Route {
 
     @ApiModelProperty("路由ID")
     @Column(nullable = false)
-    private String routeid;
+    private String routeId;
 
     @ApiModelProperty("路由URI")
     @Column(nullable = false)

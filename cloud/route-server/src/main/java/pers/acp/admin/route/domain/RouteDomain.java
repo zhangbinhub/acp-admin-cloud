@@ -16,7 +16,10 @@ import pers.acp.admin.route.definition.PredicateDefinition;
 import pers.acp.admin.route.definition.RouteConstant;
 import pers.acp.admin.route.definition.RouteDefinition;
 import pers.acp.admin.route.entity.Route;
+import pers.acp.admin.route.entity.RouteLog;
+import pers.acp.admin.route.po.RouteLogPO;
 import pers.acp.admin.route.po.RoutePO;
+import pers.acp.admin.route.repo.RouteLogRepository;
 import pers.acp.admin.route.repo.RouteRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
@@ -38,6 +41,8 @@ public class RouteDomain extends BaseDomain {
 
     private final RouteRepository routeRepository;
 
+    private final RouteLogRepository routeLogRepository;
+
     private final RedisTemplate<Object, Object> redisTemplate;
 
     private final ObjectMapper objectMapper;
@@ -45,9 +50,10 @@ public class RouteDomain extends BaseDomain {
     private final DistributedLock distributedLock;
 
     @Autowired
-    public RouteDomain(LogInstance logInstance, RouteRepository routeRepository, RedisTemplate<Object, Object> redisTemplate, ObjectMapper objectMapper, DistributedLock distributedLock) {
+    public RouteDomain(LogInstance logInstance, RouteRepository routeRepository, RouteLogRepository routeLogRepository, RedisTemplate<Object, Object> redisTemplate, ObjectMapper objectMapper, DistributedLock distributedLock) {
         this.logInstance = logInstance;
         this.routeRepository = routeRepository;
+        this.routeLogRepository = routeLogRepository;
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
         this.distributedLock = distributedLock;
@@ -55,7 +61,7 @@ public class RouteDomain extends BaseDomain {
 
     private Route doSave(Route route, RoutePO routePO) {
         route.setUri(routePO.getUri());
-        route.setRouteid(routePO.getRouteid());
+        route.setRouteId(routePO.getRouteId());
         route.setPredicates(routePO.getPredicates());
         route.setFilters(routePO.getFilters());
         route.setEnabled(routePO.getEnabled());
@@ -90,11 +96,39 @@ public class RouteDomain extends BaseDomain {
             if (routePO.getEnabled() != null) {
                 predicateList.add(criteriaBuilder.equal(root.get("enabled"), routePO.getEnabled()));
             }
-            if (!CommonTools.isNullStr(routePO.getRouteid())) {
-                predicateList.add(criteriaBuilder.like(root.get("routeid").as(String.class), "%" + routePO.getRouteid() + "%"));
+            if (!CommonTools.isNullStr(routePO.getRouteId())) {
+                predicateList.add(criteriaBuilder.like(root.get("routeId").as(String.class), "%" + routePO.getRouteId() + "%"));
             }
             return criteriaBuilder.and(predicateList.toArray(new Predicate[]{}));
         }, buildPageRequest(routePO.getQueryParam()));
+    }
+
+    public Page<RouteLog> doQueryLog(RouteLogPO routeLogPO) {
+        return routeLogRepository.findAll((Specification<RouteLog>) (root, query, criteriaBuilder) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (!CommonTools.isNullStr(routeLogPO.getRemoteIp())) {
+                predicateList.add(criteriaBuilder.like(root.get("remoteIp").as(String.class), "%" + routeLogPO.getRemoteIp() + "%"));
+            }
+            if (!CommonTools.isNullStr(routeLogPO.getGatewayIp())) {
+                predicateList.add(criteriaBuilder.like(root.get("gatewayIp").as(String.class), "%" + routeLogPO.getGatewayIp() + "%"));
+            }
+            if (!CommonTools.isNullStr(routeLogPO.getPath())) {
+                predicateList.add(criteriaBuilder.like(root.get("path").as(String.class), "%" + routeLogPO.getPath() + "%"));
+            }
+            if (!CommonTools.isNullStr(routeLogPO.getServerId())) {
+                predicateList.add(criteriaBuilder.like(root.get("serverId").as(String.class), "%" + routeLogPO.getServerId() + "%"));
+            }
+            if (routeLogPO.getStartTime() != null) {
+                predicateList.add(criteriaBuilder.ge(root.get("requestTime").as(Long.class), routeLogPO.getStartTime()));
+            }
+            if (routeLogPO.getEndTime() != null) {
+                predicateList.add(criteriaBuilder.le(root.get("requestTime").as(Long.class), routeLogPO.getEndTime()));
+            }
+            if (routeLogPO.getResponseStatus() != null) {
+                predicateList.add(criteriaBuilder.equal(root.get("responseStatus").as(Long.class), routeLogPO.getResponseStatus()));
+            }
+            return criteriaBuilder.and(predicateList.toArray(new Predicate[]{}));
+        }, buildPageRequest(routeLogPO.getQueryParam()));
     }
 
     @Transactional
@@ -108,7 +142,7 @@ public class RouteDomain extends BaseDomain {
                 logInstance.info("清理 Redis 缓存完成");
                 for (Route route : routeList) {
                     RouteDefinition routeDefinition = new RouteDefinition();
-                    routeDefinition.setId(route.getRouteid());
+                    routeDefinition.setId(route.getRouteId());
                     routeDefinition.setUri(new URI(route.getUri()));
                     routeDefinition.setOrder(route.getOrderNum());
                     routeDefinition.setPredicates(objectMapper.readValue(route.getPredicates(), TypeFactory.defaultInstance().constructCollectionLikeType(List.class, PredicateDefinition.class)));

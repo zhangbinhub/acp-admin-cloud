@@ -10,6 +10,8 @@ public interface RouteApi {
 
     String gateWayRouteConfig = "/gatewayroute";
 
+    String gateWayRouteLog = "/gatewayroutelog";
+
     String gateWayRouteRefresh = gateWayRouteConfig + "/refresh";
 
 }

@@ -10,6 +10,7 @@
 > - [Upgrade] 新建route-server模块，路由配置相关功能移入route-server
 > - [Upgrade] 配置中心相关接口移入config-server
 > - [Upgrade] 网关通过kafka发送消息给route-server模块，进行路由日志记录
+> - [Upgrade] route-server模块增加路由日志查询接口
 ##### v1.4.2
 > - [Upgrade] 升级 Spring Boot 至 2.1.4.RELEASE
 > - [Upgrade] 更新核心库至 5.1.4.2

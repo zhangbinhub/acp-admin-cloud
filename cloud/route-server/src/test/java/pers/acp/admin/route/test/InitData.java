@@ -32,7 +32,7 @@ class InitData extends BaseTest {
     @Rollback(false)
     void initGateWayRoute() {
         Route route1 = new Route();
-        route1.setRouteid("log-server-api");
+        route1.setRouteId("log-server-api");
         route1.setEnabled(true);
         route1.setUri("lb://log-server");
         route1.setPredicates("[\"Path=/api/log/**\"]");
