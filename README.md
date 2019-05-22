@@ -178,7 +178,7 @@ http://127.0.0.1:5601
 ### （一）数据库
 > - 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
 
-## 六、服务列表
+## 七、服务列表
 ### （一）admin-server 
 ###### 1 可视化监控，监控服务状态、信息聚合
 |          url          |  描述                   |
@@ -209,18 +209,23 @@ http://127.0.0.1:5601
 > 服务注册发现（支持高可用eureka集群）
 >（1）无需改动代码
 >（2）修改 yml 配置即可
-### （二）gateway-server
+### （三）gateway-server
 > 网关服务，修改 yml
 > 动态路由信息保存在 redis
-### （三）config-server
+### （四）config-server
 > 配置中心，配置信息存放于数据库，并支持bus广播刷新所有服务配置信息
-### （四）log-server
+### （五）log-server
 > - 统一日志服务
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
-### （五）oauth-server
+### （六）oauth-server
 > - 统一认证服务
 > - 提供全套权限体系接口
-### （六）file-server
+### （七）file-server
+> - 文件服务
 > - 提供基本的文件上传、下载服务
+### （八）route-server
+> - 路由服务
+> - 提供动态路由策略配置及刷新接口
+> - 提供路由日志信息查询接口
