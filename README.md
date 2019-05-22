@@ -1,14 +1,15 @@
 # acp-admin-cloud
-###### v1.4.2 [版本更新日志](doc/version_history.md)
+###### v1.4.3 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
-- [Spring Boot 2.1.4.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.5.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR1](http://projects.spring.io/spring-cloud)
 
 ## 技术栈
+- joda-time
 - apache httpclient
-- mina
+- netty
 - xstream
 - hibernate
 - jackson
@@ -51,8 +52,8 @@
 > - 日志服务不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 > - 各深度定制开发的服务从 config server 中获取自定义配置信息
 > - 各深度定制开发的服务可通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
-> - 各服务将链路互相调用的链路信息通过 kafka 发送给 zipkin server
-> - 各服务将链路互相调用的断路信息通过 admin server 进行监控
+> - 各服务将互相调用的链路信息通过 kafka 发送给 zipkin server
+> - 各服务将互相调用的断路信息通过 admin server 进行监控
 > - oauth server 将 token 信息持久化到 redis 进行统一认证管理
 > - 前后端交互 HttpStatus Code 说明
 > 
@@ -68,7 +69,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.4
+- gradle 5.4.1
 
 ## 二、gralde 配置及使用
 ### （一）配置文件
@@ -109,7 +110,7 @@ ext {
 
 ### （三）升级命令
 ``
-    gradlew wrapper --gradle-version=5.4 --distribution-type=all
+    gradlew wrapper --gradle-version=5.4.1 --distribution-type=all
 ``
 
 ## 三、工程说明
@@ -156,10 +157,7 @@ ext {
 > docker-compose -f docker-compose-base.yml down
 > ```
 > - docker-compose 文件：cloud/dockerfile/docker-compose-base.yml
-> - elasticsearch 的插件安装：
->    - docker exec -it [容器Id] /bin/sh
->    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.5.4/elasticsearch-analysis-ik-6.5.4.zip
->    - elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v6.5.4/elasticsearch-analysis-pinyin-6.5.4.zip
+
 ##### 1. zipkin 链路监控
 http://127.0.0.1:9411
 ![Architecture diagram](doc/images/zipkin.png)
@@ -224,3 +222,5 @@ http://127.0.0.1:5601
 ### （五）oauth-server
 > - 统一认证服务
 > - 提供全套权限体系接口
+### （六）file-server
+> - 提供基本的文件上传、下载服务

@@ -16,4 +16,6 @@ include 'cloud:config-server'
 findProject(':cloud:config-server')?.name = 'config-server'
 include 'cloud:file-server'
 findProject(':cloud:file-server')?.name = 'file-server'
+include 'cloud:route-server'
+findProject(':cloud:route-server')?.name = 'route-server'
 

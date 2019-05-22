@@ -40,11 +40,6 @@ spring:
       kafka:
         binder:
           brokers: 127.0.0.1:9092
-      bindings:
-        update_route_output:
-          # topic
-          destination: update-gateway-routes
-          content-type: application/json
   # ===============================
   # = JPA / HIBERNATE
   # ===============================

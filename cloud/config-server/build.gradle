@@ -22,4 +22,8 @@ dependencies {
         exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-bus-kafka'
     }
     compile "org.springframework.cloud:spring-cloud-config-server"
+
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'junit'
+    }
 }

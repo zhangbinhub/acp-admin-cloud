@@ -40,11 +40,6 @@ spring:
       kafka:
         binder:
           brokers: 127.0.0.1:9092
-      bindings:
-        update_route_output:
-          # topic
-          destination: update-gateway-routes
-          content-type: application/json
   # ===============================
   # = JPA / HIBERNATE
   # ===============================
@@ -68,22 +63,6 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
-# ===============================
-# = Ribbon Config
-# ===============================
-feign:
-  client:
-    config:
-      oauth2-server:
-        connectTimeout: 30000
-        readTimeout: 30000
-hystrix:
-  command:
-    "OauthServer#busRefresh()":
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 31000
 # ===============================
 # = Security Config
 # ===============================

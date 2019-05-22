@@ -14,12 +14,12 @@ import org.springframework.security.oauth2.provider.token.DefaultAuthenticationK
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
-import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.oauth.token.LoginLog;
 import pers.acp.admin.oauth.token.SecurityTokenStore;
 import pers.acp.admin.oauth.vo.LoginLogVO;
 import pers.acp.core.CommonTools;
 import pers.acp.core.log.LogFactory;
+import pers.acp.core.task.timer.container.Calculation;
 
 import java.util.*;
 
@@ -109,7 +109,7 @@ public class SecurityTokenStoreRedis implements TokenStore, SecurityTokenStore {
     public void storeLoginNum(String appId, String userId) {
         LoginLog loginLog = new LoginLog();
         loginLog.setAppid(appId);
-        loginLog.setDate(CommonTools.getDateTimeString(null, CommonConstant.DATE_FORMAT));
+        loginLog.setDate(CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT));
         loginLog.setUserid(userId);
         try {
             redisTemplate.opsForList().rightPush(loginLogPrefix + appId, objectMapper.writeValueAsString(loginLog));

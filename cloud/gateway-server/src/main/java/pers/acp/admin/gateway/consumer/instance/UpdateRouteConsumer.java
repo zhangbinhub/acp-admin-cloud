@@ -3,19 +3,14 @@ package pers.acp.admin.gateway.consumer.instance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.stereotype.Component;
 import pers.acp.admin.gateway.constant.GateWayConstant;
-import pers.acp.admin.gateway.consumer.UpdateRouteInput;
 import pers.acp.admin.gateway.repo.RouteRedisRepository;
 
 /**
  * @author zhang by 18/03/2019
  * @since JDK 11
  */
-@Component
-@EnableBinding(UpdateRouteInput.class)
 public class UpdateRouteConsumer {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

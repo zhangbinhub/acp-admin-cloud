@@ -1,4 +1,16 @@
 ## 版本更新记录
+##### v1.4.3
+> - [Upgrade] 更新文档
+> - [Upgrade] 升级 gradle 至 5.4.1
+> - [Upgrade] 更新核心库至 5.1.5
+> - [Upgrade] 升级 Spring Boot 至 2.1.5.RELEASE
+> - [Upgrade] 升级 Spring Boot Admin 至 2.1.5
+> - [Upgrade] 使用 joda-time 替换 jdk 日期时间及日历处理
+> - [Upgrade] 更新路由信息的 binding 和 topic 写入自动配置
+> - [Upgrade] 新建route-server模块，路由配置相关功能移入route-server
+> - [Upgrade] 配置中心相关接口移入config-server
+> - [Upgrade] 网关通过kafka发送消息给route-server模块，进行路由日志记录
+> - [Upgrade] route-server模块增加路由日志查询接口
 ##### v1.4.2
 > - [Upgrade] 升级 Spring Boot 至 2.1.4.RELEASE
 > - [Upgrade] 更新核心库至 5.1.4.2

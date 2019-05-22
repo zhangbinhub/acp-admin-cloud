@@ -7,10 +7,10 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.acp.admin.common.constant.CommonConstant;
 import pers.acp.admin.oauth.constant.TokenConstant;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
+import pers.acp.core.task.timer.container.Calculation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class SecurityTokenEnhancer implements TokenEnhancer {
                 additionalInformation.put(TokenConstant.USER_INFO_APPID, authentication.getOAuth2Request().getClientId());
                 additionalInformation.put(TokenConstant.USER_INFO_ID, user.getId());
                 additionalInformation.put(TokenConstant.USER_INFO_LOGINNO, user.getLoginno());
-                additionalInformation.put(TokenConstant.USER_INFO_LOGINTIME, CommonTools.getDateTimeString(null, CommonConstant.DATE_TIME_FORMAT));
+                additionalInformation.put(TokenConstant.USER_INFO_LOGINTIME, CommonTools.getDateTimeString(null, Calculation.DATETIME_FORMAT));
             });
             token.setAdditionalInformation(additionalInformation);
             return token;

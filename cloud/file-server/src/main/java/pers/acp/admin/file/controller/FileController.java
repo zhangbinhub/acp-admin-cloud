@@ -141,13 +141,10 @@ public class FileController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PostMapping(value = FileApi.downLoad, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InfoVO> download(HttpServletRequest request, HttpServletResponse response,
-                                           @RequestBody @Valid FileDownLoadPO fileDownLoadPO) throws ServerException {
+    @PostMapping(value = FileApi.downLoad, produces = MediaType.ALL_VALUE)
+    public void download(HttpServletRequest request, HttpServletResponse response,
+                         @RequestBody @Valid FileDownLoadPO fileDownLoadPO) throws ServerException {
         fileDownLoadDomain.doDownLoadFile(request, response, fileDownLoadPO.getFilePath());
-        InfoVO infoVO = new InfoVO();
-        infoVO.setMessage("下载文件成功：【" + fileDownLoadPO.getFilePath() + "】");
-        return ResponseEntity.ok(infoVO);
     }
 
 }
