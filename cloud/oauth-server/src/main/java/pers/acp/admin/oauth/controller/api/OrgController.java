@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.oauth.constant.OauthApi;
 import pers.acp.admin.oauth.constant.OrgConfigExpression;
@@ -64,6 +65,7 @@ public class OrgController extends BaseController {
     })
     @PreAuthorize(OrgConfigExpression.orgAdd)
     @PutMapping(value = OauthApi.orgConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Organization> add(OAuth2Authentication user, @RequestBody @Valid OrganizationPO organizationPO) throws ServerException {
         return ResponseEntity.status(HttpStatus.CREATED).body(organizationDomain.doCreate(user.getName(), organizationPO));
     }
@@ -90,6 +92,7 @@ public class OrgController extends BaseController {
     })
     @PreAuthorize(OrgConfigExpression.orgUpdate)
     @PatchMapping(value = OauthApi.orgConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Organization> update(OAuth2Authentication user, @RequestBody @Valid OrganizationPO organizationPO) throws ServerException {
         if (CommonTools.isNullStr(organizationPO.getId())) {
             throw new ServerException("ID不能为空");

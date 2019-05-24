@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -56,6 +57,7 @@ public class RouteController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PutMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Route> add(@RequestBody @Valid RoutePO routePO) {
         Route route = routeDomain.doCreate(routePO);
         return ResponseEntity.status(HttpStatus.CREATED).body(route);
@@ -82,6 +84,7 @@ public class RouteController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PatchMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Route> update(@RequestBody @Valid RoutePO routePO) throws ServerException {
         if (CommonTools.isNullStr(routePO.getId())) {
             throw new ServerException("配置ID不能为空");
@@ -124,6 +127,7 @@ public class RouteController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = RouteApi.gateWayRouteRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<InfoVO> refresh() throws ServerException {
         routeDomain.doRefresh();
         updateRouteProducer.doNotifyUpdateRoute();

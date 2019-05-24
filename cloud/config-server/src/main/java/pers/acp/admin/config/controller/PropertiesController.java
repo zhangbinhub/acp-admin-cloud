@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -54,6 +55,7 @@ public class PropertiesController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PutMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Properties> add(@RequestBody @Valid PropertiesPO propertiesPO) throws ServerException {
         Properties properties = propertiesDomain.doCreate(propertiesPO);
         return ResponseEntity.status(HttpStatus.CREATED).body(properties);
@@ -80,6 +82,7 @@ public class PropertiesController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PatchMapping(value = ConfigApi.propertiesConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Properties> update(@RequestBody @Valid PropertiesPO propertiesPO) throws ServerException {
         if (CommonTools.isNullStr(propertiesPO.getId())) {
             throw new ServerException("配置ID不能为空");
@@ -108,6 +111,7 @@ public class PropertiesController extends BaseController {
     })
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = ConfigApi.propertiesRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<InfoVO> refresh() throws ServerException {
         oauthServer.busRefresh();
         InfoVO infoVO = new InfoVO();

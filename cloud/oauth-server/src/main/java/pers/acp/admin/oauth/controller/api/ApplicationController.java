@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.oauth.constant.AppConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -55,6 +56,7 @@ public class ApplicationController extends BaseController {
     })
     @PreAuthorize(AppConfigExpression.appAdd)
     @PutMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Application> add(@RequestBody @Valid ApplicationPO applicationPO) {
         Application application = applicationDomain.doCreate(applicationPO);
         refreshEventPublish.doNotifyUpdateApp();
@@ -83,6 +85,7 @@ public class ApplicationController extends BaseController {
     })
     @PreAuthorize(AppConfigExpression.appUpdate)
     @PatchMapping(value = OauthApi.appConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Application> update(@RequestBody @Valid ApplicationPO applicationPO) throws ServerException {
         if (CommonTools.isNullStr(applicationPO.getId())) {
             throw new ServerException("ID不能为空");
@@ -118,6 +121,7 @@ public class ApplicationController extends BaseController {
     })
     @PreAuthorize(AppConfigExpression.appUpdateSecret)
     @GetMapping(value = OauthApi.updateSecret + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Application> updateSecret(@ApiParam(value = "应用id", required = true) @NotBlank(message = "应用id不能为空")
                                                     @PathVariable String appId) throws ServerException {
         Application application = applicationDomain.doUpdateSecret(appId);
