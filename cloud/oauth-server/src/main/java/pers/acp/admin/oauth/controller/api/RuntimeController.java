@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.oauth.constant.RuntimeConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -37,7 +38,7 @@ import java.util.List;
 @RestController
 @RequestMapping(OauthApi.basePath)
 @Api("运行参数配置")
-public class RuntiimeController extends BaseController {
+public class RuntimeController extends BaseController {
 
     private final InnerRuntimeController innerRuntimeController;
 
@@ -46,7 +47,7 @@ public class RuntiimeController extends BaseController {
     private final RefreshEventPublish refreshEventPublish;
 
     @Autowired
-    public RuntiimeController(InnerRuntimeController innerRuntimeController, RuntimeConfigDomain runtimeConfigDomain, RefreshEventPublish refreshEventPublish) {
+    public RuntimeController(InnerRuntimeController innerRuntimeController, RuntimeConfigDomain runtimeConfigDomain, RefreshEventPublish refreshEventPublish) {
         this.innerRuntimeController = innerRuntimeController;
         this.runtimeConfigDomain = runtimeConfigDomain;
         this.refreshEventPublish = refreshEventPublish;
@@ -60,6 +61,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<RuntimeConfig> add(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
         RuntimeConfig runtimeConfig = runtimeConfigDomain.doCreate(runtimePO);
         refreshEventPublish.doNotifyUpdateRuntime();
@@ -88,6 +90,7 @@ public class RuntiimeController extends BaseController {
     })
     @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
     @PatchMapping(value = OauthApi.runtimeConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<RuntimeConfig> update(@RequestBody @Valid RuntimePO runtimePO) throws ServerException {
         if (CommonTools.isNullStr(runtimePO.getId())) {
             throw new ServerException("配置ID不能为空");

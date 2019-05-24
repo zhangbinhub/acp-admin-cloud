@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.constant.OauthApi;
@@ -100,6 +101,7 @@ public class RoleController extends BaseController {
     })
     @PreAuthorize(RoleConfigExpression.roleAdd)
     @PutMapping(value = OauthApi.roleConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Role> add(OAuth2Authentication user, @RequestBody @Valid RolePO rolePO) throws ServerException {
         if (CommonTools.isNullStr(rolePO.getAppid())) {
             throw new ServerException("应用ID不能为空");
@@ -132,6 +134,7 @@ public class RoleController extends BaseController {
     })
     @PreAuthorize(RoleConfigExpression.roleUpdate)
     @PatchMapping(value = OauthApi.roleConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Role> update(OAuth2Authentication user, @RequestBody @Valid RolePO rolePO) throws ServerException {
         if (!roleCodeList.contains(rolePO.getCode())) {
             throw new ServerException("角色编码非法，请重新输入");

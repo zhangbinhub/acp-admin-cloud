@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.ModuleFuncCode;
 import pers.acp.admin.oauth.constant.OauthApi;
@@ -127,6 +128,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Menu> addMenu(@RequestBody @Valid MenuPO menuPO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPO));
     }
@@ -139,6 +141,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<ModuleFunc> addModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPO));
     }
@@ -178,6 +181,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = OauthApi.menuConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<Menu> updateMenu(@RequestBody @Valid MenuPO menuPO) throws ServerException {
         return ResponseEntity.ok(menuDomain.doUpdate(menuPO));
     }
@@ -189,6 +193,7 @@ public class AuthController extends BaseController {
     })
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = OauthApi.moduleFuncConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<ModuleFunc> updateModuleFunc(@RequestBody @Valid ModuleFuncPO moduleFuncPO) throws ServerException {
         if (!moduleFuncCodeList.contains(moduleFuncPO.getCode())) {
             throw new ServerException("模块功能编码非法，请重新输入");

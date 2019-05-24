@@ -177,6 +177,8 @@ http://127.0.0.1:5601
 ## 六、系统初始化
 ### （一）数据库
 > - 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
+> - 执行 route-server 模块下的 pers.acp.admin.route.test.InitData.doInitAll() 单元测试
+> - 执行 config-server 模块下的 pers.acp.admin.config.test.InitData.doInitAll() 单元测试
 
 ## 七、服务列表
 ### （一）admin-server 

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.oauth.constant.OauthApi;
 import pers.acp.admin.oauth.constant.UserConfigExpression;
@@ -52,7 +53,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
     @GetMapping(value = OauthApi.currUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> userinfo(OAuth2Authentication user) throws ServerException {
+    public ResponseEntity<User> userInfo(OAuth2Authentication user) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
             throw new ServerException("找不到用户信息");
@@ -67,6 +68,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO.class)
     })
     @RequestMapping(value = OauthApi.currUser, method = {RequestMethod.PUT, RequestMethod.PATCH}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<User> updateCurrUser(OAuth2Authentication user, @RequestBody @Valid UserInfoPO userInfoPO) throws ServerException {
         User userInfo = userDomain.findCurrUserInfo(user.getName());
         if (userInfo == null) {
@@ -114,6 +116,7 @@ public class UserController extends BaseController {
     })
     @PreAuthorize(UserConfigExpression.userAdd)
     @PutMapping(value = OauthApi.userConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<User> add(OAuth2Authentication user, @RequestBody @Valid UserPO userPO) throws ServerException {
         return ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.getName(), userPO));
     }
@@ -140,6 +143,7 @@ public class UserController extends BaseController {
     })
     @PreAuthorize(UserConfigExpression.userUpdate)
     @PatchMapping(value = OauthApi.userConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<User> update(OAuth2Authentication user, @RequestBody @Valid UserPO userPO) throws ServerException {
         if (CommonTools.isNullStr(userPO.getId())) {
             throw new ServerException("ID不能为空");
@@ -154,6 +158,7 @@ public class UserController extends BaseController {
     })
     @PreAuthorize(UserConfigExpression.userUpdate)
     @GetMapping(value = OauthApi.userResetPwd + "/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DuplicateSubmission
     public ResponseEntity<InfoVO> resetPwd(OAuth2Authentication user, @PathVariable String userId) throws ServerException {
         if (CommonTools.isNullStr(userId)) {
             throw new ServerException("ID不能为空");
