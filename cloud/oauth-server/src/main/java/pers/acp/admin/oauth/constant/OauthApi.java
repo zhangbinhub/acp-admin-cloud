@@ -8,7 +8,7 @@ public interface OauthApi {
 
     String basePath = "/oauth";
 
-    String currUser = "/userInfo";
+    String currUser = "/userinfo";
 
     String modifiableUser = "/moduserlist";
 
