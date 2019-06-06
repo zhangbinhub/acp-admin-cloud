@@ -18,4 +18,6 @@ include 'cloud:file-server'
 findProject(':cloud:file-server')?.name = 'file-server'
 include 'cloud:route-server'
 findProject(':cloud:route-server')?.name = 'route-server'
+include 'cloud:workflow-server'
+findProject(':cloud:workflow-server')?.name = 'workflow-server'
 
