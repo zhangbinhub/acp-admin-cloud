@@ -92,13 +92,14 @@ public class WorkFlowDomain extends BaseDomain {
      *
      * @param taskId  任务id
      * @param comment 审批意见
+     * @param params  附加参数变量
      * @throws ServerException 异常
      */
-    public void pass(String taskId, String comment) throws ServerException {
+    public void pass(String taskId, String comment, Map<String, Object> params) throws ServerException {
         if (CommonTools.isNullStr(comment)) {
             comment = "审批通过";
         }
-        approved(taskId, true, comment);
+        approved(taskId, true, comment, params);
     }
 
     /**
@@ -106,13 +107,14 @@ public class WorkFlowDomain extends BaseDomain {
      *
      * @param taskId  任务id
      * @param comment 审批意见
+     * @param params  附加参数变量
      * @throws ServerException 异常
      */
-    public void noPass(String taskId, String comment) throws ServerException {
+    public void noPass(String taskId, String comment, Map<String, Object> params) throws ServerException {
         if (CommonTools.isNullStr(comment)) {
             comment = "审批不通过";
         }
-        approved(taskId, false, comment);
+        approved(taskId, false, comment, params);
     }
 
     /**
@@ -121,9 +123,10 @@ public class WorkFlowDomain extends BaseDomain {
      * @param taskId   任务id
      * @param approved 审批结果（true-通过，false-不通过）
      * @param comment  审批意见
+     * @param params   附加参数变量
      * @throws ServerException 异常
      */
-    private void approved(String taskId, boolean approved, String comment) throws ServerException {
+    private void approved(String taskId, boolean approved, String comment, Map<String, Object> params) throws ServerException {
         try {
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             if (task == null) {
@@ -134,6 +137,11 @@ public class WorkFlowDomain extends BaseDomain {
             HashMap<String, Object> map = new HashMap<>();
             map.put("approved", approved);
             map.put("comment", comment);
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (!map.containsKey(entry.getKey())) {
+                    map.put(entry.getKey(), entry.getValue());
+                }
+            }
             taskService.complete(taskId, map);
         } catch (Exception e) {
             logInstance.error(e.getMessage(), e);
