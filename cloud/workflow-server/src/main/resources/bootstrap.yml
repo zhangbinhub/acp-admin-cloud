@@ -42,6 +42,8 @@ management:
   endpoint:
     health:
       show-details: always
+    flowable:
+      enabled: true
 # ===============================
 # = Eureka Config
 # ===============================
