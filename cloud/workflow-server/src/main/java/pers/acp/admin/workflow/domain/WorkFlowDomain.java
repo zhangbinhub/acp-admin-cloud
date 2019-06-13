@@ -1,6 +1,9 @@
 package pers.acp.admin.workflow.domain;
 
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.FlowElement;
+import org.flowable.bpmn.model.FlowNode;
+import org.flowable.bpmn.model.SequenceFlow;
 import org.flowable.engine.*;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author zhang by 10/06/2019
@@ -90,7 +94,7 @@ public class WorkFlowDomain extends BaseDomain {
     /**
      * 审批通过
      *
-     * @param taskId  任务id
+     * @param taskId  当前任务id
      * @param comment 审批意见
      * @param params  附加参数变量
      * @throws ServerException 异常
@@ -105,7 +109,7 @@ public class WorkFlowDomain extends BaseDomain {
     /**
      * 审批不通过
      *
-     * @param taskId  任务id
+     * @param taskId  当前任务id
      * @param comment 审批意见
      * @param params  附加参数变量
      * @throws ServerException 异常
@@ -120,7 +124,7 @@ public class WorkFlowDomain extends BaseDomain {
     /**
      * 审批处理
      *
-     * @param taskId   任务id
+     * @param taskId   当前任务id
      * @param approved 审批结果（true-通过，false-不通过）
      * @param comment  审批意见
      * @param params   附加参数变量
@@ -159,6 +163,31 @@ public class WorkFlowDomain extends BaseDomain {
         try {
             return historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId).finished()
                     .orderByHistoricTaskInstanceEndTime().asc().list();
+        } catch (Exception e) {
+            logInstance.error(e.getMessage(), e);
+            throw new ServerException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取下一步流程节点列表
+     *
+     * @param taskId 当前任务id
+     * @return 流程节点列表
+     * @throws ServerException 异常
+     */
+    public List<FlowElement> getNextFlowElementList(String taskId) throws ServerException {
+        try {
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            if (task == null) {
+                logInstance.error("流程【" + taskId + "】不存在！");
+                throw new ServerException("流程不存在！");
+            }
+            Execution execution = runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
+            BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
+            FlowNode flowNode = (FlowNode) bpmnModel.getFlowElement(execution.getActivityId());
+            List<SequenceFlow> outFlows = flowNode.getOutgoingFlows();
+            return outFlows.stream().map(SequenceFlow::getTargetFlowElement).collect(Collectors.toList());
         } catch (Exception e) {
             logInstance.error(e.getMessage(), e);
             throw new ServerException(e.getMessage());
