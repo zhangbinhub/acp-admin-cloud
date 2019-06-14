@@ -47,6 +47,14 @@ public class FlowApprovePO {
         this.params = params;
     }
 
+    public Map<String, Object> getTaskParams() {
+        return taskParams;
+    }
+
+    public void setTaskParams(Map<String, Object> taskParams) {
+        this.taskParams = taskParams;
+    }
+
     @ApiModelProperty(value = "任务id", required = true, position = 1)
     @NotBlank(message = "任务id不能为空")
     private String taskId;
@@ -55,10 +63,13 @@ public class FlowApprovePO {
     @NotNull(message = "审批结果不能为空")
     private Boolean approved;
 
-    @ApiModelProperty(value = "审批意见", required = true, example = "true", position = 3)
+    @ApiModelProperty(value = "审批意见", required = true, position = 3)
     private String comment;
 
-    @ApiModelProperty(value = "自定义参数", position = 4)
+    @ApiModelProperty(value = "自定义流程参数", position = 4)
     private Map<String, Object> params = new HashMap<>();
+
+    @ApiModelProperty(value = "自定义任务参数", position = 5)
+    private Map<String, Object> taskParams = new HashMap<>();
 
 }

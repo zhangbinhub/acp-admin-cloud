@@ -526,6 +526,54 @@ class InitData extends BaseTest {
         userQuery.setCovert(false);
         userQuery = moduleFuncRepository.save(userQuery);
 
+        ModuleFunc flowProcess = new ModuleFunc();
+        flowProcess.setAppid(application.getId());
+        flowProcess.setParentid(application.getId());
+        flowProcess.setName("工作流处理");
+        flowProcess.setCode(ModuleFuncCode.flowProcess);
+        flowProcess.setCovert(false);
+        flowProcess = moduleFuncRepository.save(flowProcess);
+
+        ModuleFunc flowStart = new ModuleFunc();
+        flowStart.setAppid(application.getId());
+        flowStart.setParentid(flowProcess.getId());
+        flowStart.setName("发起流程");
+        flowStart.setCode(ModuleFuncCode.flowStart);
+        flowStart.setCovert(false);
+        flowStart = moduleFuncRepository.save(flowStart);
+
+        ModuleFunc flowPending = new ModuleFunc();
+        flowPending.setAppid(application.getId());
+        flowPending.setParentid(flowProcess.getId());
+        flowPending.setName("查看待办任务");
+        flowPending.setCode(ModuleFuncCode.flowPending);
+        flowPending.setCovert(false);
+        flowPending = moduleFuncRepository.save(flowPending);
+
+        ModuleFunc flowApprove = new ModuleFunc();
+        flowApprove.setAppid(application.getId());
+        flowApprove.setParentid(flowProcess.getId());
+        flowApprove.setName("审批");
+        flowApprove.setCode(ModuleFuncCode.flowApprove);
+        flowApprove.setCovert(false);
+        flowApprove = moduleFuncRepository.save(flowApprove);
+
+        ModuleFunc flowHistory = new ModuleFunc();
+        flowHistory.setAppid(application.getId());
+        flowHistory.setParentid(flowProcess.getId());
+        flowHistory.setName("历史记录查看");
+        flowHistory.setCode(ModuleFuncCode.flowHistory);
+        flowHistory.setCovert(false);
+        flowHistory = moduleFuncRepository.save(flowHistory);
+
+        ModuleFunc flowDiagram = new ModuleFunc();
+        flowDiagram.setAppid(application.getId());
+        flowDiagram.setParentid(flowProcess.getId());
+        flowDiagram.setName("流程图查看");
+        flowDiagram.setCode(ModuleFuncCode.flowDiagram);
+        flowDiagram.setCovert(false);
+        flowDiagram = moduleFuncRepository.save(flowDiagram);
+
         for (Role role : roles) {
             role.getModuleFuncSet().add(sysConfig);
             role.getModuleFuncSet().add(runtimeConfig);
@@ -559,6 +607,12 @@ class InitData extends BaseTest {
             role.getModuleFuncSet().add(userDelete);
             role.getModuleFuncSet().add(userUpdate);
             role.getModuleFuncSet().add(userQuery);
+            role.getModuleFuncSet().add(flowProcess);
+            role.getModuleFuncSet().add(flowStart);
+            role.getModuleFuncSet().add(flowPending);
+            role.getModuleFuncSet().add(flowApprove);
+            role.getModuleFuncSet().add(flowHistory);
+            role.getModuleFuncSet().add(flowDiagram);
         }
     }
 

@@ -10,8 +10,8 @@ import java.util.Map;
  * @author zhang by 14/06/2019
  * @since JDK 11
  */
-@ApiModel("流程任务")
-public class FlowTaskVO {
+@ApiModel("流程历史记录")
+public class FlowHistoryVO {
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -21,12 +21,20 @@ public class FlowTaskVO {
         this.processInstanceId = processInstanceId;
     }
 
-    public String getName() {
-        return name;
+    public String getActivityId() {
+        return activityId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getActivityName() {
+        return activityName;
+    }
+
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
     }
 
     public String getTaskId() {
@@ -35,14 +43,6 @@ public class FlowTaskVO {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
-    }
-
-    public String getParentTaskId() {
-        return parentTaskId;
-    }
-
-    public void setParentTaskId(String parentTaskId) {
-        this.parentTaskId = parentTaskId;
     }
 
     public String getExecutionId() {
@@ -69,6 +69,22 @@ public class FlowTaskVO {
         this.userId = userId;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
     public Map<String, Object> getParams() {
         return params;
     }
@@ -93,17 +109,25 @@ public class FlowTaskVO {
         this.createTime = createTime;
     }
 
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
     @ApiModelProperty(value = "流程实例id", position = 1)
     private String processInstanceId;
 
-    @ApiModelProperty(value = "任务名称", position = 2)
-    private String name;
+    @ApiModelProperty(value = "活动id", position = 2)
+    private String activityId;
 
-    @ApiModelProperty(value = "任务id", position = 3)
+    @ApiModelProperty(value = "活动名称", position = 3)
+    private String activityName;
+
+    @ApiModelProperty(value = "任务id", position = 4)
     private String taskId;
-
-    @ApiModelProperty(value = "父任务id", position = 4)
-    private String parentTaskId;
 
     @ApiModelProperty(value = "执行实例id", position = 5)
     private String executionId;
@@ -114,13 +138,22 @@ public class FlowTaskVO {
     @ApiModelProperty(value = "处理人id", position = 7)
     private String userId;
 
-    @ApiModelProperty(value = "流程自定义参数", position = 8)
+    @ApiModelProperty(value = "审批意见", position = 8)
+    private String comment;
+
+    @ApiModelProperty(value = "审批是否通过", position = 9)
+    private boolean approved;
+
+    @ApiModelProperty(value = "流程自定义参数", position = 10)
     private Map<String, Object> params = new HashMap<>();
 
-    @ApiModelProperty(value = "任务自定义参数", position = 9)
+    @ApiModelProperty(value = "任务自定义参数", position = 11)
     private Map<String, Object> localParams = new HashMap<>();
 
-    @ApiModelProperty(value = "任务创建时间", position = 10)
+    @ApiModelProperty(value = "开始时间", position = 12)
     private long createTime;
+
+    @ApiModelProperty(value = "结束时间", position = 13)
+    private long endTime;
 
 }
