@@ -72,4 +72,16 @@ public interface ModuleFuncCode {
 
     String userQuery = "user_query";
 
+    String flowProcess = "flow_process";
+
+    String flowStart = "flow_start";
+
+    String flowPending = "flow_pending";
+
+    String flowApprove = "flow_approve";
+
+    String flowHistory = "flow_history";
+
+    String flowDiagram = "flow_diagram";
+
 }

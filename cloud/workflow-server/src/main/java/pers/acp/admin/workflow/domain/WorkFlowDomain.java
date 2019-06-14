@@ -5,6 +5,8 @@ import org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.FlowNode;
 import org.flowable.bpmn.model.SequenceFlow;
 import org.flowable.engine.*;
+import org.flowable.engine.history.HistoricActivityInstance;
+import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.common.base.BaseDomain;
+import pers.acp.admin.workflow.constant.WorkFlowParamKey;
 import pers.acp.core.CommonTools;
 import pers.acp.springboot.core.exceptions.ServerException;
 import pers.acp.springcloud.common.log.LogInstance;
@@ -59,16 +62,14 @@ public class WorkFlowDomain extends BaseDomain {
     /**
      * 启动流程
      *
-     * @param workFlowKey 流程名称
-     * @param businessKey 业务键
+     * @param processDefinitionKey 流程键
+     * @param businessKey          业务键
      * @return 流程实例id
      */
-    public String startFlow(String workFlowKey, String businessKey, Map<String, Object> params) throws ServerException {
-        if (!params.containsKey("businessKey")) {
-            params.put("businessKey", businessKey);
-        }
+    public String startFlow(String processDefinitionKey, String businessKey, Map<String, Object> params) throws ServerException {
+        params.put(WorkFlowParamKey.businessKey, businessKey);
         try {
-            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(workFlowKey, businessKey, params);
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, params);
             return processInstance.getId();
         } catch (Exception e) {
             logInstance.error(e.getMessage(), e);
@@ -134,13 +135,13 @@ public class WorkFlowDomain extends BaseDomain {
         try {
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             if (task == null) {
-                logInstance.error("流程【" + taskId + "】不存在！");
-                throw new ServerException("流程不存在！");
+                logInstance.error("流程任务【" + taskId + "】不存在！");
+                throw new ServerException("流程任务不存在！");
             }
             //通过审核
             HashMap<String, Object> map = new HashMap<>();
-            map.put("approved", approved);
-            map.put("comment", comment);
+            map.put(WorkFlowParamKey.approved, approved);
+            map.put(WorkFlowParamKey.comment, comment);
             for (Map.Entry<String, Object> entry : params.entrySet()) {
                 if (!map.containsKey(entry.getKey())) {
                     map.put(entry.getKey(), entry.getValue());
@@ -180,8 +181,8 @@ public class WorkFlowDomain extends BaseDomain {
         try {
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             if (task == null) {
-                logInstance.error("流程【" + taskId + "】不存在！");
-                throw new ServerException("流程不存在！");
+                logInstance.error("流程任务【" + taskId + "】不存在！");
+                throw new ServerException("流程任务不存在！");
             }
             Execution execution = runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
             BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
@@ -197,38 +198,48 @@ public class WorkFlowDomain extends BaseDomain {
     /**
      * 生成流程图
      *
-     * @param taskId 任务名称
+     * @param processInstanceId 流程实例id
      * @return 流程图输入流
      * @throws ServerException 异常
      */
-    public InputStream generateDiagram(String taskId) throws ServerException {
+    public InputStream generateDiagram(String processInstanceId) throws ServerException {
         try {
-            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-            if (task == null) {
-                logInstance.error("流程【" + taskId + "】不存在！");
-                throw new ServerException("流程不存在！");
+            String processDefinitionId;
+            if (isFinished(processInstanceId)) {
+                HistoricProcessInstance pi = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+                processDefinitionId = pi.getProcessDefinitionId();
+            } else {
+                ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+                processDefinitionId = pi.getProcessDefinitionId();
             }
-            List<Execution> executions = runtimeService.createExecutionQuery()
-                    .processInstanceId(task.getProcessInstanceId())
-                    .list();
-            //得到正在执行的Activity的Id
-            List<String> activityIds = new ArrayList<>();
+            List<String> activityIdList = new ArrayList<>();
+            List<HistoricActivityInstance> historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).orderByHistoricActivityInstanceStartTime().asc().list();
+            for (HistoricActivityInstance activityInstance : historicActivityInstanceList) {
+                activityIdList.add(activityInstance.getActivityId());
+            }
             List<String> flows = new ArrayList<>();
-            for (Execution exe : executions) {
-                List<String> ids = runtimeService.getActiveActivityIds(exe.getId());
-                activityIds.addAll(ids);
-            }
             //获取流程图
-            BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
+            BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
             ProcessEngineConfiguration engineConfiguration = processEngineFactoryBean.getProcessEngineConfiguration();
             ProcessDiagramGenerator diagramGenerator = engineConfiguration.getProcessDiagramGenerator();
-            return diagramGenerator.generateDiagram(bpmnModel, "png", activityIds, flows,
+            return diagramGenerator.generateDiagram(bpmnModel, "bmp", activityIdList, flows,
                     engineConfiguration.getActivityFontName(), engineConfiguration.getLabelFontName(), engineConfiguration.getAnnotationFontName(),
                     engineConfiguration.getClassLoader(), 1.0, true);
         } catch (Exception e) {
             logInstance.error(e.getMessage(), e);
             throw new ServerException(e.getMessage());
         }
+    }
+
+    /**
+     * 流程是否结束
+     *
+     * @param processInstanceId 流程实例id
+     * @return true|false
+     */
+    public boolean isFinished(String processInstanceId) {
+        return historyService.createHistoricProcessInstanceQuery().finished()
+                .processInstanceId(processInstanceId).count() > 0;
     }
 
 }

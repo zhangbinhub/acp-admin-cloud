@@ -6,6 +6,16 @@ package pers.acp.admin.workflow.constant;
  */
 public interface WorkFlowApi {
 
-    String basePath = "workflow";
+    String basePath = "/workflow";
+
+    String flowStart = "/start";
+
+    String flowPending = "/pending";
+
+    String flowApprove = "/approve";
+
+    String flowHistory = "/history";
+
+    String flowDiagram = "/diagram";
 
 }
