@@ -2,6 +2,7 @@
 ##### v2.0.0
 > - [Upgrade] 增加工作流服务，整合flowable工作流引擎
 > - [Upgrade] 初始化数据中增加工作流相关权限配置
+> - [Upgrade] 更新文档
 ##### v1.4.3
 > - [Upgrade] 更新文档
 > - [Upgrade] 升级 gradle 至 5.4.1
