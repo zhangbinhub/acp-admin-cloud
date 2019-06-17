@@ -1,12 +1,12 @@
 debug: false
 server:
   address: 127.0.0.1
-  port: 8790
+  port: 8772
 # ===============================
 # = Log To File Config
 # ===============================
 logging:
-  path: logs/file-server
+  path: logs/workflow-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
   file:
@@ -39,6 +39,29 @@ spring:
       kafka:
         binder:
           brokers: 127.0.0.1:9092
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
 # ===============================
 # = Security Config
 # ===============================

@@ -6,7 +6,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: route-server
+    name: workflow-server
   thymeleaf:
     cache: false
   zipkin:
@@ -42,6 +42,8 @@ management:
   endpoint:
     health:
       show-details: always
+    flowable:
+      enabled: true
 # ===============================
 # = Eureka Config
 # ===============================
@@ -59,9 +61,11 @@ security:
   oauth2:
     resource:
       token-info-uri: http://oauth2-server/oauth/check_token
+flowable:
+  history-level: full
 acp:
   cloud:
     log-server:
       client:
         enabled: true
-        log-type: ROUTE
+        log-type: WORKFLOW

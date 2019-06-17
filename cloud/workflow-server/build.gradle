@@ -1,0 +1,29 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$versions.spring_boot")
+    }
+}
+
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$versions.spring_boot"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
+    }
+}
+bootJar {
+    manifest {
+        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Project': 'Acp Admin Cloud')
+    }
+}
+dependencies {
+    compile project(":cloud:acp-admin-cloud-dependencies")
+
+    compile "org.flowable:flowable-spring-boot-starter:$versions.flowable"
+    compile "org.flowable:flowable-spring-boot-starter-actuator:$versions.flowable"
+
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'junit'
+    }
+}
