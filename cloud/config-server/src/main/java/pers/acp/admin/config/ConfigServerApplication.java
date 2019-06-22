@@ -2,7 +2,7 @@ package pers.acp.admin.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.config.server.EnableConfigServer;
-import pers.acp.springcloud.common.annotation.AcpCloudAtomApplication;
+import pers.acp.spring.cloud.annotation.AcpCloudAtomApplication;
 
 /**
  * @author zhang by 27/02/2019

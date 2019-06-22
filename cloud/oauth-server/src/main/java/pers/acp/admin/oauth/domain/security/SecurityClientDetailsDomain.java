@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.oauth.entity.Application;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
-import pers.acp.springcloud.common.log.LogInstance;
+import pers.acp.spring.cloud.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import java.util.List;

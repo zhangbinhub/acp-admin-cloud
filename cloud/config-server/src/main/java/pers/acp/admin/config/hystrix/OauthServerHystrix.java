@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.common.base.BaseFeignHystrix;
 import pers.acp.admin.config.feign.OauthServer;
-import pers.acp.springboot.core.exceptions.ServerException;
-import pers.acp.springcloud.common.log.LogInstance;
+import pers.acp.spring.boot.exceptions.ServerException;
+import pers.acp.spring.cloud.log.LogInstance;
 
 /**
  * @author zhang by 28/02/2019

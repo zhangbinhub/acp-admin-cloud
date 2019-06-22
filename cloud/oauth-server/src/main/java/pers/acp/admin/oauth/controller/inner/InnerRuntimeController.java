@@ -15,8 +15,8 @@ import pers.acp.admin.oauth.constant.OauthOpenInnerApi;
 import pers.acp.admin.common.vo.RuntimeConfigVO;
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
-import pers.acp.springboot.core.exceptions.ServerException;
-import pers.acp.springboot.core.vo.ErrorVO;
+import pers.acp.spring.boot.exceptions.ServerException;
+import pers.acp.spring.boot.vo.ErrorVO;
 
 import javax.validation.constraints.NotBlank;
 

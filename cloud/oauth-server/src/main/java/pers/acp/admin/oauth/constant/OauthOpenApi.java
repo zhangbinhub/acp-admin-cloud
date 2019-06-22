@@ -1,6 +1,6 @@
 package pers.acp.admin.oauth.constant;
 
-import pers.acp.springcloud.common.enums.RestPrefix;
+import pers.acp.spring.cloud.enums.RestPrefix;
 
 /**
  * @author zhang by 01/02/2019

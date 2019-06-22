@@ -11,7 +11,7 @@ import pers.acp.admin.oauth.po.ApplicationPO;
 import pers.acp.admin.oauth.repo.ApplicationRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;

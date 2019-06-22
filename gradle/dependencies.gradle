@@ -13,7 +13,7 @@ versions += [
         slf4j           : "1.7.26",
         logback         : "1.2.3",
         xstream         : "1.4.11.1",
-        jackson_databind: "2.9.8",
+        jackson_databind: "2.9.9",
 
         hikaricp        : "3.2.0",
         mysql           : "8.0.16",
@@ -27,7 +27,7 @@ versions += [
         swagger         : "2.9.2",
 
         netty           : "4.1.36.Final",
-        httpclient      : "4.5.8",
+        httpclient      : "4.5.9",
 
         flowable        : "6.4.1"
 ]

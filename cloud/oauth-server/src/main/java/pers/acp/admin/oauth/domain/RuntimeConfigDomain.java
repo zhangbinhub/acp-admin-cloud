@@ -13,7 +13,7 @@ import pers.acp.admin.oauth.po.RuntimePO;
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.criteria.Predicate;

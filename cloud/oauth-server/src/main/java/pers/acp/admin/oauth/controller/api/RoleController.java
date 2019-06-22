@@ -20,9 +20,9 @@ import pers.acp.admin.oauth.entity.Role;
 import pers.acp.admin.oauth.po.RolePO;
 import pers.acp.admin.oauth.vo.RoleVO;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
-import pers.acp.springboot.core.vo.ErrorVO;
-import pers.acp.springcloud.common.log.LogInstance;
+import pers.acp.spring.boot.exceptions.ServerException;
+import pers.acp.spring.boot.vo.ErrorVO;
+import pers.acp.spring.cloud.log.LogInstance;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;

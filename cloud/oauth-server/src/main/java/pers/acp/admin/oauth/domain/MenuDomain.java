@@ -12,7 +12,7 @@ import pers.acp.admin.oauth.repo.MenuRepository;
 import pers.acp.admin.oauth.repo.RoleRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.admin.oauth.vo.MenuVO;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import java.util.*;
 import java.util.stream.Collectors;
