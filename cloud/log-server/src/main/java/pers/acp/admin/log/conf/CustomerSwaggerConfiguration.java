@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.common.base.BaseSwaggerConfiguration;
-import pers.acp.springboot.core.conf.SwaggerConfiguration;
+import pers.acp.spring.boot.conf.SwaggerConfiguration;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 

@@ -20,7 +20,7 @@ import pers.acp.admin.oauth.token.SecurityTokenService;
 import pers.acp.admin.oauth.vo.UserVO;
 import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;

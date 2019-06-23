@@ -21,8 +21,8 @@ import pers.acp.admin.oauth.domain.RuntimeConfigDomain;
 import pers.acp.admin.oauth.entity.RuntimeConfig;
 import pers.acp.admin.oauth.po.RuntimePO;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
-import pers.acp.springboot.core.vo.ErrorVO;
+import pers.acp.spring.boot.exceptions.ServerException;
+import pers.acp.spring.boot.vo.ErrorVO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

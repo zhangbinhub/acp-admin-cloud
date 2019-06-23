@@ -15,7 +15,7 @@ import pers.acp.admin.oauth.repo.ModuleFuncRepository;
 import pers.acp.admin.oauth.repo.RoleRepository;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.admin.oauth.vo.RoleVO;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import java.util.HashSet;
 import java.util.List;

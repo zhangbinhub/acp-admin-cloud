@@ -3,7 +3,7 @@ package pers.acp.admin.common.base;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pers.acp.springboot.core.conf.SwaggerConfiguration;
+import pers.acp.spring.boot.conf.SwaggerConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;

@@ -2,7 +2,7 @@ package pers.acp.admin.common.test;
 
 import org.junit.jupiter.api.Test;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 /**
  * @author zhang by 15/01/2019

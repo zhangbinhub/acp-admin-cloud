@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import pers.acp.admin.oauth.bus.event.RefreshApplicationEvent;
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain;
-import pers.acp.springcloud.common.log.LogInstance;
+import pers.acp.spring.cloud.log.LogInstance;
 
 /**
  * @author zhang by 19/03/2019

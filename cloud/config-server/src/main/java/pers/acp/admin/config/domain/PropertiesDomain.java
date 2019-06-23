@@ -10,7 +10,7 @@ import pers.acp.admin.config.entity.Properties;
 import pers.acp.admin.config.po.PropertiesPO;
 import pers.acp.admin.config.repo.PropertiesRepository;
 import pers.acp.core.CommonTools;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;

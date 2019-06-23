@@ -8,8 +8,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import pers.acp.springboot.core.enums.ResponseCode;
-import pers.acp.springboot.core.vo.ErrorVO;
+import pers.acp.spring.boot.enums.ResponseCode;
+import pers.acp.spring.boot.vo.ErrorVO;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

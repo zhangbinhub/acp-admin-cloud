@@ -1,8 +1,13 @@
 ## 版本更新记录
 ##### v2.0.0
+> - [Upgrade] 升级核心库至 5.2.0
+> - [Upgrade] 升级 Spring Boot 至 2.1.6.RELEASE
 > - [Upgrade] 增加工作流服务，整合flowable工作流引擎
 > - [Upgrade] 初始化数据中增加工作流相关权限配置
 > - [Upgrade] 更新文档
+> - [Upgrade] 升级依赖项
+>   - Apache HttpClient to 4.5.9
+>   - jackson to 2.9.9
 ##### v1.4.3
 > - [Upgrade] 更新文档
 > - [Upgrade] 升级 gradle 至 5.4.1

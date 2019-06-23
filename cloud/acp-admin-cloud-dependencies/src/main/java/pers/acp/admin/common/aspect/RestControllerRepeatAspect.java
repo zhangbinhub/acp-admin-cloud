@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.lock.DistributedLock;
 import pers.acp.core.security.MD5Utils;
-import pers.acp.springboot.core.exceptions.ServerException;
+import pers.acp.spring.boot.exceptions.ServerException;
 
 import java.lang.reflect.Method;
 

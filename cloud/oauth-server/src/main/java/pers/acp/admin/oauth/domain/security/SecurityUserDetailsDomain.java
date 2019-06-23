@@ -13,7 +13,7 @@ import pers.acp.admin.common.constant.RoleCode;
 import pers.acp.admin.oauth.repo.UserRepository;
 import pers.acp.core.CommonTools;
 import pers.acp.core.security.SHA256Utils;
-import pers.acp.springcloud.common.log.LogInstance;
+import pers.acp.spring.cloud.log.LogInstance;
 
 import java.util.HashSet;
 import java.util.Set;
