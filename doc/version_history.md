@@ -2,6 +2,7 @@
 ##### v2.0.0
 > - [Upgrade] 升级核心库至 5.2.0
 > - [Upgrade] 升级 Spring Boot 至 2.1.6.RELEASE
+> - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR2
 > - [Upgrade] 增加工作流服务，整合flowable工作流引擎
 > - [Upgrade] 初始化数据中增加工作流相关权限配置
 > - [Upgrade] 更新文档
