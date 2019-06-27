@@ -1,4 +1,4 @@
-package pers.acp.admin.workflow.po;
+package pers.acp.admin.common.po;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
