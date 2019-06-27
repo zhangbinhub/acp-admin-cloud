@@ -1,5 +1,5 @@
 ### workflow-server
-工作流服务，集成[flowable](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
+工作流服务，集成[flowable v6.4.1](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
 
 ##### 一、流程编辑器
 - 1、请前往flowable[官网](https://www.flowable.org)或[GitHub](https://github.com/flowable/flowable-engine/releases)下载并部署 flowable-modeler 至 tomcat9 并启动
