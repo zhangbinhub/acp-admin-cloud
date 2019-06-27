@@ -9,9 +9,9 @@ logging:
   path: logs/oauth-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
-  file:
-    max-size: 5MB
-    max-history: 30
+  file: ${logging.path}/${spring.application.name}.log
+logging.file.max-size: 5MB
+logging.file.max-history: 30
 # ===============================
 # = Eureka Config
 # ===============================
