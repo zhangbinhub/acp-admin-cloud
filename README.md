@@ -191,8 +191,8 @@ http://127.0.0.1:5601
 ###### 2 zipkin 链路追踪（需依赖 kafka）
 - 服务端
 > 从SpringCloud2.0 以后，官方已经不支持自定义服务，官方只提供编译好的jar包供用户使用。可以自行使用多种方式部署zipkin服务，并采用elasticsearch作为zipkin的数据存储器。
-- 客户端
-> - 依赖 cloud:acp-spring-cloud-starter-common
+- 客户端（cloud中其他需要监控链路的服务，admin-server、eureka-server、gateway-server 除外）
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 增加 zipkin 相关配置
 > ```yaml
 > spring:
@@ -217,21 +217,29 @@ http://127.0.0.1:5601
 > 动态路由信息保存在 redis
 ### （四）[config-server](cloud/config-server/README.md)
 > 配置中心，配置信息存放于数据库，并支持bus广播刷新所有服务配置信息
+> - 依赖 cloud:acp-admin-cloud-dependencies
 ### （五）[log-server](cloud/log-server/README.md)
 > - 统一日志服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
 ### （六）[oauth-server](cloud/oauth-server/README.md)
 > - 统一认证服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 提供全套权限体系接口
 ### （七）[file-server](cloud/file-server/README.md)
 > - 文件服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 提供基本的文件上传、下载服务
 ### （八）[route-server](cloud/route-server/README.md)
 > - 路由服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 提供动态路由策略配置及刷新接口
 > - 提供路由日志信息查询接口
-### （九）[workflow-serveer](cloud/workflow-server/README.md)
+### （九）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
 > - 提供工作流相关接口服务
+### （十）其他自定义服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
