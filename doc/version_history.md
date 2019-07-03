@@ -1,4 +1,10 @@
 ## 版本更新记录
+##### v2.0.1
+> - [Upgrade] 升级核心库至 5.2.1
+> - [Upgrade] 升级 gradle 至 5.5
+> - [Upgrade] 升级版本号至 2.0.1
+> - [Upgrade] 更新依赖项，Apache HttpClient 替换为 OKHttp
+> - [Upgrade] 更新文档
 ##### v2.0.0
 > - [Upgrade] 升级核心库至 5.2.0
 > - [Upgrade] 升级 Spring Boot 至 2.1.6.RELEASE

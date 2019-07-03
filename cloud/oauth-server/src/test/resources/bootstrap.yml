@@ -27,7 +27,7 @@ spring:
         max-interval: 5000 #最长重试间隔
         multiplier: 1.1 #每次重试失败后，重试间隔所增加的倍数
 info:
-  version: 2.0.0
+  version: 2.0.1
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -63,10 +63,14 @@ feign:
         readTimeout: 10000
         loggerLevel: full
   httpclient:
-    enabled: true
+    enabled: false
     connection-timeout: ${feign.client.config.default.connectTimeout}
     max-connections: 1000
-    max-connections-per-route: 50
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
   hystrix:
     enabled: true
 hystrix:
@@ -80,6 +84,8 @@ ribbon:
   ServerListRefreshInterval: 5000
   ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
   ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
   eager-load:
     enabled: true
     clients: config-server
@@ -98,5 +104,6 @@ acp:
     oauth:
       oauth-server: true
     log-server:
-      enabled: true
-      log-type: AUTH
+      client:
+        enabled: true
+        log-type: AUTH
