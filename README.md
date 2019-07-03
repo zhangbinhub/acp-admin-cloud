@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v2.0.0 [版本更新日志](doc/version_history.md)
+###### v2.0.1 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
@@ -9,7 +9,7 @@
 ## 技术栈
 - flowable
 - joda-time
-- apache httpclient
+- okhttp
 - netty
 - xstream
 - hibernate
@@ -70,7 +70,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.4.1
+- gradle 5.5
 
 ## 二、gralde 配置及使用
 ### （一）配置文件
@@ -111,7 +111,7 @@ ext {
 
 ### （三）升级命令
 ``
-    gradlew wrapper --gradle-version=5.4.1 --distribution-type=all
+    gradlew wrapper --gradle-version=5.5 --distribution-type=all
 ``
 
 ## 三、工程说明

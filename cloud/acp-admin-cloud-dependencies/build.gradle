@@ -37,7 +37,7 @@ dependencies {
     compile "io.netty:netty-all:$versions.netty"
 
     // http client
-    compile "org.apache.httpcomponents:httpclient:$versions.httpclient"
+    compile "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
@@ -61,9 +61,9 @@ dependencies {
     compile "org.springframework.retry:spring-retry"
     // monitor : 服务间调用、断路器、链路追踪
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-    compile "io.github.openfeign:feign-httpclient"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+    compile "io.github.openfeign:feign-okhttp"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-redis"

@@ -66,7 +66,7 @@ spring:
                 name: GateWayHystrix
                 fallbackUri: forward:/hystrixhandle
 info:
-  version: 2.0.0
+  version: 2.0.1
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -105,6 +105,8 @@ ribbon:
   ServerListRefreshInterval: 5000
   ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
   ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
   eager-load:
     enabled: true
     clients: file-server,route-server,config-server,oauth2-server

@@ -5,7 +5,7 @@ server:
     max-threads: 1000
     uri-encoding: UTF-8
 info:
-  version: 2.0.0
+  version: 2.0.1
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -94,10 +94,14 @@ spring:
 # ===============================
 feign:
   httpclient:
-    enabled: true
+    enabled: false
     connection-timeout: ${feign.client.config.default.connectTimeout}
     max-connections: 1000
-    max-connections-per-route: 50
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
   hystrix:
     enabled: true
   client:
@@ -125,6 +129,8 @@ ribbon:
   ServerListRefreshInterval: 5000
   ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
   ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
   eager-load:
     enabled: true
     clients: oauth2-server
