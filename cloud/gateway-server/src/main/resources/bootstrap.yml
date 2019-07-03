@@ -109,4 +109,4 @@ ribbon:
     enabled: true
   eager-load:
     enabled: true
-    clients: file-server,route-server,config-server,oauth2-server
+    clients: file-server,route-server,config-server,oauth2-server,log-server
