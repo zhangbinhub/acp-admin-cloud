@@ -53,43 +53,6 @@ eureka:
   client:
     registry-fetch-interval-seconds: 5
 # ===============================
-# = Ribbon Config
-# ===============================
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 10000
-        readTimeout: 10000
-        loggerLevel: full
-  httpclient:
-    enabled: false
-    connection-timeout: ${feign.client.config.default.connectTimeout}
-    max-connections: 1000
-    time-to-live: 900
-    time-to-live-unit: seconds
-    follow-redirects: true
-  okhttp:
-    enabled: true
-  hystrix:
-    enabled: true
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 11000
-ribbon:
-  ServerListRefreshInterval: 5000
-  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
-  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
-  okhttp:
-    enabled: true
-  eager-load:
-    enabled: true
-    clients: config-server
-# ===============================
 # = Security Config
 # ===============================
 security:
