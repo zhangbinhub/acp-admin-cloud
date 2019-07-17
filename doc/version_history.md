@@ -3,6 +3,7 @@
 > - [Upgrade] 升级核心库至 6.0.0
 > - [Upgrade] 升级 gradle 至 5.5.1
 > - [Upgrade] 使用 kotlin 重写
+> - [Upgrade] 更新 Spring Boot Admin 至 2.1.6
 > - [Upgrade] 更新文档
 ##### v2.0.1
 > - [Upgrade] 升级核心库至 5.2.1

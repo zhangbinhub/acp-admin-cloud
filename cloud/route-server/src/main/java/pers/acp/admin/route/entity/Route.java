@@ -80,7 +80,7 @@ public class Route {
     }
 
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "guid")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
     @ApiModelProperty("ID")

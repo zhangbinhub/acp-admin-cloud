@@ -68,7 +68,7 @@ public class Organization extends OauthBaseTreeEntity<Organization> {
     }
 
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "guid")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
     @ApiModelProperty("机构ID")

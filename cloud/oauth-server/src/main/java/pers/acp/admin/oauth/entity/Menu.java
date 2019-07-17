@@ -100,7 +100,7 @@ public class Menu extends OauthBaseTreeEntity<Menu> {
     }
 
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "guid")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
     @GeneratedValue(generator = "idGenerator")
     @Column(length = 36, nullable = false)
     @ApiModelProperty("菜单ID")
