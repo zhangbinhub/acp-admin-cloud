@@ -58,7 +58,7 @@ public class BaseSwaggerConfiguration {
 
     protected Docket buildDocket(String basePackage, String title) {
         return new Docket(DocumentationType.SWAGGER_2)
-                .enable(swaggerConfiguration.isEnabled())
+                .enable(swaggerConfiguration.getEnabled())
                 .apiInfo(buildApiInfo(title))
                 .select()
                 //为当前包路径

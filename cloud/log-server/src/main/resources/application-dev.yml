@@ -47,5 +47,5 @@ acp:
   swagger:
     enabled: true
   schedule:
-    crons:
+    cron:
       LogFileBackUpTask: 0 0/1 * * * ?

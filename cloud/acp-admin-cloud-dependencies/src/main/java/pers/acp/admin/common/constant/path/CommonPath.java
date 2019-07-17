@@ -1,6 +1,6 @@
 package pers.acp.admin.common.constant.path;
 
-import pers.acp.spring.cloud.enums.RestPrefix;
+import pers.acp.spring.cloud.constant.RestPrefix;
 
 /**
  * @author zhang by 01/02/2019
@@ -10,6 +10,6 @@ public interface CommonPath {
 
     String innerBasePath = "/inner";
 
-    String openInnerBasePath = RestPrefix.OPEN + innerBasePath;
+    String openInnerBasePath = RestPrefix.Open + innerBasePath;
 
 }

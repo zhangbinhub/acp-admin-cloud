@@ -8,8 +8,8 @@ import pers.acp.admin.log.conf.LogServerCustomerConfiguration;
 import pers.acp.admin.log.constant.LogBackUp;
 import pers.acp.core.CalendarTools;
 import pers.acp.core.CommonTools;
-import pers.acp.core.task.timer.container.Calculation;
-import pers.acp.spring.boot.base.BaseSpringBootScheduledTask;
+import pers.acp.core.task.timer.Calculation;
+import pers.acp.spring.boot.base.BaseSpringBootScheduledAsyncTask;
 import pers.acp.spring.boot.exceptions.ServerException;
 import pers.acp.spring.cloud.log.LogInstance;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * @since JDK 11
  */
 @Component("LogFileBackUpTask")
-public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
+public class LogFileBackUpTask extends BaseSpringBootScheduledAsyncTask {
 
     @Value("${server.address}")
     private String serverIp;
@@ -69,7 +69,7 @@ public class LogFileBackUpTask extends BaseSpringBootScheduledTask {
                             fileNames.add(file.getAbsolutePath());
                         }
                         logInstance.info("开始执行文件压缩...");
-                        zipFilePath = CommonTools.filesToZIP(fileNames.toArray(new String[]{}), zipFilePath, true);
+                        zipFilePath = CommonTools.filesToZip(fileNames.toArray(new String[]{}), zipFilePath, true);
                         if (!CommonTools.isNullStr(zipFilePath)) {
                             logInstance.info("文件压缩完成，压缩文件为：" + zipFilePath);
                         } else {

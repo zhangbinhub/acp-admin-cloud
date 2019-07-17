@@ -1,6 +1,6 @@
 package pers.acp.admin.oauth.constant;
 
-import pers.acp.spring.cloud.enums.RestPrefix;
+import pers.acp.spring.cloud.constant.RestPrefix;
 
 /**
  * @author zhang by 01/02/2019
@@ -8,6 +8,6 @@ import pers.acp.spring.cloud.enums.RestPrefix;
  */
 public interface OauthOpenApi {
 
-    String openInnerBasePath = RestPrefix.OPEN + OauthApi.basePath;
+    String openInnerBasePath = RestPrefix.Open + OauthApi.basePath;
 
 }
