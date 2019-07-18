@@ -58,9 +58,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val oauthSer
                @RequestBody
                idList: List<String>): ResponseEntity<InfoVO> {
         propertiesDomain.doDelete(idList)
-        return ResponseEntity.ok(InfoVO(
-                message = "删除成功"
-        ))
+        return ResponseEntity.ok(InfoVO(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新服务名称、配置项、标签、键、值、描述")
@@ -98,9 +96,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val oauthSer
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVO> {
         oauthServer.busRefresh()
-        return ResponseEntity.ok(InfoVO(
-                message = "请求成功，稍后所有服务将刷新配置信息"
-        ))
+        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后所有服务将刷新配置信息"))
     }
 
 }
