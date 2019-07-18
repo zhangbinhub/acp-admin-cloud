@@ -111,7 +111,7 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
     private fun doDeleteFileForFold(fold: File, filterNames: List<String>) {
         if (fold.exists()) {
             fold.listFiles { pathname -> !filterNames.contains(pathname.name) }?.let {
-                for (file in it) {
+                it.forEach { file ->
                     CommonTools.doDeleteFile(file, false)
                 }
             }

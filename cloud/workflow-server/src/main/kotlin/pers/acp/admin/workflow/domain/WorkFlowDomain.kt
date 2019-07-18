@@ -18,7 +18,6 @@ import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.cloud.log.LogInstance
 
 import java.io.InputStream
-import java.util.stream.Collectors
 
 /**
  * @author zhang by 10/06/2019
@@ -61,9 +60,15 @@ constructor(private val logInstance: LogInstance,
      */
     private fun actToVO(historicActivityInstance: HistoricActivityInstance, businessKey: String): FlowHistoryVO {
         val historicDetailQuery = historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id)
-        val params = historicDetailQuery.list().stream().filter { historicDetail -> CommonTools.isNullStr(historicDetail.taskId) }
-                .collect(Collectors.toMap({ historicDetail -> (historicDetail as HistoricVariableUpdate).variableName },
-                        { historicDetail -> (historicDetail as HistoricVariableUpdate).value }))
+        val params: MutableMap<String, Any> = mutableMapOf()
+        val localParams: MutableMap<String, Any> = mutableMapOf()
+        historicDetailQuery.list().filter { historicDetail -> CommonTools.isNullStr(historicDetail.taskId) }.forEach { historicDetail ->
+            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
+        }
+        historicDetailQuery.taskId(historicActivityInstance.taskId).list().forEach { historicDetail ->
+            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
+
+        }
         return FlowHistoryVO(
                 processInstanceId = historicActivityInstance.processInstanceId,
                 activityId = historicActivityInstance.activityId,
@@ -75,9 +80,7 @@ constructor(private val logInstance: LogInstance,
                 isApproved = params[WorkFlowParamKey.approved] as Boolean,
                 comment = params[WorkFlowParamKey.comment].toString(),
                 params = params,
-                localParams = historicDetailQuery.taskId(historicActivityInstance.taskId).list().stream()
-                        .collect(Collectors.toMap({ historicDetail -> (historicDetail as HistoricVariableUpdate).variableName },
-                                { historicDetail -> (historicDetail as HistoricVariableUpdate).value })),
+                localParams = localParams,
                 createTime = historicActivityInstance.startTime.time,
                 endTime = historicActivityInstance.endTime.time
         )
@@ -112,7 +115,7 @@ constructor(private val logInstance: LogInstance,
     fun findTaskListByUserId(userId: String): List<FlowTaskVO> =
             try {
                 taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list()
-                        .stream().map { task -> taskToVO(task) }.collect(Collectors.toList())
+                        .map { task -> taskToVO(task) }
             } catch (e: Exception) {
                 logInstance.error(e.message, e)
                 throw ServerException(e.message)
@@ -202,10 +205,9 @@ constructor(private val logInstance: LogInstance,
                     throw ServerException("流程实例不存在！")
                 }
                 historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).finished()
-                        .orderByHistoricActivityInstanceEndTime().asc().list().stream()
+                        .orderByHistoricActivityInstanceEndTime().asc().list()
                         .filter { historicActivityInstance -> !CommonTools.isNullStr(historicActivityInstance.taskId) }
                         .map { historicActivityInstance -> actToVO(historicActivityInstance, historicProcessInstance.businessKey) }
-                        .collect(Collectors.toList())
             } catch (e: Exception) {
                 logInstance.error(e.message, e)
                 throw ServerException(e.message)
@@ -227,10 +229,8 @@ constructor(private val logInstance: LogInstance,
                     throw ServerException("流程任务不存在！")
                 }
                 val execution = runtimeService.createExecutionQuery().executionId(task.executionId).singleResult()
-                val model = repositoryService.getBpmnModel(task.processDefinitionId)
-                val flowNode = model.getFlowElement(execution.activityId) as FlowNode
-                val outFlows = flowNode.outgoingFlows
-                outFlows.stream().map { it.targetFlowElement }.collect(Collectors.toList())
+                (repositoryService.getBpmnModel(task.processDefinitionId).getFlowElement(execution.activityId) as FlowNode)
+                        .outgoingFlows.map { it.targetFlowElement }
             } catch (e: Exception) {
                 logInstance.error(e.message, e)
                 throw ServerException(e.message)
