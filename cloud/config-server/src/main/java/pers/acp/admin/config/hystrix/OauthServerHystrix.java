@@ -22,26 +22,26 @@ public class OauthServerHystrix extends BaseFeignHystrix<OauthServer> {
 
     @Override
     public OauthServer create(Throwable cause) {
-        logInstance.error("调用 oauth2-server 异常: " + cause.getMessage(), cause);
+        getLogInstance().error("调用 oauth2-server 异常: " + cause.getMessage(), cause);
         return new OauthServer() {
             @Override
             public void busRefresh() throws ServerException {
                 String errMsg = "配置信息刷新失败";
-                logInstance.info(errMsg);
+                getLogInstance().info(errMsg);
                 throw new ServerException(errMsg);
             }
 
             @Override
             public void busRefresh(String application) throws ServerException {
                 String errMsg = "配置信息刷新失败: application.name = " + application;
-                logInstance.info(errMsg);
+                getLogInstance().info(errMsg);
                 throw new ServerException(errMsg);
             }
 
             @Override
             public void busRefreshMatcher(String matcher) throws ServerException {
                 String errMsg = "配置信息刷新失败: matcher = " + matcher;
-                logInstance.info(errMsg);
+                getLogInstance().info(errMsg);
                 throw new ServerException(errMsg);
             }
         };
