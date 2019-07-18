@@ -15,7 +15,6 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 import javax.annotation.PostConstruct
-import java.util.ArrayList
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -35,7 +34,7 @@ constructor(private val redisTemplate: RedisTemplate<Any, Any>, private val obje
     fun loadRouteDefinitions() {
         synchronized(this) {
             routes.clear()
-            val values = ArrayList<RouteDefinition>()
+            val values: MutableList<RouteDefinition> = mutableListOf()
             try {
                 redisTemplate.opsForList().range(GateWayConstant.ROUTES_DEFINITION_KEY, 0, -1)?.let {
                     for (route in it) {

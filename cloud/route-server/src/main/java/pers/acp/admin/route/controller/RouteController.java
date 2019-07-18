@@ -55,7 +55,7 @@ public class RouteController extends BaseController {
             @ApiResponse(code = 201, message = "创建成功", response = Route.class),
             @ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @PutMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @DuplicateSubmission
     public ResponseEntity<Route> add(@RequestBody @Valid RoutePO routePO) {
@@ -67,7 +67,7 @@ public class RouteController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @DeleteMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@ApiParam(value = "id列表", required = true) @NotEmpty(message = "id不能为空") @NotNull(message = "id不能为空")
                                          @RequestBody List<String> idList) {
@@ -82,7 +82,7 @@ public class RouteController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；路由信息ID不能为空；找不到信息；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @PatchMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @DuplicateSubmission
     public ResponseEntity<Route> update(@RequestBody @Valid RoutePO routePO) throws ServerException {
@@ -98,7 +98,7 @@ public class RouteController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @PostMapping(value = RouteApi.gateWayRouteConfig, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Page<Route>> query(@RequestBody RoutePO routePO) throws ServerException {
         if (routePO.getQueryParam() == null) {
@@ -112,7 +112,7 @@ public class RouteController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @PostMapping(value = RouteApi.gateWayRouteLog, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Page<RouteLog>> queryLog(@RequestBody RouteLogPO routeLogPO) throws ServerException {
         if (routeLogPO.getQueryParam() == null) {
@@ -125,7 +125,7 @@ public class RouteController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @PostMapping(value = RouteApi.gateWayRouteRefresh, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @DuplicateSubmission
     public ResponseEntity<InfoVO> refresh() throws ServerException {

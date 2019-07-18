@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
+import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.oauth.constant.OauthApi;
 import pers.acp.admin.oauth.constant.UserConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -102,7 +103,7 @@ public class UserController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO.class)
     })
-    @PreAuthorize(UserConfigExpression.sysConfig)
+    @PreAuthorize(BaseExpression.Companion.sysConfig)
     @GetMapping(value = OauthApi.modifiableUser, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<User>> modifiableUser(OAuth2Authentication user) {
         return ResponseEntity.ok(userDomain.findModifiableUserList(user.getName()));

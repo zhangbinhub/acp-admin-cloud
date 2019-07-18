@@ -72,7 +72,7 @@ public class LoginController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @GetMapping(value = OauthApi.loginInfo, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<LoginLogVO>> getLoginLog() throws ServerException {
         List<LoginLogVO> loginLogVOList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class LoginController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过，找不到用户信息；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @GetMapping(value = OauthApi.onlineInfo + "/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<OnlienInfoVO>> getOnlineInfo(@ApiParam(value = "用户id", required = true)
                                                             @PathVariable String userId) throws ServerException {
@@ -144,7 +144,7 @@ public class LoginController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO.class)
     })
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.Companion.adminOnly)
     @DeleteMapping(value = OauthApi.onlineInfo + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<InfoVO> delete(@ApiParam(value = "应用id", required = true)
                                          @PathVariable String appId,

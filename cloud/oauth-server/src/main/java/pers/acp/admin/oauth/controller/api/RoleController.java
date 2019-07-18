@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pers.acp.admin.common.annotation.DuplicateSubmission;
 import pers.acp.admin.common.base.BaseController;
 import pers.acp.admin.common.constant.RoleCode;
+import pers.acp.admin.common.permission.BaseExpression;
 import pers.acp.admin.oauth.constant.OauthApi;
 import pers.acp.admin.oauth.constant.RoleConfigExpression;
 import pers.acp.admin.common.vo.InfoVO;
@@ -77,7 +78,7 @@ public class RoleController extends BaseController {
     }
 
     @ApiOperation(value = "获取指定应用下可编辑的角色列表", notes = "查询指定应用下可编辑的角色列表")
-    @PreAuthorize(RoleConfigExpression.sysConfig)
+    @PreAuthorize(BaseExpression.Companion.sysConfig)
     @GetMapping(value = OauthApi.roleList + "/{appId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Role>> getRoleList(OAuth2Authentication user, @PathVariable String appId) throws ServerException {
         if (CommonTools.isNullStr(appId)) {

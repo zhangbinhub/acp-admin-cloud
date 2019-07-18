@@ -15,8 +15,6 @@ import springfox.documentation.service.Parameter
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 
-import java.util.ArrayList
-
 /**
  * @author zhang by 01/02/2019
  * @since JDK 11
@@ -30,7 +28,7 @@ constructor(private val swaggerConfiguration: SwaggerConfiguration) {
 
     private fun globalOperationParameters(): List<Parameter> {
         val tokenPar = ParameterBuilder()
-        val pars = ArrayList<Parameter>()
+        val pars: MutableList<Parameter> = mutableListOf()
         tokenPar.name("Authorization").description("认证信息").modelRef(ModelRef("string")).parameterType("header").required(false).build()
         pars.add(tokenPar.build())
         return pars

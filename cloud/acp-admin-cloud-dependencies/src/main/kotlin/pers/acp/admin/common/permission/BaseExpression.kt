@@ -9,7 +9,7 @@ import pers.acp.admin.common.constant.RoleCode
  * @author zhang by 11/01/2019
  * @since JDK 11
  */
-interface BaseExpression {
+open class BaseExpression {
     companion object {
         /**
          * 仅超级管理员可执行
