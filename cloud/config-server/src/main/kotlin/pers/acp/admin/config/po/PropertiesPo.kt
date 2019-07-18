@@ -12,58 +12,56 @@ import javax.validation.constraints.NotNull
  * @since JDK 11
  */
 @ApiModel("后台服务配置参数")
-class PropertiesPo {
+data class PropertiesPo(
+        @ApiModelProperty("配置ID")
+        var id: String? = null,
 
-    @ApiModelProperty("配置ID")
-    var id: String? = null
+        /**
+         * 对应 spring.application.name
+         */
+        @ApiModelProperty(value = "服务名", position = 1)
+        @NotBlank(message = "服务名不能为空")
+        var configApplication: String? = null,
 
-    /**
-     * 对应 spring.application.name
-     */
-    @ApiModelProperty(value = "服务名", position = 1)
-    @NotBlank(message = "服务名不能为空")
-    var configApplication: String? = null
+        /**
+         * 对应 spring.profiles.active
+         */
+        @ApiModelProperty(value = "配置项", position = 2)
+        @NotBlank(message = "配置项不能为空")
+        var configProfile: String? = null,
 
-    /**
-     * 对应 spring.profiles.active
-     */
-    @ApiModelProperty(value = "配置项", position = 2)
-    @NotBlank(message = "配置项不能为空")
-    var configProfile: String? = null
+        /**
+         * 分支标签
+         */
+        @ApiModelProperty(value = "标签", position = 3)
+        @NotBlank(message = "标签不能为空")
+        var configLabel: String? = null,
 
-    /**
-     * 分支标签
-     */
-    @ApiModelProperty(value = "标签", position = 3)
-    @NotBlank(message = "标签不能为空")
-    var configLabel: String? = null
+        /**
+         * 配置项键
+         */
+        @ApiModelProperty(value = "键", position = 4)
+        @NotBlank(message = "键不能为空")
+        var configKey: String? = null,
 
-    /**
-     * 配置项键
-     */
-    @ApiModelProperty(value = "键", position = 4)
-    @NotBlank(message = "键不能为空")
-    var configKey: String? = null
+        /**
+         * 配置项值
+         */
+        @ApiModelProperty(value = "值", position = 5)
+        @NotBlank(message = "值不能为空")
+        var configValue: String? = null,
 
-    /**
-     * 配置项值
-     */
-    @ApiModelProperty(value = "值", position = 5)
-    @NotBlank(message = "值不能为空")
-    var configValue: String? = null
+        @ApiModelProperty(value = "描述", position = 6)
+        var configDes: String = "",
 
-    @ApiModelProperty(value = "描述", position = 6)
-    var configDes = ""
-
-    /**
-     * 是否启用
-     */
-    @ApiModelProperty(value = "是否启用", position = 7)
-    @NotNull(message = "是否启用不能为空")
-    var enabled: Boolean? = null
+        /**
+         * 是否启用
+         */
+        @ApiModelProperty(value = "是否启用", position = 7)
+        @NotNull(message = "是否启用不能为空")
+        var enabled: Boolean? = null,
 
 
-    @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)
-    var queryParam: QueryParam? = null
-
-}
+        @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)
+        var queryParam: QueryParam? = null
+)

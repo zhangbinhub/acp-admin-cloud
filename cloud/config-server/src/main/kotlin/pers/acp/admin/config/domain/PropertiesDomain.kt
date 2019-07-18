@@ -46,18 +46,19 @@ constructor(private val propertiesRepository: PropertiesRepository) : BaseDomain
             }
 
     private fun doSave(properties: Properties, propertiesPo: PropertiesPo): Properties =
-            properties.apply {
-                this.configApplication = propertiesPo.configApplication
-                this.configProfile = propertiesPo.configProfile
-                this.configLabel = propertiesPo.configLabel
-                this.configKey = propertiesPo.configKey
-                this.configValue = propertiesPo.configValue
-                this.configDes = propertiesPo.configDes
+            properties.copy(
+                    configApplication = propertiesPo.configApplication,
+                    configProfile = propertiesPo.configProfile,
+                    configLabel = propertiesPo.configLabel,
+                    configKey = propertiesPo.configKey,
+                    configValue = propertiesPo.configValue,
+                    configDes = propertiesPo.configDes
+            ).apply {
                 propertiesPo.enabled?.let {
                     this.enabled = it
                 }
             }.let {
-                propertiesRepository.save(properties)
+                propertiesRepository.save(it)
             }
 
     @Transactional
