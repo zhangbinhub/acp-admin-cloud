@@ -31,6 +31,6 @@ data class RouteLogPo(
         @ApiModelProperty("响应状态码")
         var responseStatus: Int? = null,
 
-        @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)
+        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
         var queryParam: QueryParam? = null
 )

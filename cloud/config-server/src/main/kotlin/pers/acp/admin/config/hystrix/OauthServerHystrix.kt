@@ -14,7 +14,7 @@ import pers.acp.spring.cloud.log.LogInstance
  */
 @Component
 class OauthServerHystrix @Autowired
-protected constructor(logInstance: LogInstance, objectMapper: ObjectMapper) : BaseFeignHystrix<OauthServer>(logInstance, objectMapper) {
+constructor(logInstance: LogInstance, objectMapper: ObjectMapper) : BaseFeignHystrix<OauthServer>(logInstance, objectMapper) {
 
     override fun create(cause: Throwable): OauthServer {
         logInstance.error("调用 oauth2-server 异常: " + cause.message, cause)

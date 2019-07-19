@@ -1,6 +1,5 @@
 package pers.acp.admin.workflow
 
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.runApplication
 import pers.acp.spring.cloud.annotation.AcpCloudAtomApplication
 

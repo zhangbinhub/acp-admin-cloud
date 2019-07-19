@@ -1,5 +1,6 @@
 package pers.acp.admin.config.repo
 
+import org.springframework.data.repository.NoRepositoryBean
 import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.config.entity.Properties
 import java.util.Optional

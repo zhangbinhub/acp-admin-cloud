@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull
  */
 @ApiModel("后台服务配置参数")
 data class PropertiesPo(
+
         @ApiModelProperty("配置ID")
         var id: String? = null,
 
@@ -62,6 +63,6 @@ data class PropertiesPo(
         var enabled: Boolean? = null,
 
 
-        @ApiModelProperty(value = "分页查询参数", position = Integer.MAX_VALUE)
+        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
         var queryParam: QueryParam? = null
 )

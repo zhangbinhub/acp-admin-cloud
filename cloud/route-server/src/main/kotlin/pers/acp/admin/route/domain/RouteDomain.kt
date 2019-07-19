@@ -26,7 +26,6 @@ import pers.acp.spring.cloud.log.LogInstance
 
 import javax.persistence.criteria.Predicate
 import java.net.URI
-import javax.persistence.metamodel.SingularAttribute
 
 /**
  * @author zhang by 01/03/2019
@@ -43,15 +42,15 @@ constructor(private val logInstance: LogInstance,
             private val distributedLock: DistributedLock) : BaseDomain() {
 
     private fun doSave(route: Route, routePo: RoutePo): Route =
-            route.copy(
-                    uri = routePo.uri,
-                    routeId = routePo.routeId,
-                    predicates = routePo.predicates,
-                    filters = routePo.filters,
-                    enabled = routePo.enabled!!,
-                    orderNum = routePo.orderNum,
-                    remarks = routePo.remarks
-            ).let {
+            route.apply {
+                uri = routePo.uri
+                routeId = routePo.routeId
+                predicates = routePo.predicates!!
+                filters = routePo.filters
+                enabled = routePo.enabled ?: false
+                orderNum = routePo.orderNum
+                remarks = routePo.remarks
+            }.let {
                 routeRepository.save(it)
             }
 
@@ -65,46 +64,44 @@ constructor(private val logInstance: LogInstance,
     @Transactional
     fun doDelete(idList: List<String>) = routeRepository.deleteByIdInAndEnabled(idList, false)
 
-    fun doQuery(routePo: RoutePo): Page<Route> {
-        return routeRepository.findAll({ root, _, criteriaBuilder ->
-            val predicateList: MutableList<Predicate> = mutableListOf()
-            if (routePo.enabled != null) {
-                predicateList.add(criteriaBuilder.equal(root.get(root.model.getAttribute("enabled") as SingularAttribute), routePo.enabled))
-            }
-            if (!CommonTools.isNullStr(routePo.routeId)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("routeId") as SingularAttribute).`as`(String::class.java), "%" + routePo.routeId + "%"))
-            }
-            criteriaBuilder.and(*predicateList.toTypedArray())
-        }, buildPageRequest(routePo.queryParam!!))
-    }
+    fun doQuery(routePo: RoutePo): Page<Route> =
+            routeRepository.findAll({ root, _, criteriaBuilder ->
+                val predicateList: MutableList<Predicate> = mutableListOf()
+                if (routePo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), routePo.enabled))
+                }
+                if (!CommonTools.isNullStr(routePo.routeId)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("routeId").`as`(String::class.java), "%" + routePo.routeId + "%"))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(routePo.queryParam!!))
 
-    fun doQueryLog(routeLogPO: RouteLogPo): Page<RouteLog> {
-        return routeLogRepository.findAll({ root, _, criteriaBuilder ->
-            val predicateList: MutableList<Predicate> = mutableListOf()
-            if (!CommonTools.isNullStr(routeLogPO.remoteIp)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("remoteIp") as SingularAttribute).`as`(String::class.java), "%" + routeLogPO.remoteIp + "%"))
-            }
-            if (!CommonTools.isNullStr(routeLogPO.gatewayIp)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("gatewayIp") as SingularAttribute).`as`(String::class.java), "%" + routeLogPO.gatewayIp + "%"))
-            }
-            if (!CommonTools.isNullStr(routeLogPO.path)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("path") as SingularAttribute).`as`(String::class.java), "%" + routeLogPO.path + "%"))
-            }
-            if (!CommonTools.isNullStr(routeLogPO.serverId)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("serverId") as SingularAttribute).`as`(String::class.java), "%" + routeLogPO.serverId + "%"))
-            }
-            if (routeLogPO.startTime != null) {
-                predicateList.add(criteriaBuilder.ge(root.get(root.model.getAttribute("requestTime") as SingularAttribute).`as`(Long::class.java), routeLogPO.startTime))
-            }
-            if (routeLogPO.endTime != null) {
-                predicateList.add(criteriaBuilder.le(root.get(root.model.getAttribute("requestTime") as SingularAttribute).`as`(Long::class.java), routeLogPO.endTime))
-            }
-            if (routeLogPO.responseStatus != null) {
-                predicateList.add(criteriaBuilder.equal(root.get(root.model.getAttribute("responseStatus") as SingularAttribute).`as`(Long::class.java), routeLogPO.responseStatus))
-            }
-            criteriaBuilder.and(*predicateList.toTypedArray())
-        }, buildPageRequest(routeLogPO.queryParam!!))
-    }
+    fun doQueryLog(routeLogPO: RouteLogPo): Page<RouteLog> =
+            routeLogRepository.findAll({ root, _, criteriaBuilder ->
+                val predicateList: MutableList<Predicate> = mutableListOf()
+                if (!CommonTools.isNullStr(routeLogPO.remoteIp)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + routeLogPO.remoteIp + "%"))
+                }
+                if (!CommonTools.isNullStr(routeLogPO.gatewayIp)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + routeLogPO.gatewayIp + "%"))
+                }
+                if (!CommonTools.isNullStr(routeLogPO.path)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + routeLogPO.path + "%"))
+                }
+                if (!CommonTools.isNullStr(routeLogPO.serverId)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + routeLogPO.serverId + "%"))
+                }
+                if (routeLogPO.startTime != null) {
+                    predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPO.startTime))
+                }
+                if (routeLogPO.endTime != null) {
+                    predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPO.endTime))
+                }
+                if (routeLogPO.responseStatus != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), routeLogPO.responseStatus))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(routeLogPO.queryParam!!))
 
     @Transactional
     @Throws(ServerException::class)

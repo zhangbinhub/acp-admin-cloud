@@ -9,6 +9,8 @@ import pers.acp.admin.common.permission.BaseExpression
  * @since JDK 11
  */
 object WorkFlowExpression : BaseExpression() {
+    const val adminOnly = BaseExpression.adminOnly
+    const val sysConfig = BaseExpression.sysConfig
     /**
      * 启动流程
      */

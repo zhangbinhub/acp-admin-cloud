@@ -12,7 +12,6 @@ import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 
 import javax.persistence.criteria.Predicate
-import javax.persistence.metamodel.SingularAttribute
 
 /**
  * @author zhang by 01/03/2019
@@ -46,17 +45,14 @@ constructor(private val propertiesRepository: PropertiesRepository) : BaseDomain
             }
 
     private fun doSave(properties: Properties, propertiesPo: PropertiesPo): Properties =
-            properties.copy(
-                    configApplication = propertiesPo.configApplication,
-                    configProfile = propertiesPo.configProfile,
-                    configLabel = propertiesPo.configLabel,
-                    configKey = propertiesPo.configKey,
-                    configValue = propertiesPo.configValue,
-                    configDes = propertiesPo.configDes
-            ).apply {
-                propertiesPo.enabled?.let {
-                    this.enabled = it
-                }
+            properties.apply {
+                configApplication = propertiesPo.configApplication!!
+                configProfile = propertiesPo.configProfile!!
+                configLabel = propertiesPo.configLabel!!
+                configKey = propertiesPo.configKey!!
+                configValue = propertiesPo.configValue!!
+                configDes = propertiesPo.configDes
+                enabled = propertiesPo.enabled ?: false
             }.let {
                 propertiesRepository.save(it)
             }
@@ -83,26 +79,25 @@ constructor(private val propertiesRepository: PropertiesRepository) : BaseDomain
     @Transactional
     fun doDelete(idList: List<String>) = propertiesRepository.deleteByIdInAndEnabled(idList, false)
 
-    fun doQuery(propertiesPo: PropertiesPo): Page<Properties> {
-        return propertiesRepository.findAll({ root, _, criteriaBuilder ->
-            val predicateList: MutableList<Predicate> = mutableListOf()
-            if (propertiesPo.enabled != null) {
-                predicateList.add(criteriaBuilder.equal(root.get(root.model.getAttribute("enabled") as SingularAttribute), propertiesPo.enabled))
-            }
-            if (!CommonTools.isNullStr(propertiesPo.configApplication)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("configApplication") as SingularAttribute).`as`(String::class.java), "%" + propertiesPo.configApplication + "%"))
-            }
-            if (!CommonTools.isNullStr(propertiesPo.configProfile)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("configProfile") as SingularAttribute).`as`(String::class.java), "%" + propertiesPo.configApplication + "%"))
-            }
-            if (!CommonTools.isNullStr(propertiesPo.configLabel)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("configLabel") as SingularAttribute).`as`(String::class.java), "%" + propertiesPo.configApplication + "%"))
-            }
-            if (!CommonTools.isNullStr(propertiesPo.configKey)) {
-                predicateList.add(criteriaBuilder.like(root.get(root.model.getAttribute("configKey") as SingularAttribute).`as`(String::class.java), "%" + propertiesPo.configApplication + "%"))
-            }
-            criteriaBuilder.and(*predicateList.toTypedArray())
-        }, buildPageRequest(propertiesPo.queryParam!!))
-    }
+    fun doQuery(propertiesPo: PropertiesPo): Page<Properties> =
+            propertiesRepository.findAll({ root, _, criteriaBuilder ->
+                val predicateList: MutableList<Predicate> = mutableListOf()
+                if (propertiesPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), propertiesPo.enabled))
+                }
+                if (!CommonTools.isNullStr(propertiesPo.configApplication)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("configApplication").`as`(String::class.java), "%" + propertiesPo.configApplication + "%"))
+                }
+                if (!CommonTools.isNullStr(propertiesPo.configProfile)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("configProfile").`as`(String::class.java), "%" + propertiesPo.configProfile + "%"))
+                }
+                if (!CommonTools.isNullStr(propertiesPo.configLabel)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("configLabel").`as`(String::class.java), "%" + propertiesPo.configLabel + "%"))
+                }
+                if (!CommonTools.isNullStr(propertiesPo.configKey)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("configKey").`as`(String::class.java), "%" + propertiesPo.configKey + "%"))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(propertiesPo.queryParam!!))
 
 }

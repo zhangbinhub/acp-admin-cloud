@@ -1,5 +1,6 @@
 package pers.acp.admin.route.repo
 
+import org.springframework.data.repository.NoRepositoryBean
 import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.route.entity.Route
 
