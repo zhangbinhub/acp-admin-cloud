@@ -1,15 +1,12 @@
 debug: false
 server:
   address: 127.0.0.1
-  port: 9099
-management:
-  server:
-    port: 9098
+  port: 8880
 # ===============================
 # = Log To File Config
 # ===============================
 logging:
-  path: logs/admin-server
+  path: logs/config-refresh-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
   file: ${logging.path}/${spring.application.name}.log
@@ -22,9 +19,6 @@ eureka:
   instance:
     ip-address: ${server.address}
     instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
-    metadata-map:
-      user.name: admin
-      user.password: 888888
   client:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
@@ -32,7 +26,24 @@ eureka:
 # = Spring Config
 # ===============================
 spring:
-  security:
-    user:
-      name: ${eureka.instance.metadata-map.user.name}
-      password: ${eureka.instance.metadata-map.user.password}
+  devtools:
+    restart:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: 127.0.0.1:9092
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    client:
+      client-id: 8a80cb816c0a5d4f016c0a5e0c020000
+      client-secret: 2523342F2BD345EA9658452A289364AA

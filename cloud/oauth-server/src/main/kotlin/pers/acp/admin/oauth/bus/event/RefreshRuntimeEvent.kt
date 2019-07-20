@@ -6,14 +6,8 @@ import org.springframework.cloud.bus.event.RemoteApplicationEvent
  * @author zhang by 19/03/2019
  * @since JDK 11
  */
-class RefreshRuntimeEvent : RemoteApplicationEvent {
+class RefreshRuntimeEvent(source: Any, origin: String, destination: String?, message: String) : RemoteApplicationEvent(source, origin, destination) {
 
-    var message: String? = null
-
-    constructor()
-
-    constructor(source: Any, origin: String, destination: String?, message: String) : super(source, origin, destination) {
-        this.message = message
-    }
+    var message: String? = message
 
 }

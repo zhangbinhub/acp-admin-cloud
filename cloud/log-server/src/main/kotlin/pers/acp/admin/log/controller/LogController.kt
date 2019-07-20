@@ -56,8 +56,10 @@ constructor(private val logInstance: LogInstance, private val logFileDomain: Log
                 if (end >= nowDay) {
                     throw ServerException("结束日期必须早于当前")
                 }
-                ResponseEntity.ok(logFileDomain.fileList(CommonTools.getDateTimeString(start, Calculation.DATE_FORMAT),
-                        CommonTools.getDateTimeString(end, Calculation.DATE_FORMAT)))
+                ResponseEntity.ok(logFileDomain.fileList(
+                        CommonTools.getDateTimeString(start, Calculation.DATE_FORMAT),
+                        CommonTools.getDateTimeString(end, Calculation.DATE_FORMAT)
+                ))
             } catch (e: Exception) {
                 logInstance.error(e.message, e)
                 throw ServerException(e.message)

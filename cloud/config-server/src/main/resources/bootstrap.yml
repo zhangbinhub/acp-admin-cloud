@@ -112,7 +112,7 @@ feign:
         connectTimeout: 10000
         readTimeout: 10000
         loggerLevel: full
-      oauth2-server:
+      config-refresh-server:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
@@ -122,7 +122,7 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 11000
-    "OauthServer#busRefresh()":
+    "ConfigRefreshServer#busRefresh()":
       execution:
         isolation:
           thread:
@@ -135,7 +135,7 @@ ribbon:
     enabled: true
   eager-load:
     enabled: true
-    clients: oauth2-server
+    clients: config-refresh-server
 # ===============================
 # = Security Config
 # ===============================

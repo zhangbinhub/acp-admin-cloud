@@ -1,0 +1,51 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: dev
+  application:
+    name: config-refresh-server
+  thymeleaf:
+    cache: false
+  zipkin:
+    sender:
+      type: kafka
+info:
+  version: 3.0.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://oauth2-server/oauth/check_token
+acp:
+  cloud:
+    oauth:
+      resource-server: false

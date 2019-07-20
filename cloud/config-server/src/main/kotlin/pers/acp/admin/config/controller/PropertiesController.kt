@@ -16,7 +16,7 @@ import pers.acp.admin.common.vo.InfoVO
 import pers.acp.admin.config.constant.ConfigApi
 import pers.acp.admin.config.domain.PropertiesDomain
 import pers.acp.admin.config.entity.Properties
-import pers.acp.admin.config.feign.OauthServer
+import pers.acp.admin.config.feign.ConfigRefreshServer
 import pers.acp.admin.config.po.PropertiesPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull
 @RequestMapping(ConfigApi.basePath)
 @Api("服务配置信息")
 class PropertiesController @Autowired
-constructor(private val propertiesDomain: PropertiesDomain, private val oauthServer: OauthServer) : BaseController() {
+constructor(private val propertiesDomain: PropertiesDomain, private val configRefreshServer: ConfigRefreshServer) : BaseController() {
 
     @ApiOperation(value = "新建参数信息", notes = "服务名称、配置项、标签、键、值、描述")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Properties::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO::class))
@@ -95,7 +95,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val oauthSer
     @DuplicateSubmission
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVO> {
-        oauthServer.busRefresh()
+        configRefreshServer.busRefresh()
         return ResponseEntity.ok(InfoVO(message = "请求成功，稍后所有服务将刷新配置信息"))
     }
 

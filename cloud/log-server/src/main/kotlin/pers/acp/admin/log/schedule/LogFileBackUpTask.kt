@@ -1,7 +1,6 @@
 package pers.acp.admin.log.schedule
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.constant.LogBackUp
@@ -22,12 +21,6 @@ import java.io.File
 class LogFileBackUpTask @Autowired
 constructor(private val logInstance: LogInstance, private val logServerCustomerConfiguration: LogServerCustomerConfiguration) : BaseSpringBootScheduledAsyncTask() {
 
-    @Value("\${server.address}")
-    private val serverIp: String? = null
-
-    @Value("\${server.port}")
-    private val serverPort: Int = 0
-
     init {
         taskName = "日志文件备份任务"
     }
@@ -44,7 +37,7 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
                 val logFileDate = CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT)
                 val logFold = File(logServerCustomerConfiguration.logFilePath)
                 val logFoldPath = logFold.absolutePath
-                var zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION
+                var zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
                 val zipFile = File(zipFilePath)
                 if (!zipFile.exists()) {
                     if (!logFold.exists() || !logFold.isDirectory) {
@@ -96,7 +89,7 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
         var day = CalendarTools.getPrevDay(CommonTools.getNowDateTime())
         for (i in 0..logServerCustomerConfiguration.maxHistoryDayNumber) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT))
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT) + "_" + serverIp + "_" + serverPort + LogBackUp.EXTENSION)
+            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT) + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION)
             day = CalendarTools.getPrevDay(day)
         }
         // 清理历史日志文件

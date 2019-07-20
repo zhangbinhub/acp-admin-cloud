@@ -40,8 +40,8 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         validateFold(fold)
         val fileList: MutableList<String> = mutableListOf()
         fold.listFiles { pathname ->
-            pathname.name >= LogBackUp.ZIP_FILE_PREFIX + startDate + LogBackUp.EXTENSION &&
-                    pathname.name <= LogBackUp.ZIP_FILE_PREFIX + endDate + LogBackUp.EXTENSION
+            pathname.name >= LogBackUp.ZIP_FILE_PREFIX + startDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
+                    && pathname.name <= LogBackUp.ZIP_FILE_PREFIX + endDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
         }?.let {
             for (file in it) {
                 fileList.add(file.name)

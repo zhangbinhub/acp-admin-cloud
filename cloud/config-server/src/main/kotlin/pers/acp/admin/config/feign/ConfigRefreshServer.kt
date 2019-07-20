@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import pers.acp.admin.config.hystrix.OauthServerHystrix
+import pers.acp.admin.config.hystrix.ConfigRefreshServerHystrix
 import pers.acp.spring.boot.exceptions.ServerException
 
 /**
@@ -13,8 +13,8 @@ import pers.acp.spring.boot.exceptions.ServerException
  * @since JDK 11
  */
 @Component
-@FeignClient(value = "oauth2-server", fallbackFactory = OauthServerHystrix::class)
-interface OauthServer {
+@FeignClient(value = "config-refresh-server", fallbackFactory = ConfigRefreshServerHystrix::class)
+interface ConfigRefreshServer {
 
     /**
      * 刷新配置信息

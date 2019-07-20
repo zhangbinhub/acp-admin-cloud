@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component
 @RefreshScope
 class LogServerCustomerConfiguration {
 
+    @Value("\${server.address}")
+    val serverIp: String? = null
+
+    @Value("\${server.port}")
+    val serverPort: Int = 0
+
     /**
      * 日志路径
      */
