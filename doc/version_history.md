@@ -5,6 +5,7 @@
 > - [Upgrade] 使用 kotlin 重写
 > - [Upgrade] annotationProcessor 替换为 kapt
 > - [Upgrade] 更新 Spring Boot Admin 至 2.1.6
+> - [Upgrade] 数据库字段名称修改，entity严格使用驼峰命名
 > - [Upgrade] 修改配置，所有服务的 actuator 端口不向注册中心开放，保证服务安全
 > - [Upgrade] 增加 config-refresh-server 服务，仅用于向注册中心开放 actuator 端口，接收请求并向总线发送配置刷新事件
 > - [Upgrade] 升级版本号至 3.0.0

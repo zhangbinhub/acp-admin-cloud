@@ -8,4 +8,6 @@ object ConfigApi {
     const val basePath = "/config"
     const val propertiesConfig = "/properties"
     const val propertiesRefresh = "$propertiesConfig/refresh"
+    const val propertiesRefreshApplication = "$propertiesRefresh/application"
+    const val propertiesRefreshMatcher = "$propertiesRefresh/matcher"
 }
