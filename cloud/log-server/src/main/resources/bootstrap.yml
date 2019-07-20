@@ -27,7 +27,7 @@ spring:
         max-interval: 5000 #最长重试间隔
         multiplier: 1.1 #每次重试失败后，重试间隔所增加的倍数
 info:
-  version: 2.0.1
+  version: 3.0.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

@@ -6,12 +6,14 @@ buildscript {
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:$versions.spring_boot"
+        mavenBom("org.springframework.boot:spring-boot-dependencies:$versions.spring_boot") {
+            bomProperty("kotlin.version", "${kotlinVersion}")
+        }
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
     }
 }
 dependencies {
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    kapt "org.springframework.boot:spring-boot-configuration-processor"
 
     compile fileTree(dir: "$rootDir/libs", include: "*.jar")
 
@@ -21,6 +23,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:$versions.slf4j"
     compile "ch.qos.logback:logback-classic:$versions.logback"
     compile "com.fasterxml.jackson.core:jackson-databind:$versions.jackson_databind"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$versions.jackson_databind"
     compile "org.bouncycastle:bcmail-jdk15on:$versions.bouncycastle"
     compile "org.bouncycastle:bcprov-ext-jdk15on:$versions.bouncycastle"
     compile "com.thoughtworks.xstream:xstream:$versions.xstream"
@@ -43,7 +46,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-devtools"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     // Swagger2
     compile "io.springfox:springfox-swagger2:$versions.swagger"

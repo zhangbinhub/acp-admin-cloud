@@ -2,6 +2,9 @@ debug: false
 server:
   address: 127.0.0.1
   port: 8761
+management:
+  server:
+    port: 8760
 # ===============================
 # = Log To File Config
 # ===============================

@@ -5,7 +5,9 @@ ext {
 versions += [
         jupiter         : "5.3.2",
 
+        kotlin_coroutines: "1.2.2",
         joda_time       : "2.9.9",
+        commons_codec    : "1.11",
         commons_text    : "1.6",
         commons_lang3   : "3.9",
         dom4j           : "1.6.1",
@@ -22,7 +24,7 @@ versions += [
         postgresql      : "42.2.5",
 
         jaxb_runtime    : "2.3.2",
-        spring_boot     : "2.1.5.RELEASE",
+        spring_boot     : "2.1.6.RELEASE",
         spring_cloud    : "Greenwich.SR2",
         swagger         : "2.9.2",
 

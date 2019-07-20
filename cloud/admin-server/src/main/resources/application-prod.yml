@@ -1,7 +1,10 @@
 debug: false
 server:
   address: 127.0.0.1
-  port: 8090
+  port: 9099
+management:
+  server:
+    port: 9098
 # ===============================
 # = Log To File Config
 # ===============================

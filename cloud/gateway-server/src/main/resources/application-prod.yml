@@ -1,7 +1,10 @@
 debug: false
 server:
   address: 127.0.0.1
-  port: 8770
+  port: 8771
+management:
+  server:
+    port: 8770
 # ===============================
 # = Log To File Config
 # ===============================

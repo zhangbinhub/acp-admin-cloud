@@ -1,4 +1,15 @@
 ## 版本更新记录
+##### v3.0.0
+> - [Upgrade] 升级核心库至 6.0.0
+> - [Upgrade] 升级 gradle 至 5.5.1
+> - [Upgrade] 使用 kotlin 重写
+> - [Upgrade] annotationProcessor 替换为 kapt
+> - [Upgrade] 更新 Spring Boot Admin 至 2.1.6
+> - [Upgrade] 修改配置，所有服务的 actuator 端口不向注册中心开放，保证服务安全
+> - [Upgrade] 增加 config-refresh-server 服务，仅用于向注册中心开放 actuator 端口，接收请求并向总线发送配置刷新事件
+> - [Upgrade] 升级版本号至 3.0.0
+> - [Upgrade] 更新文档
+> - [Fix] 修复日志文件查询时，文件名不匹配导致查询结果异常的 bug
 ##### v2.0.1
 > - [Upgrade] 升级核心库至 5.2.1
 > - [Upgrade] 升级 gradle 至 5.5

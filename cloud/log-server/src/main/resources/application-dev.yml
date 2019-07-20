@@ -2,6 +2,9 @@ debug: false
 server:
   address: 127.0.0.1
   port: 8780
+management:
+  server:
+    port: 8779
 # ===============================
 # = Log To File Config
 # ===============================
@@ -41,11 +44,11 @@ spring:
 security:
   oauth2:
     client:
-      client-id: 793a9790-8e7a-11e9-9bab-d8c49792dd7b
-      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
+      client-id: 8a80cb816c0a5d4f016c0a5e0c020000
+      client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:
     enabled: true
   schedule:
-    crons:
+    cron:
       LogFileBackUpTask: 0 0/1 * * * ?

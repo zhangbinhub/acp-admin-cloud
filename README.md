@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v2.0.1 [版本更新日志](doc/version_history.md)
+###### v3.0.0 [版本更新日志](doc/version_history.md)
 基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本及官方文档
@@ -70,7 +70,8 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.5
+- gradle 5.5.1
+- kotlin 1.3.41
 
 ## 二、gralde 配置及使用
 ### （一）配置文件
@@ -89,6 +90,7 @@ gradle全局参数：
 - mavenCentralUrl：maven中央仓库地址
 - org.gradle.jvmargs：gradle执行时的jvm参数
 - javaVersion：jdk版本号
+- kotlinVersion：kotlin版本号
     
 ##### 4.build.gradle
 公共构建脚本
@@ -110,9 +112,9 @@ ext {
 ```
 
 ### （三）升级命令
-``
-    gradlew wrapper --gradle-version=5.5 --distribution-type=all
-``
+```
+    gradlew wrapper --gradle-version=5.5.1 --distribution-type=all
+```
 
 ## 三、工程说明
 - doc目录下的files文件夹，当需要用到时放到打包后的jar同目录下即可

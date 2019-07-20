@@ -5,7 +5,7 @@ server:
     max-threads: 1000
     uri-encoding: UTF-8
 info:
-  version: 2.0.1
+  version: 3.0.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -13,6 +13,8 @@ info:
     author: zhangbin
     active: ${spring.profiles.active}
 management:
+  server:
+    port: 8768
   endpoints:
     web:
       exposure:
@@ -110,7 +112,7 @@ feign:
         connectTimeout: 10000
         readTimeout: 10000
         loggerLevel: full
-      oauth2-server:
+      config-refresh-server:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
@@ -120,7 +122,7 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 11000
-    "OauthServer#busRefresh()":
+    "ConfigRefreshServer#busRefresh()":
       execution:
         isolation:
           thread:
@@ -133,15 +135,15 @@ ribbon:
     enabled: true
   eager-load:
     enabled: true
-    clients: oauth2-server
+    clients: config-refresh-server
 # ===============================
 # = Security Config
 # ===============================
 security:
   oauth2:
     client:
-      client-id: 793a9790-8e7a-11e9-9bab-d8c49792dd7b
-      client-secret: E0D3024D-9A22-41EE-AC0F-FC6B56E367AE
+      client-id: 8a80cb816c0a5d4f016c0a5e0c020000
+      client-secret: 2523342F2BD345EA9658452A289364AA
     resource:
       token-info-uri: http://oauth2-server/oauth/check_token
 # ===============================
