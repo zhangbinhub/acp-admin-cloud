@@ -1,10 +1,13 @@
 # acp-admin-cloud
 ###### v3.0.0 [版本更新日志](doc/version_history.md)
-基于SpringCloud构建的一套后端系统。该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
+- 使用Application Construction Platform 应用构建平台作为脚手架
+- 基于 Spring Cloud
+- 该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
-## 相关组件版本及官方文档
+## 相关组件版本
 - [Spring Boot 2.1.6.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR2](http://projects.spring.io/spring-cloud)
+- [Acp 6.0.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -119,7 +122,7 @@ ext {
 ## 三、工程说明
 - doc目录下的files文件夹，当需要用到时放到打包后的jar同目录下即可
 - 工程全局默认使用 UTF-8 字符集
-- libs 下面为 [acp](https://github.com/zhangbin1010/acp/tree/release-5.1.3) 核心模块包
+- libs 下面为 [acp](https://github.com/zhangbin1010/acp) 核心模块包
 - cloud 目录下为基于 Spring Cloud 的一整套组件模块
 - gradle 目录下为相关配置文件
 - test 目录下为测试工程
@@ -243,5 +246,9 @@ http://127.0.0.1:5601
 > - 工作流引擎服务
 > - 依赖 cloud:acp-admin-cloud-dependencies
 > - 提供工作流相关接口服务
-### （十）其他自定义服务
+### （十）[config-refresh-server](cloud/config-refresh-server/README.md)
+> - 配置刷新服务
+> - 依赖 cloud:acp-admin-cloud-dependencies
+> - 接收 /actuator 管理接口，向总线发送刷新配置“事件”
+### （十一）其他自定义服务
 > - 依赖 cloud:acp-admin-cloud-dependencies
