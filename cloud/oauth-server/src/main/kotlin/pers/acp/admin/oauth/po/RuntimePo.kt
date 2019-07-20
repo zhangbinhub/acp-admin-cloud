@@ -18,7 +18,7 @@ data class RuntimePo(
         var id: String? = null,
 
         @ApiModelProperty(value = "名称，查询时可为空", required = true, position = 1)
-        @NotBlank(message = "参数名称不能为空")
+        @get:NotBlank(message = "参数名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "值", position = 2)
@@ -28,7 +28,7 @@ data class RuntimePo(
         var configDes: String = "",
 
         @ApiModelProperty(value = "是否启用", position = 4)
-        @NotNull(message = "是否启用不能为空")
+        @get:NotNull(message = "是否启用不能为空")
         var enabled: Boolean? = null,
 
         @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)

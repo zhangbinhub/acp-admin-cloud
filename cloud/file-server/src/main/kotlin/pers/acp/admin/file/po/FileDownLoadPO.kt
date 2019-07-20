@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank
 @ApiModel("文件下载参数")
 data class FileDownLoadPO(
         @ApiModelProperty("文件路径")
-        @NotBlank(message = "路径不能为空")
+        @get:NotBlank(message = "路径不能为空")
         var filePath: String? = null
 )

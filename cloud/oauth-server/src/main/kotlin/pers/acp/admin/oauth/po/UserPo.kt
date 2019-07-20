@@ -18,23 +18,23 @@ data class UserPo(
         var id: String? = null,
 
         @ApiModelProperty(value = "用户名称", required = true, position = 1)
-        @NotBlank(message = "用户名称不能为空")
+        @get:NotBlank(message = "用户名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "登录账号", required = true, position = 2)
-        @NotBlank(message = "登录账号不能为空")
+        @get:NotBlank(message = "登录账号不能为空")
         var loginNo: String? = null,
 
         @ApiModelProperty(value = "手机号", required = true, position = 3)
-        @NotBlank(message = "手机号不能为空")
+        @get:NotBlank(message = "手机号不能为空")
         var mobile: String? = null,
 
         @ApiModelProperty(value = "用户级别", required = true, position = 4)
-        @NotNull(message = "用户级别不能为空")
+        @get:NotNull(message = "用户级别不能为空")
         var levels: Int? = null,
 
         @ApiModelProperty(value = "是否启用", required = true, position = 5)
-        @NotNull(message = "是否启用不能为空")
+        @get:NotNull(message = "是否启用不能为空")
         var enabled: Boolean? = null,
 
         @ApiModelProperty(value = "序号", required = true, position = 6)

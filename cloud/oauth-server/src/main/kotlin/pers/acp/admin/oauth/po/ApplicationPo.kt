@@ -16,7 +16,7 @@ data class ApplicationPo(
         var id: String? = null,
 
         @ApiModelProperty(value = "应用名称", required = true, position = 1)
-        @NotBlank(message = "应用名称不能为空")
+        @get:NotBlank(message = "应用名称不能为空")
         var appName: String? = null,
 
         @ApiModelProperty(value = "token 有效期，单位秒", required = true, position = 2)

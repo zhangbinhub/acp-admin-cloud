@@ -19,11 +19,11 @@ data class RolePo(
         var appId: String? = null,
 
         @ApiModelProperty(value = "角色名称", required = true, position = 2)
-        @NotBlank(message = "角色名称不能为空")
+        @get:NotBlank(message = "角色名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "角色编码", required = true, position = 3)
-        @NotBlank(message = "角色编码不能为空")
+        @get:NotBlank(message = "角色编码不能为空")
         var code: String? = null,
 
         @ApiModelProperty(value = "角色级别", required = true, position = 4)

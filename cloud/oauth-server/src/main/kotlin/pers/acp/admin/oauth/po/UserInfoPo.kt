@@ -13,11 +13,11 @@ import javax.validation.constraints.NotBlank
 data class UserInfoPo(
 
         @ApiModelProperty(value = "名称", required = true)
-        @NotBlank(message = "名称不能为空")
+        @get:NotBlank(message = "名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "手机号", required = true, position = 1)
-        @NotBlank(message = "手机号不能为空")
+        @get:NotBlank(message = "手机号不能为空")
         var mobile: String? = null,
 
         @ApiModelProperty(value = "头像图片base64数据", position = 2)

@@ -16,19 +16,19 @@ data class ModuleFuncPo(
         var id: String? = null,
 
         @ApiModelProperty(value = "应用ID", required = true, position = 1)
-        @NotBlank(message = "应用ID不能为空")
+        @get:NotBlank(message = "应用ID不能为空")
         var appId: String? = null,
 
         @ApiModelProperty(value = "模块名称", required = true, position = 2)
-        @NotBlank(message = "模块名称不能为空")
+        @get:NotBlank(message = "模块名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "模块编码", required = true, position = 3)
-        @NotBlank(message = "模块编码不能为空")
+        @get:NotBlank(message = "模块编码不能为空")
         var code: String? = null,
 
         @ApiModelProperty(value = "上级ID", required = true, position = 4)
-        @NotBlank(message = "上级ID不能为空")
+        @get:NotBlank(message = "上级ID不能为空")
         var parentId: String? = null,
 
         @ApiModelProperty(value = "关联角色ID", position = 9)

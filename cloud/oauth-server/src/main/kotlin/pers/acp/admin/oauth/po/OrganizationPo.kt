@@ -16,14 +16,14 @@ data class OrganizationPo(
         var id: String? = null,
 
         @ApiModelProperty(value = "机构名称", required = true, position = 1)
-        @NotBlank(message = "机构名称不能为空")
+        @get:NotBlank(message = "机构名称不能为空")
         var name: String? = null,
 
         @ApiModelProperty(value = "机构编码", position = 2)
         var code: String = "",
 
         @ApiModelProperty(value = "上级机构ID", required = true, position = 3)
-        @NotBlank(message = "上级机构ID不能为空")
+        @get:NotBlank(message = "上级机构ID不能为空")
         var parentId: String? = null,
 
         @ApiModelProperty(value = "序号", required = true, position = 4)

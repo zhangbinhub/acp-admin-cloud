@@ -16,15 +16,15 @@ data class RoutePo(
         var id: String? = null,
 
         @ApiModelProperty(value = "路由ID", required = true, position = 1)
-        @NotBlank(message = "路由ID不能为空")
+        @get:NotBlank(message = "路由ID不能为空")
         var routeId: String? = null,
 
         @ApiModelProperty(value = "路由URI", required = true, position = 2)
-        @NotBlank(message = "路由URI不能为空")
+        @get:NotBlank(message = "路由URI不能为空")
         var uri: String? = null,
 
         @ApiModelProperty(value = "路由断言", required = true, position = 3)
-        @NotBlank(message = "路由断言不能为空")
+        @get:NotBlank(message = "路由断言不能为空")
         var predicates: String? = null,
 
         @ApiModelProperty(value = "路由过滤器", position = 4)
