@@ -100,4 +100,6 @@ constructor(private val propertiesRepository: PropertiesRepository) : BaseDomain
                 criteriaBuilder.and(*predicateList.toTypedArray())
             }, buildPageRequest(propertiesPo.queryParam!!))
 
+    fun findDistinctApplication() = propertiesRepository.findDistinctApplication()
+
 }

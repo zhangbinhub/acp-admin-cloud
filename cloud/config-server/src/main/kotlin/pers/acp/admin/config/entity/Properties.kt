@@ -10,9 +10,9 @@ import javax.persistence.*
  * @author zhang by 27/02/2019
  * @since JDK 11
  */
+@ApiModel("后台服务配置")
 @Entity
 @Table(name = "t_properties", indexes = [Index(columnList = "configApplication,configProfile,configLabel,enabled")])
-@ApiModel("后台服务配置")
 class Properties {
 
     @Id

@@ -1,6 +1,6 @@
 package pers.acp.admin.config.repo
 
-import org.springframework.data.repository.NoRepositoryBean
+import org.springframework.data.jpa.repository.Query
 import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.config.entity.Properties
 import java.util.Optional
@@ -10,6 +10,9 @@ import java.util.Optional
  * @since JDK 11
  */
 interface PropertiesRepository : BaseRepository<Properties, String> {
+
+    @Query(value = "select distinct p.configApplication from Properties p")
+    fun findDistinctApplication(): List<String>
 
     /**
      * 定位一个可用的配置项
