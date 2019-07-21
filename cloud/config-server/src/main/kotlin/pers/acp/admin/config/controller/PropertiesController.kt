@@ -88,6 +88,13 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
                 ResponseEntity.ok(propertiesDomain.doQuery(propertiesPo))
             }
 
+    @ApiOperation(value = "获取有配置信息的服务列表")
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @PreAuthorize(BaseExpression.adminOnly)
+    @GetMapping(value = [ConfigApi.propertiesServerList], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun serverList(): ResponseEntity<List<String>> = ResponseEntity.ok(propertiesDomain.findDistinctApplication())
+
     @ApiOperation(value = "刷新配置信息")
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
@@ -97,6 +104,28 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     fun refresh(): ResponseEntity<InfoVO> {
         configRefreshServer.busRefresh()
         return ResponseEntity.ok(InfoVO(message = "请求成功，稍后所有服务将刷新配置信息"))
+    }
+
+    @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务名，如果有该服务有多个实例则均会刷新")
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @PreAuthorize(BaseExpression.adminOnly)
+    @PostMapping(value = [ConfigApi.propertiesRefreshApplication], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DuplicateSubmission
+    @Throws(ServerException::class)
+    fun refresh(@ApiParam(value = "服务名", required = true) @RequestParam applicationName: String): ResponseEntity<InfoVO> {
+        configRefreshServer.busRefresh(applicationName)
+        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后${applicationName}将刷新配置信息"))
+    }
+
+    @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定规则表达式；例如：oauth2-server:8999:**")
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @PreAuthorize(BaseExpression.adminOnly)
+    @PostMapping(value = [ConfigApi.propertiesRefreshMatcher], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DuplicateSubmission
+    @Throws(ServerException::class)
+    fun refreshMatcher(@ApiParam(value = "刷新规则表达式", required = true) matcher: String): ResponseEntity<InfoVO> {
+        configRefreshServer.busRefreshMatcher(matcher)
+        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后表达式【${matcher}】所匹配的服务将刷新配置信息"))
     }
 
 }
