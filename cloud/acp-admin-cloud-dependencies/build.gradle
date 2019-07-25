@@ -28,6 +28,7 @@ dependencies {
     compile "org.bouncycastle:bcprov-ext-jdk15on:$versions.bouncycastle"
     compile "com.thoughtworks.xstream:xstream:$versions.xstream"
     compile "dom4j:dom4j:$versions.dom4j"
+    compile "net.lingala.zip4j:zip4j:$versions.zip4j"
 
     // sql data base connection
     compile "com.zaxxer:HikariCP:$versions.hikaricp"

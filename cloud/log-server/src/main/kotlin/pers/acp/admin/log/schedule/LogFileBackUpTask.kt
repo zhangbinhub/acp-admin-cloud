@@ -46,12 +46,12 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
                     val files = logFold.listFiles { pathname -> pathname.name.contains(logFileDate) }
                     if (files != null && files.isNotEmpty()) {
                         logInstance.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
-                        val fileNames = ArrayList<String>()
+                        val fileNames: MutableList<String> = mutableListOf()
                         for (file in files) {
                             fileNames.add(file.absolutePath)
                         }
                         logInstance.info("开始执行文件压缩...")
-                        zipFilePath = CommonTools.filesToZip(fileNames.toTypedArray(), zipFilePath, true)
+                        zipFilePath = CommonTools.filesToZip(fileNames, zipFilePath, true)
                         if (!CommonTools.isNullStr(zipFilePath)) {
                             logInstance.info("文件压缩完成，压缩文件为：$zipFilePath")
                         } else {

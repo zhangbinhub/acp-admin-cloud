@@ -1,8 +1,7 @@
 # 集群的名字，默认是docker-cluster
 cluster.name: elastic-cluster
-#node.name: es1
-#node.master: true
-#node.data: true
+
+# 单机
 # 如果你确定是单机模式，请设置为1
 discovery.zen.minimum_master_nodes: 1
 http.port: 9200
@@ -14,5 +13,21 @@ discovery.type: single-node
 http.cors.enabled: true
 http.cors.allow-origin: "*"
 xpack.security.enabled: false
-#network.publish_host: master-ip
-#discovery.zen.ping.unicast.hosts: ["master-ip"]
+
+# 集群，另外一台es2为192.168.1.3，配置参考如下，只需改一下 node.name 和 network.publish_host
+#node.name: es1
+# es2此项为false，集群中只有一个master
+#node.master: true
+#node.data: true
+## 通过配置这个参数来防止集群脑裂现象 (集群总节点数量/2)+1
+#discovery.zen.minimum_master_nodes: 2
+#http.port: 9200
+#network.host: 192.168.1.2
+## 如果你系统没有关闭交换分区，请把该参数设置为true
+#bootstrap.memory_lock: true
+#http.cors.enabled: true
+#http.cors.allow-origin: "*"
+#xpack.security.enabled: false
+#network.publish_host: 192.168.1.2
+# 指向其他节点的ip列表
+#discovery.zen.ping.unicast.hosts: ["192.168.1.3"]
