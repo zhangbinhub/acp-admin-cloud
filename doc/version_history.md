@@ -1,4 +1,6 @@
 ## 版本更新记录
+##### v3.x
+> - [Upgrade] 调整 gradle 脚本
 ##### v3.0.1
 > - [Upgrade] 升级 docker 中间件 elasticsearch 相关组件为 7.2.0
 > - [Upgrade] 升级核心库至 6.0.1
