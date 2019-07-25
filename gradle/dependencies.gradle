@@ -3,33 +3,34 @@ ext {
 }
 
 versions += [
-        jupiter         : "5.3.2",
+        jupiter          : "5.3.2",
 
         kotlin_coroutines: "1.2.2",
-        joda_time       : "2.9.9",
+        joda_time        : "2.9.9",
         commons_codec    : "1.11",
-        commons_text    : "1.6",
-        commons_lang3   : "3.9",
-        dom4j           : "1.6.1",
-        bouncycastle    : "1.61",
-        slf4j           : "1.7.26",
-        logback         : "1.2.3",
-        xstream         : "1.4.11.1",
-        jackson_databind: "2.9.9",
+        commons_text     : "1.6",
+        commons_lang3    : "3.9",
+        dom4j            : "1.6.1",
+        bouncycastle     : "1.61",
+        slf4j            : "1.7.26",
+        logback          : "1.2.3",
+        xstream          : "1.4.11.1",
+        jackson_databind : "2.9.9",
+        zip4j            : "2.1.1",
 
-        hikaricp        : "3.2.0",
-        mysql           : "8.0.16",
-        mssqljdbc       : "6.4.0.jre8",
-        ojdbc           : "12.1.0.2",
-        postgresql      : "42.2.5",
+        hikaricp         : "3.2.0",
+        mysql            : "8.0.16",
+        mssqljdbc        : "6.4.0.jre8",
+        ojdbc            : "12.1.0.2",
+        postgresql       : "42.2.5",
 
-        jaxb_runtime    : "2.3.2",
-        spring_boot     : "2.1.6.RELEASE",
-        spring_cloud    : "Greenwich.SR2",
-        swagger         : "2.9.2",
+        jaxb_runtime     : "2.3.2",
+        spring_boot      : "2.1.6.RELEASE",
+        spring_cloud     : "Greenwich.SR2",
+        swagger          : "2.9.2",
 
-        netty           : "4.1.36.Final",
-        okhttp          : "3.8.1",
+        netty            : "4.1.36.Final",
+        okhttp           : "3.8.1",
 
-        flowable        : "6.4.1"
+        flowable         : "6.4.1"
 ]
