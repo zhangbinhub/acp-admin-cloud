@@ -117,7 +117,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
         return ResponseEntity.ok(InfoVO(message = "请求成功，稍后${applicationName}将刷新配置信息"))
     }
 
-    @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定规则表达式；例如：oauth2-server:8999:**")
+    @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务ID的匹配表达式；格式：name:ip:port:version:profiles；例如：log-server:**")
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = [ConfigApi.propertiesRefreshMatcher], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])

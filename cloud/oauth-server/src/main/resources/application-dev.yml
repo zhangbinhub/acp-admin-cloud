@@ -21,10 +21,12 @@ logging.file.max-history: 30
 eureka:
   instance:
     ip-address: ${server.address}
-    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
+    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
   client:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
+info:
+  instance-id: ${eureka.instance.instance-id}
 # ===============================
 # = Spring Config
 # ===============================
@@ -38,6 +40,8 @@ spring:
     sampler:
       probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
   cloud:
+    bus:
+      id: ${eureka.instance.instance-id}
     stream:
       default-binder: kafka
       kafka:
