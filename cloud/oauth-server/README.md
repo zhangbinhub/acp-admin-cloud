@@ -2,10 +2,18 @@
 权限服务，系统核心服务，集成 oauth2
 
 ##### 一、说明
-- 1、从kafka接收日志消息，进行日志记录
-- 2、定时清理历史日志文件，策略参数从配置中心获取
-- 3、提供日志备份文件查询及下载接口
-- 4、日志信息写入文件的同时，通过logstash发送给elasticsearch进行汇总
+- 提供一整套应用、用户、机构、权限全方位配置管理
+- 统一认证服务：token 存储于 Redis，user 及 client 信息可扩展配置
+  
+  |          url          |  描述                   |
+  | --------------------- | ----------------------- | 
+  | /oauth/authorize      | 申请授权，basic认证保护      |
+  | /oauth/token          | 获取token的服务，url中没有client_id和client_secret的，走basic认证保护 |
+  | /oauth/check_token    | 资源服务器用来校验token，basic认证保护 |
+  | /oauth/confirm_access | 授权确认，basic认证保护  |
+  | /oauth/error          | 认证失败，无认证保护     |
+  
+  [查看认证过程](../../doc/oauth2.0认证.md)
 
 ##### 二、数据初始化
 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试

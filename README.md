@@ -76,7 +76,7 @@
 - gradle 5.5.1
 - kotlin 1.3.41
 
-## 二、gralde 配置及使用
+## 二、gradle 配置及使用
 ### （一）配置文件
 ##### 1.gradle/dependencies.gradle
 定义外部依赖版本号
