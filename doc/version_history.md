@@ -1,4 +1,6 @@
 ## 版本更新记录
+##### v3.X
+> - [Upgrade] 优化日志服务 logback 配置
 ##### v3.0.2
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.0.2
