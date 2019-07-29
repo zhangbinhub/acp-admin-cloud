@@ -56,7 +56,7 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         val foldPath = logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH.replace("\\", "/")
         val fold = File(foldPath)
         validateFold(fold)
-        val filePath = foldPath + File.separator + fileName
+        val filePath = "$foldPath/$fileName".replace("/", File.separator).replace("\\", File.separator)
         if (!File(filePath).exists()) {
             throw ServerException("文件[$fileName]不存在")
         }

@@ -21,7 +21,7 @@ constructor(private val fileDownLoadHandle: FileDownLoadHandle) {
 
     @Throws(ServerException::class)
     fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, filePath: String) {
-        val filePathFormat = filePath.replace("\\", "/")
+        val filePathFormat = filePath.replace("/", File.separator).replace("\\", File.separator)
         if (!File(filePathFormat).exists()) {
             throw ServerException("文件下载失败，文件[$filePath]不存在")
         }
