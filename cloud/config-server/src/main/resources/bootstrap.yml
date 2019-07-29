@@ -5,7 +5,7 @@ server:
     max-threads: 1000
     uri-encoding: UTF-8
 info:
-  version: 3.0.1
+  version: 3.0.2
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -31,7 +31,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
     ip-address: ${server.address}
-    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
+    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
   client:
     registry-fetch-interval-seconds: 5
     service-url:

@@ -1,6 +1,8 @@
 ## 版本更新记录
-##### v3.x
+##### v3.0.2
 > - [Upgrade] 调整 gradle 脚本
+> - [Upgrade] 升级核心库至 6.0.2
+> - [Upgrade] 修改各服务配置，bus中的服务id和注册中心的instance-id进行统一
 ##### v3.0.1
 > - [Upgrade] 升级 docker 中间件 elasticsearch 相关组件为 7.2.0
 > - [Upgrade] 升级核心库至 6.0.1

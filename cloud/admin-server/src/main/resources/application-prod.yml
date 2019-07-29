@@ -21,7 +21,7 @@ logging.file.max-history: 30
 eureka:
   instance:
     ip-address: ${server.address}
-    instance-id: ${spring.application.name}(${server.address}:${server.port}):v${info.version}:${spring.profiles.active}
+    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
     metadata-map:
       user.name: admin
       user.password: 888888
