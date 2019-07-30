@@ -1,8 +1,5 @@
 package pers.acp.admin.common.base
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
 import pers.acp.spring.boot.conf.SwaggerConfiguration
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.ParameterBuilder
@@ -19,12 +16,8 @@ import springfox.documentation.spring.web.plugins.Docket
  * @author zhang by 01/02/2019
  * @since JDK 11
  */
-@Component
-class BaseSwaggerConfiguration @Autowired
-constructor(private val swaggerConfiguration: SwaggerConfiguration) {
-
-    @Value("\${info.version}")
-    private val version: String? = null
+abstract class BaseSwaggerConfiguration(private val version: String?,
+                                        private val swaggerConfiguration: SwaggerConfiguration) {
 
     private fun globalOperationParameters(): List<Parameter> {
         val tokenPar = ParameterBuilder()

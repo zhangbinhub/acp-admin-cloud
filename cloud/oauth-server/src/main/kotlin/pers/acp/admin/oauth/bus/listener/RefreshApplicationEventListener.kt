@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 import pers.acp.admin.oauth.bus.event.RefreshApplicationEvent
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 19/03/2019
@@ -14,19 +14,19 @@ import pers.acp.spring.cloud.log.LogInstance
  */
 @Component
 class RefreshApplicationEventListener @Autowired
-constructor(private val logInstance: LogInstance,
+constructor(private val logAdapter: LogAdapter,
             private val objectMapper: ObjectMapper,
             private val securityClientDetailsDomain: SecurityClientDetailsDomain) : ApplicationListener<RefreshApplicationEvent> {
 
     override fun onApplicationEvent(refreshApplicationEvent: RefreshApplicationEvent) {
-        logInstance.info("收到更新应用信息事件：" + refreshApplicationEvent.message!!)
+        logAdapter.info("收到更新应用信息事件：" + refreshApplicationEvent.message!!)
         try {
-            logInstance.debug(objectMapper.writeValueAsString(refreshApplicationEvent))
-            logInstance.info("开始刷新client数据...")
+            logAdapter.debug(objectMapper.writeValueAsString(refreshApplicationEvent))
+            logAdapter.info("开始刷新client数据...")
             securityClientDetailsDomain.loadClientInfo()
-            logInstance.info("client数据刷新完成！")
+            logAdapter.info("client数据刷新完成！")
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }

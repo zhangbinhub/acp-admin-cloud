@@ -7,9 +7,7 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
 import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.lock.DistributedLock
 import pers.acp.core.security.MD5Utils
@@ -22,10 +20,8 @@ import pers.acp.spring.boot.exceptions.ServerException
  * @since JDK 11
  */
 @Aspect
-@Component
 @Order(0)
-class RestControllerRepeatAspect @Autowired
-constructor(private val distributedLock: DistributedLock, private val objectMapper: ObjectMapper) {
+class RestControllerRepeatAspect(private val distributedLock: DistributedLock, private val objectMapper: ObjectMapper) {
 
     /**
      * 定义拦截规则

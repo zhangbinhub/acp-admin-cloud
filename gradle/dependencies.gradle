@@ -32,5 +32,5 @@ versions += [
         netty            : "4.1.36.Final",
         okhttp           : "3.8.1",
 
-        flowable         : "6.4.1"
+        flowable         : "6.4.2"
 ]

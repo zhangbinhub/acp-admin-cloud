@@ -38,10 +38,6 @@
             <customFields>{"appname":"log_server_all"}</customFields>
         </encoder>
     </appender>
-    <logger name="ALL" level="INFO" additivity="false">
-        <appender-ref ref="ALL"/>
-        <appender-ref ref="ALL-LOGSTASH"/>
-    </logger>
 
     <appender name="AUTH" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -75,10 +71,6 @@
             <customFields>{"appname":"log_server_auth"}</customFields>
         </encoder>
     </appender>
-    <logger name="AUTH" level="INFO" additivity="false">
-        <appender-ref ref="AUTH"/>
-        <appender-ref ref="AUTH-LOGSTASH"/>
-    </logger>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -112,10 +104,6 @@
             <customFields>{"appname":"log_server_file"}</customFields>
         </encoder>
     </appender>
-    <logger name="FILE" level="INFO" additivity="false">
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="FILE-LOGSTASH"/>
-    </logger>
 
     <appender name="ROUTE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -149,10 +137,6 @@
             <customFields>{"appname":"log_server_route"}</customFields>
         </encoder>
     </appender>
-    <logger name="ROUTE" level="INFO" additivity="false">
-        <appender-ref ref="ROUTE"/>
-        <appender-ref ref="ROUTE-LOGSTASH"/>
-    </logger>
 
     <appender name="WORKFLOW" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -186,6 +170,23 @@
             <customFields>{"appname":"log_server_workflow"}</customFields>
         </encoder>
     </appender>
+
+    <logger name="ALL" level="INFO" additivity="false">
+        <appender-ref ref="ALL"/>
+        <appender-ref ref="ALL-LOGSTASH"/>
+    </logger>
+    <logger name="AUTH" level="INFO" additivity="false">
+        <appender-ref ref="AUTH"/>
+        <appender-ref ref="AUTH-LOGSTASH"/>
+    </logger>
+    <logger name="FILE" level="INFO" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE-LOGSTASH"/>
+    </logger>
+    <logger name="ROUTE" level="INFO" additivity="false">
+        <appender-ref ref="ROUTE"/>
+        <appender-ref ref="ROUTE-LOGSTASH"/>
+    </logger>
     <logger name="WORKFLOW" level="INFO" additivity="false">
         <appender-ref ref="WORKFLOW"/>
         <appender-ref ref="WORKFLOW-LOGSTASH"/>

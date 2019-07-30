@@ -62,12 +62,6 @@ configure(allprojects) {
         compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
     }
 
-    kotlin {
-        experimental {
-            coroutines 'enable'
-        }
-    }
-
     kapt {
         javacOptions {
             // 增加注解处理器的最大错误次数

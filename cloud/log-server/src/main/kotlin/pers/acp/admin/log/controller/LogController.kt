@@ -14,8 +14,8 @@ import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
-import pers.acp.spring.cloud.log.LogInstance
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull
 @RequestMapping(LogApi.basePath)
 @Api("日志信息")
 class LogController @Autowired
-constructor(private val logInstance: LogInstance, private val logFileDomain: LogFileDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter, private val logFileDomain: LogFileDomain) : BaseController() {
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
@@ -61,7 +61,7 @@ constructor(private val logInstance: LogInstance, private val logFileDomain: Log
                         CommonTools.getDateTimeString(end, Calculation.DATE_FORMAT)
                 ))
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 

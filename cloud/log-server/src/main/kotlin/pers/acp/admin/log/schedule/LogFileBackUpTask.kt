@@ -9,7 +9,7 @@ import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.base.BaseSpringBootScheduledAsyncTask
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 import java.io.File
 
@@ -19,14 +19,14 @@ import java.io.File
  */
 @Component("LogFileBackUpTask")
 class LogFileBackUpTask @Autowired
-constructor(private val logInstance: LogInstance, private val logServerCustomerConfiguration: LogServerCustomerConfiguration) : BaseSpringBootScheduledAsyncTask() {
+constructor(private val logAdapter: LogAdapter, private val logServerCustomerConfiguration: LogServerCustomerConfiguration) : BaseSpringBootScheduledAsyncTask() {
 
     init {
         taskName = "日志文件备份任务"
     }
 
     override fun beforeExecuteFun(): Boolean {
-        logInstance.info("开始执行日志文件备份")
+        logAdapter.info("开始执行日志文件备份")
         return true
     }
 
@@ -45,26 +45,26 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
                     }
                     val files = logFold.listFiles { pathname -> pathname.name.contains(logFileDate) }
                     if (files != null && files.isNotEmpty()) {
-                        logInstance.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
+                        logAdapter.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
                         val fileNames: MutableList<String> = mutableListOf()
                         for (file in files) {
                             fileNames.add(file.absolutePath)
                         }
-                        logInstance.info("开始执行文件压缩...")
+                        logAdapter.info("开始执行文件压缩...")
                         zipFilePath = CommonTools.filesToZip(fileNames, zipFilePath, true)
                         if (!CommonTools.isNullStr(zipFilePath)) {
-                            logInstance.info("文件压缩完成，压缩文件为：$zipFilePath")
+                            logAdapter.info("文件压缩完成，压缩文件为：$zipFilePath")
                         } else {
-                            logInstance.info("文件压缩失败！")
+                            logAdapter.info("文件压缩失败！")
                         }
                     } else {
-                        logInstance.debug("$logFoldPath 路径下没有 $logFileDate 的日志文件")
+                        logAdapter.debug("$logFoldPath 路径下没有 $logFileDate 的日志文件")
                     }
                 }
                 day = CalendarTools.getPrevDay(day)
             }
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
         return true
@@ -74,13 +74,13 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
         try {
             doClearBackUpFiles()
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }
 
     private fun doClearBackUpFiles() {
-        logInstance.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
+        logAdapter.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
         val filterLogFileNames = ArrayList<String>()
         filterLogFileNames.add("spring.log")
         filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1))
@@ -98,7 +98,7 @@ constructor(private val logInstance: LogInstance, private val logServerCustomerC
         // 清理历史备份压缩日志文件
         val backUpFold = File(logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH)
         doDeleteFileForFold(backUpFold, filterLogZipFileNames)
-        logInstance.info("清理历史备份文件完成！")
+        logAdapter.info("清理历史备份文件完成！")
     }
 
     private fun doDeleteFileForFold(fold: File, filterNames: List<String>) {

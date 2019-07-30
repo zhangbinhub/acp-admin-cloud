@@ -22,7 +22,7 @@ import pers.acp.admin.route.repo.RouteLogRepository
 import pers.acp.admin.route.repo.RouteRepository
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 import javax.persistence.criteria.Predicate
 import java.net.URI
@@ -34,7 +34,7 @@ import java.net.URI
 @Service
 @Transactional(readOnly = true)
 class RouteDomain @Autowired
-constructor(private val logInstance: LogInstance,
+constructor(private val logAdapter: LogAdapter,
             private val routeRepository: RouteRepository,
             private val routeLogRepository: RouteLogRepository,
             private val redisTemplate: RedisTemplate<Any, Any>,
@@ -107,12 +107,12 @@ constructor(private val logInstance: LogInstance,
     @Throws(ServerException::class)
     fun doRefresh() {
         val routeList = routeRepository.findAllByEnabled(true)
-        logInstance.info("查询到启用的路由信息共 " + routeList.size + " 条")
+        logAdapter.info("查询到启用的路由信息共 " + routeList.size + " 条")
         try {
             val uuid = CommonTools.getUuid()
             if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, 30000)) {
                 redisTemplate.delete(RouteConstant.ROUTES_DEFINITION_KEY)
-                logInstance.info("清理 Redis 缓存完成")
+                logAdapter.info("清理 Redis 缓存完成")
                 for (route in routeList) {
                     val routeDefinition = RouteDefinition()
                     routeDefinition.id = route.routeId!!
@@ -122,7 +122,7 @@ constructor(private val logInstance: LogInstance,
                     routeDefinition.filters = objectMapper.readValue(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
                     redisTemplate.opsForList().rightPush(RouteConstant.ROUTES_DEFINITION_KEY, objectMapper.writeValueAsBytes(routeDefinition))
                 }
-                logInstance.info("路由信息更新至 Redis，共 " + routeList.size + " 条")
+                logAdapter.info("路由信息更新至 Redis，共 " + routeList.size + " 条")
                 distributedLock.releaseLock(RouteConstant.ROUTES_LOCK_KEY, uuid)
             } else {
                 throw ServerException("系统正在进行路由信息更新，请稍后重试")

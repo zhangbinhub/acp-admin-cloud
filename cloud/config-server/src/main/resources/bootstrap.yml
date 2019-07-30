@@ -127,6 +127,16 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 31000
+    "ConfigRefreshServer#busRefresh(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+    "ConfigRefreshServer#busRefreshMatcher(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
 ribbon:
   ServerListRefreshInterval: 5000
   ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}

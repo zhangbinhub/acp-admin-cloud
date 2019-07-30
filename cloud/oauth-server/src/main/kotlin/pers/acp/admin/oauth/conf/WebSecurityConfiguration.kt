@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import pers.acp.core.CommonTools
 import pers.acp.admin.oauth.component.UserPasswordEncoder
 import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
-import pers.acp.spring.cloud.constant.ConfigurationOrder
+import pers.acp.spring.cloud.constant.CloudConfigurationOrder
 
 /**
  * @author zhangbin by 11/04/2018 15:16
@@ -21,7 +21,7 @@ import pers.acp.spring.cloud.constant.ConfigurationOrder
  */
 @Configuration
 @EnableWebSecurity
-@Order(ConfigurationOrder.resourceServerConfiguration + 1)
+@Order(CloudConfigurationOrder.resourceServerConfiguration + 1)
 class WebSecurityConfiguration @Autowired
 constructor(serverProperties: ServerProperties,
             private val userPasswordEncoder: UserPasswordEncoder,

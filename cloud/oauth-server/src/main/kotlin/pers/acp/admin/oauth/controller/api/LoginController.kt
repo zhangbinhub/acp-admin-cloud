@@ -19,8 +19,8 @@ import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.admin.oauth.vo.OnlineInfoVo
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
-import pers.acp.spring.cloud.log.LogInstance
 
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api("登录信息")
 class LoginController @Autowired
-constructor(private val logInstance: LogInstance,
+constructor(private val logAdapter: LogAdapter,
             private val applicationDomain: ApplicationDomain,
             private val userDomain: UserDomain,
             private val securityTokenService: SecurityTokenService) : BaseController() {
@@ -61,7 +61,7 @@ constructor(private val logInstance: LogInstance,
     fun doLogOut(user: OAuth2Authentication): ResponseEntity<InfoVO> =
             try {
                 securityTokenService.removeToken(user)
-                logInstance.info("用户[loginNo=" + user.name + "]主动下线!")
+                logAdapter.info("用户[loginNo=" + user.name + "]主动下线!")
                 ResponseEntity.ok(InfoVO(message = "成功下线"))
             } catch (e: Exception) {
                 throw ServerException(e.message)
@@ -137,7 +137,7 @@ constructor(private val logInstance: LogInstance,
                 idList.forEach {
                     val userInfo = userDomain.getUserInfo(it) ?: throw ServerException("找不到该用户信息")
                     securityTokenService.removeTokensByAppIdAndLoginNo(appId, userInfo.loginNo)
-                    logInstance.info("用户[" + userInfo.name + "(" + userInfo.loginNo + ")]被管理员强制下线!")
+                    logAdapter.info("用户[" + userInfo.name + "(" + userInfo.loginNo + ")]被管理员强制下线!")
                 }
                 ResponseEntity.ok(InfoVO(message = "成功下线"))
             } catch (e: Exception) {

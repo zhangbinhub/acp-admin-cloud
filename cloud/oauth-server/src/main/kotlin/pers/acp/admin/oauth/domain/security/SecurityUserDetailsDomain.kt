@@ -13,7 +13,7 @@ import pers.acp.admin.common.constant.RoleCode
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
 import pers.acp.core.security.SHA256Utils
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhangbin by 11/04/2018 15:19
@@ -22,7 +22,7 @@ import pers.acp.spring.cloud.log.LogInstance
 @Service
 @Transactional(readOnly = true)
 class SecurityUserDetailsDomain @Autowired
-constructor(private val logInstance: LogInstance, private val userRepository: UserRepository) : UserDetailsService {
+constructor(private val logAdapter: LogAdapter, private val userRepository: UserRepository) : UserDetailsService {
 
     /**
      * 根据 username 获取用户信息
@@ -35,7 +35,7 @@ constructor(private val logInstance: LogInstance, private val userRepository: Us
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByLoginNo(username).orElse(null)
         if (user == null) {
-            logInstance.error("无此用户：$username")
+            logAdapter.error("无此用户：$username")
             throw UsernameNotFoundException("无此用户：$username")
         }
         val grantedAuthorities: MutableSet<GrantedAuthority> = mutableSetOf()

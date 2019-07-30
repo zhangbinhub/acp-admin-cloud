@@ -14,8 +14,8 @@ import pers.acp.admin.file.domain.FileDownLoadDomain
 import pers.acp.admin.file.po.FileDownLoadPO
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
-import pers.acp.spring.cloud.log.LogInstance
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -31,7 +31,7 @@ import java.io.File
 @RequestMapping(FileApi.basePath)
 @Api("文件信息")
 class FileController @Autowired
-constructor(private val logInstance: LogInstance, private val fileDownLoadDomain: FileDownLoadDomain) {
+constructor(private val logAdapter: LogAdapter, private val fileDownLoadDomain: FileDownLoadDomain) {
 
     private fun formatPath(filePath: String): String {
         var uploadPath = filePath
@@ -90,7 +90,7 @@ constructor(private val logInstance: LogInstance, private val fileDownLoadDomain
             val originFileName = file.originalFilename
             val destFileName = System.currentTimeMillis().toString() + "_" + originFileName
             if (file.isEmpty) {
-                logInstance.error("文件为空【" + file.originalFilename + "】")
+                logAdapter.error("文件为空【" + file.originalFilename + "】")
                 break
             }
             if (doUpLoad(file, path, destFileName)) {
@@ -101,7 +101,7 @@ constructor(private val logInstance: LogInstance, private val fileDownLoadDomain
                     resultPath.append(result).append(",")
                 }
             } else {
-                logInstance.error("文件上传失败【$originFileName】")
+                logAdapter.error("文件上传失败【$originFileName】")
                 break
             }
         }
@@ -120,7 +120,7 @@ constructor(private val logInstance: LogInstance, private val fileDownLoadDomain
                 file.transferTo(destFile.absoluteFile)
                 true
             } catch (ex: Exception) {
-                logInstance.error(ex.message, ex)
+                logAdapter.error(ex.message, ex)
                 false
             }
 
