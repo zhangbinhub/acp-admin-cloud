@@ -30,7 +30,10 @@ constructor(private val logAdapter: LogAdapter,
             val securityTokenEnhancer: SecurityTokenEnhancer,
             private val objectMapper: ObjectMapper) : DefaultTokenServices() {
 
-    private val tokenStore: SecurityTokenStore
+    /**
+     * 默认持久化到内存
+     */
+    private var tokenStore: SecurityTokenStore = inMemoryTokenStore()
 
     fun getTokenStore(): TokenStore = this.tokenStore
 
@@ -39,13 +42,12 @@ constructor(private val logAdapter: LogAdapter,
     private fun inMemoryTokenStore(): SecurityTokenStore = SecurityTokenStoreMemory()
 
     init {
-        val redisCls = Class.forName("org.springframework.data.redis.connection.RedisConnection")
-        if (redisCls == null) {
-            // 持久化到内存
-            this.tokenStore = inMemoryTokenStore()
-        } else {
-            // 持久化到 Redis
-            this.tokenStore = redisTokenStore()
+        try {
+            Class.forName("org.springframework.data.redis.connection.RedisConnection")?.also {
+                // 持久化到 Redis
+                this.tokenStore = redisTokenStore()
+            }
+        } catch (e: Throwable) {
         }
         setCustomerObj()
     }
