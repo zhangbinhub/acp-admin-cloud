@@ -15,7 +15,7 @@ import pers.acp.admin.common.vo.FlowTaskVO
 import pers.acp.admin.workflow.constant.WorkFlowParamKey
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 import java.io.InputStream
 
@@ -26,7 +26,7 @@ import java.io.InputStream
 @Service
 @Transactional(readOnly = true)
 class WorkFlowDomain @Autowired
-constructor(private val logInstance: LogInstance,
+constructor(private val logAdapter: LogAdapter,
             private val runtimeService: RuntimeService,
             private val taskService: TaskService,
             private val repositoryService: RepositoryService,
@@ -101,7 +101,7 @@ constructor(private val logInstance: LogInstance,
                 runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, params)
                         .id
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
@@ -117,7 +117,7 @@ constructor(private val logInstance: LogInstance,
                 taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list()
                         .map { task -> taskToVO(task) }
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
@@ -171,7 +171,7 @@ constructor(private val logInstance: LogInstance,
             try {
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
-                    logInstance.error("流程任务【$taskId】不存在！")
+                    logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
                 //通过审核
@@ -186,7 +186,7 @@ constructor(private val logInstance: LogInstance,
                 runtimeService.setVariablesLocal(task.executionId, taskParams)
                 taskService.complete(taskId, map)
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
@@ -201,7 +201,7 @@ constructor(private val logInstance: LogInstance,
             try {
                 val historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult()
                 if (historicProcessInstance == null) {
-                    logInstance.error("流程实例【$processInstanceId】不存在")
+                    logAdapter.error("流程实例【$processInstanceId】不存在")
                     throw ServerException("流程实例不存在！")
                 }
                 historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).finished()
@@ -209,7 +209,7 @@ constructor(private val logInstance: LogInstance,
                         .filter { historicActivityInstance -> !CommonTools.isNullStr(historicActivityInstance.taskId) }
                         .map { historicActivityInstance -> actToVO(historicActivityInstance, historicProcessInstance.businessKey) }
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
@@ -225,14 +225,14 @@ constructor(private val logInstance: LogInstance,
             try {
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
-                    logInstance.error("流程任务【$taskId】不存在！")
+                    logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
                 val execution = runtimeService.createExecutionQuery().executionId(task.executionId).singleResult()
                 (repositoryService.getBpmnModel(task.processDefinitionId).getFlowElement(execution.activityId) as FlowNode)
                         .outgoingFlows.map { it.targetFlowElement }
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
@@ -265,7 +265,7 @@ constructor(private val logInstance: LogInstance,
                         engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                         engineConfiguration.classLoader, 1.0, true)
             } catch (e: Exception) {
-                logInstance.error(e.message, e)
+                logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 

@@ -17,9 +17,9 @@ import pers.acp.admin.oauth.token.LoginLog
 import pers.acp.admin.oauth.token.SecurityTokenStore
 import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.core.CommonTools
-import pers.acp.core.log.LogFactory
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 import java.util.*
 
@@ -27,9 +27,9 @@ import java.util.*
  * @author zhang by 08/03/2019
  * @since JDK 11
  */
-class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>, private val objectMapper: ObjectMapper) : TokenStore, SecurityTokenStore {
-
-    private val log = LogFactory.getInstance(this.javaClass)
+class SecurityTokenStoreRedis(private val logAdapter: LogAdapter,
+                              private val redisTemplate: RedisTemplate<Any, Any>,
+                              private val objectMapper: ObjectMapper) : TokenStore, SecurityTokenStore {
 
     private var authenticationKeyGenerator: AuthenticationKeyGenerator = DefaultAuthenticationKeyGenerator()
 
@@ -88,7 +88,7 @@ class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>
                     userId = userId
             )))
         } catch (e: Exception) {
-            log.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }
@@ -114,7 +114,7 @@ class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>
         try {
             auth = deserializeAuthentication(tokenInfo)
         } catch (e: Exception) {
-            log.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
         return auth
@@ -172,7 +172,7 @@ class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>
                 null
             }
         } catch (e: Exception) {
-            log.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }
@@ -245,7 +245,7 @@ class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>
                 null
             }
         } catch (e: Exception) {
-            log.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }
@@ -259,11 +259,10 @@ class SecurityTokenStoreRedis(private val redisTemplate: RedisTemplate<Any, Any>
         return readAuthenticationForRefreshToken(token.value)
     }
 
-    fun readAuthenticationForRefreshToken(token: String): OAuth2Authentication {
-        val auth = deserializeAuthentication(redisTemplate.execute { connection -> connection.get(serializeKey(REFRESH_AUTH + token)) })
-        if (auth == null) throw ServerException("token not exist")
-        return auth
-    }
+    fun readAuthenticationForRefreshToken(token: String): OAuth2Authentication =
+            deserializeAuthentication(redisTemplate.execute { connection ->
+                connection.get(serializeKey(REFRESH_AUTH + token))
+            }) ?: throw ServerException("token not exist")
 
     override fun removeRefreshToken(refreshToken: OAuth2RefreshToken) {
         removeRefreshToken(refreshToken.value)

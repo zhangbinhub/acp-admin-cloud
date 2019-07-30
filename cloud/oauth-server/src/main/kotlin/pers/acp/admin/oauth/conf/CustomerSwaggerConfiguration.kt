@@ -1,12 +1,12 @@
 package pers.acp.admin.oauth.conf
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 import pers.acp.admin.common.base.BaseSwaggerConfiguration
 import pers.acp.spring.boot.conf.SwaggerConfiguration
-import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 /**
@@ -17,7 +17,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 @EnableSwagger2
 @Component
 class CustomerSwaggerConfiguration @Autowired
-constructor(swaggerConfiguration: SwaggerConfiguration) : BaseSwaggerConfiguration(swaggerConfiguration) {
+constructor(@Value("\${info.version}")
+            version: String?,
+            swaggerConfiguration: SwaggerConfiguration) : BaseSwaggerConfiguration(version, swaggerConfiguration) {
 
     @Bean
     fun createRestApi() = buildDocket("pers.acp.admin.oauth.controller", "Oauth Server RESTful API")

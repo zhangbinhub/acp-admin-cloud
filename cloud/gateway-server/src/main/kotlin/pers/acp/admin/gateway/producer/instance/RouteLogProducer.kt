@@ -2,6 +2,8 @@ package pers.acp.admin.gateway.producer.instance
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.support.MessageBuilder
 import pers.acp.admin.gateway.po.RouteLogPO
@@ -16,7 +18,9 @@ constructor(private val routeLogOutput: RouteLogOutput, private val objectMapper
 
     @Throws(JsonProcessingException::class)
     fun doNotifyRouteLog(routeLogPO: RouteLogPO) {
-        routeLogOutput.sendMessage().send(MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogPO)).build())
+        GlobalScope.launch {
+            routeLogOutput.sendMessage().send(MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogPO)).build())
+        }
     }
 
 }

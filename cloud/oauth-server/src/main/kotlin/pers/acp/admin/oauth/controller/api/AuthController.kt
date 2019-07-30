@@ -25,8 +25,8 @@ import pers.acp.admin.oauth.vo.MenuVo
 import pers.acp.admin.oauth.vo.ModuleFuncVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
-import pers.acp.spring.cloud.log.LogInstance
 
 import javax.annotation.PostConstruct
 import javax.validation.Valid
@@ -43,7 +43,7 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api("权限信息")
 class AuthController @Autowired
-constructor(private val logInstance: LogInstance, private val menuDomain: MenuDomain, private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDomain, private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
 
     private val moduleFuncCodeList: MutableList<String> = mutableListOf()
 
@@ -59,7 +59,7 @@ constructor(private val logInstance: LogInstance, private val menuDomain: MenuDo
                 moduleFuncCodeList.add(field.get(ModuleFuncCode::class.java).toString())
             }
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }

@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.bus.publish
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.bus.BusProperties
 import org.springframework.context.ApplicationContext
@@ -16,11 +18,17 @@ class RefreshEventPublish @Autowired
 constructor(private val applicationContext: ApplicationContext, private val busProperties: BusProperties) {
 
     fun doNotifyUpdateApp() {
-        applicationContext.publishEvent(RefreshApplicationEvent(this, busProperties.id, null, "refresh client"))
+        val source = this
+        GlobalScope.launch {
+            applicationContext.publishEvent(RefreshApplicationEvent(busProperties.id, null, "refresh client", source))
+        }
     }
 
     fun doNotifyUpdateRuntime() {
-        applicationContext.publishEvent(RefreshRuntimeEvent(this, busProperties.id, null, "refresh runtime"))
+        val source = this
+        GlobalScope.launch {
+            applicationContext.publishEvent(RefreshRuntimeEvent(busProperties.id, null, "refresh runtime", source))
+        }
     }
 
 }

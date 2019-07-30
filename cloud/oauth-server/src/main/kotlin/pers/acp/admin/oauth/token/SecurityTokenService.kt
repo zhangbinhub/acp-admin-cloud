@@ -9,14 +9,14 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.TokenStore
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.constant.TokenConstant
+import pers.acp.admin.oauth.token.store.SecurityTokenStoreMemory
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis
 import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 19/12/2018
@@ -25,7 +25,7 @@ import pers.acp.spring.cloud.log.LogInstance
 @Service
 @Transactional(readOnly = true)
 class SecurityTokenService @Autowired
-constructor(private val logInstance: LogInstance,
+constructor(private val logAdapter: LogAdapter,
             private val redisTemplate: RedisTemplate<Any, Any>,
             val securityTokenEnhancer: SecurityTokenEnhancer,
             private val objectMapper: ObjectMapper) : DefaultTokenServices() {
@@ -34,15 +34,19 @@ constructor(private val logInstance: LogInstance,
 
     fun getTokenStore(): TokenStore = this.tokenStore
 
-    private fun redisTokenStore(): SecurityTokenStore = SecurityTokenStoreRedis(redisTemplate, objectMapper)
+    private fun redisTokenStore(): SecurityTokenStore = SecurityTokenStoreRedis(logAdapter, redisTemplate, objectMapper)
 
-    private fun inMemoryTokenStore(): TokenStore = InMemoryTokenStore()
+    private fun inMemoryTokenStore(): SecurityTokenStore = SecurityTokenStoreMemory()
 
     init {
-        // 持久化到内存
-        //        this.tokenStore = inMemoryTokenStore();
-        // 持久化到 Redis
-        this.tokenStore = redisTokenStore()
+        val redisCls = Class.forName("org.springframework.data.redis.connection.RedisConnection")
+        if (redisCls == null) {
+            // 持久化到内存
+            this.tokenStore = inMemoryTokenStore()
+        } else {
+            // 持久化到 Redis
+            this.tokenStore = redisTokenStore()
+        }
         setCustomerObj()
     }
 
@@ -59,7 +63,7 @@ constructor(private val logInstance: LogInstance,
         try {
             tokenStore.storeLoginNum(authentication.oAuth2Request.clientId, oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID].toString())
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
         return oAuth2AccessToken
     }

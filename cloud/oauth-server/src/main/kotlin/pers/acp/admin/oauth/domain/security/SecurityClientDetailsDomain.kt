@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.constant.RoleCode
 import pers.acp.admin.oauth.repo.ApplicationRepository
-import pers.acp.spring.cloud.log.LogInstance
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 import javax.annotation.PostConstruct
 
@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct
 @Service
 @Transactional(readOnly = true)
 class SecurityClientDetailsDomain @Autowired
-constructor(private val logInstance: LogInstance, private val applicationRepository: ApplicationRepository) : ClientDetailsService {
+constructor(private val logAdapter: LogAdapter, private val applicationRepository: ApplicationRepository) : ClientDetailsService {
 
     private var clientDetailsService: ClientDetailsService? = null
 
@@ -50,7 +50,7 @@ constructor(private val logInstance: LogInstance, private val applicationReposit
         try {
             clientDetailsService = memoryClientDetailsServiceBuilder.build()
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
         }
 
     }

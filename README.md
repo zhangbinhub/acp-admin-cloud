@@ -58,7 +58,8 @@
 > - [依赖中间件 kafka、logstash、elasticsearch] log server 不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
 > - [依赖中间件 kafka] config refresh server 通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
 > - [依赖中间件 kafka、zipkin、zipkin-dependencies、elasticsearch] 各服务将互相调用的链路信息通过 kafka 发送给 zipkin server
-> - [依赖中间件 redis] oauth server 将 token 信息持久化到 redis 进行统一认证管理
+> - [依赖中间件 redis] 包路径中包含 Redis 时，oauth server 将 token 信息持久化到 redis 进行统一认证管理，否则仅持久化到内存
+> - [依赖中间件 redis] 分布式锁，实现 pers.acp.admin.common.lock.DistributedLock 接口，并注册为Spring Bean，包路径中包含 Redis 时，默认配置一个基于 Redis 的分布式锁实现
 > - 前后端交互 HttpStatus Code 说明
 > 
 >     | HttpStatus | 描述 |

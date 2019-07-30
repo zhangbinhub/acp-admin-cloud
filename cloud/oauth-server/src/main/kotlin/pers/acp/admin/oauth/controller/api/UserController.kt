@@ -54,8 +54,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPO: UserInfoPo): ResponseEntity<User> {
         val userInfo = userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")
         if (!CommonTools.isNullStr(userInfoPO.mobile)) {
-            userDomain.getMobileForOtherUser(userInfoPO.mobile!!, userInfo.id)
-                    ?: throw ServerException("手机号已存在，请重新输入")
+            userDomain.getMobileForOtherUser(userInfoPO.mobile!!, userInfo.id)?.let { throw ServerException("手机号已存在，请重新输入") }
         }
         userInfo.avatar = userInfoPO.avatar ?: ""
         userInfo.name = userInfoPO.name ?: userInfo.name

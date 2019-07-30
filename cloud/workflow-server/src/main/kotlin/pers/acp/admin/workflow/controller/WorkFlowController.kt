@@ -19,8 +19,8 @@ import pers.acp.admin.common.po.FlowApprovePO
 import pers.acp.admin.common.po.FlowStartPO
 import pers.acp.admin.common.vo.FlowTaskVO
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
-import pers.acp.spring.cloud.log.LogInstance
 
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -35,7 +35,7 @@ import java.io.*
 @RequestMapping(WorkFlowApi.basePath)
 @Api("工作流控制")
 class WorkFlowController @Autowired
-constructor(private val logInstance: LogInstance, private val workFlowDomain: WorkFlowDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter, private val workFlowDomain: WorkFlowDomain) : BaseController() {
 
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVO::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVO::class))
@@ -96,7 +96,7 @@ constructor(private val logInstance: LogInstance, private val workFlowDomain: Wo
         try {
             val buffer = ByteArray(inputStream.available())
             if (inputStream.read(buffer) == -1) {
-                logInstance.error("图片生成失败，流程引擎生成为空")
+                logAdapter.error("图片生成失败，流程引擎生成为空")
                 throw ServerException("图片生成失败")
             }
             response.reset()
@@ -104,14 +104,14 @@ constructor(private val logInstance: LogInstance, private val workFlowDomain: Wo
             outputStream.write(buffer)
             outputStream.flush()
         } catch (e: Exception) {
-            logInstance.error(e.message, e)
+            logAdapter.error(e.message, e)
             throw ServerException("图片生成失败")
         } finally {
             try {
                 inputStream.close()
                 outputStream?.close()
             } catch (ex: Exception) {
-                logInstance.error(ex.message, ex)
+                logAdapter.error(ex.message, ex)
             }
         }
     }
