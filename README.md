@@ -48,19 +48,19 @@
 ![Architecture diagram](doc/images/总体架构.jpg)
 
 #### 说明
-> - 各服务在 eureka server 上进行注册，gateway 和其他各个服务通过 eureka 发现和查找目标服务进行访问
-> - 各深度定制开发的服务从 config server 中获取自定义配置信息
-> - 各服务将互相调用的断路信息通过 admin server 进行监控
-> - [依赖中间件 redis] gateway server 根据制定的策略路由到指定服务；路由定义从 redis 获取，缓存至本地；基于动态路由配置可根据实际情况扩展实现灰度发布
-> - [依赖中间件 redis、kafka] route server 修改路由信息后更新至 redis ，通过 kafka 通知 gateway server 动态更新路由
-> - [依赖中间件 kafka] oauth server 修改应用配置和参数配置后通过 kafka 推送 bus 总线事件，广播通知所有 oauth server 更新缓存
-> - [依赖中间件 kafka] 各深度定制开发的服务通过 kafka 发送日志消息，log server 从 kafka 中消费消息并进行日志的统一记录
-> - [依赖中间件 kafka、logstash、elasticsearch] log server 不仅将日志信息记录在本地，还发送给 elasticsearch 进行汇总
-> - [依赖中间件 kafka] config refresh server 通过 kafka 发送 bus 总线事件，广播给所有其余服务进行配置刷新
-> - [依赖中间件 kafka、zipkin、zipkin-dependencies、elasticsearch] 各服务将互相调用的链路信息通过 kafka 发送给 zipkin server
-> - [依赖中间件 redis] 包路径中包含 Redis 时，oauth server 将 token 信息持久化到 redis 进行统一认证管理，否则仅持久化到内存
-> - [依赖中间件 redis] 分布式锁，实现 pers.acp.admin.common.lock.DistributedLock 接口，并注册为Spring Bean，包路径中包含 Redis 时，默认配置一个基于 Redis 的分布式锁实现
-> - 前后端交互 HttpStatus Code 说明
+> - 各服务在 **eureka server** 上进行注册，**gateway** 和其他各个服务通过 **eureka** 发现和查找目标服务进行访问
+> - 各深度定制开发的服务从 **config server** 中获取自定义配置信息
+> - 各服务将互相调用的断路信息通过 **admin server** 进行监控
+> - **【依赖中间件 redis】 gateway server** 根据制定的策略路由到指定服务；路由定义从 **Redis** 获取，缓存至本地；基于动态路由配置可根据实际情况扩展实现灰度发布
+> - **【依赖中间件 redis、kafka】 route server** 修改路由信息后更新至 **Redis** ，通过 **Kafka** 通知 **gateway server** 动态更新路由
+> - **【依赖中间件 kafka】 oauth server** 修改应用配置和参数配置后通过 **Kafka** 推送 **Bus** 总线事件，广播通知所有 **oauth server** 更新缓存
+> - **【依赖中间件 kafka】** 各深度定制开发的服务通过 **kafka** 发送日志消息，**log server** 从 **Kafka** 中消费消息并进行日志的统一记录
+> - **【依赖中间件 kafka、logstash、elasticsearch】 log server** 不仅将日志信息记录在本地，还发送给 **elasticsearch** 进行汇总
+> - **【依赖中间件 kafka】 config refresh server** 通过 **Kafka** 发送 **Bus** 总线事件，广播给所有其余服务进行配置刷新
+> - **【依赖中间件 kafka、zipkin、zipkin-dependencies、elasticsearch】** 各服务将互相调用的链路信息通过 **Kafka** 发送给 **zipkin server**
+> - **【依赖中间件 redis】** 包路径中包含 **Redis** 时，**oauth server** 将 **token** 信息持久化到 **Redis** 进行统一认证管理，否则仅持久化到内存
+> - **【依赖中间件 redis】** 分布式锁，实现 **pers.acp.admin.common.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **spring-data-redis** 时，默认配置一个基于 **Redis** 的分布式锁实现
+> - 前后端交互 **HttpStatus Code** 说明
 > 
 >     | HttpStatus | 描述 |
 >     | --- | --- | 
