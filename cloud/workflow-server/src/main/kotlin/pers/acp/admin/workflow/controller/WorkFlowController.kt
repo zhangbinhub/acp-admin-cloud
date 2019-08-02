@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.vo.FlowHistoryVO
 import pers.acp.admin.common.vo.InfoVO
@@ -21,6 +20,7 @@ import pers.acp.admin.common.vo.FlowTaskVO
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -41,7 +41,7 @@ constructor(private val logAdapter: LogAdapter, private val workFlowDomain: Work
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVO::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVO::class))
     @PreAuthorize(WorkFlowExpression.flowStart)
     @PutMapping(value = [WorkFlowApi.flowStart], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun create(@RequestBody @Valid flowStartPO: FlowStartPO): ResponseEntity<InfoVO> =
             workFlowDomain.startFlow(flowStartPO.processDefinitionKey!!, flowStartPO.businessKey!!, flowStartPO.params).let {
@@ -62,7 +62,7 @@ constructor(private val logAdapter: LogAdapter, private val workFlowDomain: Work
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVO::class))
     @PreAuthorize(WorkFlowExpression.flowApprove)
     @PostMapping(value = [WorkFlowApi.flowApprove], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun approve(@RequestBody @Valid flowApprovePO: FlowApprovePO): ResponseEntity<InfoVO> {
         if (flowApprovePO.approved!!) {
@@ -88,7 +88,7 @@ constructor(private val logAdapter: LogAdapter, private val workFlowDomain: Work
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVO::class))
     @PreAuthorize(WorkFlowExpression.flowDiagram)
     @GetMapping(value = [WorkFlowApi.flowDiagram + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun diagram(response: HttpServletResponse, @ApiParam(value = "流程实例id", required = true) @PathVariable processInstanceId: String) {
         val inputStream = workFlowDomain.generateDiagram(processInstanceId)

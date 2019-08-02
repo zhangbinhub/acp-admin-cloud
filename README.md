@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v3.0.2 [版本更新日志](doc/version_history.md)
+###### v3.0.3 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
 - 该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
@@ -59,7 +59,8 @@
 > - **【依赖中间件 kafka】 config refresh server** 通过 **Kafka** 发送 **Bus** 总线事件，广播给所有其余服务进行配置刷新
 > - **【依赖中间件 kafka、zipkin、zipkin-dependencies、elasticsearch】** 各服务将互相调用的链路信息通过 **Kafka** 发送给 **zipkin server**
 > - **【依赖中间件 redis】** 包路径中包含 **Redis** 时，**oauth server** 将 **token** 信息持久化到 **Redis** 进行统一认证管理，否则仅持久化到内存
-> - **【依赖中间件 redis】** 分布式锁，实现 **pers.acp.admin.common.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **spring-data-redis** 时，默认配置一个基于 **Redis** 的分布式锁实现
+> - **【依赖中间件 redis】** 分布式锁，实现 **pers.acp.spring.cloud.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **spring-data-redis** 时，默认配置一个基于 **Redis** 的分布式锁实现
+> - 需要进行防重请求的 controller 方法上增加注解 **pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission**，默认30秒过期
 > - 前后端交互 **HttpStatus Code** 说明
 > 
 >     | HttpStatus | 描述 |

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.permission.BaseExpression
 import pers.acp.admin.common.vo.InfoVO
@@ -21,6 +20,7 @@ import pers.acp.admin.config.po.PropertiesPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
@@ -41,7 +41,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Properties::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PutMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(@RequestBody @Valid propertiesPo: PropertiesPo): ResponseEntity<Properties> =
             propertiesDomain.doCreate(propertiesPo).let {
@@ -65,7 +65,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PatchMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid propertiesPo: PropertiesPo): ResponseEntity<Properties> =
             if (CommonTools.isNullStr(propertiesPo.id)) {
@@ -99,7 +99,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = [ConfigApi.propertiesRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVO> {
         configRefreshServer.busRefresh()
@@ -110,7 +110,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = [ConfigApi.propertiesRefreshApplication], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun refresh(@ApiParam(value = "服务名", required = true) @RequestParam applicationName: String): ResponseEntity<InfoVO> {
         configRefreshServer.busRefresh(applicationName)
@@ -121,7 +121,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = [ConfigApi.propertiesRefreshMatcher], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun refreshMatcher(@ApiParam(value = "刷新规则表达式", required = true) matcher: String): ResponseEntity<InfoVO> {
         configRefreshServer.busRefreshMatcher(matcher)

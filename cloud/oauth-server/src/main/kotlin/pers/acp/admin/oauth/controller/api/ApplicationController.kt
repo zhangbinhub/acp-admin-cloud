@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.AppConfigExpression
 import pers.acp.admin.common.vo.InfoVO
@@ -21,6 +20,7 @@ import pers.acp.admin.oauth.po.ApplicationPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -42,7 +42,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Application::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
     @PreAuthorize(AppConfigExpression.appAdd)
     @PutMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     fun add(@RequestBody @Valid applicationPO: ApplicationPo): ResponseEntity<Application> =
             applicationDomain.doCreate(applicationPO).also {
                 refreshEventPublish.doNotifyUpdateApp()
@@ -68,7 +68,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(AppConfigExpression.appUpdate)
     @PatchMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid applicationPO: ApplicationPo): ResponseEntity<Application> {
         if (CommonTools.isNullStr(applicationPO.id)) {
@@ -99,7 +99,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(AppConfigExpression.appUpdateSecret)
     @GetMapping(value = [OauthApi.updateSecret + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateSecret(@ApiParam(value = "应用id", required = true)
                      @NotBlank(message = "应用id不能为空")
