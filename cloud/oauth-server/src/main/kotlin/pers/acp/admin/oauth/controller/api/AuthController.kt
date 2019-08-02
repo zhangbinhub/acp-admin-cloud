@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.constant.ModuleFuncCode
 import pers.acp.admin.oauth.constant.OauthApi
@@ -27,6 +26,7 @@ import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.annotation.PostConstruct
 import javax.validation.Valid
@@ -105,14 +105,14 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     fun addMenu(@RequestBody @Valid menuPO: MenuPo): ResponseEntity<Menu> = ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPO))
 
     @ApiOperation(value = "新建模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     fun addModuleFunc(@RequestBody @Valid moduleFuncPO: ModuleFuncPo): ResponseEntity<ModuleFunc> =
             ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPO))
 
@@ -144,7 +144,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateMenu(@RequestBody @Valid menuPO: MenuPo): ResponseEntity<Menu> =
             ResponseEntity.ok(menuDomain.doUpdate(menuPO))
@@ -153,7 +153,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；模块功能编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateModuleFunc(@RequestBody @Valid moduleFuncPO: ModuleFuncPo): ResponseEntity<ModuleFunc> {
         if (!moduleFuncCodeList.contains(moduleFuncPO.code)) {

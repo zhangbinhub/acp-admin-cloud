@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.RuntimeConfigExpression
 import pers.acp.admin.common.vo.InfoVO
@@ -23,6 +22,7 @@ import pers.acp.admin.oauth.po.RuntimePo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -44,7 +44,7 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(@RequestBody @Valid runtimePO: RuntimePo): ResponseEntity<RuntimeConfig> =
             runtimeConfigDomain.doCreate(runtimePO).also {
@@ -72,7 +72,7 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
     @PatchMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid runtimePO: RuntimePo): ResponseEntity<RuntimeConfig> {
         if (CommonTools.isNullStr(runtimePO.id)) {

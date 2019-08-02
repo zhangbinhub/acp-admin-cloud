@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.OrgConfigExpression
@@ -21,6 +20,7 @@ import pers.acp.admin.oauth.vo.OrganizationVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -51,7 +51,7 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Organization::class), ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
     @PreAuthorize(OrgConfigExpression.orgAdd)
     @PutMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid organizationPO: OrganizationPo): ResponseEntity<Organization> =
             ResponseEntity.status(HttpStatus.CREATED).body(organizationDomain.doCreate(user.name, organizationPO))
@@ -73,7 +73,7 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(OrgConfigExpression.orgUpdate)
     @PatchMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(user: OAuth2Authentication, @RequestBody @Valid organizationPO: OrganizationPo): ResponseEntity<Organization> {
         if (CommonTools.isNullStr(organizationPO.id)) {

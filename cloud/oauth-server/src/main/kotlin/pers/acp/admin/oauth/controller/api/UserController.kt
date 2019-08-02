@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.UserConfigExpression
@@ -23,6 +22,7 @@ import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
@@ -49,7 +49,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiOperation(value = "更新当前用户信息", notes = "1、根据当前登录的用户信息，更新头像、名称、手机；2、如果原密码和新密码均不为空，校验原密码并修改为新密码")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO::class))
     @RequestMapping(value = [OauthApi.currUser], method = [RequestMethod.PUT, RequestMethod.PATCH], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPO: UserInfoPo): ResponseEntity<User> {
         val userInfo = userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")
@@ -83,7 +83,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = User::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO::class))
     @PreAuthorize(UserConfigExpression.userAdd)
     @PutMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid userPO: UserPo): ResponseEntity<User> =
             ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.name, userPO))
@@ -107,7 +107,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(UserConfigExpression.userUpdate)
     @PatchMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(user: OAuth2Authentication, @RequestBody @Valid userPO: UserPo): ResponseEntity<User> {
         if (CommonTools.isNullStr(userPO.id)) {
@@ -120,7 +120,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVO::class))
     @PreAuthorize(UserConfigExpression.userUpdate)
     @GetMapping(value = [OauthApi.userResetPwd + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun resetPwd(user: OAuth2Authentication, @PathVariable userId: String): ResponseEntity<InfoVO> {
         if (CommonTools.isNullStr(userId)) {

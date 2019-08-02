@@ -1,9 +1,9 @@
-package pers.acp.admin.common.lock.instanse
+package pers.acp.admin.common.lock
 
 import org.springframework.data.redis.connection.ReturnType
 import org.springframework.data.redis.core.RedisCallback
 import org.springframework.data.redis.core.RedisTemplate
-import pers.acp.admin.common.lock.DistributedLock
+import pers.acp.spring.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 22/03/2019

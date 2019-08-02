@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.permission.BaseExpression
 import pers.acp.admin.common.vo.InfoVO
@@ -23,6 +22,7 @@ import pers.acp.admin.route.producer.instance.UpdateRouteProducer
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
@@ -43,7 +43,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Route::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PutMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     fun add(@RequestBody @Valid routePo: RoutePo): ResponseEntity<Route> =
             routeDomain.doCreate(routePo).let {
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
@@ -66,7 +66,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；路由信息ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PatchMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid routePo: RoutePo): ResponseEntity<Route> {
         if (CommonTools.isNullStr(routePo.id)) {
@@ -105,7 +105,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
     @PreAuthorize(BaseExpression.adminOnly)
     @PostMapping(value = [RouteApi.gateWayRouteRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVO> {
         routeDomain.doRefresh()

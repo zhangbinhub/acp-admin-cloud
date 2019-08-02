@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.annotation.DuplicateSubmission
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.constant.RoleCode
 import pers.acp.admin.common.permission.BaseExpression
@@ -24,6 +23,7 @@ import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.annotation.PostConstruct
 import javax.validation.Valid
@@ -84,7 +84,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Role::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO::class))
     @PreAuthorize(RoleConfigExpression.roleAdd)
     @PutMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid rolePO: RolePo): ResponseEntity<Role> {
         if (CommonTools.isNullStr(rolePO.appId)) {
@@ -113,7 +113,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
     @PreAuthorize(RoleConfigExpression.roleUpdate)
     @PatchMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @DuplicateSubmission
+    @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(user: OAuth2Authentication, @RequestBody @Valid rolePO: RolePo): ResponseEntity<Role> {
         if (!roleCodeList.contains(rolePO.code)) {

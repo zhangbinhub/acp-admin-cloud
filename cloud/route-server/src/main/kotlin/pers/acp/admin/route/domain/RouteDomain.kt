@@ -9,7 +9,6 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
-import pers.acp.admin.common.lock.DistributedLock
 import pers.acp.admin.route.definition.FilterDefinition
 import pers.acp.admin.route.definition.PredicateDefinition
 import pers.acp.admin.route.definition.RouteConstant
@@ -23,6 +22,7 @@ import pers.acp.admin.route.repo.RouteRepository
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
+import pers.acp.spring.cloud.lock.DistributedLock
 
 import javax.persistence.criteria.Predicate
 import java.net.URI
