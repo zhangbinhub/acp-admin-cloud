@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnection
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.lock.RedisDistributedLock
+import pers.acp.admin.common.serialnumber.GenerateSerialNumber
 import pers.acp.spring.cloud.AcpCloudComponentAutoConfiguration
 import pers.acp.spring.cloud.lock.DistributedLock
 
@@ -23,5 +24,9 @@ class AcpAdminComponentAutoConfiguration {
     @ConditionalOnMissingBean(DistributedLock::class)
     @ConditionalOnClass(RedisConnection::class)
     fun redisDistributedLock(redisTemplate: RedisTemplate<Any, Any>): DistributedLock = RedisDistributedLock(redisTemplate)
+
+    @Bean
+    @ConditionalOnClass(RedisConnection::class)
+    fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = GenerateSerialNumber(redisTemplate)
 
 }
