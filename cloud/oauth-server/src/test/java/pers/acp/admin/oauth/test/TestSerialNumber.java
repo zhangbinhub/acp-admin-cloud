@@ -17,7 +17,7 @@ class TestSerialNumber extends BaseTest {
 
     @Test
     void testGenerateSerialNumber() throws InterruptedException {
-        String key = "321";
+        String key = "serial_number";
         long number = generateSerialNumber.getSerialNumber(key, 10000);
         System.out.println(CommonTools.getNowTimeString() + " 第一次获取序列号（超时时间10秒）：" + number);
         new Thread(() -> {
