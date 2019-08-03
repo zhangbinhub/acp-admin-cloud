@@ -4,6 +4,7 @@
 > - [Upgrade] 升级核心库至 6.1.1
 > - [Upgrade] 分布式锁接口及防重请求移入核心库，仅保留分布式锁实现
 > - [Upgrade] 防重请求处理移入核心库
+> - [Upgrade] 公共模块中增加基于Redis的全局序列号生成组件 **pers.acp.admin.common.serialnumber.GenerateSerialNumber**
 ##### v3.0.2
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.1.0
