@@ -4,7 +4,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.core.CommonTools
-import java.util.concurrent.TimeUnit
 
 /**
  * @author zhang by 03/08/2019
