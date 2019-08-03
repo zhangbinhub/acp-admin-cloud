@@ -11,6 +11,11 @@ import pers.acp.core.CommonTools
  */
 class GenerateSerialNumber(private val redisTemplate: RedisTemplate<Any, Any>) {
 
+    /**
+     * 生成序列号
+     * @param keyString 序列号键名称
+     * @param expirationTime 过期时间（重新计数超时时间）
+     */
     @JvmOverloads
     fun getSerialNumber(keyString: String = CommonTools.getNowString(), expirationTime: Long = 86400000): Long {
         val result = redisTemplate.execute { connection ->
