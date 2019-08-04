@@ -43,6 +43,16 @@ class TestSerialNumber extends BaseTest {
                     }
                 }).start();
             }
+//            System.out.println("开始循环获取序列号，同时启动10个线程，无限循环取，直到程序结束");
+//            for (int t = 0; t < 10; t++) {
+//                new Thread(() -> {
+//                    int i = 0;
+//                    while (true) {
+//                        long serialNumber = generateSerialNumber.getSerialNumber(key, 5000);
+//                        System.out.println(CommonTools.getNowTimeString() + " 第" + (++i) + "次获取序列号：" + serialNumber);
+//                    }
+//                }).start();
+//            }
         }).start();
         Thread.sleep(20000);
     }
