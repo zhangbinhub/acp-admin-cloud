@@ -29,15 +29,19 @@ class TestSerialNumber extends BaseTest {
             }
             long number1 = generateSerialNumber.getSerialNumber(key, 5000);
             System.out.println(CommonTools.getNowTimeString() + " 第二次获取序列号（超时时间5秒）：" + number1);
-            System.out.println("开始循环获取序列号，每次间隔100毫秒，循环60次：");
-            for (int i = 0; i < 60; i++) {
-                number1 = generateSerialNumber.getSerialNumber(key, 5000);
-                System.out.println(CommonTools.getNowTimeString() + " 第" + i + "次获取序列号：" + number1);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            System.out.println("开始循环获取序列号，同时启动10个线程，每次间隔100毫秒，循环60次：");
+            for (int t = 0; t < 10; t++) {
+                new Thread(() -> {
+                    for (int i = 0; i < 60; i++) {
+                        long serialNumber = generateSerialNumber.getSerialNumber(key, 5000);
+                        System.out.println(CommonTools.getNowTimeString() + " 第" + i + "次获取序列号：" + serialNumber);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         }).start();
         Thread.sleep(20000);
