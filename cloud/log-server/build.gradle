@@ -1,3 +1,4 @@
+group "${group}.cloud"
 versions += [
         logstash: "5.3"
 ]
