@@ -1,3 +1,4 @@
+group "${group}.cloud"
 versions += [
         boot_admin: "2.1.6"
 ]
