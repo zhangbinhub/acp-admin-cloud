@@ -13,7 +13,7 @@ spring:
     sender:
       type: kafka
 info:
-  version: 3.0.3
+  version: 3.0.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

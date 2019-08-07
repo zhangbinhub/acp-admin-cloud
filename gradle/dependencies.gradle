@@ -6,7 +6,7 @@ versions += [
         jupiter          : "5.3.2",
 
         kotlin_coroutines: "1.2.2",
-        joda_time        : "2.9.9",
+        joda_time        : "2.10.3",
         commons_codec    : "1.11",
         commons_text     : "1.6",
         commons_lang3    : "3.9",
@@ -19,17 +19,17 @@ versions += [
         zip4j            : "2.1.1",
 
         hikaricp         : "3.2.0",
-        mysql            : "8.0.16",
+        mysql            : "8.0.17",
         mssqljdbc        : "6.4.0.jre8",
         ojdbc            : "12.1.0.2",
-        postgresql       : "42.2.5",
+        postgresql       : "42.2.6",
 
         jaxb_runtime     : "2.3.2",
-        spring_boot      : "2.1.6.RELEASE",
+        spring_boot      : "2.1.7.RELEASE",
         spring_cloud     : "Greenwich.SR2",
         swagger          : "2.9.2",
 
-        netty            : "4.1.36.Final",
+        netty            : "4.1.38.Final",
         okhttp           : "3.8.1",
 
         flowable         : "6.4.2"
