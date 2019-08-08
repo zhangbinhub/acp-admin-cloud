@@ -24,27 +24,6 @@ services:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zookeeper:2888:3888
 
-  kafka1:
-    image: wurstmeister/kafka
-    hostname: kafka1
-    restart: always
-    ports:
-      - "9092:9092"
-    networks:
-      - elk
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://10.0.75.1:9092"
-      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 1
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-      #      KAFKA_HEAP_OPTS: "-Xmx1G -Xms1G"
-      EXTRA_ARGS: "-name kafkaServer -loggc"
-      #      JMX_PORT: 9999
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-
   kafka-manager:
     image: sheepkiller/kafka-manager
     restart: always

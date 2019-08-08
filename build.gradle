@@ -55,6 +55,7 @@ configure(allprojects) {
     dependencies {
         testCompile("org.junit.jupiter:junit-jupiter-engine:$versions.jupiter")
         testCompile("org.junit.jupiter:junit-jupiter-api:$versions.jupiter")
+        testCompile("org.junit.platform:junit-platform-launcher:$versions.junit_platform")
         testCompile "org.jetbrains.kotlin:kotlin-test"
         testCompile "org.jetbrains.kotlin:kotlin-test-junit5"
         compile "org.jetbrains.kotlin:kotlin-stdlib"

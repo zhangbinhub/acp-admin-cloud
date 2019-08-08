@@ -17,16 +17,15 @@ import pers.acp.spring.cloud.lock.DistributedLock
  * @since JDK 11
  */
 @Configuration
+@ConditionalOnClass(RedisConnection::class)
 @AutoConfigureBefore(AcpCloudComponentAutoConfiguration::class)
 class AcpAdminComponentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DistributedLock::class)
-    @ConditionalOnClass(RedisConnection::class)
     fun redisDistributedLock(redisTemplate: RedisTemplate<Any, Any>): DistributedLock = RedisDistributedLock(redisTemplate)
 
     @Bean
-    @ConditionalOnClass(RedisConnection::class)
     fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = GenerateSerialNumber(redisTemplate)
 
 }
