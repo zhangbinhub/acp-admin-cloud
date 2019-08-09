@@ -54,6 +54,8 @@ eureka:
     lease-expiration-duration-in-seconds: 15
   client:
     registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
 # = Security Config
 # ===============================

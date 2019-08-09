@@ -23,6 +23,7 @@ bootJar {
 dependencies {
     compile(project(":cloud:acp-admin-cloud-dependencies")) {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-redis'
         exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-config'
     }
 }
