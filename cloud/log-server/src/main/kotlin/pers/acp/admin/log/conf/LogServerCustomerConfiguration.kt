@@ -18,6 +18,9 @@ class LogServerCustomerConfiguration {
     @Value("\${server.port}")
     val serverPort: Int = 0
 
+    @Value("\${logging.file}")
+    val logFile: String = ""
+
     /**
      * 日志路径
      */

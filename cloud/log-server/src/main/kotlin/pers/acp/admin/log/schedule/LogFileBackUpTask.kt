@@ -82,11 +82,11 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
     private fun doClearBackUpFiles() {
         logAdapter.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
         val filterLogFileNames = ArrayList<String>()
-        filterLogFileNames.add("spring.log")
+        filterLogFileNames.add(logServerCustomerConfiguration.logFile.substring(logServerCustomerConfiguration.logFilePath.length + 1))
         filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1))
         val filterLogZipFileNames = ArrayList<String>()
         // 保留当天和历史最大天数的文件
-        var day = CalendarTools.getPrevDay(CommonTools.getNowDateTime())
+        var day = CommonTools.getNowDateTime()
         for (i in 0..logServerCustomerConfiguration.maxHistoryDayNumber) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT))
             filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT) + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION)
