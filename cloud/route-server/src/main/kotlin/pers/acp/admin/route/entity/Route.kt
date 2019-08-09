@@ -31,11 +31,12 @@ class Route {
     var uri: String? = null
 
     @ApiModelProperty("路由断言")
-    @Column(columnDefinition = "text", nullable = false)
+    @Lob
+    @Column(nullable = false)
     var predicates: String = ""
 
     @ApiModelProperty("路由过滤器")
-    @Column(columnDefinition = "text")
+    @Lob
     var filters: String? = null
 
     @ApiModelProperty("路由序号")
