@@ -47,7 +47,7 @@ class User {
     @ApiModelProperty("是否启用")
     var enabled: Boolean = false
 
-    @Column(columnDefinition = "text")
+    @Lob
     @ApiModelProperty("头像")
     var avatar: String? = null
 

@@ -22,9 +22,6 @@ eureka:
   instance:
     ip-address: ${server.address}
     instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
 info:
   instance-id: ${eureka.instance.instance-id}
 # ===============================
@@ -34,6 +31,8 @@ spring:
   devtools:
     restart:
       enabled: true
+  redis:
+    url: redis://127.0.0.1:6379
   cloud:
     bus:
       id: ${eureka.instance.instance-id}

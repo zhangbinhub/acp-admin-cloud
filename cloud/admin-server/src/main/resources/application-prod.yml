@@ -25,9 +25,6 @@ eureka:
     metadata-map:
       user.name: admin
       user.password: 888888
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
 # = Spring Config
 # ===============================

@@ -3,6 +3,7 @@
 > - [Upgrade] 优化 gradle 脚本，每个模块重新设置 group
 > - [Upgrade] Config server 增加api文档配置
 > - [Upgrade] 升级核心库至 6.1.2
+> - [Upgrade] 优化日志服务清理策略
 ##### v3.0.3
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.1.1

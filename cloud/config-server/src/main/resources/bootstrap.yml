@@ -59,6 +59,8 @@ spring:
   sleuth:
     sampler:
       probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+  redis:
+    url: redis://127.0.0.1:6379
   cloud:
     config:
       server:
