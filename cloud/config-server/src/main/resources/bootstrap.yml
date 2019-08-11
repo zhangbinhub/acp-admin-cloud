@@ -12,6 +12,7 @@ info:
   build:
     author: zhangbin
     active: ${spring.profiles.active}
+  instance-id: ${eureka.instance.instance-id}
 management:
   server:
     port: 8768

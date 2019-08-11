@@ -25,6 +25,8 @@ eureka:
     metadata-map:
       user.name: admin
       user.password: 888888
+info:
+  instance-id: ${eureka.instance.instance-id}
 # ===============================
 # = Spring Config
 # ===============================
