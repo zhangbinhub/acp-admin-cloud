@@ -53,9 +53,11 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     fun init() {
         try {
             for (field in RoleCode::class.java.declaredFields) {
-                val code = field.get(RoleCode::class.java).toString()
-                if (RoleCode.prefix != code && !code.contains(RoleCode::class.java.canonicalName)) {
-                    roleCodeList.add(code)
+                val value = field.get(RoleCode::class.java)
+                if (value is String) {
+                    if (RoleCode.prefix != value) {
+                        roleCodeList.add(value)
+                    }
                 }
             }
         } catch (e: Exception) {
