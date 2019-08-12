@@ -1,17 +1,16 @@
 #!/bin/bash
-APP_NAME=$(cd "$(dirname "$0")";pwd)/xxxx-1.0.0.jar
+APP_NAME=$(cd "$(dirname "$0")";pwd)/@appJarName@
 JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Dfile.encoding=utf-8'
 
 usage() {
-    echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
-    exit 1
+  echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
+  exit 1
 }
 
 is_exist(){
   pid=`ps -ef|grep $APP_NAME|grep -v grep|awk '{print $2}' `
-  #如果不存在返回1，存在返回0
   if [ -z "${pid}" ]; then
-   return 1
+    return 1
   else
     return 0
   fi
