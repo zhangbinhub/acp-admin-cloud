@@ -216,9 +216,18 @@ configure(allprojects) {
                     from file("${buildDir}/libs/" + fileName)
                     into "$rootDir/release/$project.name"
                 }
-                copy {
-                    from "${buildDir}/resources/main"
-                    into "$rootDir/release/$project.name"
+                if (project.name == "log-server") {
+                    copy {
+                        from "${buildDir}/resources/main"
+                        into "$rootDir/release/$project.name"
+                    }
+                } else {
+                    copy {
+                        from("${buildDir}/resources/main") {
+                            exclude("logback-spring.xml")
+                        }
+                        into "$rootDir/release/$project.name"
+                    }
                 }
                 generateShell(fileName)
             }
