@@ -1,6 +1,6 @@
 #!/bin/bash
-APP_NAME=xxx.jar
-JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xlog:age*,gc*=info:file=gc-%t.log:time,tid,tags:filecount=3,filesize=20m -Djava.io.tmpdir=/tmp -Xms1024m -Xmx4086m -Dfile.encoding=utf-8'
+APP_NAME=$(cd "$(dirname "$0")";pwd)/xxxx-1.0.0.jar
+JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Dfile.encoding=utf-8'
 
 usage() {
     echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
@@ -22,7 +22,7 @@ start(){
   if [ $? -eq "0" ]; then
     echo "${APP_NAME} is already running. pid=${pid} ."
   else
-    nohup java $JVM_PARAM -jar $APP_NAME > /dev/null 2>&1 &
+    nohup $JAVA_HOME/bin/java $JVM_PARAM -jar $APP_NAME > /dev/null 2>&1 &
   fi
 }
 
