@@ -4,6 +4,8 @@
 > - [Upgrade] Config server 增加api文档配置
 > - [Upgrade] 升级核心库至 6.1.2
 > - [Upgrade] 优化日志服务清理策略
+> - [Fix] kotlin 反射获取属性时，内置对象也取出来的问题（获取角色编码、权限编码）
+> - [Fix] 修改角色信息时，超级管理员无法添加其他应用角色的问题
 ##### v3.0.3
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.1.1

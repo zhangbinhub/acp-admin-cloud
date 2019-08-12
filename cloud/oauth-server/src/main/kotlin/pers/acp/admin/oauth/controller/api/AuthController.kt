@@ -56,7 +56,10 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     fun init() {
         try {
             for (field in ModuleFuncCode::class.java.declaredFields) {
-                moduleFuncCodeList.add(field.get(ModuleFuncCode::class.java).toString())
+                val code = field.get(ModuleFuncCode::class.java).toString()
+                if (!code.contains(ModuleFuncCode::class.java.canonicalName)) {
+                    moduleFuncCodeList.add(code)
+                }
             }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)

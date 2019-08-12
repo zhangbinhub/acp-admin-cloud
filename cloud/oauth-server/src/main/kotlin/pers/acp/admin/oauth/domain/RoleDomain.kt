@@ -52,9 +52,11 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doCreate(rolePO: RolePo, loginNo: String): Role {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        val currLevel = getRoleMinLevel(rolePO.appId!!, user)
-        if (currLevel >= rolePO.levels) {
-            throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
+        if (!isAdmin(user)) {
+            val currLevel = getRoleMinLevel(rolePO.appId!!, user)
+            if (currLevel >= rolePO.levels) {
+                throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
+            }
         }
         if (rolePO.code == RoleCode.ADMIN) {
             throw ServerException("不允许创建超级管理员")
@@ -66,11 +68,13 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        val roleMinLevel = getRoleMinLevel(user)
-        val roleList = roleRepository.findAllById(idList)
-        roleList.forEach {
-            if (!roleMinLevel.containsKey(it.appId) || roleMinLevel.getValue(it.appId) >= it.levels) {
-                throw ServerException("没有权限做此操作")
+        if (!isAdmin(user)) {
+            val roleMinLevel = getRoleMinLevel(user)
+            val roleList = roleRepository.findAllById(idList)
+            roleList.forEach {
+                if (!roleMinLevel.containsKey(it.appId) || roleMinLevel.getValue(it.appId) >= it.levels) {
+                    throw ServerException("没有权限做此操作")
+                }
             }
         }
         roleRepository.deleteByIdIn(idList)
@@ -84,9 +88,9 @@ constructor(userRepository: UserRepository,
         if (roleOptional.isEmpty) {
             throw ServerException("找不到角色信息")
         }
-        val currLevel = getRoleMinLevel(rolePO.appId!!, user)
         val role = roleOptional.get()
         if (!isAdmin(user)) {
+            val currLevel = getRoleMinLevel(rolePO.appId!!, user)
             if (currLevel > 0 && currLevel >= rolePO.levels) {
                 throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
             }
