@@ -1,8 +1,8 @@
 package pers.acp.admin.oauth.constant
 
-import pers.acp.admin.common.constant.ModuleFuncCode
-import pers.acp.admin.common.constant.RoleCode
-import pers.acp.admin.common.permission.BaseExpression
+import pers.acp.admin.constant.ModuleFuncCode
+import pers.acp.admin.constant.RoleCode
+import pers.acp.admin.permission.BaseExpression
 
 /**
  * 定义用户配置权限表达式

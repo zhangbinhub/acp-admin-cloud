@@ -22,6 +22,7 @@ bootJar {
 }
 dependencies {
     compile project(":cloud:acp-admin-cloud-dependencies")
+    compile project(":cloud:acp-admin-cloud-constant")
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'junit'

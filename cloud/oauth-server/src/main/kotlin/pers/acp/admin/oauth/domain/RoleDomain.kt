@@ -3,7 +3,7 @@ package pers.acp.admin.oauth.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.common.constant.RoleCode
+import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.po.RolePo

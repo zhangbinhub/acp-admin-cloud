@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.constant.RoleCode
-import pers.acp.admin.common.permission.BaseExpression
+import pers.acp.admin.constant.RoleCode
+import pers.acp.admin.permission.BaseExpression
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.RoleConfigExpression
 import pers.acp.admin.common.vo.InfoVO

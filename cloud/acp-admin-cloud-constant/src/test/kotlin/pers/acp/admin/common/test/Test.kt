@@ -1,6 +1,6 @@
 package pers.acp.admin.common.test
 
-import pers.acp.admin.common.constant.RoleCode
+import pers.acp.admin.constant.RoleCode
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.reflect

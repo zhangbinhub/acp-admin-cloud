@@ -24,6 +24,7 @@ dependencies {
     compile(project(":cloud:acp-admin-cloud-dependencies")) {
         exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-bus-kafka'
     }
+    compile project(":cloud:acp-admin-cloud-constant")
     compile "org.springframework.cloud:spring-cloud-config-server"
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {

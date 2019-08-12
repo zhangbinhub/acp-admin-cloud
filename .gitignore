@@ -13,6 +13,7 @@ logs/
 /file
 elasticsearch/
 gradle/deploy.gradle
+/release
 
 # OSX
 #

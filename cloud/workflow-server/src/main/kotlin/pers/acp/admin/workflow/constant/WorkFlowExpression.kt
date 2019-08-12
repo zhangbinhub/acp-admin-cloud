@@ -1,8 +1,8 @@
 package pers.acp.admin.workflow.constant
 
-import pers.acp.admin.common.constant.ModuleFuncCode
-import pers.acp.admin.common.constant.RoleCode
-import pers.acp.admin.common.permission.BaseExpression
+import pers.acp.admin.constant.ModuleFuncCode
+import pers.acp.admin.constant.RoleCode
+import pers.acp.admin.permission.BaseExpression
 
 /**
  * @author zhang by 14/06/2019

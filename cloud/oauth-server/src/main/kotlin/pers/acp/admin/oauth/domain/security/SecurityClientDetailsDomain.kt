@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService
 import org.springframework.security.oauth2.provider.ClientRegistrationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.common.constant.RoleCode
+import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.repo.ApplicationRepository
 import pers.acp.spring.boot.interfaces.LogAdapter
 
