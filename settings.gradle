@@ -22,4 +22,6 @@ include 'cloud:route-server'
 findProject(':cloud:route-server')?.name = 'route-server'
 include 'cloud:workflow-server'
 findProject(':cloud:workflow-server')?.name = 'workflow-server'
+include 'cloud:acp-admin-cloud-constant'
+findProject(':cloud:acp-admin-cloud-constant')?.name = 'acp-admin-cloud-constant'
 

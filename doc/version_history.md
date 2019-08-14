@@ -2,8 +2,13 @@
 ##### v3.0.4
 > - [Upgrade] 优化 gradle 脚本，每个模块重新设置 group
 > - [Upgrade] Config server 增加api文档配置
-> - [Upgrade] 升级核心库至 6.1.2
+> - [Upgrade] 升级核心库至 6.1.3
 > - [Upgrade] 优化日志服务清理策略
+> - [Upgrade] 优化 gradle 脚本，build任务之后将打好的jar包放入项目根路径下的release目录
+> - [Upgrade] 优化 gradle 脚本，resources文件一同放入release目录，并生成脚本server.sh
+> - [Upgrade] 增加 acp-admin-cloud-constant 公共模块，公共的编码、权限等静态变量移入该模块
+> - [Fix] kotlin 反射获取属性时，内置对象也取出来的问题（获取角色编码、权限编码）
+> - [Fix] 修改角色信息时，超级管理员无法添加其他应用角色的问题
 ##### v3.0.3
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.1.1

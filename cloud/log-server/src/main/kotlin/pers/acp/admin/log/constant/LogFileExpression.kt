@@ -1,6 +1,6 @@
 package pers.acp.admin.log.constant
 
-import pers.acp.admin.common.permission.BaseExpression
+import pers.acp.admin.permission.BaseExpression
 
 /**
  * @author zhang by 01/02/2019

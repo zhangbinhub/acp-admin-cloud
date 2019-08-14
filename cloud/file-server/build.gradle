@@ -17,11 +17,12 @@ dependencyManagement {
 }
 bootJar {
     manifest {
-        attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
+        attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
     }
 }
 dependencies {
     compile(project(":cloud:acp-admin-cloud-dependencies")) {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
     }
+    compile project(":cloud:acp-admin-cloud-constant")
 }

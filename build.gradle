@@ -80,7 +80,7 @@ configure(allprojects) {
     }
 
     task clearPj(type: Delete) {
-        delete 'build', 'target', 'out'
+        delete 'release', 'build', 'target', 'out'
     }
 
     task copyJar(type: Copy) {
@@ -139,7 +139,7 @@ configure(allprojects) {
     jar {
         dependsOn(copyJar)
         manifest {
-            attributes('Version': "${version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
+            attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
         }
     }
 
@@ -178,6 +178,60 @@ configure(allprojects) {
 
     configurations.all {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'// no caching to maven repository
+    }
+
+    def generateShell = { String appJarName ->
+        File templateFile = new File("$rootDir/doc/script/server.model")
+        List<String> lines = templateFile.readLines("UTF-8")
+        StringBuffer buffer = new StringBuffer()
+        for (String line : lines) {
+            buffer.append(line).append("\n")
+        }
+        String shellContent = buffer.toString()
+        shellContent = shellContent.replaceAll("@appJarName@", appJarName)
+        File outFile = new File("$rootDir/release/$project.name/server.sh")
+        Writer writer = new FileWriter(outFile)
+        writer.write(new String(shellContent.getBytes("UTF-8")))
+        writer.flush()
+        writer.close()
+    }
+
+    build {
+        doLast {
+            def needCopy = {
+                return ["admin-server",
+                        "config-refresh-server",
+                        "config-server",
+                        "eureka-server",
+                        "file-server",
+                        "gateway-server",
+                        "log-server",
+                        "oauth-server",
+                        "workflow-server",
+                        "route-server"].toArray().contains("$project.name")
+            }
+            if (needCopy()) {
+                def fileName = "$project.name" + "-" + "$project.version" + ".jar"
+                copy {
+                    from file("${buildDir}/libs/" + fileName)
+                    into "$rootDir/release/$project.name"
+                }
+                if (project.name == "log-server") {
+                    copy {
+                        from "${buildDir}/resources/main"
+                        into "$rootDir/release/$project.name"
+                    }
+                } else {
+                    copy {
+                        from("${buildDir}/resources/main") {
+                            exclude("logback-spring.xml")
+                        }
+                        into "$rootDir/release/$project.name"
+                    }
+                }
+                generateShell(fileName)
+            }
+        }
     }
 
 }

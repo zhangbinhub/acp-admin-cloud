@@ -1,4 +1,4 @@
-package pers.acp.admin.common.constant
+package pers.acp.admin.constant
 
 /**
  * 角色编码

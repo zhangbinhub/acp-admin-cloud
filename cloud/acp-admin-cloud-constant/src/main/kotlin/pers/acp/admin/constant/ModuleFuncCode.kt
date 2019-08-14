@@ -1,4 +1,4 @@
-package pers.acp.admin.common.constant
+package pers.acp.admin.constant
 
 /**
  * @author zhang by 15/01/2019

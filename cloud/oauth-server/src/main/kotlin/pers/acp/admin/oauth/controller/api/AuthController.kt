@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.constant.ModuleFuncCode
+import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.AuthConfigExpression
 import pers.acp.admin.common.vo.InfoVO
@@ -56,7 +56,10 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     fun init() {
         try {
             for (field in ModuleFuncCode::class.java.declaredFields) {
-                moduleFuncCodeList.add(field.get(ModuleFuncCode::class.java).toString())
+                val value = field.get(ModuleFuncCode::class.java)
+                if (value is String) {
+                    moduleFuncCodeList.add(value)
+                }
             }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)

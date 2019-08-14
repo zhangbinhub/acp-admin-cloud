@@ -1,7 +1,7 @@
-package pers.acp.admin.common.permission
+package pers.acp.admin.permission
 
-import pers.acp.admin.common.constant.ModuleFuncCode
-import pers.acp.admin.common.constant.RoleCode
+import pers.acp.admin.constant.ModuleFuncCode
+import pers.acp.admin.constant.RoleCode
 
 /**
  * 定义权限表达式
