@@ -9,6 +9,7 @@
 > - [Upgrade] 增加 acp-admin-cloud-constant 公共模块，公共的编码、权限等静态变量移入该模块
 > - [Fix] kotlin 反射获取属性时，内置对象也取出来的问题（获取角色编码、权限编码）
 > - [Fix] 修改角色信息时，超级管理员无法添加其他应用角色的问题
+> - [Fix] 重写 SecurityTokenStoreRedis 中 removeAccessToken 方法，解决从redis获取对象反序列化后再进行序列化字节码不一致导致lRem执行不成功的问题
 ##### v3.0.3
 > - [Upgrade] 调整 gradle 脚本
 > - [Upgrade] 升级核心库至 6.1.1

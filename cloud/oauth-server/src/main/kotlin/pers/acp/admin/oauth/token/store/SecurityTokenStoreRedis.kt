@@ -194,32 +194,26 @@ class SecurityTokenStoreRedis(private val logAdapter: LogAdapter,
         val accessKey = serializeKey(ACCESS + tokenValue)
         val authKey = serializeKey(AUTH + tokenValue)
         val accessToRefreshKey = serializeKey(ACCESS_TO_REFRESH + tokenValue)
-        val results = redisTemplate.executePipelined { connection ->
+        redisTemplate.execute { connection ->
             try {
-                connection.get(accessKey)
-                connection.get(authKey)
+                val access = connection.get(accessKey)
+                val auth = connection.get(authKey)
                 connection.del(accessKey)
                 connection.del(accessToRefreshKey)
                 // Don't remove the refresh token - it's up to the caller to do that
                 connection.del(authKey)
-            } catch (ex: Exception) {
-                throw RuntimeException(ex)
-            }
-            null
-        }
-        val access = results[0]
-        val auth = results[1]
-        val authentication = auth as OAuth2Authentication
-        val key = authenticationKeyGenerator.extractKey(authentication)
-        val authToAccessKey = serializeKey(AUTH_TO_ACCESS + key)
-        val uNameKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(authentication))
-        val clientId = serializeKey(CLIENT_ID_TO_ACCESS + authentication.oAuth2Request.clientId)
-        redisTemplate.executePipelined { connection ->
-            try {
-                connection.del(authToAccessKey)
-                connection.lRem(uNameKey, 1, serialize(access))
-                connection.lRem(clientId, 1, serialize(access))
-                connection.del(serialize(ACCESS + key))
+                deserializeAuthentication(auth)?.apply {
+                    val key = authenticationKeyGenerator.extractKey(this)
+                    val authToAccessKey = serializeKey(AUTH_TO_ACCESS + key)
+                    val uNameKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(this))
+                    val clientId = serializeKey(CLIENT_ID_TO_ACCESS + this.oAuth2Request.clientId)
+                    connection.del(authToAccessKey)
+                    connection.del(serialize(ACCESS + key))
+                    access?.let {
+                        connection.lRem(uNameKey, 1, it)
+                        connection.lRem(clientId, 1, it)
+                    }
+                }
             } catch (ex: Exception) {
                 throw RuntimeException(ex)
             }
@@ -355,8 +349,7 @@ class SecurityTokenStoreRedis(private val logAdapter: LogAdapter,
             return getApprovalKey(authentication.oAuth2Request.clientId, userName)
         }
 
-        private fun getApprovalKey(clientId: String, userName: String?): String {
-            return clientId + if (userName == null) "" else ":$userName"
-        }
+        private fun getApprovalKey(clientId: String, userName: String?) =
+                clientId + if (userName == null) "" else ":$userName"
     }
 }
