@@ -11,30 +11,30 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object AuthConfigExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
     /**
      * 权限配置
      */
-    const val authConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.authConfig + "')"
+    const val authConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.authConfig + "')"
 
     /**
      * 权限新增
      */
-    const val authAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.authAdd + "')"
+    const val authAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.authAdd + "')"
 
     /**
      * 权限删除
      */
-    const val authDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.authDelete + "')"
+    const val authDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.authDelete + "')"
 
     /**
      * 权限更新
      */
-    const val authUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.authUpdate + "')"
+    const val authUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.authUpdate + "')"
 
     /**
      * 权限查询
      */
-    const val authQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.authQuery + "')"
+    const val authQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.authQuery + "')"
 }

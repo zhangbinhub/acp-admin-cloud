@@ -11,30 +11,30 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object UserConfigExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
     /**
      * 用户配置
      */
-    const val userConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.userConfig + "')"
+    const val userConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.userConfig + "')"
 
     /**
      * 用户新增
      */
-    const val userAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.userAdd + "')"
+    const val userAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.userAdd + "')"
 
     /**
      * 用户删除
      */
-    const val userDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.userDelete + "')"
+    const val userDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.userDelete + "')"
 
     /**
      * 用户更新
      */
-    const val userUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.userUpdate + "')"
+    const val userUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.userUpdate + "')"
 
     /**
      * 用户查询
      */
-    const val userQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.userQuery + "')"
+    const val userQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.userQuery + "')"
 }

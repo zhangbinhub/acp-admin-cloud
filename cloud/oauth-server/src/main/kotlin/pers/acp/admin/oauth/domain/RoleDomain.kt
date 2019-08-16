@@ -1,6 +1,7 @@
 package pers.acp.admin.oauth.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.constant.RoleCode
@@ -26,11 +27,18 @@ constructor(userRepository: UserRepository,
             private val menuRepository: MenuRepository,
             private val moduleFuncRepository: ModuleFuncRepository) : OauthBaseDomain(userRepository) {
 
-    fun getRoleList(): MutableList<Role> = roleRepository.findAllByOrderBySortAsc()
+    fun getRoleList(user: OAuth2Authentication): MutableList<Role> {
+        val currUser = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
+        return if (isSuper(currUser)) {
+            roleRepository.findAllByOrderBySortAsc()
+        } else {
+            roleRepository.findByAppIdOrderBySortAsc(user.oAuth2Request.clientId)
+        }
+    }
 
     fun getRoleListByAppId(loginNo: String, appId: String): List<Role> {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        return if (isAdmin(user)) {
+        return if (isSuper(user)) {
             roleRepository.findByAppIdOrderBySortAsc(appId)
         } else {
             roleRepository.findByAppIdAndLevelsGreaterThanOrderBySortAsc(appId, getRoleMinLevel(appId, user))
@@ -52,13 +60,13 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doCreate(rolePO: RolePo, loginNo: String): Role {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        if (!isAdmin(user)) {
+        if (!isSuper(user)) {
             val currLevel = getRoleMinLevel(rolePO.appId!!, user)
             if (currLevel >= rolePO.levels) {
                 throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
             }
         }
-        if (rolePO.code == RoleCode.ADMIN) {
+        if (rolePO.code == RoleCode.SUPER) {
             throw ServerException("不允许创建超级管理员")
         }
         return doSave(Role().apply { appId = rolePO.appId!! }, rolePO)
@@ -68,7 +76,7 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        if (!isAdmin(user)) {
+        if (!isSuper(user)) {
             val roleMinLevel = getRoleMinLevel(user)
             val roleList = roleRepository.findAllById(idList)
             roleList.forEach {
@@ -89,8 +97,8 @@ constructor(userRepository: UserRepository,
             throw ServerException("找不到角色信息")
         }
         val role = roleOptional.get()
-        if (!isAdmin(user)) {
-            val currLevel = getRoleMinLevel(rolePO.appId!!, user)
+        if (!isSuper(user)) {
+            val currLevel = getRoleMinLevel(role.appId, user)
             if (currLevel > 0 && currLevel >= rolePO.levels) {
                 throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
             }
@@ -98,7 +106,7 @@ constructor(userRepository: UserRepository,
                 throw ServerException("没有权限做此操作，请联系系统管理员")
             }
         } else {
-            if (rolePO.code != role.code && role.code == RoleCode.ADMIN) {
+            if (rolePO.code != role.code && role.code == RoleCode.SUPER) {
                 throw ServerException("超级管理员编码不允许修改")
             }
             if (rolePO.levels != role.levels && role.levels <= 0) {

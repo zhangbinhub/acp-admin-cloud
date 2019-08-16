@@ -2,6 +2,7 @@ package pers.acp.admin.oauth.domain
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
@@ -23,7 +24,20 @@ import javax.persistence.criteria.Predicate
 class ApplicationDomain @Autowired
 constructor(userRepository: UserRepository, private val applicationRepository: ApplicationRepository) : OauthBaseDomain(userRepository) {
 
-    fun getAppList(): MutableList<Application> = applicationRepository.findAllByOrderByAppNameAsc()
+    fun getAppList(user: OAuth2Authentication): MutableList<Application> {
+        val currUserInfo = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
+        return if (isSuper(currUserInfo)) {
+            applicationRepository.findAllByOrderByAppNameAsc()
+        } else {
+            applicationRepository.findById(user.oAuth2Request.clientId).let {
+                if (it.isPresent) {
+                    mutableListOf(it.get())
+                } else {
+                    mutableListOf()
+                }
+            }
+        }
+    }
 
     @Transactional
     fun doCreate(applicationPO: ApplicationPo): Application =

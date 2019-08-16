@@ -7,6 +7,6 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object LogFileExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
 }

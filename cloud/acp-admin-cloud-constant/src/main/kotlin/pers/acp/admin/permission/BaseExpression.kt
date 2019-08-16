@@ -14,10 +14,10 @@ open class BaseExpression {
         /**
          * 仅超级管理员可执行
          */
-        const val adminOnly = "hasRole('" + RoleCode.ADMIN + "')"
+        const val superOnly = "hasRole('" + RoleCode.SUPER + "')"
         /**
          * 拥有系统配置权限
          */
-        const val sysConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.sysConfig + "')"
+        const val sysConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.sysConfig + "')"
     }
 }

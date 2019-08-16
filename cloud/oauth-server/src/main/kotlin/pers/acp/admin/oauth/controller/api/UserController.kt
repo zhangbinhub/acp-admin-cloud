@@ -74,7 +74,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
 
     @ApiOperation(value = "获取可管理的用户信息列表", notes = "根据当前登录的用户信息，获取可管理的用户信息列表")
     @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO::class))
-    @PreAuthorize(UserConfigExpression.adminOnly)
+    @PreAuthorize(UserConfigExpression.userConfig)
     @GetMapping(value = [OauthApi.modifiableUser], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun modifiableUser(user: OAuth2Authentication): ResponseEntity<List<User>> =
             ResponseEntity.ok(userDomain.findModifiableUserList(user.name))

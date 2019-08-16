@@ -14,7 +14,6 @@ import pers.acp.admin.permission.BaseExpression
 import pers.acp.admin.common.vo.InfoVO
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.entity.Application
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.admin.oauth.vo.OnlineInfoVo
@@ -41,12 +40,11 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取各应用登录次数统计")
     @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVO::class))
-    @PreAuthorize(BaseExpression.adminOnly)
     @GetMapping(value = [OauthApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun findLoginLog(): ResponseEntity<List<LoginLogVo>> =
+    fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
             mutableListOf<LoginLogVo>().apply {
-                applicationDomain.getAppList().forEach { item ->
+                applicationDomain.getAppList(user).forEach { item ->
                     val loginLogVos = securityTokenService.getLoginLogList(item.id)
                     loginLogVos.forEach { loginLogVO -> loginLogVO.appName = item.appName }
                     this.addAll(loginLogVos)
@@ -73,15 +71,7 @@ constructor(private val logAdapter: LogAdapter,
     fun getOnlineInfo(user: OAuth2Authentication): ResponseEntity<List<OnlineInfoVo>> =
             try {
                 mutableListOf<OnlineInfoVo>().apply {
-                    var applicationList: MutableList<Application> = mutableListOf()
-                    if (userDomain.isAdmin(user)) {
-                        applicationList = applicationDomain.getAppList()
-                    } else {
-                        applicationDomain.getApp(user.oAuth2Request.clientId)?.let {
-                            applicationList.add(it)
-                        }
-                    }
-                    applicationList.forEach {
+                    applicationDomain.getAppList(user).forEach {
                         this.add(OnlineInfoVo(
                                 appId = it.id,
                                 appName = it.appName,
@@ -97,16 +87,17 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取用户在线情况")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过，找不到用户信息；", response = ErrorVO::class))
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.superOnly)
     @GetMapping(value = [OauthApi.onlineInfo + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun getOnlineInfo(@ApiParam(value = "用户id", required = true)
+    fun getOnlineInfo(user: OAuth2Authentication,
+                      @ApiParam(value = "用户id", required = true)
                       @PathVariable
                       userId: String): ResponseEntity<List<OnlineInfoVo>> =
             try {
                 mutableListOf<OnlineInfoVo>().apply {
                     val userInfo = userDomain.getUserInfo(userId) ?: throw ServerException("找不到该用户信息")
-                    applicationDomain.getAppList().forEach { item ->
+                    applicationDomain.getAppList(user).forEach { item ->
                         this.add(OnlineInfoVo(
                                 appId = item.id,
                                 appName = item.appName,
@@ -122,7 +113,7 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "指定应用下的用户强制下线")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
-    @PreAuthorize(BaseExpression.adminOnly)
+    @PreAuthorize(BaseExpression.superOnly)
     @DeleteMapping(value = [OauthApi.onlineInfo + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun delete(@ApiParam(value = "应用id", required = true)

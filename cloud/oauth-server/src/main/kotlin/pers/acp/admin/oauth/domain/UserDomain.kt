@@ -3,7 +3,6 @@ package pers.acp.admin.oauth.domain
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
@@ -38,13 +37,10 @@ constructor(userRepository: UserRepository,
             private val roleRepository: RoleRepository,
             private val securityTokenService: SecurityTokenService) : OauthBaseDomain(userRepository) {
 
-    fun isAdmin(user: OAuth2Authentication): Boolean = isAdmin(findCurrUserInfo(user.name)
-            ?: throw ServerException("无法获取当前用户信息"))
-
     @Throws(ServerException::class)
     private fun validatePermit(loginNo: String, userPO: UserPo, roleSet: Set<Role>, isCreate: Boolean) {
         val currUserInfo = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        if (!isAdmin(currUserInfo)) {
+        if (!isSuper(currUserInfo)) {
             if (currUserInfo.levels >= userPO.levels!!) {
                 throw ServerException("不能编辑级别比自身大的用户信息")
             }
@@ -89,7 +85,7 @@ constructor(userRepository: UserRepository,
 
     fun findModifiableUserList(loginNo: String): MutableList<User> {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        return if (isAdmin(user)) {
+        return if (isSuper(user)) {
             userRepository.findAll()
         } else {
             user.let {
@@ -154,7 +150,7 @@ constructor(userRepository: UserRepository,
         }
         userOptional.get().apply {
             (findCurrUserInfo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
-                if (!isAdmin(it)) {
+                if (!isSuper(it)) {
                     if (it.levels >= this.levels) {
                         throw ServerException("不能修改级别比自身大或相等的用户信息")
                     }
@@ -174,7 +170,7 @@ constructor(userRepository: UserRepository,
             throw ServerException("不能删除自己")
         }
         val userList = userRepository.findAllById(idList)
-        if (!isAdmin(user)) {
+        if (!isSuper(user)) {
             userList.forEach {
                 if (user.levels >= it.levels) {
                     throw ServerException("没有权限做此操作，请联系系统管理员")

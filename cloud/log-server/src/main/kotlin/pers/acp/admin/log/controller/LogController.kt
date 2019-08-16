@@ -35,7 +35,7 @@ constructor(private val logAdapter: LogAdapter, private val logFileDomain: LogFi
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
-    @PreAuthorize(LogFileExpression.adminOnly)
+    @PreAuthorize(LogFileExpression.superOnly)
     @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun query(@ApiParam(value = "开始日期", required = true, example = "0")
@@ -67,7 +67,7 @@ constructor(private val logAdapter: LogAdapter, private val logFileDomain: LogFi
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
-    @PreAuthorize(LogFileExpression.adminOnly)
+    @PreAuthorize(LogFileExpression.superOnly)
     @GetMapping(value = [LogApi.logFile + "/{fileName}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun download(request: HttpServletRequest, response: HttpServletResponse,
