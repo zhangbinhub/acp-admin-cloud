@@ -34,7 +34,7 @@ constructor(private val logAdapter: LogAdapter, private val applicationRepositor
         var builder = memoryClientDetailsServiceBuilder.withClient("test")
                 .secret("test")
                 .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                .authorities(RoleCode.prefix + RoleCode.ADMIN)
+                .authorities(RoleCode.prefix + RoleCode.SUPER)
                 .scopes("test")
                 .accessTokenValiditySeconds(86400)
                 .refreshTokenValiditySeconds(2592000)

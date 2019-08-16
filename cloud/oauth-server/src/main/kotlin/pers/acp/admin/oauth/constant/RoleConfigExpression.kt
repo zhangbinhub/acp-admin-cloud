@@ -11,30 +11,30 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object RoleConfigExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
     /**
      * 角色配置
      */
-    const val roleConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.roleConfig + "')"
+    const val roleConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleConfig + "')"
 
     /**
      * 角色新增
      */
-    const val roleAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.roleAdd + "')"
+    const val roleAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleAdd + "')"
 
     /**
      * 角色删除
      */
-    const val roleDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.roleDelete + "')"
+    const val roleDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleDelete + "')"
 
     /**
      * 角色更新
      */
-    const val roleUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.roleUpdate + "')"
+    const val roleUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleUpdate + "')"
 
     /**
      * 角色查询
      */
-    const val roleQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.roleQuery + "')"
+    const val roleQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleQuery + "')"
 }

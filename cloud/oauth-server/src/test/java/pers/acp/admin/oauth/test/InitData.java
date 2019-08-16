@@ -53,7 +53,7 @@ class InitData extends BaseTest {
         Role roleAdmin = new Role();
         roleAdmin.setAppId(application.getId());
         roleAdmin.setName("超级管理员");
-        roleAdmin.setCode(RoleCode.ADMIN);
+        roleAdmin.setCode(RoleCode.SUPER);
         roleAdmin.setLevels(0);
         roleAdmin.setSort(0);
 

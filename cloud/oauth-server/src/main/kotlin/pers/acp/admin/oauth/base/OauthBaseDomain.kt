@@ -23,8 +23,8 @@ constructor(protected val userRepository: UserRepository) : BaseDomain() {
      * @param user 用户对象
      * @return true|false
      */
-    protected fun isAdmin(user: User): Boolean =
-            user.roleSet.map { it.code }.toList().contains(RoleCode.ADMIN)
+    protected fun isSuper(user: User): Boolean =
+            user.roleSet.map { it.code }.toList().contains(RoleCode.SUPER)
 
     /**
      * 获取指定用户所属角色中最高级别

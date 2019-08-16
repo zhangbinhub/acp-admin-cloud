@@ -58,7 +58,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
      * @return true|false
      */
     private fun isNotPermit(user: User, vararg orgIds: String): Boolean =
-            !isAdmin(user) && !user.organizationMngSet.map { it.id }.toMutableList().containsAll(mutableListOf(*orgIds))
+            !isSuper(user) && !user.organizationMngSet.map { it.id }.toMutableList().containsAll(mutableListOf(*orgIds))
 
     /**
      * 是否有编辑权限

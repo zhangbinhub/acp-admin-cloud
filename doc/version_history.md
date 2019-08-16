@@ -7,6 +7,7 @@
 > - [Upgrade] 优化 gradle 脚本，build任务之后将打好的jar包放入项目根路径下的release目录
 > - [Upgrade] 优化 gradle 脚本，resources文件一同放入release目录，并生成脚本server.sh
 > - [Upgrade] 增加 acp-admin-cloud-constant 公共模块，公共的编码、权限等静态变量移入该模块
+> - [Upgrade] 调整权限，除超级管理员外其余角色只能编辑当前应用下的角色及权限
 > - [Fix] kotlin 反射获取属性时，内置对象也取出来的问题（获取角色编码、权限编码）
 > - [Fix] 修改角色信息时，超级管理员无法添加其他应用角色的问题
 > - [Fix] 重写 SecurityTokenStoreRedis 中 removeAccessToken 方法，解决从redis获取对象反序列化后再进行序列化字节码不一致导致lRem执行不成功的问题

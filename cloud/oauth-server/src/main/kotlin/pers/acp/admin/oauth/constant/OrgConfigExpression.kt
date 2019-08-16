@@ -11,30 +11,30 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object OrgConfigExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
     /**
      * 机构配置
      */
-    const val orgConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.orgConfig + "')"
+    const val orgConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.orgConfig + "')"
 
     /**
      * 机构新增
      */
-    const val orgAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.orgAdd + "')"
+    const val orgAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.orgAdd + "')"
 
     /**
      * 机构删除
      */
-    const val orgDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.orgDelete + "')"
+    const val orgDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.orgDelete + "')"
 
     /**
      * 机构更新
      */
-    const val orgUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.orgUpdate + "')"
+    const val orgUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.orgUpdate + "')"
 
     /**
      * 机构查询
      */
-    const val orgQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.orgQuery + "')"
+    const val orgQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.orgQuery + "')"
 }

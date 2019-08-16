@@ -18,6 +18,11 @@ object RoleCode {
     /**
      * 超级管理员
      */
+    const val SUPER = "SUPER"
+
+    /**
+     * 管理员
+     */
     const val ADMIN = "ADMIN"
 
     /**

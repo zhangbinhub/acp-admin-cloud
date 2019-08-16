@@ -9,35 +9,35 @@ import pers.acp.admin.permission.BaseExpression
  * @since JDK 11
  */
 object AppConfigExpression : BaseExpression() {
-    const val adminOnly = BaseExpression.adminOnly
+    const val superOnly = BaseExpression.superOnly
     const val sysConfig = BaseExpression.sysConfig
     /**
      * 应用配置
      */
-    const val appConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appConfig + "')"
+    const val appConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appConfig + "')"
 
     /**
      * 应用新增
      */
-    const val appAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appAdd + "')"
+    const val appAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appAdd + "')"
 
     /**
      * 应用删除
      */
-    const val appDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appDelete + "')"
+    const val appDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appDelete + "')"
 
     /**
      * 应用更新
      */
-    const val appUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appUpdate + "')"
+    const val appUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appUpdate + "')"
 
     /**
      * 应用查询
      */
-    const val appQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appQuery + "')"
+    const val appQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appQuery + "')"
 
     /**
      * 应用更新密钥
      */
-    const val appUpdateSecret = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.ADMIN + "','" + ModuleFuncCode.appUpdateSecret + "')"
+    const val appUpdateSecret = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.appUpdateSecret + "')"
 }

@@ -80,7 +80,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")
     @PreAuthorize(RoleConfigExpression.roleQuery)
     @GetMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    fun roleList(): ResponseEntity<List<Role>> = ResponseEntity.ok(roleDomain.getRoleList())
+    fun roleList(user: OAuth2Authentication): ResponseEntity<List<Role>> = ResponseEntity.ok(roleDomain.getRoleList(user))
 
     @ApiOperation(value = "新建角色信息", notes = "名称、编码、应用ID、级别、序号、关联用户、关联菜单、关联模块功能")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Role::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO::class))
