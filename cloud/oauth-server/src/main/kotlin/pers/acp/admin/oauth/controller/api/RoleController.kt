@@ -60,6 +60,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
                     }
                 }
             }
+            roleCodeList.sort()
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
         }

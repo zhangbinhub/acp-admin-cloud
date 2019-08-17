@@ -61,6 +61,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
                     moduleFuncCodeList.add(value)
                 }
             }
+            moduleFuncCodeList.sort()
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
         }
