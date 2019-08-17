@@ -13,7 +13,7 @@ object RoleCode {
     /**
      * 新建角色时默认值
      */
-    const val OTHER = "OTHER"
+    const val BUSINESS = "BUSINESS"
 
     /**
      * 超级管理员
