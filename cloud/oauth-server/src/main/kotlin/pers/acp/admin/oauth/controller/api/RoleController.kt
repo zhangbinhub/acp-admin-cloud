@@ -93,9 +93,6 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
         if (CommonTools.isNullStr(rolePO.appId)) {
             throw ServerException("应用ID不能为空")
         }
-        if (!roleCodeList.contains(rolePO.code)) {
-            throw ServerException("角色编码非法，请重新输入")
-        }
         return ResponseEntity.status(HttpStatus.CREATED).body(roleDomain.doCreate(rolePO, user.name))
     }
 
@@ -119,9 +116,6 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(user: OAuth2Authentication, @RequestBody @Valid rolePO: RolePo): ResponseEntity<Role> {
-        if (!roleCodeList.contains(rolePO.code)) {
-            throw ServerException("角色编码非法，请重新输入")
-        }
         if (CommonTools.isNullStr(rolePO.id)) {
             throw ServerException("ID不能为空")
         }

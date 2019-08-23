@@ -1,4 +1,8 @@
 ## 版本更新记录
+##### v3.0.5
+> - [Upgrade] 升级核心库至 6.1.4
+> - [Upgrade] 角色编码可自定义输入
+> - [Upgrade] 升级 kotlin 至 1.3.50
 ##### v3.0.4
 > - [Upgrade] 优化 gradle 脚本，每个模块重新设置 group
 > - [Upgrade] Config server 增加api文档配置
