@@ -24,7 +24,8 @@ constructor(protected val userRepository: UserRepository) : BaseDomain() {
      * @return true|false
      */
     protected fun isSuper(user: User): Boolean =
-            user.roleSet.map { it.code }.toList().contains(RoleCode.SUPER)
+            user.roleSet.map { it.code }.toList().contains(RoleCode.SUPER) ||
+                    user.roleSet.map { it.levels }.toIntArray().min() == 0
 
     /**
      * 获取指定用户所属角色中最高级别
