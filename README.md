@@ -7,7 +7,7 @@
 ## 相关组件版本
 - [Spring Boot 2.1.7.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR2](http://projects.spring.io/spring-cloud)
-- [Acp 6.1.4](https://github.com/zhangbin1010/acp)
+- [Acp 6.1.5](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -76,7 +76,7 @@
 ## 一、环境要求
 - jdk 11
 - gradle 5.6
-- kotlin 1.3.41
+- kotlin 1.3.50
 
 ## 二、gradle 配置及使用
 ### （一）配置文件
