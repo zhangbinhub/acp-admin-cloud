@@ -1,6 +1,8 @@
 ## 版本更新记录
-##### v3.x
+##### v3.0.6
 > - [Upgrade] 升级 gradle 至 5.6
+> - [Upgrade] 升级核心库至 6.1.5
+> - [Upgrade] gateway-server 增加是否允许跨域配置项
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

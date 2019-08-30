@@ -1,5 +1,5 @@
 # acp-admin-cloud
-###### v3.0.5 [版本更新日志](doc/version_history.md)
+###### v3.0.6 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
 - 该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
