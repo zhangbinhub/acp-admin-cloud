@@ -1,7 +1,9 @@
 package pers.acp.admin.gateway.conf
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cloud.gateway.filter.GlobalFilter
 import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter
 import org.springframework.cloud.stream.annotation.EnableBinding
@@ -40,6 +42,8 @@ import javax.annotation.PostConstruct
 class RouteConfiguration @Autowired
 constructor(private val environment: Environment, private val bindings: BindingServiceProperties, private val routeLogDomain: RouteLogDomain) {
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     @PostConstruct
     fun init() {
         initConsumer()
@@ -75,7 +79,9 @@ constructor(private val environment: Environment, private val bindings: BindingS
     fun updateRouteConsumer(routeRedisRepository: RouteRedisRepository) = UpdateRouteConsumer(routeRedisRepository)
 
     @Bean
+    @ConditionalOnProperty(name = ["cross-domain"], havingValue = "true")
     fun corsFilter(): WebFilter {
+        log.warn("cross-domain is true: Production environment is not recommended to true");
         return object : WebFilter {
             override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
                 val request = exchange.request

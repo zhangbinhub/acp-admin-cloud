@@ -1,4 +1,5 @@
 debug: false
+cross-domain: true
 server:
   address: 127.0.0.1
   port: 8771
