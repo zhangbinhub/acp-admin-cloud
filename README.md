@@ -132,8 +132,8 @@ ext {
 
 ## 四、启停 springboot 应用
 - [jvm 参考参数](doc/jvm-params.txt)
-- [启停脚本(Linux) server.sh](doc/script/server.sh)，根据实际情况修改第2行 APP_NAME 和第3行 JVM_PARAM 的值即可，和 SpringBoot 应用的 .jar 放在同一路径下
-- [启停脚本(windows) server.bat](doc/script/server.bat)，根据实际情况修改第1行末尾需要执行的 jar 名称，和SpringBoot应用的 .jar 放在同一路径下
+- [启停脚本模板(Linux)](doc/script/server.model)，根据实际情况修改第2行 APP_NAME 和第3行 JVM_PARAM 的值即可，和 SpringBoot 应用的 .jar 放在同一路径下
+- [启停脚本(windows)](doc/script/server.bat)，根据实际情况修改第1行末尾需要执行的 jar 名称，和SpringBoot应用的 .jar 放在同一路径下
 - Linux 命令：
 
 |          命令         |           描述          |
@@ -189,7 +189,7 @@ http://127.0.0.1:5601
 > - 执行 config-server 模块下的 pers.acp.admin.config.test.InitData.doInitAll() 单元测试
 
 ## 七、服务列表
-### （一）[admin-server](cloud/admin-server/README.md)
+### （一）[admin-server](common/admin-server/README.md)
 ###### 1 可视化监控，监控服务状态、信息聚合
 |          url          |  描述                   |
 | --------------------- | ----------------------- | 
@@ -219,7 +219,7 @@ http://127.0.0.1:5601
 > 服务注册发现（支持高可用eureka集群）
 >（1）无需改动代码
 >（2）修改 yml 配置即可
-### （三）[gateway-server](cloud/gateway-server/README.md)
+### （三）[gateway-server](common/gateway-server/README.md)
 > 网关服务，修改 yml
 > 动态路由信息保存在 redis
 ### （四）[config-server](cloud/config-server/README.md)
