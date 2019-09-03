@@ -16,7 +16,7 @@ abstract class BaseDomain {
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize)
             } else {
                 var direction: Sort.Direction = Sort.Direction.DESC
-                if (queryParam.orderCommond.equals("asc", ignoreCase = true)) {
+                if (queryParam.orderCommond.startsWith("asc", ignoreCase = true)) {
                     direction = Sort.Direction.ASC
                 }
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize, direction, *queryParam.orderName!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
