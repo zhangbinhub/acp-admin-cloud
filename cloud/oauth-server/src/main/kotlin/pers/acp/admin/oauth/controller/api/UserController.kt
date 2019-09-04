@@ -142,7 +142,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
         return ResponseEntity.ok(userDomain.doQuery(userPO))
     }
 
-    @ApiOperation(value = "查询用户列表", notes = "根据用户ID查询详细信息")
+    @ApiOperation(value = "查询用户信息", notes = "根据用户ID查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVO::class))
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
