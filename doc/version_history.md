@@ -1,6 +1,6 @@
 ## 版本更新记录
 ##### v3.0.6
-> - [Upgrade] 升级 gradle 至 5.6
+> - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.5
 > - [Upgrade] gateway-server 增加是否允许跨域配置项
 > - [Upgrade] 调整工程结构，无需依赖Acp核心库的模块放入common
