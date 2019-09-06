@@ -5,6 +5,7 @@
 > - [Upgrade] gateway-server 增加是否允许跨域配置项
 > - [Upgrade] 调整工程结构，无需依赖Acp核心库的模块放入common
 > - [Upgrade] 调整BaseDomain中查询排序封装
+> - [Upgrade] 调整机构信息 entity，编码可为空
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

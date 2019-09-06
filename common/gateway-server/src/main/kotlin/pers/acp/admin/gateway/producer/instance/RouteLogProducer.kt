@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.support.MessageBuilder
-import pers.acp.admin.gateway.po.RouteLogPO
+import pers.acp.admin.gateway.po.RouteLogPo
 import pers.acp.admin.gateway.producer.RouteLogOutput
 
 /**
@@ -17,9 +17,9 @@ class RouteLogProducer @Autowired
 constructor(private val routeLogOutput: RouteLogOutput, private val objectMapper: ObjectMapper) {
 
     @Throws(JsonProcessingException::class)
-    fun doNotifyRouteLog(routeLogPO: RouteLogPO) {
+    fun doNotifyRouteLog(routeLogPo: RouteLogPo) {
         GlobalScope.launch {
-            routeLogOutput.sendMessage().send(MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogPO)).build())
+            routeLogOutput.sendMessage().send(MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogPo)).build())
         }
     }
 

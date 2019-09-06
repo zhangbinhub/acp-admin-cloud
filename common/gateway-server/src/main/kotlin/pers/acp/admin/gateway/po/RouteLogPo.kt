@@ -4,7 +4,7 @@ package pers.acp.admin.gateway.po
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-data class RouteLogPO(
+data class RouteLogPo(
         var remoteIp: String? = null,
         var gatewayIp: String? = null,
         var path: String? = null,

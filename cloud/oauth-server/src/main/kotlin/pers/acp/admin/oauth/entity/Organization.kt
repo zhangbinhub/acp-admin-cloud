@@ -28,7 +28,7 @@ class Organization : OauthBaseTreeEntity<Organization>() {
     @ApiModelProperty("机构名称")
     var name: String = ""
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     @ApiModelProperty("机构编码")
     var code: String = ""
 

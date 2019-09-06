@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ServerWebExchange
-import pers.acp.admin.gateway.po.RouteLogPO
+import pers.acp.admin.gateway.po.RouteLogPo
 import pers.acp.admin.gateway.producer.RouteLogOutput
 import pers.acp.admin.gateway.producer.instance.RouteLogProducer
 
@@ -31,8 +31,8 @@ constructor(private val environment: Environment, private val routeLogOutput: Ro
     fun routeLogProducer() = RouteLogProducer(routeLogOutput, objectMapper)
 
     @Transactional
-    fun beforeRoute(serverWebExchange: ServerWebExchange): RouteLogPO {
-        val routeLogPO = RouteLogPO(
+    fun beforeRoute(serverWebExchange: ServerWebExchange): RouteLogPo {
+        val routeLogPO = RouteLogPo(
                 remoteIp = if (serverWebExchange.request.remoteAddress != null) serverWebExchange.request.remoteAddress!!.hostString else "",
                 gatewayIp = environment.getProperty("server.address")
         )
@@ -62,15 +62,15 @@ constructor(private val environment: Environment, private val routeLogOutput: Ro
     }
 
     @Transactional
-    fun afterRoute(serverWebExchange: ServerWebExchange, routeLogPO: RouteLogPO) {
+    fun afterRoute(serverWebExchange: ServerWebExchange, routeLogPo: RouteLogPo) {
         try {
             val responseTime = System.currentTimeMillis()
-            routeLogPO.processTime = responseTime - routeLogPO.requestTime!!
-            routeLogPO.responseTime = responseTime
+            routeLogPo.processTime = responseTime - routeLogPo.requestTime!!
+            routeLogPo.responseTime = responseTime
             serverWebExchange.response.statusCode?.let {
-                routeLogPO.responseStatus = it.value()
+                routeLogPo.responseStatus = it.value()
             }
-            routeLogProducer().doNotifyRouteLog(routeLogPO)
+            routeLogProducer().doNotifyRouteLog(routeLogPo)
         } catch (e: Exception) {
             log.error(e.message, e)
         }
