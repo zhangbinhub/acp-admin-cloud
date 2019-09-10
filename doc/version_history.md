@@ -11,6 +11,7 @@
 >   - netty to "4.1.39.Final"
 > - [Upgrade] 去除 file-server 模块
 > - [Upgrade] 应用信息表增加 scope 字段
+> - [Upgrade] 取消热部署配置
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入
