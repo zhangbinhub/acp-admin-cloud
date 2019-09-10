@@ -48,6 +48,7 @@ class InitData extends BaseTest {
         application.setAppName("Acp-Admin");
         application.setSecret("2523342F2BD345EA9658452A289364AA");
         application.setCovert(false);
+        application.setScope("ALL");
         application = applicationRepository.save(application);
 
         Role roleAdmin = new Role();

@@ -11,7 +11,7 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_gateway_route_log")
+@Table(name = "t_log_gateway_route")
 @ApiModel("网关路由日志")
 class RouteLog {
 

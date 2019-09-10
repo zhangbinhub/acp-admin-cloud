@@ -1,11 +1,16 @@
 ## 版本更新记录
-##### v3.0.6
+##### v3.1.0
 > - [Upgrade] 升级 gradle 至 5.6.2
-> - [Upgrade] 升级核心库至 6.1.5
+> - [Upgrade] 升级核心库至 6.1.6
 > - [Upgrade] gateway-server 增加是否允许跨域配置项
 > - [Upgrade] 调整工程结构，无需依赖Acp核心库的模块放入common
 > - [Upgrade] 调整BaseDomain中查询排序封装
 > - [Upgrade] 调整机构信息 entity，编码可为空
+> - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE
+> - [Upgrade] 升级依赖项
+>   - netty to "4.1.39.Final"
+> - [Upgrade] 去除 file-server 模块
+> - [Upgrade] 应用信息表增加 scope 字段
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

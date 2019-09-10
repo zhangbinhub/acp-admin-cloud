@@ -1,14 +1,15 @@
 package pers.acp.admin.oauth.domain.security
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder
 import org.springframework.security.oauth2.provider.ClientDetails
 import org.springframework.security.oauth2.provider.ClientDetailsService
 import org.springframework.security.oauth2.provider.ClientRegistrationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.repo.ApplicationRepository
+import pers.acp.core.CommonTools
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 import javax.annotation.PostConstruct
@@ -31,21 +32,24 @@ constructor(private val logAdapter: LogAdapter, private val applicationRepositor
     fun loadClientInfo() {
         val applicationList = applicationRepository.findAll()
         val memoryClientDetailsServiceBuilder = InMemoryClientDetailsServiceBuilder()
-        var builder = memoryClientDetailsServiceBuilder.withClient("test")
-                .secret("test")
-                .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                .authorities(RoleCode.prefix + RoleCode.SUPER)
-                .scopes("test")
-                .accessTokenValiditySeconds(86400)
-                .refreshTokenValiditySeconds(2592000)
-        applicationList.forEach { application ->
-            builder = builder.and()
-                    .withClient(application.id)
-                    .secret(application.secret)
-                    .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                    .scopes("ALL")
-                    .accessTokenValiditySeconds(application.accessTokenValiditySeconds)
-                    .refreshTokenValiditySeconds(application.refreshTokenValiditySeconds)
+        if (applicationList.size > 0) {
+            var builder: ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder>.ClientBuilder? = null
+            applicationList.forEach { application ->
+                builder = if (builder != null) {
+                    builder!!.and().withClient(application.id)
+                } else {
+                    memoryClientDetailsServiceBuilder.withClient(application.id)
+                }
+                builder!!.secret(application.secret)
+                        .authorizedGrantTypes("password", "client_credentials", "refresh_token")
+                        .accessTokenValiditySeconds(application.accessTokenValiditySeconds)
+                        .refreshTokenValiditySeconds(application.refreshTokenValiditySeconds)
+                application.scope.apply {
+                    if (!CommonTools.isNullStr(this)) {
+                        this.split(",").forEach { scope -> builder!!.scopes(scope) }
+                    }
+                }
+            }
         }
         try {
             clientDetailsService = memoryClientDetailsServiceBuilder.build()

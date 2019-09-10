@@ -1,13 +1,13 @@
 # acp-admin-cloud
-###### v3.0.6 [版本更新日志](doc/version_history.md)
+###### v3.1.0 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
 - 该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.1.7.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.8.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR2](http://projects.spring.io/spring-cloud)
-- [Acp 6.1.5](https://github.com/zhangbin1010/acp)
+- [Acp 6.1.6](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -241,26 +241,20 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供全套权限体系接口
-### （七）[file-server](cloud/file-server/README.md)
-> - 文件服务
-> - 依赖 
->   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
-> - 提供基本的文件上传、下载服务
-### （八）[route-server](cloud/route-server/README.md)
+### （七）[route-server](cloud/route-server/README.md)
 > - 路由服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供动态路由策略配置及刷新接口
 > - 提供路由日志信息查询接口
-### （九）[workflow-server](cloud/workflow-server/README.md)
+### （八）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供工作流相关接口服务
-### （十）[config-refresh-server](cloud/config-refresh-server/README.md)
+### （九）[config-refresh-server](cloud/config-refresh-server/README.md)
 > - 配置刷新服务
 > - 依赖 cloud:acp-admin-cloud-dependencies
 > - 接收 /actuator 管理接口，向总线发送刷新配置“事件”

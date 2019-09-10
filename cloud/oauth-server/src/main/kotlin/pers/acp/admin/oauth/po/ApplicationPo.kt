@@ -19,10 +19,13 @@ data class ApplicationPo(
         @get:NotBlank(message = "应用名称不能为空")
         var appName: String? = null,
 
-        @ApiModelProperty(value = "token 有效期，单位秒", required = true, position = 2)
+        @ApiModelProperty("权限范围，多个权限“,”分隔", position = 2)
+        var scope: String? = null,
+
+        @ApiModelProperty(value = "token 有效期，单位秒", required = true, position = 3)
         var accessTokenValiditySeconds: Int = 86400,
 
-        @ApiModelProperty(value = "refresh token 有效期，单位秒", required = true, position = 3)
+        @ApiModelProperty(value = "refresh token 有效期，单位秒", required = true, position = 4)
         var refreshTokenValiditySeconds: Int = 2592000,
 
         @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
