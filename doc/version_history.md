@@ -13,6 +13,7 @@
 > - [Upgrade] 去除 file-server 模块
 > - [Upgrade] 应用信息表增加 scope 字段
 > - [Upgrade] 取消热部署配置
+> - [Upgrade] 路由日志相关功能移入 log-server
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

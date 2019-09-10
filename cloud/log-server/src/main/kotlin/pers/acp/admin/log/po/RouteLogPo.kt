@@ -1,4 +1,4 @@
-package pers.acp.admin.route.po
+package pers.acp.admin.log.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty

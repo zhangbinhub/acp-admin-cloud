@@ -1,7 +1,7 @@
-package pers.acp.admin.route.repo
+package pers.acp.admin.log.repo
 
 import pers.acp.admin.common.base.BaseRepository
-import pers.acp.admin.route.entity.RouteLog
+import pers.acp.admin.log.entity.RouteLog
 
 /**
  * @author zhang by 21/05/2019

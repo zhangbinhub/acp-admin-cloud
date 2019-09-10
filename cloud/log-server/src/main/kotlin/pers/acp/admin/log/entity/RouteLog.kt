@@ -1,4 +1,4 @@
-package pers.acp.admin.route.entity
+package pers.acp.admin.log.entity
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty

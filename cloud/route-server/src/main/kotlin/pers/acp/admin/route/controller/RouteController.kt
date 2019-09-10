@@ -14,8 +14,6 @@ import pers.acp.admin.common.vo.InfoVO
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.admin.route.constant.RouteApi
 import pers.acp.admin.route.domain.RouteDomain
-import pers.acp.admin.route.entity.RouteLog
-import pers.acp.admin.route.po.RouteLogPo
 import pers.acp.admin.route.po.RoutePo
 import pers.acp.admin.route.entity.Route
 import pers.acp.admin.route.producer.instance.UpdateRouteProducer
@@ -87,18 +85,6 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
             throw ServerException("分页查询参数不能为空")
         }
         return ResponseEntity.ok(routeDomain.doQuery(routePo))
-    }
-
-    @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、开始时间、结束时间、响应状态")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
-    @PreAuthorize(BaseExpression.superOnly)
-    @PostMapping(value = [RouteApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @Throws(ServerException::class)
-    fun queryLog(@RequestBody routeLogPO: RouteLogPo): ResponseEntity<Page<RouteLog>> {
-        if (routeLogPO.queryParam == null) {
-            throw ServerException("分页查询参数不能为空")
-        }
-        return ResponseEntity.ok(routeDomain.doQueryLog(routeLogPO))
     }
 
     @ApiOperation(value = "刷新路由配置信息")

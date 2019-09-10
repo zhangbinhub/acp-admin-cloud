@@ -7,4 +7,5 @@ package pers.acp.admin.log.constant
 object LogApi {
     const val basePath = "/log"
     const val logFile = "/files"
+    const val gateWayRouteLog = "/gatewayroutelog"
 }

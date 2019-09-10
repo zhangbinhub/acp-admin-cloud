@@ -1,8 +1,8 @@
-package pers.acp.admin.route.consumer
+package pers.acp.admin.log.consumer
 
 import org.springframework.cloud.stream.annotation.Input
 import org.springframework.messaging.SubscribableChannel
-import pers.acp.admin.route.constant.GateWayConstant
+import pers.acp.admin.log.constant.LogServerConstant
 
 /**
  * @author zhang by 18/03/2019
@@ -10,7 +10,7 @@ import pers.acp.admin.route.constant.GateWayConstant
  */
 interface RouteLogInput {
 
-    @Input(GateWayConstant.ROUTE_LOG_INPUT)
+    @Input(LogServerConstant.ROUTE_LOG_INPUT)
     fun input(): SubscribableChannel
 
 }
