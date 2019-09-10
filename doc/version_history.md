@@ -9,6 +9,7 @@
 > - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE
 > - [Upgrade] 升级依赖项
 >   - netty to "4.1.39.Final"
+>   - kotlinx-coroutines-core to "1.3.1"
 > - [Upgrade] 去除 file-server 模块
 > - [Upgrade] 应用信息表增加 scope 字段
 > - [Upgrade] 取消热部署配置
