@@ -1,15 +1,20 @@
-package pers.acp.admin.gateway.po
+package pers.acp.admin.log.message
 
 /**
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-data class RouteLogPo(
+data class RouteLogMessage(
+        var applyToken: Boolean = false,
         var remoteIp: String? = null,
         var gatewayIp: String? = null,
         var path: String? = null,
         var serverId: String? = null,
+        var targetIp: String? = null,
         var targetUri: String? = null,
+        var targetPath: String? = null,
+        var method: String? = null,
+        var token: String? = null,
         var requestTime: Long? = null,
         var processTime: Long? = null,
         var responseTime: Long? = null,

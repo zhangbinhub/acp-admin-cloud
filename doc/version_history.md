@@ -1,5 +1,5 @@
 ## 版本更新记录
-##### v3.1.0
+##### v4.0.0
 > - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.6
 > - [Upgrade] gateway-server 增加是否允许跨域配置项
@@ -14,6 +14,7 @@
 > - [Upgrade] 应用信息表增加 scope 字段
 > - [Upgrade] 取消热部署配置
 > - [Upgrade] 路由日志相关功能移入 log-server
+> - [Upgrade] 重写 gateway 路由请求、响应过滤器，路由日志消息
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

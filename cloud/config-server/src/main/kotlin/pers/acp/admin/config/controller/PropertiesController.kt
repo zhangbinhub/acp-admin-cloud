@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.permission.BaseExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.config.constant.ConfigApi
 import pers.acp.admin.config.domain.PropertiesDomain
 import pers.acp.admin.config.entity.Properties
@@ -56,9 +56,9 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: List<String>): ResponseEntity<InfoVO> {
+               idList: List<String>): ResponseEntity<InfoVo> {
         propertiesDomain.doDelete(idList)
-        return ResponseEntity.ok(InfoVO(message = "删除成功"))
+        return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新服务名称、配置项、标签、键、值、描述")
@@ -101,9 +101,9 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @PostMapping(value = [ConfigApi.propertiesRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun refresh(): ResponseEntity<InfoVO> {
+    fun refresh(): ResponseEntity<InfoVo> {
         configRefreshServer.busRefresh()
-        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后所有服务将刷新配置信息"))
+        return ResponseEntity.ok(InfoVo(message = "请求成功，稍后所有服务将刷新配置信息"))
     }
 
     @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务名，如果有该服务有多个实例则均会刷新")
@@ -112,9 +112,9 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @PostMapping(value = [ConfigApi.propertiesRefreshApplication], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun refresh(@ApiParam(value = "服务名", required = true) @RequestParam applicationName: String): ResponseEntity<InfoVO> {
+    fun refresh(@ApiParam(value = "服务名", required = true) @RequestParam applicationName: String): ResponseEntity<InfoVo> {
         configRefreshServer.busRefresh(applicationName)
-        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后${applicationName}将刷新配置信息"))
+        return ResponseEntity.ok(InfoVo(message = "请求成功，稍后${applicationName}将刷新配置信息"))
     }
 
     @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务ID的匹配表达式；格式：name:ip:port:version:profiles；例如：log-server:**")
@@ -123,9 +123,9 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     @PostMapping(value = [ConfigApi.propertiesRefreshMatcher], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun refreshMatcher(@ApiParam(value = "刷新规则表达式", required = true) matcher: String): ResponseEntity<InfoVO> {
+    fun refreshMatcher(@ApiParam(value = "刷新规则表达式", required = true) matcher: String): ResponseEntity<InfoVo> {
         configRefreshServer.busRefreshMatcher(matcher)
-        return ResponseEntity.ok(InfoVO(message = "请求成功，稍后表达式【${matcher}】所匹配的服务将刷新配置信息"))
+        return ResponseEntity.ok(InfoVo(message = "请求成功，稍后表达式【${matcher}】所匹配的服务将刷新配置信息"))
     }
 
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull
  * @since JDK 11
  */
 @ApiModel("启动审批参数")
-data class FlowApprovePO(
+data class FlowApprovePo(
         @ApiModelProperty(value = "任务id", required = true, position = 1)
         @NotBlank(message = "任务id不能为空")
         var taskId: String? = null,

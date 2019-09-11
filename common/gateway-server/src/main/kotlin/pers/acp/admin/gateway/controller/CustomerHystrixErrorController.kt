@@ -5,7 +5,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import pers.acp.admin.gateway.vo.ErrorVO
+import pers.acp.admin.gateway.vo.ErrorVo
 import reactor.core.publisher.Mono
 
 /**
@@ -22,7 +22,7 @@ class CustomerHystrixErrorController {
      */
     @RequestMapping(value = ["/hystrixhandle"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun hystrixHandle(): Mono<ResponseEntity<*>> {
-        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorVO(
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorVo(
                 code = 400,
                 error = "invalid service",
                 errorDescription = "GateWay error, the service is invalid"

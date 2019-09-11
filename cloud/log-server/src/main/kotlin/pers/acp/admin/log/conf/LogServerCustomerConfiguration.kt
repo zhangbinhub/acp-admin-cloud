@@ -33,4 +33,16 @@ class LogServerCustomerConfiguration {
     @Value("\${log-server.max-history-day-number}")
     var maxHistoryDayNumber = 180
 
+    /**
+     * 是否记录路由日志
+     */
+    @Value("\${log-server.route-log}")
+    var routeLog = true
+
+    /**
+     * 是否记录操作日志
+     */
+    @Value("\${log-server.operate-log}")
+    var operateLog = true
+
 }

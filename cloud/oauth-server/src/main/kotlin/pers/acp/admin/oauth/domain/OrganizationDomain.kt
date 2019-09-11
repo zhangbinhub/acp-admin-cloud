@@ -41,13 +41,13 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 organizationList
             }
 
-    private fun doSave(organization: Organization, organizationPO: OrganizationPo): Organization =
+    private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
             organizationRepository.save(organization.apply {
-                name = organizationPO.name!!
-                code = organizationPO.code
-                sort = organizationPO.sort
-                userSet = userRepository.findAllById(organizationPO.userIds).toMutableSet()
-                parentId = organizationPO.parentId!!
+                name = organizationPo.name!!
+                code = organizationPo.code
+                sort = organizationPo.sort
+                userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
+                parentId = organizationPo.parentId!!
             })
 
     /**
@@ -72,13 +72,13 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
 
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(loginNo: String, organizationPO: OrganizationPo): Organization {
+    fun doCreate(loginNo: String, organizationPo: OrganizationPo): Organization {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        if (isNotPermit(user, organizationPO.parentId!!)) {
+        if (isNotPermit(user, organizationPo.parentId!!)) {
             throw ServerException("没有权限做此操作，请联系系统管理员")
         }
         return Organization().let {
-            doSave(it, organizationPO).apply {
+            doSave(it, organizationPo).apply {
                 user.organizationMngSet.add(this)
                 userRepository.save(user)
             }
@@ -100,8 +100,8 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(loginNo: String, organizationPO: OrganizationPo): Organization {
-        val organizationOptional = organizationRepository.findById(organizationPO.id!!)
+    fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization {
+        val organizationOptional = organizationRepository.findById(organizationPo.id!!)
         if (organizationOptional.isEmpty) {
             throw ServerException("找不到机构信息")
         }
@@ -109,7 +109,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
         if (isNotPermit(loginNo, organization.id)) {
             throw ServerException("没有权限做此操作，请联系系统管理员")
         }
-        return doSave(organization, organizationPO)
+        return doSave(organization, organizationPo)
     }
 
     fun getModOrgList(loginNo: String): MutableList<Organization> =

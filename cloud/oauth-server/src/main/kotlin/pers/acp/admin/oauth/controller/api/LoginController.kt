@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.permission.BaseExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.token.SecurityTokenService
@@ -56,11 +56,11 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "注销当前用户")
     @PostMapping(value = [OauthApi.logOut], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun doLogOut(user: OAuth2Authentication): ResponseEntity<InfoVO> =
+    fun doLogOut(user: OAuth2Authentication): ResponseEntity<InfoVo> =
             try {
                 securityTokenService.removeToken(user)
                 logAdapter.info("用户[loginNo=" + user.name + "]主动下线!")
-                ResponseEntity.ok(InfoVO(message = "成功下线"))
+                ResponseEntity.ok(InfoVo(message = "成功下线"))
             } catch (e: Exception) {
                 throw ServerException(e.message)
             }
@@ -123,14 +123,14 @@ constructor(private val logAdapter: LogAdapter,
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: List<String>): ResponseEntity<InfoVO> =
+               idList: List<String>): ResponseEntity<InfoVo> =
             try {
                 idList.forEach {
                     val userInfo = userDomain.getUserInfo(it) ?: throw ServerException("找不到该用户信息")
                     securityTokenService.removeTokensByAppIdAndLoginNo(appId, userInfo.loginNo)
                     logAdapter.info("用户[" + userInfo.name + "(" + userInfo.loginNo + ")]被管理员强制下线!")
                 }
-                ResponseEntity.ok(InfoVO(message = "成功下线"))
+                ResponseEntity.ok(InfoVo(message = "成功下线"))
             } catch (e: Exception) {
                 throw ServerException(e.message)
             }

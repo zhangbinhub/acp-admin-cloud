@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank
  * @since JDK 11
  */
 @ApiModel("启动流程参数")
-data class FlowStartPO(
+data class FlowStartPo(
         @ApiModelProperty(value = "流程定义键", required = true, position = 1)
         @NotBlank(message = "流程定义键不能为空")
         var processDefinitionKey: String? = null,

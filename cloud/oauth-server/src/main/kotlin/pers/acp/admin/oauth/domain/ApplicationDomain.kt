@@ -40,13 +40,14 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     }
 
     @Transactional
-    fun doCreate(applicationPO: ApplicationPo): Application =
+    fun doCreate(applicationPo: ApplicationPo): Application =
             Application().apply {
-                appName = applicationPO.appName!!
+                appName = applicationPo.appName!!
                 secret = CommonTools.getUuid32()
-                scope = applicationPO.scope!!.trim().replace("，", ",")
-                accessTokenValiditySeconds = applicationPO.accessTokenValiditySeconds
-                refreshTokenValiditySeconds = applicationPO.refreshTokenValiditySeconds
+                scope = applicationPo.scope!!.trim().replace("，", ",")
+                identify = applicationPo.identify!!
+                accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
+                refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
                 covert = true
             }.let {
                 applicationRepository.save(it)
@@ -54,16 +55,17 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(applicationPO: ApplicationPo): Application {
-        val applicationOptional = applicationRepository.findById(applicationPO.id!!)
+    fun doUpdate(applicationPo: ApplicationPo): Application {
+        val applicationOptional = applicationRepository.findById(applicationPo.id!!)
         if (applicationOptional.isEmpty) {
             throw ServerException("找不到信息")
         }
         return applicationOptional.get().let {
-            it.appName = applicationPO.appName!!
-            it.scope = applicationPO.scope!!.trim().replace("，", ",")
-            it.accessTokenValiditySeconds = applicationPO.accessTokenValiditySeconds
-            it.refreshTokenValiditySeconds = applicationPO.refreshTokenValiditySeconds
+            it.appName = applicationPo.appName!!
+            it.scope = applicationPo.scope!!.trim().replace("，", ",")
+            it.identify = applicationPo.identify!!
+            it.accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
+            it.refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
             applicationRepository.save(it)
         }
     }
@@ -84,14 +86,14 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     @Transactional
     fun doDelete(idList: MutableList<String>) = applicationRepository.deleteByIdInAndCovert(idList, true)
 
-    fun doQuery(applicationPO: ApplicationPo): Page<Application> =
+    fun doQuery(applicationPo: ApplicationPo): Page<Application> =
             applicationRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(applicationPO.appName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("appName").`as`(String::class.java), "%" + applicationPO.appName + "%"))
+                if (!CommonTools.isNullStr(applicationPo.appName)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("appName").`as`(String::class.java), "%" + applicationPo.appName + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(applicationPO.queryParam!!))
+            }, buildPageRequest(applicationPo.queryParam!!))
 
     fun getApp(appId: String): Application? = applicationRepository.findById(appId).orElse(null)
 

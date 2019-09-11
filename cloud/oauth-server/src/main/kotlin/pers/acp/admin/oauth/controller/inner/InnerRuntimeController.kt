@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.common.constant.path.CommonPath
 import pers.acp.admin.oauth.constant.OauthOpenInnerApi
-import pers.acp.admin.common.vo.RuntimeConfigVO
+import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVO
@@ -37,9 +37,9 @@ constructor(private val runtimeConfigDomain: RuntimeConfigDomain) {
     fun find(@ApiParam(value = "参数名称", required = true)
              @NotBlank(message = "参数名称不能为空")
              @PathVariable
-             name: String): ResponseEntity<RuntimeConfigVO> =
+             name: String): ResponseEntity<RuntimeConfigVo> =
             (runtimeConfigDomain.findByName(name) ?: throw ServerException("找不到参数信息")).let {
-                RuntimeConfigVO().apply {
+                RuntimeConfigVo().apply {
                     BeanUtils.copyProperties(it, this)
                 }.let {
                     ResponseEntity.ok(it)

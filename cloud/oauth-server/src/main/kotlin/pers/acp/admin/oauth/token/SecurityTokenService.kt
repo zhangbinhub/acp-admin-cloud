@@ -62,10 +62,14 @@ constructor(private val logAdapter: LogAdapter,
     override fun createAccessToken(authentication: OAuth2Authentication): OAuth2AccessToken? {
         removeToken(tokenStore.getAccessToken(authentication))
         val oAuth2AccessToken = super.createAccessToken(authentication)
-        try {
-            tokenStore.storeLoginNum(authentication.oAuth2Request.clientId, oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID].toString())
-        } catch (e: Exception) {
-            logAdapter.error(e.message, e)
+        if (oAuth2AccessToken.additionalInformation.isNotEmpty()) {
+            oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]?.apply {
+                try {
+                    tokenStore.storeLoginNum(authentication.oAuth2Request.clientId, this.toString())
+                } catch (e: Exception) {
+                    logAdapter.error(e.message, e)
+                }
+            }
         }
         return oAuth2AccessToken
     }

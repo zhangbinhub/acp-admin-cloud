@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.admin.route.constant.RouteApi
 import pers.acp.admin.route.domain.RouteDomain
@@ -55,9 +55,9 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: List<String>): ResponseEntity<InfoVO> {
+               idList: List<String>): ResponseEntity<InfoVo> {
         routeDomain.doDelete(idList)
-        return ResponseEntity.ok(InfoVO(message = "删除成功"))
+        return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新路由信息", notes = "可更新路由ID、路由URI、断言、过滤器、序号")
@@ -93,10 +93,10 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @PostMapping(value = [RouteApi.gateWayRouteRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun refresh(): ResponseEntity<InfoVO> {
+    fun refresh(): ResponseEntity<InfoVo> {
         routeDomain.doRefresh()
         updateRouteProducer.doNotifyUpdateRoute()
-        return ResponseEntity.ok(InfoVO(message = "刷新路由缓存成功，稍后网关将刷新路由配置信息"))
+        return ResponseEntity.ok(InfoVo(message = "刷新路由缓存成功，稍后网关将刷新路由配置信息"))
     }
 
 }

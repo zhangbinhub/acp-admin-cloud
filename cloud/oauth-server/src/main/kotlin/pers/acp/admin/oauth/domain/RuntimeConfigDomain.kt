@@ -42,16 +42,16 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
 
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(runtimePO: RuntimePo): RuntimeConfig {
-        val runtimeConfigOptional = runtimeConfigRepository.findByName(runtimePO.name!!)
+    fun doCreate(runtimePo: RuntimePo): RuntimeConfig {
+        val runtimeConfigOptional = runtimeConfigRepository.findByName(runtimePo.name!!)
         if (runtimeConfigOptional.isPresent) {
             throw ServerException("参数信息已存在")
         }
         return RuntimeConfig().apply {
-            name = runtimePO.name!!
-            value = runtimePO.value
-            configDes = runtimePO.configDes
-            enabled = runtimePO.enabled ?: true
+            name = runtimePo.name!!
+            value = runtimePo.value
+            configDes = runtimePo.configDes
+            enabled = runtimePo.enabled ?: true
             covert = true
         }.let {
             runtimeConfigRepository.save(it)
@@ -60,34 +60,34 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(runtimePO: RuntimePo): RuntimeConfig {
-        val runtimeConfigOptional = runtimeConfigRepository.findById(runtimePO.id!!)
+    fun doUpdate(runtimePo: RuntimePo): RuntimeConfig {
+        val runtimeConfigOptional = runtimeConfigRepository.findById(runtimePo.id!!)
         if (runtimeConfigOptional.isEmpty) {
             throw ServerException("找不到参数信息")
         }
         return runtimeConfigRepository.save(runtimeConfigOptional.get().apply {
-            value = runtimePO.value
-            enabled = runtimePO.enabled ?: true
-            configDes = runtimePO.configDes
+            value = runtimePo.value
+            enabled = runtimePo.enabled ?: true
+            configDes = runtimePo.configDes
         })
     }
 
     @Transactional
     fun doDelete(idList: MutableList<String>) = runtimeConfigRepository.deleteByIdInAndCovert(idList, true)
 
-    fun doQuery(runtimePO: RuntimePo): Page<RuntimeConfig> =
+    fun doQuery(runtimePo: RuntimePo): Page<RuntimeConfig> =
             runtimeConfigRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(runtimePO.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + runtimePO.name + "%"))
+                if (!CommonTools.isNullStr(runtimePo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + runtimePo.name + "%"))
                 }
-                if (!CommonTools.isNullStr(runtimePO.value)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("value").`as`(String::class.java), "%" + runtimePO.value + "%"))
+                if (!CommonTools.isNullStr(runtimePo.value)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("value").`as`(String::class.java), "%" + runtimePo.value + "%"))
                 }
-                if (runtimePO.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), runtimePO.enabled))
+                if (runtimePo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), runtimePo.enabled))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(runtimePO.queryParam!!))
+            }, buildPageRequest(runtimePo.queryParam!!))
 
 }

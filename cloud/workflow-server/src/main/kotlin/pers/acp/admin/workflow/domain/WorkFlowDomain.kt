@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
-import pers.acp.admin.common.vo.FlowHistoryVO
-import pers.acp.admin.common.vo.FlowTaskVO
+import pers.acp.admin.common.vo.FlowHistoryVo
+import pers.acp.admin.common.vo.FlowTaskVo
 import pers.acp.admin.workflow.constant.WorkFlowParamKey
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -39,7 +39,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param task 任务对象
      * @return 转换后任务对象
      */
-    private fun taskToVO(task: TaskInfo) = FlowTaskVO(
+    private fun taskToVO(task: TaskInfo) = FlowTaskVo(
             processInstanceId = task.processInstanceId,
             name = task.name,
             taskId = task.id,
@@ -58,7 +58,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param historicActivityInstance 历史记录
      * @return 转换后对象
      */
-    private fun actToVO(historicActivityInstance: HistoricActivityInstance, businessKey: String): FlowHistoryVO {
+    private fun actToVO(historicActivityInstance: HistoricActivityInstance, businessKey: String): FlowHistoryVo {
         val historicDetailQuery = historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id)
         val params: MutableMap<String, Any> = mutableMapOf()
         val localParams: MutableMap<String, Any> = mutableMapOf()
@@ -69,7 +69,7 @@ constructor(private val logAdapter: LogAdapter,
             params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
 
         }
-        return FlowHistoryVO(
+        return FlowHistoryVo(
                 processInstanceId = historicActivityInstance.processInstanceId,
                 activityId = historicActivityInstance.activityId,
                 activityName = historicActivityInstance.activityName,
@@ -112,7 +112,7 @@ constructor(private val logAdapter: LogAdapter,
      * @return 任务列表
      */
     @Throws(ServerException::class)
-    fun findTaskListByUserId(userId: String): List<FlowTaskVO> =
+    fun findTaskListByUserId(userId: String): List<FlowTaskVo> =
             try {
                 taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list()
                         .map { task -> taskToVO(task) }
@@ -197,7 +197,7 @@ constructor(private val logAdapter: LogAdapter,
      * @return 流程历史信息
      */
     @Throws(ServerException::class)
-    fun findHistoryInfo(processInstanceId: String): List<FlowHistoryVO> =
+    fun findHistoryInfo(processInstanceId: String): List<FlowHistoryVo> =
             try {
                 val historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult()
                 if (historicProcessInstance == null) {

@@ -11,9 +11,9 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_gateway_route")
+@Table(name = "t_log_operate")
 @ApiModel("网关路由日志")
-class RouteLog {
+class OperateLog {
 
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -57,6 +57,15 @@ class RouteLog {
 
     @ApiModelProperty("客户端标识")
     var identify: String? = null
+
+    @ApiModelProperty("操作用户id")
+    var userId: String? = null
+
+    @ApiModelProperty("操作用户登录号")
+    var loginNo: String? = null
+
+    @ApiModelProperty("操作用户名称")
+    var userName: String? = null
 
     @Column(nullable = false)
     @ApiModelProperty("请求时间")

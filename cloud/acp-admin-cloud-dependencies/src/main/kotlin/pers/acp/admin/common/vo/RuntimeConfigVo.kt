@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty
  * @since JDK 11
  */
 @ApiModel("运行配置信息")
-data class RuntimeConfigVO(
+data class RuntimeConfigVo(
         @ApiModelProperty("名称")
         var name: String? = null,
 

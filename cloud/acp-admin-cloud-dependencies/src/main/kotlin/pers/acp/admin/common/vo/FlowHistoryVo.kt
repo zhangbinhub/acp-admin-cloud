@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty
  * @since JDK 11
  */
 @ApiModel("流程历史记录")
-data class FlowHistoryVO(
+data class FlowHistoryVo(
         @ApiModelProperty(value = "流程实例id", position = 1)
         var processInstanceId: String? = null,
 

@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty
  * @since JDK 11
  */
 @ApiModel("响应信息")
-data class InfoVO(
+data class InfoVo(
         @ApiModelProperty(value = "响应信息内容")
         var message: String? = null
 )

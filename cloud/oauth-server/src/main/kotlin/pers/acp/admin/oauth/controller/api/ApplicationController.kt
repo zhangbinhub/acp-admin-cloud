@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.AppConfigExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.bus.publish.RefreshEventPublish
 import pers.acp.admin.oauth.domain.ApplicationDomain
@@ -44,8 +44,8 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @PreAuthorize(AppConfigExpression.appAdd)
     @PutMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
-    fun add(@RequestBody @Valid applicationPO: ApplicationPo): ResponseEntity<Application> =
-            applicationDomain.doCreate(applicationPO).also {
+    fun add(@RequestBody @Valid applicationPo: ApplicationPo): ResponseEntity<Application> =
+            applicationDomain.doCreate(applicationPo).also {
                 refreshEventPublish.doNotifyUpdateApp()
             }.let {
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
@@ -59,10 +59,10 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVO> {
+               idList: MutableList<String>): ResponseEntity<InfoVo> {
         applicationDomain.doDelete(idList)
         refreshEventPublish.doNotifyUpdateApp()
-        return ResponseEntity.ok(InfoVO(message = "删除成功"))
+        return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新指定的信息", notes = "可更新应用名称、token 有效期、refresh token 有效期")
@@ -71,11 +71,11 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @PatchMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun update(@RequestBody @Valid applicationPO: ApplicationPo): ResponseEntity<Application> {
-        if (CommonTools.isNullStr(applicationPO.id)) {
+    fun update(@RequestBody @Valid applicationPo: ApplicationPo): ResponseEntity<Application> {
+        if (CommonTools.isNullStr(applicationPo.id)) {
             throw ServerException("ID不能为空")
         }
-        return applicationDomain.doUpdate(applicationPO).also {
+        return applicationDomain.doUpdate(applicationPo).also {
             refreshEventPublish.doNotifyUpdateApp()
         }.let {
             ResponseEntity.ok(it)
@@ -87,9 +87,9 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @PreAuthorize(AppConfigExpression.appQuery)
     @PostMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody applicationPO: ApplicationPo): ResponseEntity<Page<Application>> =
-            (applicationPO.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
-                return ResponseEntity.ok(applicationDomain.doQuery(applicationPO))
+    fun query(@RequestBody applicationPo: ApplicationPo): ResponseEntity<Page<Application>> =
+            (applicationPo.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
+                return ResponseEntity.ok(applicationDomain.doQuery(applicationPo))
             }
 
     @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")

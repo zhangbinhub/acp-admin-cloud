@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.UserConfigExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.UserInfoPo
@@ -51,20 +51,20 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @RequestMapping(value = [OauthApi.currUser], method = [RequestMethod.PUT, RequestMethod.PATCH], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPO: UserInfoPo): ResponseEntity<User> {
+    fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPo: UserInfoPo): ResponseEntity<User> {
         val userInfo = userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")
-        if (!CommonTools.isNullStr(userInfoPO.mobile)) {
-            userDomain.getMobileForOtherUser(userInfoPO.mobile!!, userInfo.id)?.let { throw ServerException("手机号已存在，请重新输入") }
+        if (!CommonTools.isNullStr(userInfoPo.mobile)) {
+            userDomain.getMobileForOtherUser(userInfoPo.mobile!!, userInfo.id)?.let { throw ServerException("手机号已存在，请重新输入") }
         }
-        userInfo.avatar = userInfoPO.avatar ?: ""
-        userInfo.name = userInfoPO.name ?: userInfo.name
-        userInfo.mobile = userInfoPO.mobile ?: userInfo.mobile
-        if (!CommonTools.isNullStr(userInfoPO.oldPassword)) {
-            if (CommonTools.isNullStr(userInfoPO.password)) {
+        userInfo.avatar = userInfoPo.avatar ?: ""
+        userInfo.name = userInfoPo.name ?: userInfo.name
+        userInfo.mobile = userInfoPo.mobile ?: userInfo.mobile
+        if (!CommonTools.isNullStr(userInfoPo.oldPassword)) {
+            if (CommonTools.isNullStr(userInfoPo.password)) {
                 throw ServerException("新密码为空")
             }
-            if (userInfo.password.equals(userInfoPO.oldPassword!!, ignoreCase = true)) {
-                userInfo.password = userInfoPO.password!!
+            if (userInfo.password.equals(userInfoPo.oldPassword!!, ignoreCase = true)) {
+                userInfo.password = userInfoPo.password!!
             } else {
                 throw ServerException("原密码不正确")
             }
@@ -85,8 +85,8 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @PutMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun add(user: OAuth2Authentication, @RequestBody @Valid userPO: UserPo): ResponseEntity<User> =
-            ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.name, userPO))
+    fun add(user: OAuth2Authentication, @RequestBody @Valid userPo: UserPo): ResponseEntity<User> =
+            ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.name, userPo))
 
     @ApiOperation(value = "删除指定的用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
@@ -98,9 +98,9 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVO> {
+               idList: MutableList<String>): ResponseEntity<InfoVo> {
         userDomain.doDelete(user.name, idList)
-        return ResponseEntity.ok(InfoVO(message = "删除成功"))
+        return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新用户信息", notes = "名称、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
@@ -109,11 +109,11 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @PatchMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun update(user: OAuth2Authentication, @RequestBody @Valid userPO: UserPo): ResponseEntity<User> {
-        if (CommonTools.isNullStr(userPO.id)) {
+    fun update(user: OAuth2Authentication, @RequestBody @Valid userPo: UserPo): ResponseEntity<User> {
+        if (CommonTools.isNullStr(userPo.id)) {
             throw ServerException("ID不能为空")
         }
-        return ResponseEntity.ok(userDomain.doUpdate(user.name, userPO))
+        return ResponseEntity.ok(userDomain.doUpdate(user.name, userPo))
     }
 
     @ApiOperation(value = "重置用户密码", notes = "根据用户ID查询详细信息并重置密码")
@@ -122,12 +122,12 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @GetMapping(value = [OauthApi.userResetPwd + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun resetPwd(user: OAuth2Authentication, @PathVariable userId: String): ResponseEntity<InfoVO> {
+    fun resetPwd(user: OAuth2Authentication, @PathVariable userId: String): ResponseEntity<InfoVo> {
         if (CommonTools.isNullStr(userId)) {
             throw ServerException("ID不能为空")
         }
         userDomain.doUpdatePwd(user.name, userId)
-        return ResponseEntity.ok(InfoVO(message = "操作成功"))
+        return ResponseEntity.ok(InfoVo(message = "操作成功"))
     }
 
     @ApiOperation(value = "查询用户列表", notes = "查询条件：名称、登录帐号、状态、所属机构")
@@ -135,11 +135,11 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @PreAuthorize(UserConfigExpression.userQuery)
     @PostMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody userPO: UserPo): ResponseEntity<Page<UserVo>> {
-        if (userPO.queryParam == null) {
+    fun query(@RequestBody userPo: UserPo): ResponseEntity<Page<UserVo>> {
+        if (userPo.queryParam == null) {
             throw ServerException("分页查询参数不能为空")
         }
-        return ResponseEntity.ok(userDomain.doQuery(userPO))
+        return ResponseEntity.ok(userDomain.doQuery(userPo))
     }
 
     @ApiOperation(value = "查询用户信息", notes = "根据用户ID查询详细信息")

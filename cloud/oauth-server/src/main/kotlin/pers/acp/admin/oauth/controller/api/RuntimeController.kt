@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.RuntimeConfigExpression
-import pers.acp.admin.common.vo.InfoVO
-import pers.acp.admin.common.vo.RuntimeConfigVO
+import pers.acp.admin.common.vo.InfoVo
+import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.bus.publish.RefreshEventPublish
 import pers.acp.admin.oauth.controller.inner.InnerRuntimeController
@@ -46,8 +46,8 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @PutMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun add(@RequestBody @Valid runtimePO: RuntimePo): ResponseEntity<RuntimeConfig> =
-            runtimeConfigDomain.doCreate(runtimePO).also {
+    fun add(@RequestBody @Valid runtimePo: RuntimePo): ResponseEntity<RuntimeConfig> =
+            runtimeConfigDomain.doCreate(runtimePo).also {
                 refreshEventPublish.doNotifyUpdateRuntime()
             }.let {
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
@@ -61,11 +61,11 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVO> =
+               idList: MutableList<String>): ResponseEntity<InfoVo> =
             runtimeConfigDomain.doDelete(idList).also {
                 refreshEventPublish.doNotifyUpdateRuntime()
             }.let {
-                ResponseEntity.ok(InfoVO(message = "删除成功"))
+                ResponseEntity.ok(InfoVo(message = "删除成功"))
             }
 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新参数值、描述、状态")
@@ -74,11 +74,11 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @PatchMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun update(@RequestBody @Valid runtimePO: RuntimePo): ResponseEntity<RuntimeConfig> {
-        if (CommonTools.isNullStr(runtimePO.id)) {
+    fun update(@RequestBody @Valid runtimePo: RuntimePo): ResponseEntity<RuntimeConfig> {
+        if (CommonTools.isNullStr(runtimePo.id)) {
             throw ServerException("配置ID不能为空")
         }
-        return runtimeConfigDomain.doUpdate(runtimePO).also {
+        return runtimeConfigDomain.doUpdate(runtimePo).also {
             refreshEventPublish.doNotifyUpdateRuntime()
         }.let {
             ResponseEntity.ok(it)
@@ -90,9 +90,9 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @PreAuthorize(RuntimeConfigExpression.runtimeQuery)
     @PostMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody runtimePO: RuntimePo): ResponseEntity<Page<RuntimeConfig>> =
-            (runtimePO.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
-                ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimePO))
+    fun query(@RequestBody runtimePo: RuntimePo): ResponseEntity<Page<RuntimeConfig>> =
+            (runtimePo.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
+                ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimePo))
             }
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
@@ -102,6 +102,6 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     fun find(@ApiParam(value = "参数名称", required = true)
              @NotBlank(message = "参数名称不能为空")
              @PathVariable
-             name: String): ResponseEntity<RuntimeConfigVO> = innerRuntimeController.find(name)
+             name: String): ResponseEntity<RuntimeConfigVo> = innerRuntimeController.find(name)
 
 }

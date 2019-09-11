@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-@ApiModel("网关路由日志")
+@ApiModel("网关路由日志查询参数")
 data class RouteLogPo(
         @ApiModelProperty("客户端ip")
         @get:NotBlank(message = "客户端ip不能为空")

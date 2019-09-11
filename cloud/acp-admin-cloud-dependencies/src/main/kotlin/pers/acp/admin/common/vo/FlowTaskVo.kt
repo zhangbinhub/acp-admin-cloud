@@ -10,7 +10,7 @@ import java.util.HashMap
  * @since JDK 11
  */
 @ApiModel("流程任务")
-data class FlowTaskVO(
+data class FlowTaskVo(
         @ApiModelProperty(value = "流程实例id", position = 1)
         var processInstanceId: String? = null,
 

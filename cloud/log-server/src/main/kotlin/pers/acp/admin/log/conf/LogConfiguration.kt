@@ -13,7 +13,7 @@ import org.springframework.util.MimeTypeUtils
 import pers.acp.admin.log.constant.LogServerConstant
 import pers.acp.admin.log.consumer.RouteLogInput
 import pers.acp.admin.log.consumer.instance.RouteLogConsumer
-import pers.acp.admin.log.domain.RouteLogDomain
+import pers.acp.admin.log.domain.LogDomain
 import javax.annotation.PostConstruct
 
 /**
@@ -45,6 +45,9 @@ constructor(private val bindings: BindingServiceProperties) {
     }
 
     @Bean
-    fun updateRouteConsumer(objectMapper: ObjectMapper, routeLogDomain: RouteLogDomain) = RouteLogConsumer(objectMapper, routeLogDomain)
+    fun updateRouteConsumer(objectMapper: ObjectMapper,
+                            logDomain: LogDomain,
+                            logServerCustomerConfiguration: LogServerCustomerConfiguration) =
+            RouteLogConsumer(objectMapper, logDomain, logServerCustomerConfiguration)
 
 }

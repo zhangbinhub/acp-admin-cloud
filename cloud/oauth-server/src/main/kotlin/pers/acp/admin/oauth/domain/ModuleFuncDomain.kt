@@ -52,20 +52,20 @@ constructor(userRepository: UserRepository,
                 sortModuleFuncList(formatToTreeList(map))
             }
 
-    private fun doSave(moduleFunc: ModuleFunc, moduleFuncPO: ModuleFuncPo): ModuleFunc =
+    private fun doSave(moduleFunc: ModuleFunc, moduleFuncPo: ModuleFuncPo): ModuleFunc =
             moduleFuncRepository.save(moduleFunc.apply {
-                name = moduleFuncPO.name!!
-                code = moduleFuncPO.code!!
-                roleSet = roleRepository.findAllById(moduleFuncPO.roleIds).toMutableSet()
-                parentId = moduleFuncPO.parentId!!
+                name = moduleFuncPo.name!!
+                code = moduleFuncPo.code!!
+                roleSet = roleRepository.findAllById(moduleFuncPo.roleIds).toMutableSet()
+                parentId = moduleFuncPo.parentId!!
             })
 
     @Transactional
-    fun doCreate(moduleFuncPO: ModuleFuncPo): ModuleFunc =
+    fun doCreate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
             doSave(ModuleFunc().apply {
-                appId = moduleFuncPO.appId!!
+                appId = moduleFuncPo.appId!!
                 covert = true
-            }, moduleFuncPO)
+            }, moduleFuncPo)
 
     @Transactional
     @Throws(ServerException::class)
@@ -79,12 +79,12 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(moduleFuncPO: ModuleFuncPo): ModuleFunc {
-        val moduleFuncOptional = moduleFuncRepository.findById(moduleFuncPO.id!!)
+    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc {
+        val moduleFuncOptional = moduleFuncRepository.findById(moduleFuncPo.id!!)
         if (moduleFuncOptional.isEmpty) {
             throw ServerException("找不到模块功能信息")
         }
-        return doSave(moduleFuncOptional.get(), moduleFuncPO)
+        return doSave(moduleFuncOptional.get(), moduleFuncPo)
     }
 
     @Throws(ServerException::class)
