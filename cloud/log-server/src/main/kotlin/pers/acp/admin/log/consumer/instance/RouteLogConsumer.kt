@@ -24,17 +24,22 @@ constructor(private val objectMapper: ObjectMapper,
         log.debug("收到 kafka 消息：$message")
         try {
             objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
+                if (logServerCustomerConfiguration.routeLogEnabled) {
+                    logDomain.doRouteLog(it)
+                }
                 it.token?.apply {
-                    if (logServerCustomerConfiguration.routeLog) {
-                        logDomain.doRouteLog(it)
-                    }
-                    if (logServerCustomerConfiguration.operateLog) {
-                        logDomain.doOperateLog(it)
+                    if (it.responseStatus == 200) {
+                        if (logServerCustomerConfiguration.operateLogEnabled) {
+                            logDomain.doOperateLog(it)
+                        }
+                        if (it.applyToken) {
+                            logDomain.doLoginLog(it)
+                        }
                     }
                 }
             }
         } catch (e: Exception) {
-            log.error(e.message, e)
+            log.error("日志消息：$message \n处理失败：${e.message}", e)
         }
 
     }

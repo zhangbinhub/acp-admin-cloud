@@ -15,6 +15,7 @@
 > - [Upgrade] 取消热部署配置
 > - [Upgrade] 路由日志相关功能移入 log-server
 > - [Upgrade] 重写 gateway 路由请求、响应过滤器，路由日志消息
+> - [Upgrade] 重写路由日志
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

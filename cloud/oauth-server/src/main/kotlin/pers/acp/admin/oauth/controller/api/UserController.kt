@@ -21,7 +21,7 @@ import pers.acp.admin.oauth.po.UserPo
 import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
@@ -40,14 +40,14 @@ class UserController @Autowired
 constructor(private val userDomain: UserDomain) : BaseController() {
 
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户信息，并查询详细信息，包含用户基本信息、所属角色、所属机构")
-    @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun userInfo(user: OAuth2Authentication): ResponseEntity<User> =
             (userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "更新当前用户信息", notes = "1、根据当前登录的用户信息，更新头像、名称、手机；2、如果原密码和新密码均不为空，校验原密码并修改为新密码")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVo::class))
     @RequestMapping(value = [OauthApi.currUser], method = [RequestMethod.PUT, RequestMethod.PATCH], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
@@ -73,14 +73,14 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     }
 
     @ApiOperation(value = "获取可管理的用户信息列表", notes = "根据当前登录的用户信息，获取可管理的用户信息列表")
-    @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userConfig)
     @GetMapping(value = [OauthApi.modifiableUser], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun modifiableUser(user: OAuth2Authentication): ResponseEntity<List<User>> =
             ResponseEntity.ok(userDomain.findModifiableUserList(user.name))
 
     @ApiOperation(value = "新建用户信息", notes = "名称、登录账号、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = User::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = User::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userAdd)
     @PutMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -89,7 +89,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
             ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.name, userPo))
 
     @ApiOperation(value = "删除指定的用户信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userDelete)
     @DeleteMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -104,7 +104,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     }
 
     @ApiOperation(value = "更新用户信息", notes = "名称、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userUpdate)
     @PatchMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -117,7 +117,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     }
 
     @ApiOperation(value = "重置用户密码", notes = "根据用户ID查询详细信息并重置密码")
-    @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userUpdate)
     @GetMapping(value = [OauthApi.userResetPwd + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -131,7 +131,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     }
 
     @ApiOperation(value = "查询用户列表", notes = "查询条件：名称、登录帐号、状态、所属机构")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userQuery)
     @PostMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -143,7 +143,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     }
 
     @ApiOperation(value = "查询用户信息", notes = "根据用户ID查询详细信息")
-    @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)

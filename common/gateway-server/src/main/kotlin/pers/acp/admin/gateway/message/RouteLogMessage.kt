@@ -5,7 +5,7 @@ package pers.acp.admin.gateway.message
  * @since JDK 11
  */
 data class RouteLogMessage(
-        var applyToken: Boolean = false,
+        var logId: String? = null,
         var remoteIp: String? = null,
         var gatewayIp: String? = null,
         var path: String? = null,
@@ -16,6 +16,7 @@ data class RouteLogMessage(
         var method: String? = null,
         var token: String? = null,
         var requestTime: Long? = null,
+        var applyToken: Boolean = false,
         var processTime: Long? = null,
         var responseTime: Long? = null,
         var responseStatus: Int? = null

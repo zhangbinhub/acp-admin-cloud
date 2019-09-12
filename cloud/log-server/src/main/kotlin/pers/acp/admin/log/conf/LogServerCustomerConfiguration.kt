@@ -31,18 +31,18 @@ class LogServerCustomerConfiguration {
      * 日志最大保留天数，默认 180 天
      */
     @Value("\${log-server.max-history-day-number}")
-    var maxHistoryDayNumber = 180
+    var maxHistoryDayNumber: Int = 180
 
     /**
      * 是否记录路由日志
      */
-    @Value("\${log-server.route-log}")
-    var routeLog = true
+    @Value("\${log-server.route-log.enabled}")
+    var routeLogEnabled: Boolean = true
 
     /**
      * 是否记录操作日志
      */
-    @Value("\${log-server.operate-log}")
-    var operateLog = true
+    @Value("\${log-server.operate-log.enabled}")
+    var operateLogEnabled: Boolean = true
 
 }

@@ -20,7 +20,7 @@ import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -41,7 +41,7 @@ constructor(private val logAdapter: LogAdapter,
             private val logDomain: LogDomain) : BaseController() {
 
     @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、开始时间、结束时间、响应状态")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -53,7 +53,7 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(LogFileExpression.superOnly)
     @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -85,7 +85,7 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(LogFileExpression.superOnly)
     @GetMapping(value = [LogApi.logFile + "/{fileName}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)

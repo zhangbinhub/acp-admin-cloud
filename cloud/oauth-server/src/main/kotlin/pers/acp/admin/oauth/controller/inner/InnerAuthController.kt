@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -16,6 +17,7 @@ import pers.acp.admin.oauth.constant.OauthInnerApi
  * @author zhang by 16/01/2019
  * @since JDK 11
  */
+@Validated
 @RestController
 @RequestMapping(CommonPath.innerBasePath)
 @Api("权限信息")

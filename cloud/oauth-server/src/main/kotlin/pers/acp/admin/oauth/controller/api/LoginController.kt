@@ -19,7 +19,7 @@ import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.admin.oauth.vo.OnlineInfoVo
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -39,7 +39,7 @@ constructor(private val logAdapter: LogAdapter,
             private val securityTokenService: SecurityTokenService) : BaseController() {
 
     @ApiOperation(value = "获取各应用登录次数统计")
-    @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
@@ -86,7 +86,7 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     @ApiOperation(value = "获取用户在线情况")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过，找不到用户信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过，找不到用户信息；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @GetMapping(value = [OauthApi.onlineInfo + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -112,7 +112,7 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     @ApiOperation(value = "指定应用下的用户强制下线")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @DeleteMapping(value = [OauthApi.onlineInfo + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)

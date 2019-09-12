@@ -20,7 +20,7 @@ import pers.acp.admin.oauth.entity.Application
 import pers.acp.admin.oauth.po.ApplicationPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
@@ -40,7 +40,7 @@ class ApplicationController @Autowired
 constructor(private val applicationDomain: ApplicationDomain, private val refreshEventPublish: RefreshEventPublish) : BaseController() {
 
     @ApiOperation(value = "新建应用信息", notes = "应用名称、token 有效期、refresh token 有效期")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Application::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Application::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AppConfigExpression.appAdd)
     @PutMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -52,7 +52,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
             }
 
     @ApiOperation(value = "删除指定的信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AppConfigExpression.appDelete)
     @DeleteMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun delete(@ApiParam(value = "id列表", required = true)
@@ -66,7 +66,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     }
 
     @ApiOperation(value = "更新指定的信息", notes = "可更新应用名称、token 有效期、refresh token 有效期")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AppConfigExpression.appUpdate)
     @PatchMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -83,7 +83,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     }
 
     @ApiOperation(value = "查询信息列表", notes = "查询条件：应用名称")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AppConfigExpression.appQuery)
     @PostMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -98,7 +98,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     fun appList(user: OAuth2Authentication): ResponseEntity<List<Application>> = ResponseEntity.ok(applicationDomain.getAppList(user))
 
     @ApiOperation(value = "更新应用密钥")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AppConfigExpression.appUpdateSecret)
     @GetMapping(value = [OauthApi.updateSecret + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission

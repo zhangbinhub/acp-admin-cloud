@@ -17,6 +17,8 @@ fun main() {
                 }
             }
         }
+        val ss = "[fsdadf2341243]"
+        println(ss.replace(Regex("[\\[|\\]]"), ""))
     } catch (e: Exception) {
         e.printStackTrace()
     }

@@ -11,7 +11,7 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_gateway_route")
+@Table(name = "t_log_gateway_route", uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])])
 @ApiModel("网关路由日志")
 class RouteLog {
 
@@ -21,6 +21,10 @@ class RouteLog {
     @Column(length = 36, nullable = false)
     @ApiModelProperty("ID")
     var id: String = ""
+
+    @Column(nullable = false)
+    @ApiModelProperty("路由消息随机ID")
+    var logId: String? = null
 
     @Column(nullable = false)
     @ApiModelProperty("客户端ip")
@@ -42,6 +46,9 @@ class RouteLog {
 
     @ApiModelProperty("目标服务url")
     var targetUri: String? = null
+
+    @ApiModelProperty("目标服务请求路径")
+    var targetPath: String? = null
 
     @ApiModelProperty("请求方法")
     var method: String? = null

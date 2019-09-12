@@ -25,7 +25,7 @@ import pers.acp.admin.oauth.vo.ModuleFuncVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.annotation.PostConstruct
@@ -106,14 +106,14 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     fun allModuleFuncList(): ResponseEntity<List<ModuleFunc>> = ResponseEntity.ok(moduleFuncDomain.getAllModuleFuncList())
 
     @ApiOperation(value = "新建菜单信息", notes = "名称、应用ID、图标、链接、上级、序号、模式、状态、关联角色")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     fun addMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> = ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPo))
 
     @ApiOperation(value = "新建模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -121,7 +121,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
             ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPo))
 
     @ApiOperation(value = "删除指定的菜单信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -133,7 +133,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
             menuDomain.doDelete(idList).let { ResponseEntity.ok(InfoVo(message = "删除成功")) }
 
     @ApiOperation(value = "删除指定的模块功能信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authDelete)
     @DeleteMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -145,7 +145,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
             moduleFuncDomain.doDelete(idList).let { ResponseEntity.ok(InfoVo(message = "删除成功")) }
 
     @ApiOperation(value = "更新菜单信息", notes = "名称、应用ID、图标、链接、上级、序号、模式、状态、关联角色")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -154,7 +154,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
             ResponseEntity.ok(menuDomain.doUpdate(menuPo))
 
     @ApiOperation(value = "更新模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；模块功能编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；模块功能编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
     @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -167,7 +167,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     }
 
     @ApiOperation(value = "获取菜单详细信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = [OauthApi.menuConfig + "/{menuId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -178,7 +178,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
             ResponseEntity.ok(menuDomain.getMenuInfo(menuId))
 
     @ApiOperation(value = "获取模块功能详细信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = [OauthApi.moduleFuncConfig + "/{moduleFuncId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)

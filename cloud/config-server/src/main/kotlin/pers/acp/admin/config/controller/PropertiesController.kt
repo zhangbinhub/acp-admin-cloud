@@ -19,7 +19,7 @@ import pers.acp.admin.config.feign.ConfigRefreshServer
 import pers.acp.admin.config.po.PropertiesPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
@@ -38,7 +38,7 @@ class PropertiesController @Autowired
 constructor(private val propertiesDomain: PropertiesDomain, private val configRefreshServer: ConfigRefreshServer) : BaseController() {
 
     @ApiOperation(value = "新建参数信息", notes = "服务名称、配置项、标签、键、值、描述")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Properties::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Properties::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PutMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -49,7 +49,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
             }
 
     @ApiOperation(value = "删除指定的服务配置信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @DeleteMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun delete(@ApiParam(value = "id列表", required = true)
@@ -62,7 +62,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     }
 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新服务名称、配置项、标签、键、值、描述")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PatchMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -77,7 +77,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
             }
 
     @ApiOperation(value = "查询参数信息列表", notes = "查询条件：服务名称、配置项、标签、键、状态")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [ConfigApi.propertiesConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -89,14 +89,14 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
             }
 
     @ApiOperation(value = "获取有配置信息的服务列表")
-    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @GetMapping(value = [ConfigApi.propertiesServerList], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun serverList(): ResponseEntity<List<String>> = ResponseEntity.ok(propertiesDomain.findDistinctApplication())
 
     @ApiOperation(value = "刷新配置信息")
-    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [ConfigApi.propertiesRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -107,7 +107,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     }
 
     @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务名，如果有该服务有多个实例则均会刷新")
-    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [ConfigApi.propertiesRefreshApplication], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
@@ -118,7 +118,7 @@ constructor(private val propertiesDomain: PropertiesDomain, private val configRe
     }
 
     @ApiOperation(value = "刷新指定服务的配置信息", notes = "指定服务ID的匹配表达式；格式：name:ip:port:version:profiles；例如：log-server:**")
-    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [ConfigApi.propertiesRefreshMatcher], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
