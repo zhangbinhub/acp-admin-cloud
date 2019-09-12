@@ -69,6 +69,10 @@ class RouteLog {
     @ApiModelProperty("请求时间")
     var requestTime: Long? = null
 
+    @Column(nullable = false)
+    @ApiModelProperty("是否是申请token的请求")
+    var applyToken: Boolean = false
+
     @ApiModelProperty("处理时长")
     var processTime: Long? = null
 

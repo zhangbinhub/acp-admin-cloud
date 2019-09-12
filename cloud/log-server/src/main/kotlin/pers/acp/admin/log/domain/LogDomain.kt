@@ -9,11 +9,13 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.log.entity.LoginLog
 import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.message.RouteLogMessage
 import pers.acp.admin.log.po.RouteLogPo
+import pers.acp.admin.log.repo.LoginLogRepository
 import pers.acp.admin.log.repo.OperateLogRepository
 import pers.acp.admin.log.repo.RouteLogRepository
 import pers.acp.core.CommonTools
@@ -31,6 +33,7 @@ constructor(private val logAdapter: LogAdapter,
             private val objectMapper: ObjectMapper,
             private val routeLogRepository: RouteLogRepository,
             private val operateLogRepository: OperateLogRepository,
+            private val loginLogRepository: LoginLogRepository,
             private val oauthServer: OauthServer) : BaseDomain() {
 
     /**
@@ -45,7 +48,20 @@ constructor(private val logAdapter: LogAdapter,
         GlobalScope.launch {
             while (true) {
                 try {
-                    // todo
+                    val loginLog = messageToEntity(message, LoginLog::class.java)
+                    oauthServer.userInfo(routeLogMessage.token!!).let { user ->
+                        if (!CommonTools.isNullStr(user.id)) {
+                            loginLog.userId = user.id
+                            loginLog.loginNo = user.loginNo
+                            loginLog.userName = user.name
+                            oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                                loginLog.clientId = app.id
+                                loginLog.clientName = app.appName
+                                loginLog.identify = app.identify
+                            }
+                            loginLogRepository.save(loginLog)
+                        }
+                    }
                     break
                 } catch (e: Exception) {
                     logAdapter.error(e.message, e)
@@ -98,19 +114,17 @@ constructor(private val logAdapter: LogAdapter,
             while (true) {
                 try {
                     val operateLog = messageToEntity(message, OperateLog::class.java)
-                    if (routeLogMessage.token != null && routeLogMessage.responseStatus != null) {
-                        oauthServer.appInfo(routeLogMessage.token!!).let { app ->
-                            operateLog.clientId = app.id
-                            operateLog.clientName = app.appName
-                            operateLog.identify = app.identify
-                        }
-                        oauthServer.userInfo(routeLogMessage.token!!).let { user ->
-                            operateLog.userId = user.id
-                            operateLog.loginNo = user.loginNo
-                            operateLog.userName = user.name
-                        }
-                        operateLogRepository.save(operateLog)
+                    oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                        operateLog.clientId = app.id
+                        operateLog.clientName = app.appName
+                        operateLog.identify = app.identify
                     }
+                    oauthServer.userInfo(routeLogMessage.token!!).let { user ->
+                        operateLog.userId = user.id
+                        operateLog.loginNo = user.loginNo
+                        operateLog.userName = user.name
+                    }
+                    operateLogRepository.save(operateLog)
                     break
                 } catch (e: Exception) {
                     logAdapter.error(e.message, e)

@@ -11,6 +11,7 @@
 > - [Upgrade] gateway-server 重写 gateway 路由请求、响应过滤器，路由日志消息
 > - [Upgrade] log-server 重写路由日志
 > - [Upgrade] log-server 增加接口调用操作日志记录
+> - [Upgrade] log-server 增加用户登录日志记录
 > - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.6
 > - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE

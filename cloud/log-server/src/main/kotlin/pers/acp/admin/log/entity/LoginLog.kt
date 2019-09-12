@@ -11,9 +11,9 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_operate")
-@ApiModel("操作日志")
-class OperateLog {
+@Table(name = "t_log_login")
+@ApiModel("登录日志")
+class LoginLog {
 
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -68,10 +68,6 @@ class OperateLog {
     @Column(nullable = false)
     @ApiModelProperty("请求时间")
     var requestTime: Long? = null
-
-    @Column(nullable = false)
-    @ApiModelProperty("是否是申请token的请求")
-    var applyToken: Boolean = false
 
     @ApiModelProperty("处理时长")
     var processTime: Long? = null
