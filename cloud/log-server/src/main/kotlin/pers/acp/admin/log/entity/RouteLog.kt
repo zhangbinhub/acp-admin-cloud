@@ -24,17 +24,15 @@ class RouteLog {
 
     @Column(nullable = false)
     @ApiModelProperty("路由消息随机ID")
-    var logId: String? = null
+    var logId: String = ""
 
     @Column(nullable = false)
     @ApiModelProperty("客户端ip")
-    var remoteIp: String? = null
+    var remoteIp: String = ""
 
-    @Column(nullable = false)
     @ApiModelProperty("网关ip")
     var gatewayIp: String? = null
 
-    @Column(nullable = false)
     @ApiModelProperty("请求路径")
     var path: String? = null
 
@@ -50,8 +48,9 @@ class RouteLog {
     @ApiModelProperty("目标服务请求路径")
     var targetPath: String? = null
 
+    @Column(nullable = false)
     @ApiModelProperty("请求方法")
-    var method: String? = null
+    var method: String = ""
 
     @ApiModelProperty("请求token")
     var token: String? = null
@@ -67,7 +66,7 @@ class RouteLog {
 
     @Column(nullable = false)
     @ApiModelProperty("请求时间")
-    var requestTime: Long? = null
+    var requestTime: Long = System.currentTimeMillis()
 
     @Column(nullable = false)
     @ApiModelProperty("是否是申请token的请求")

@@ -19,6 +19,7 @@ import pers.acp.admin.log.repo.LoginLogRepository
 import pers.acp.admin.log.repo.OperateLogRepository
 import pers.acp.admin.log.repo.RouteLogRepository
 import pers.acp.core.CommonTools
+import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.interfaces.LogAdapter
 import javax.persistence.criteria.Predicate
 
@@ -54,6 +55,7 @@ constructor(private val logAdapter: LogAdapter,
                             loginLog.userId = user.id
                             loginLog.loginNo = user.loginNo
                             loginLog.userName = user.name
+                            loginLog.loginDate = CommonTools.getDateTimeString(Calculation.getCalendar(loginLog.requestTime), Calculation.DATE_FORMAT)
                             oauthServer.appInfo(routeLogMessage.token!!).let { app ->
                                 loginLog.clientId = app.id
                                 loginLog.clientName = app.appName
@@ -85,10 +87,10 @@ constructor(private val logAdapter: LogAdapter,
                         }
                     }
                     if (routeLogMessage.responseStatus != null) {// 响应日志
-                        var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
+                        var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
                         while (optionalRouteLog.isEmpty) {
                             delay(1000)
-                            optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
+                            optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
                         }
                         optionalRouteLog.ifPresent {
                             it.processTime = routeLog.processTime

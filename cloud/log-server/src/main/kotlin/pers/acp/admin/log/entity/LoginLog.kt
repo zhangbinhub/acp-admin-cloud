@@ -3,6 +3,8 @@ package pers.acp.admin.log.entity
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.annotations.GenericGenerator
+import pers.acp.core.CommonTools
+import pers.acp.core.task.timer.Calculation
 
 import javax.persistence.*
 
@@ -11,7 +13,13 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_login")
+@Table(name = "t_log_login",
+        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+        indexes = [
+            Index(columnList = "userId"),
+            Index(columnList = "clientId,loginDate"),
+            Index(columnList = "userId,clientId,loginDate")
+        ])
 @ApiModel("登录日志")
 class LoginLog {
 
@@ -24,17 +32,15 @@ class LoginLog {
 
     @Column(nullable = false)
     @ApiModelProperty("路由消息随机ID")
-    var logId: String? = null
+    var logId: String = ""
 
     @Column(nullable = false)
     @ApiModelProperty("客户端ip")
-    var remoteIp: String? = null
+    var remoteIp: String = ""
 
-    @Column(nullable = false)
     @ApiModelProperty("网关ip")
     var gatewayIp: String? = null
 
-    @Column(nullable = false)
     @ApiModelProperty("请求路径")
     var path: String? = null
 
@@ -50,24 +56,27 @@ class LoginLog {
     @ApiModelProperty("目标服务请求路径")
     var targetPath: String? = null
 
+    @Column(nullable = false)
     @ApiModelProperty("请求方法")
-    var method: String? = null
+    var method: String = ""
 
     @ApiModelProperty("请求token")
     var token: String? = null
 
+    @Column(nullable = false)
     @ApiModelProperty("客户端id")
-    var clientId: String? = null
+    var clientId: String = ""
 
+    @Column(nullable = false)
     @ApiModelProperty("客户端名称")
-    var clientName: String? = null
+    var clientName: String = ""
 
     @ApiModelProperty("客户端标识")
     var identify: String? = null
 
     @Column(nullable = false)
     @ApiModelProperty("请求时间")
-    var requestTime: Long? = null
+    var requestTime: Long = System.currentTimeMillis()
 
     @ApiModelProperty("处理时长")
     var processTime: Long? = null
@@ -78,13 +87,19 @@ class LoginLog {
     @ApiModelProperty("响应状态码")
     var responseStatus: Int? = null
 
-    @ApiModelProperty("操作用户id")
-    var userId: String? = null
+    @Column(nullable = false)
+    @ApiModelProperty("用户id")
+    var userId: String = ""
 
-    @ApiModelProperty("操作用户登录号")
-    var loginNo: String? = null
+    @Column(nullable = false)
+    @ApiModelProperty("用户登录号")
+    var loginNo: String = ""
 
-    @ApiModelProperty("操作用户名称")
+    @ApiModelProperty("用户名称")
     var userName: String? = null
+
+    @Column(nullable = false)
+    @ApiModelProperty("登录日期")
+    var loginDate: String = CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT)
 
 }
