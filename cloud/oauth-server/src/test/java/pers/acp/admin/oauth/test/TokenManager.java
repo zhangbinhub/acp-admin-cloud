@@ -19,16 +19,13 @@ class TokenManager extends BaseTest {
     private RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private LogAdapter logAdapter;
 
     @Test
     void removeToken() {
         String token = "efe5e360-2bea-4881-9581-35a8b23fa65b";
         String refreshToken = "";
-        SecurityTokenStoreRedis redisTokenStore = new SecurityTokenStoreRedis(logAdapter, redisTemplate, objectMapper);
+        SecurityTokenStoreRedis redisTokenStore = new SecurityTokenStoreRedis(logAdapter, redisTemplate);
         redisTokenStore.removeAccessToken(token);
         redisTokenStore.removeRefreshToken(refreshToken);
     }

@@ -101,7 +101,7 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 31000
-    "OauthServer#userInfo(String)":
+    "OauthServer#tokenInfo(String)":
       execution:
         isolation:
           thread:

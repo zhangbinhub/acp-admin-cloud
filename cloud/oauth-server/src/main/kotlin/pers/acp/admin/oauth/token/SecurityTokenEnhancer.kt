@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.TokenEnhancer
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.oauth.constant.TokenConstant
+import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
@@ -27,8 +27,9 @@ constructor(private val userRepository: UserRepository) : TokenEnhancer {
             userRepository.findByLoginNo(authentication.name).ifPresent { user ->
                 additionalInformation[TokenConstant.USER_INFO_APPID] = authentication.oAuth2Request.clientId
                 additionalInformation[TokenConstant.USER_INFO_ID] = user.id
-                additionalInformation[TokenConstant.USER_INFO_LOGINNO] = user.loginNo
-                additionalInformation[TokenConstant.USER_INFO_LOGINTIME] = CommonTools.getDateTimeString(null, Calculation.DATETIME_FORMAT)
+                additionalInformation[TokenConstant.USER_INFO_NAME] = user.name
+                additionalInformation[TokenConstant.USER_INFO_LOGIN_NO] = user.loginNo
+                additionalInformation[TokenConstant.USER_INFO_LOGIN_TIME] = CommonTools.getDateTimeString(null, Calculation.DATETIME_FORMAT)
             }
             accessToken.additionalInformation = additionalInformation
             return accessToken

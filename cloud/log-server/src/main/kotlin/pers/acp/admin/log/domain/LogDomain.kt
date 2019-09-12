@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.log.entity.LoginLog
 import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
@@ -20,6 +21,7 @@ import pers.acp.admin.log.repo.OperateLogRepository
 import pers.acp.admin.log.repo.RouteLogRepository
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
+import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import javax.persistence.criteria.Predicate
 
@@ -41,7 +43,7 @@ constructor(private val logAdapter: LogAdapter,
      * 路由消息转为对应的实体对象
      */
     private fun <T> messageToEntity(message: String, cls: Class<T>): T {
-        return objectMapper.readValue(message, cls)
+        return objectMapper.readValue(message, cls) ?: throw ServerException("日志消息转换失败")
     }
 
     @Transactional
@@ -50,11 +52,11 @@ constructor(private val logAdapter: LogAdapter,
             while (true) {
                 try {
                     val loginLog = messageToEntity(message, LoginLog::class.java)
-                    oauthServer.userInfo(routeLogMessage.token!!).let { user ->
-                        if (!CommonTools.isNullStr(user.id)) {
-                            loginLog.userId = user.id
-                            loginLog.loginNo = user.loginNo
-                            loginLog.userName = user.name
+                    oauthServer.tokenInfo(routeLogMessage.token!!).let { oAuth2AccessToken ->
+                        if (oAuth2AccessToken.additionalInformation.containsKey(TokenConstant.USER_INFO_ID)) {
+                            loginLog.userId = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]!!.toString()
+                            loginLog.loginNo = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
+                            loginLog.userName = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
                             loginLog.loginDate = CommonTools.getDateTimeString(Calculation.getCalendar(loginLog.requestTime), Calculation.DATE_FORMAT)
                             oauthServer.appInfo(routeLogMessage.token!!).let { app ->
                                 loginLog.clientId = app.id
@@ -121,10 +123,12 @@ constructor(private val logAdapter: LogAdapter,
                         operateLog.clientName = app.appName
                         operateLog.identify = app.identify
                     }
-                    oauthServer.userInfo(routeLogMessage.token!!).let { user ->
-                        operateLog.userId = user.id
-                        operateLog.loginNo = user.loginNo
-                        operateLog.userName = user.name
+                    oauthServer.tokenInfo(routeLogMessage.token!!).let { oAuth2AccessToken ->
+                        if (oAuth2AccessToken.additionalInformation.containsKey(TokenConstant.USER_INFO_ID)) {
+                            operateLog.userId = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]!!.toString()
+                            operateLog.loginNo = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
+                            operateLog.userName = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
+                        }
                     }
                     operateLogRepository.save(operateLog)
                     break

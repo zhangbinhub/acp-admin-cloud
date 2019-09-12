@@ -2,11 +2,11 @@ package pers.acp.admin.log.hystrix
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.stereotype.Component
 import pers.acp.admin.common.base.BaseFeignHystrix
 import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.vo.ApplicationVo
-import pers.acp.admin.log.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 
@@ -27,7 +27,7 @@ constructor(logAdapter: LogAdapter, objectMapper: ObjectMapper) : BaseFeignHystr
                 throw ServerException(errMsg)
             }
 
-            override fun userInfo(token: String): UserVo {
+            override fun tokenInfo(token: String): OAuth2AccessToken {
                 val errMsg = "该token找不到对应的用户信息【$token】"
                 logAdapter.info(errMsg)
                 throw ServerException(errMsg)

@@ -6,6 +6,7 @@ package pers.acp.admin.oauth.constant
  */
 object OauthInnerApi {
     const val currOauth = "/oauthinfo"
+    const val currToken = "/tokeninfo"
     const val currUser = "/userinfo"
     const val appInfo = "/application"
 }

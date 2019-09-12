@@ -1,6 +1,5 @@
 package pers.acp.admin.oauth.token
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 
 import org.springframework.data.redis.core.RedisTemplate
@@ -11,11 +10,8 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.oauth.constant.TokenConstant
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreMemory
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis
-import pers.acp.admin.oauth.vo.LoginLogVo
-import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -27,25 +23,24 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 class SecurityTokenService @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val redisTemplate: RedisTemplate<Any, Any>,
-            val securityTokenEnhancer: SecurityTokenEnhancer,
-            private val objectMapper: ObjectMapper) : DefaultTokenServices() {
+            val securityTokenEnhancer: SecurityTokenEnhancer) : DefaultTokenServices() {
 
     /**
      * 默认持久化到内存
      */
-    private var tokenStore: SecurityTokenStore = inMemoryTokenStore()
+    private var customerTokenStore:TokenStore = inMemoryTokenStore()
 
-    fun getTokenStore(): TokenStore = this.tokenStore
+    fun getTokenStore(): TokenStore = this.customerTokenStore
 
-    private fun redisTokenStore(): SecurityTokenStore = SecurityTokenStoreRedis(logAdapter, redisTemplate, objectMapper)
+    private fun redisTokenStore(): TokenStore = SecurityTokenStoreRedis(logAdapter, redisTemplate)
 
-    private fun inMemoryTokenStore(): SecurityTokenStore = SecurityTokenStoreMemory()
+    private fun inMemoryTokenStore(): TokenStore = SecurityTokenStoreMemory()
 
     init {
         try {
             Class.forName("org.springframework.data.redis.connection.RedisConnection")?.also {
                 // 持久化到 Redis
-                this.tokenStore = redisTokenStore()
+                this.customerTokenStore = redisTokenStore()
             }
         } catch (e: Throwable) {
         }
@@ -53,25 +48,15 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     private final fun setCustomerObj() {
-        setTokenStore(tokenStore)
+        setTokenStore(customerTokenStore)
         setTokenEnhancer(securityTokenEnhancer)
     }
 
     @Transactional
     @Throws(AuthenticationException::class)
     override fun createAccessToken(authentication: OAuth2Authentication): OAuth2AccessToken? {
-        removeToken(tokenStore.getAccessToken(authentication))
-        val oAuth2AccessToken = super.createAccessToken(authentication)
-        if (oAuth2AccessToken.additionalInformation.isNotEmpty()) {
-            oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]?.apply {
-                try {
-                    tokenStore.storeLoginNum(authentication.oAuth2Request.clientId, this.toString())
-                } catch (e: Exception) {
-                    logAdapter.error(e.message, e)
-                }
-            }
-        }
-        return oAuth2AccessToken
+        removeToken(customerTokenStore.getAccessToken(authentication))
+        return super.createAccessToken(authentication)
     }
 
     /**
@@ -80,7 +65,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param authentication 授权信息
      * @return token对象
      */
-    fun getToken(authentication: OAuth2Authentication): OAuth2AccessToken = tokenStore.getAccessToken(authentication)
+    fun getToken(authentication: OAuth2Authentication): OAuth2AccessToken = customerTokenStore.getAccessToken(authentication)
 
     /**
      * 获取token详细信息
@@ -88,7 +73,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param tokenValue token值
      * @return token对象
      */
-    fun getToken(tokenValue: String): OAuth2AccessToken = tokenStore.readAccessToken(tokenValue)
+    fun getToken(tokenValue: String): OAuth2AccessToken = customerTokenStore.readAccessToken(tokenValue)
 
     /**
      * 根据应用id和登录账号获取token
@@ -97,7 +82,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param loginNo 登录账号
      * @return token 集合
      */
-    fun getTokensByAppIdAndLoginNo(appId: String, loginNo: String): Collection<OAuth2AccessToken> = tokenStore.findTokensByClientIdAndUserName(appId, loginNo)
+    fun getTokensByAppIdAndLoginNo(appId: String, loginNo: String): Collection<OAuth2AccessToken> = customerTokenStore.findTokensByClientIdAndUserName(appId, loginNo)
 
     /**
      * 根据应用id获取token
@@ -105,10 +90,10 @@ constructor(private val logAdapter: LogAdapter,
      * @param appId 应用id
      * @return token 集合
      */
-    fun getTokensByAppId(appId: String): Collection<OAuth2AccessToken> = tokenStore.findTokensByClientId(appId)
+    fun getTokensByAppId(appId: String): Collection<OAuth2AccessToken> = customerTokenStore.findTokensByClientId(appId)
 
     @Transactional
-    fun removeToken(user: OAuth2Authentication) = removeToken(tokenStore.getAccessToken(user))
+    fun removeToken(user: OAuth2Authentication) = removeToken(customerTokenStore.getAccessToken(user))
 
     /**
      * 删除token
@@ -120,9 +105,9 @@ constructor(private val logAdapter: LogAdapter,
         oAuth2AccessToken?.let { token ->
             val refreshToken = token.refreshToken
             refreshToken?.let {
-                tokenStore.removeRefreshToken(it)
+                customerTokenStore.removeRefreshToken(it)
             }
-            tokenStore.removeAccessToken(oAuth2AccessToken)
+            customerTokenStore.removeAccessToken(oAuth2AccessToken)
         }
     }
 
@@ -134,13 +119,5 @@ constructor(private val logAdapter: LogAdapter,
      */
     @Transactional
     fun removeTokensByAppIdAndLoginNo(appId: String, loginNo: String) = getTokensByAppIdAndLoginNo(appId, loginNo).forEach { this.removeToken(it) }
-
-    @Throws(ServerException::class)
-    fun getLoginLogList(appId: String): List<LoginLogVo> =
-            try {
-                tokenStore.getLoginNum(appId)
-            } catch (e: Exception) {
-                throw ServerException(e.message)
-            }
 
 }

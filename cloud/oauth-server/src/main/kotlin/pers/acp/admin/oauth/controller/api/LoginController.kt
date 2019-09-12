@@ -44,10 +44,11 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
             mutableListOf<LoginLogVo>().apply {
+                // todo: 获取登录次数统计
                 applicationDomain.getAppList(user).forEach { item ->
-                    val loginLogVos = securityTokenService.getLoginLogList(item.id)
-                    loginLogVos.forEach { loginLogVO -> loginLogVO.appName = item.appName }
-                    this.addAll(loginLogVos)
+                    //                    val loginLogVos = securityTokenService.getLoginLogList(item.id)
+//                    loginLogVos.forEach { loginLogVO -> loginLogVO.appName = item.appName }
+//                    this.addAll(loginLogVos)
                 }
             }.let {
                 ResponseEntity.ok(it)
