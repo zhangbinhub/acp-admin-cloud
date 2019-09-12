@@ -23,6 +23,10 @@ class OperateLog {
     var id: String = ""
 
     @Column(nullable = false)
+    @ApiModelProperty("路由消息随机ID")
+    var logId: String? = null
+
+    @Column(nullable = false)
     @ApiModelProperty("客户端ip")
     var remoteIp: String? = null
 
@@ -43,6 +47,9 @@ class OperateLog {
     @ApiModelProperty("目标服务url")
     var targetUri: String? = null
 
+    @ApiModelProperty("目标服务请求路径")
+    var targetPath: String? = null
+
     @ApiModelProperty("请求方法")
     var method: String? = null
 
@@ -58,15 +65,6 @@ class OperateLog {
     @ApiModelProperty("客户端标识")
     var identify: String? = null
 
-    @ApiModelProperty("操作用户id")
-    var userId: String? = null
-
-    @ApiModelProperty("操作用户登录号")
-    var loginNo: String? = null
-
-    @ApiModelProperty("操作用户名称")
-    var userName: String? = null
-
     @Column(nullable = false)
     @ApiModelProperty("请求时间")
     var requestTime: Long? = null
@@ -79,5 +77,14 @@ class OperateLog {
 
     @ApiModelProperty("响应状态码")
     var responseStatus: Int? = null
+
+    @ApiModelProperty("操作用户id")
+    var userId: String? = null
+
+    @ApiModelProperty("操作用户登录号")
+    var loginNo: String? = null
+
+    @ApiModelProperty("操作用户名称")
+    var userName: String? = null
 
 }

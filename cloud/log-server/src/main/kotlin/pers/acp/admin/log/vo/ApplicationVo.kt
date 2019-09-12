@@ -4,7 +4,7 @@ package pers.acp.admin.log.vo
  * @author zhangbin by 2018-1-17 14:56
  * @since JDK 11
  */
-data class ApplicationPo(
+data class ApplicationVo(
         var id: String = "",
         var appName: String = "",
         var secret: String = "",

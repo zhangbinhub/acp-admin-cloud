@@ -1,5 +1,6 @@
 package pers.acp.admin.log.domain
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,9 +14,10 @@ import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.message.RouteLogMessage
 import pers.acp.admin.log.po.RouteLogPo
+import pers.acp.admin.log.repo.OperateLogRepository
 import pers.acp.admin.log.repo.RouteLogRepository
 import pers.acp.core.CommonTools
-import java.util.*
+import pers.acp.spring.boot.interfaces.LogAdapter
 import javax.persistence.criteria.Predicate
 
 /**
@@ -25,63 +27,97 @@ import javax.persistence.criteria.Predicate
 @Service
 @Transactional(readOnly = true)
 class LogDomain @Autowired
-constructor(private val routeLogRepository: RouteLogRepository,
+constructor(private val logAdapter: LogAdapter,
+            private val objectMapper: ObjectMapper,
+            private val routeLogRepository: RouteLogRepository,
+            private val operateLogRepository: OperateLogRepository,
             private val oauthServer: OauthServer) : BaseDomain() {
 
-    @Transactional
-    fun doLoginLog(routeLogMessage: RouteLogMessage) {
-        // todo
-//        routeLogRepository.save(routeLog)
+    /**
+     * 路由消息转为对应的实体对象
+     */
+    private fun <T> messageToEntity(message: String, cls: Class<T>): T {
+        return objectMapper.readValue(message, cls)
     }
 
     @Transactional
-    fun doRouteLog(routeLogMessage: RouteLogMessage) {
+    fun doLoginLog(routeLogMessage: RouteLogMessage, message: String) {
         GlobalScope.launch {
-            val routeLog = RouteLog().also {
-                it.logId = routeLogMessage.logId
-                it.remoteIp = routeLogMessage.remoteIp
-                it.gatewayIp = routeLogMessage.gatewayIp
-                it.path = routeLogMessage.path
-                it.serverId = routeLogMessage.serverId
-                it.targetIp = routeLogMessage.targetIp
-                it.targetUri = routeLogMessage.targetUri
-                it.targetPath = routeLogMessage.targetPath
-                it.method = routeLogMessage.method
-                it.token = routeLogMessage.token
-                it.requestTime = routeLogMessage.requestTime
-                it.processTime = routeLogMessage.processTime
-                it.responseTime = routeLogMessage.responseTime
-                it.responseStatus = routeLogMessage.responseStatus
-            }
-            if (routeLogMessage.token != null) {
-                oauthServer.appInfo(routeLogMessage.token!!)?.let { app ->
-                    routeLog.clientId = app.id
-                    routeLog.clientName = app.appName
-                    routeLog.identify = app.identify
+            while (true) {
+                try {
+                    // todo
+                    break
+                } catch (e: Exception) {
+                    logAdapter.error(e.message, e)
+                    delay(5000)
                 }
-            }
-            if (routeLogMessage.responseStatus != null) {// 响应日志
-                var operateRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
-                while (operateRouteLog.isEmpty) {
-                    delay(1000)
-                    operateRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
-                }
-                operateRouteLog.ifPresent {
-                    it.processTime = routeLog.processTime
-                    it.responseTime = routeLog.responseTime
-                    it.responseStatus = routeLog.responseStatus
-                    routeLogRepository.save(it)
-                }
-            } else {// 请求日志
-                routeLogRepository.save(routeLog)
             }
         }
     }
 
     @Transactional
-    fun doOperateLog(routeLogMessage: RouteLogMessage) {
-        // todo
-//        routeLogRepository.save(routeLog)
+    fun doRouteLog(routeLogMessage: RouteLogMessage, message: String) {
+        GlobalScope.launch {
+            while (true) {
+                try {
+                    val routeLog = messageToEntity(message, RouteLog::class.java)
+                    if (routeLogMessage.token != null) {
+                        oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                            routeLog.clientId = app.id
+                            routeLog.clientName = app.appName
+                            routeLog.identify = app.identify
+                        }
+                    }
+                    if (routeLogMessage.responseStatus != null) {// 响应日志
+                        var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
+                        while (optionalRouteLog.isEmpty) {
+                            delay(1000)
+                            optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId!!, routeLog.requestTime!!)
+                        }
+                        optionalRouteLog.ifPresent {
+                            it.processTime = routeLog.processTime
+                            it.responseTime = routeLog.responseTime
+                            it.responseStatus = routeLog.responseStatus
+                            routeLogRepository.save(it)
+                        }
+                    } else {// 请求日志
+                        routeLogRepository.save(routeLog)
+                    }
+                    break
+                } catch (e: Exception) {
+                    logAdapter.error(e.message, e)
+                    delay(5000)
+                }
+            }
+        }
+    }
+
+    @Transactional
+    fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
+        GlobalScope.launch {
+            while (true) {
+                try {
+                    val operateLog = messageToEntity(message, OperateLog::class.java)
+                    if (routeLogMessage.token != null && routeLogMessage.responseStatus != null) {
+                        oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                            operateLog.clientId = app.id
+                            operateLog.clientName = app.appName
+                            operateLog.identify = app.identify
+                        }
+                        oauthServer.userInfo(routeLogMessage.token!!).let { user ->
+                            operateLog.userId = user.id
+                            operateLog.loginNo = user.loginNo
+                            operateLog.userName = user.name
+                        }
+                        operateLogRepository.save(operateLog)
+                    }
+                    break
+                } catch (e: Exception) {
+                    logAdapter.error(e.message, e)
+                    delay(5000)
+                }
+            }
+        }
     }
 
     fun doQueryRouteLog(routeLogPo: RouteLogPo): Page<RouteLog> =

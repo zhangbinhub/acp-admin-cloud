@@ -25,15 +25,15 @@ constructor(private val objectMapper: ObjectMapper,
         try {
             objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
                 if (logServerCustomerConfiguration.routeLogEnabled) {
-                    logDomain.doRouteLog(it)
+                    logDomain.doRouteLog(it, message)
                 }
                 it.token?.apply {
                     if (it.responseStatus == 200) {
                         if (logServerCustomerConfiguration.operateLogEnabled) {
-                            logDomain.doOperateLog(it)
+                            logDomain.doOperateLog(it, message)
                         }
                         if (it.applyToken) {
-                            logDomain.doLoginLog(it)
+                            logDomain.doLoginLog(it, message)
                         }
                     }
                 }
