@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
-import pers.acp.admin.gateway.constant.GateWayConstant
+import pers.acp.admin.constant.RouteConstant
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
@@ -36,7 +36,7 @@ constructor(private val redisTemplate: RedisTemplate<Any, Any>, private val obje
             routes.clear()
             val values: MutableList<RouteDefinition> = mutableListOf()
             try {
-                redisTemplate.opsForList().range(GateWayConstant.ROUTES_DEFINITION_KEY, 0, -1)?.let {
+                redisTemplate.opsForList().range(RouteConstant.ROUTES_DEFINITION_KEY, 0, -1)?.let {
                     for (route in it) {
                         values.add(objectMapper.readValue(route as ByteArray, RouteDefinition::class.java))
                     }

@@ -11,9 +11,9 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_gateway_route", uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])])
-@ApiModel("网关路由日志")
-class RouteLog {
+@Table(name = "t_log_operate_history", uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])])
+@ApiModel("操作日志")
+class OperateLogHistory {
 
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -33,6 +33,7 @@ class RouteLog {
     @ApiModelProperty("网关ip")
     var gatewayIp: String? = null
 
+    @Column(nullable = false)
     @ApiModelProperty("请求路径")
     var path: String? = null
 

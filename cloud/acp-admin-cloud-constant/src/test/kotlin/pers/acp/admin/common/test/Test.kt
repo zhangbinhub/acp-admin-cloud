@@ -1,5 +1,6 @@
 package pers.acp.admin.common.test
 
+import kotlinx.coroutines.*
 import pers.acp.admin.constant.RoleCode
 
 /**
@@ -19,6 +20,29 @@ fun main() {
         }
         val ss = "[fsdadf2341243]"
         println(ss.replace(Regex("[\\[|\\]]"), ""))
+
+        runBlocking {
+            GlobalScope.launch(Dispatchers.Unconfined) {
+                delay(1000)
+                print("1 >>>>>>>>> ")
+                print(Thread.currentThread())
+                println(" " + System.currentTimeMillis())
+            }
+            GlobalScope.launch(Dispatchers.Unconfined) {
+                delay(1000)
+                print("2 >>>>>>>>> ")
+                print(Thread.currentThread())
+                println(" " + System.currentTimeMillis())
+            }
+            GlobalScope.launch(Dispatchers.Unconfined) {
+                delay(1000)
+                print("3 >>>>>>>>> ")
+                print(Thread.currentThread())
+                println(" " + System.currentTimeMillis())
+            }
+        }
+        println(4)
+        Thread.sleep(5000)
     } catch (e: Exception) {
         e.printStackTrace()
     }

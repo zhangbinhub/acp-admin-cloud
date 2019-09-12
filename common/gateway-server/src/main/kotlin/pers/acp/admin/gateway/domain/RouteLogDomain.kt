@@ -133,7 +133,7 @@ constructor(private val environment: Environment,
             }
         }
         val routeLogMessage = RouteLogMessage(
-                logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), ""),
+                logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
                 remoteIp = getRealRemoteIp(serverWebExchange.request),
                 gatewayIp = environment.getProperty("server.address"),
                 method = serverWebExchange.request.methodValue,

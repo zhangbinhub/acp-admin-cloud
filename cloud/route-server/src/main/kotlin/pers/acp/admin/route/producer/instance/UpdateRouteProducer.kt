@@ -1,10 +1,11 @@
 package pers.acp.admin.route.producer.instance
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.support.MessageBuilder
-import pers.acp.admin.route.constant.RouteConstant
+import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.route.producer.UpdateRouteOutput
 
 /**
@@ -15,7 +16,7 @@ class UpdateRouteProducer @Autowired
 constructor(private val updateRouteOutput: UpdateRouteOutput) {
 
     fun doNotifyUpdateRoute() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             updateRouteOutput.sendMessage().send(MessageBuilder.withPayload(RouteConstant.UPDATE_GATEWAY_ROUTES).build())
         }
     }

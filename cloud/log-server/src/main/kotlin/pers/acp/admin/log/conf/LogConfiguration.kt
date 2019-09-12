@@ -10,10 +10,11 @@ import org.springframework.cloud.stream.config.BindingServiceProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.util.MimeTypeUtils
-import pers.acp.admin.log.constant.LogServerConstant
+import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.log.consumer.RouteLogInput
 import pers.acp.admin.log.consumer.instance.RouteLogConsumer
 import pers.acp.admin.log.domain.LogDomain
+import pers.acp.spring.boot.interfaces.LogAdapter
 import javax.annotation.PostConstruct
 
 /**
@@ -32,22 +33,23 @@ constructor(private val bindings: BindingServiceProperties) {
     }
 
     private fun initConsumer() {
-        if (this.bindings.bindings[LogServerConstant.ROUTE_LOG_INPUT] == null) {
-            this.bindings.bindings[LogServerConstant.ROUTE_LOG_INPUT] = BindingProperties()
+        if (this.bindings.bindings[RouteConstant.ROUTE_LOG_INPUT] == null) {
+            this.bindings.bindings[RouteConstant.ROUTE_LOG_INPUT] = BindingProperties()
         }
-        this.bindings.bindings[LogServerConstant.ROUTE_LOG_INPUT]?.let {
-            if (it.destination == null || it.destination == LogServerConstant.ROUTE_LOG_INPUT) {
-                it.destination = LogServerConstant.ROUTE_LOG_DESCRIPTION
+        this.bindings.bindings[RouteConstant.ROUTE_LOG_INPUT]?.let {
+            if (it.destination == null || it.destination == RouteConstant.ROUTE_LOG_INPUT) {
+                it.destination = RouteConstant.ROUTE_LOG_DESCRIPTION
             }
             it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
-            it.group = LogServerConstant.ROUTE_LOG_CONSUMER_GROUP
+            it.group = RouteConstant.ROUTE_LOG_CONSUMER_GROUP
         }
     }
 
     @Bean
-    fun updateRouteConsumer(objectMapper: ObjectMapper,
+    fun updateRouteConsumer(logAdapter: LogAdapter,
+                            objectMapper: ObjectMapper,
                             logDomain: LogDomain,
                             logServerCustomerConfiguration: LogServerCustomerConfiguration) =
-            RouteLogConsumer(objectMapper, logDomain, logServerCustomerConfiguration)
+            RouteLogConsumer(logAdapter, objectMapper, logDomain, logServerCustomerConfiguration)
 
 }

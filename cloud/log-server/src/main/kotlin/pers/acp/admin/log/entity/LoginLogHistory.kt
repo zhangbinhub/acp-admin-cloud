@@ -3,6 +3,8 @@ package pers.acp.admin.log.entity
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.annotations.GenericGenerator
+import pers.acp.core.CommonTools
+import pers.acp.core.task.timer.Calculation
 
 import javax.persistence.*
 
@@ -11,9 +13,15 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_gateway_route", uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])])
-@ApiModel("网关路由日志")
-class RouteLog {
+@Table(name = "t_log_login_history",
+        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+        indexes = [
+            Index(columnList = "userId"),
+            Index(columnList = "clientId,loginDate"),
+            Index(columnList = "userId,clientId,loginDate")
+        ])
+@ApiModel("登录日志")
+class LoginLogHistory {
 
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
@@ -55,11 +63,13 @@ class RouteLog {
     @ApiModelProperty("请求token")
     var token: String? = null
 
+    @Column(nullable = false)
     @ApiModelProperty("客户端id")
-    var clientId: String? = null
+    var clientId: String = ""
 
+    @Column(nullable = false)
     @ApiModelProperty("客户端名称")
-    var clientName: String? = null
+    var clientName: String = ""
 
     @ApiModelProperty("客户端标识")
     var identify: String? = null
@@ -67,10 +77,6 @@ class RouteLog {
     @Column(nullable = false)
     @ApiModelProperty("请求时间")
     var requestTime: Long = System.currentTimeMillis()
-
-    @Column(nullable = false)
-    @ApiModelProperty("是否是申请token的请求")
-    var applyToken: Boolean = false
 
     @ApiModelProperty("处理时长")
     var processTime: Long? = null
@@ -81,13 +87,19 @@ class RouteLog {
     @ApiModelProperty("响应状态码")
     var responseStatus: Int? = null
 
-    @ApiModelProperty("操作用户id")
-    var userId: String? = null
+    @Column(nullable = false)
+    @ApiModelProperty("用户id")
+    var userId: String = ""
 
-    @ApiModelProperty("操作用户登录号")
-    var loginNo: String? = null
+    @Column(nullable = false)
+    @ApiModelProperty("用户登录号")
+    var loginNo: String = ""
 
-    @ApiModelProperty("操作用户名称")
+    @ApiModelProperty("用户名称")
     var userName: String? = null
+
+    @Column(nullable = false)
+    @ApiModelProperty("登录日期")
+    var loginDate: String = CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT)
 
 }

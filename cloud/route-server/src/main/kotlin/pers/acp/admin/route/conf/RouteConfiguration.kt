@@ -9,7 +9,7 @@ import org.springframework.cloud.stream.config.BindingServiceProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.util.MimeTypeUtils
-import pers.acp.admin.route.constant.RouteConstant
+import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.route.producer.UpdateRouteOutput
 import pers.acp.admin.route.producer.instance.UpdateRouteProducer
 

@@ -9,9 +9,9 @@
 > - [Upgrade] 取消热部署配置
 > - [Upgrade] 路由日志相关功能移入 log-server
 > - [Upgrade] gateway-server 重写 gateway 路由请求、响应过滤器，路由日志消息
-> - [Upgrade] log-server 重写路由日志
-> - [Upgrade] log-server 增加接口调用操作日志记录
-> - [Upgrade] log-server 增加用户登录日志记录，登录用户信息取缓存 token 的详细信息
+> - [Upgrade] log-server 重写路由日志，定时任务将截止前一日的所有数据移入历史表
+> - [Upgrade] log-server 增加接口调用操作日志记录，定时任务将截止前一日的所有数据移入历史表
+> - [Upgrade] log-server 增加用户登录日志记录，登录用户信息取缓存 token 的详细信息，，定时任务将截止前一日的所有数据移入历史表
 > - [Upgrade] oauth-server 中的 TokenStore 取消存储登录次数信息
 > - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.6

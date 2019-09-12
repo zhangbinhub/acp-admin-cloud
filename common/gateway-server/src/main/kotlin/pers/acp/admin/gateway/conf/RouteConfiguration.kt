@@ -29,6 +29,7 @@ import org.springframework.web.cors.reactive.CorsUtils
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
+import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.gateway.constant.GateWayConstant
 import pers.acp.admin.gateway.consumer.UpdateRouteInput
 import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer
@@ -58,12 +59,12 @@ constructor(private val environment: Environment, private val bindings: BindingS
     }
 
     private fun initConsumer() {
-        if (this.bindings.bindings[GateWayConstant.UPDATE_ROUTE_INPUT] == null) {
-            this.bindings.bindings[GateWayConstant.UPDATE_ROUTE_INPUT] = BindingProperties()
+        if (this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT] == null) {
+            this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT] = BindingProperties()
         }
-        this.bindings.bindings[GateWayConstant.UPDATE_ROUTE_INPUT]?.let {
-            if (it.destination == null || it.destination == GateWayConstant.UPDATE_ROUTE_INPUT) {
-                it.destination = GateWayConstant.UPDATE_ROUTE_DESCRIPTION
+        this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT]?.let {
+            if (it.destination == null || it.destination == RouteConstant.UPDATE_ROUTE_INPUT) {
+                it.destination = RouteConstant.UPDATE_ROUTE_DESCRIPTION
             }
             it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
             it.group = GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + environment.getProperty("server.address") + "-" + environment.getProperty("server.port")
@@ -71,12 +72,12 @@ constructor(private val environment: Environment, private val bindings: BindingS
     }
 
     private fun initProducer() {
-        if (this.bindings.bindings[GateWayConstant.ROUTE_LOG_OUTPUT] == null) {
-            this.bindings.bindings[GateWayConstant.ROUTE_LOG_OUTPUT] = BindingProperties()
+        if (this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT] == null) {
+            this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT] = BindingProperties()
         }
-        this.bindings.bindings[GateWayConstant.ROUTE_LOG_OUTPUT]?.let {
-            if (it.destination == null || it.destination == GateWayConstant.ROUTE_LOG_OUTPUT) {
-                it.destination = GateWayConstant.ROUTE_LOG_DESCRIPTION
+        this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT]?.let {
+            if (it.destination == null || it.destination == RouteConstant.ROUTE_LOG_OUTPUT) {
+                it.destination = RouteConstant.ROUTE_LOG_DESCRIPTION
             }
             it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
         }

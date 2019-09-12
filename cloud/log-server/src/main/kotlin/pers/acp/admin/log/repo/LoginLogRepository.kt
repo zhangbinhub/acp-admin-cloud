@@ -7,4 +7,7 @@ import pers.acp.admin.log.entity.LoginLog
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-interface LoginLogRepository : BaseRepository<LoginLog, String>
+interface LoginLogRepository : BaseRepository<LoginLog, String> {
+    fun findAllByRequestTimeLessThan(time: Long): MutableList<LoginLog>
+    fun deleteAllByRequestTimeLessThan(time: Long)
+}

@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.constant.path.CommonPath
-import pers.acp.admin.oauth.constant.OauthInnerApi
+import pers.acp.admin.api.CommonPath
+import pers.acp.admin.api.OauthInnerApi
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException

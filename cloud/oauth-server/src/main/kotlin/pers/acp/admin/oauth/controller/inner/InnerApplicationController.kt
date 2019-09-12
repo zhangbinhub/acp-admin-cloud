@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.constant.path.CommonPath
-import pers.acp.admin.oauth.constant.OauthInnerApi
+import pers.acp.admin.api.CommonPath
+import pers.acp.admin.api.OauthInnerApi
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.spring.boot.exceptions.ServerException

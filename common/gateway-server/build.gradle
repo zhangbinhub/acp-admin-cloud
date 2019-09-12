@@ -21,6 +21,7 @@ bootJar {
     }
 }
 dependencies {
+    compile project(":cloud:acp-admin-cloud-constant")
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"
     compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"

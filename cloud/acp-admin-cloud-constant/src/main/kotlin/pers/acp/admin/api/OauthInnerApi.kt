@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.constant
+package pers.acp.admin.api
 
 /**
  * @author zhang by 18/01/2019

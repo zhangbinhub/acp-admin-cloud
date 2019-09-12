@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.constant.path.CommonPath
-import pers.acp.admin.oauth.constant.OauthOpenInnerApi
+import pers.acp.admin.api.CommonPath
+import pers.acp.admin.api.OauthOpenInnerApi
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.spring.boot.exceptions.ServerException
