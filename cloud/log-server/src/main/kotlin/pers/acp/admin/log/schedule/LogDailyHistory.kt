@@ -1,7 +1,6 @@
 package pers.acp.admin.log.schedule
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
@@ -59,7 +58,6 @@ constructor(private val logAdapter: LogAdapter,
                 }
             }
         }
-        println("并行任务全部执行完成")
         return true
     }
 

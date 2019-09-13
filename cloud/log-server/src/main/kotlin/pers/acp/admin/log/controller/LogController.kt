@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -15,6 +16,7 @@ import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
 import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.po.RouteLogPo
+import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
@@ -39,6 +41,16 @@ class LogController @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val logFileDomain: LogFileDomain,
             private val logDomain: LogDomain) : BaseController() {
+
+    @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
+    @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.superOnly)
+    @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
+            CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(3).let {
+                ResponseEntity.ok(logDomain.loginStatistics(it.millis))
+            }
 
     @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、开始时间、结束时间、响应状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))

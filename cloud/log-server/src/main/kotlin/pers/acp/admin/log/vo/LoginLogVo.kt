@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.vo
+package pers.acp.admin.log.vo
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty

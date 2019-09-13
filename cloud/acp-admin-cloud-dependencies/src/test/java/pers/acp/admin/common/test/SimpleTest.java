@@ -25,7 +25,7 @@ class SimpleTest {
         DateTime dateTime = CommonTools.getNowDateTime().withTimeAtStartOfDay();
         System.out.println(dateTime.toString(Calculation.DATETIME_FORMAT));
         System.out.println(dateTime.getMillis());
-        System.out.println(dateTime.toDate().getTime());
+        System.out.println(dateTime.minusMonths(6).toString(Calculation.DATETIME_FORMAT));
     }
 
 }

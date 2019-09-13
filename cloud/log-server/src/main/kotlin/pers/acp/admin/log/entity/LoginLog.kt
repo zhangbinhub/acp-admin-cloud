@@ -16,6 +16,7 @@ import javax.persistence.*
 @Table(name = "t_log_login",
         uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
         indexes = [
+            Index(columnList = "requestTime"),
             Index(columnList = "userId"),
             Index(columnList = "clientId,loginDate"),
             Index(columnList = "userId,clientId,loginDate")

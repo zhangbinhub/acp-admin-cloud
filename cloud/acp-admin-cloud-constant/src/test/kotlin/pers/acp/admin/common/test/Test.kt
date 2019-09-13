@@ -7,7 +7,7 @@ import pers.acp.admin.constant.RoleCode
  * @author zhang by 12/08/2019
  * @since JDK 11
  */
-fun main() {
+fun main() = runBlocking {
     try {
         val fields = RoleCode::class.java.declaredFields
         for (field in fields) {
@@ -21,28 +21,12 @@ fun main() {
         val ss = "[fsdadf2341243]"
         println(ss.replace(Regex("[\\[|\\]]"), ""))
 
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                delay(1000)
-                print("1 >>>>>>>>> ")
-                print(Thread.currentThread())
-                println(" " + System.currentTimeMillis())
-            }
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                delay(1000)
-                print("2 >>>>>>>>> ")
-                print(Thread.currentThread())
-                println(" " + System.currentTimeMillis())
-            }
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                delay(1000)
-                print("3 >>>>>>>>> ")
-                print(Thread.currentThread())
-                println(" " + System.currentTimeMillis())
+        for (index in 0..5000) {
+            launch(Dispatchers.IO) {
+                delay(10000)
+                println("$index >>>>>>>> finished " + System.currentTimeMillis())
             }
         }
-        println(4)
-        Thread.sleep(5000)
     } catch (e: Exception) {
         e.printStackTrace()
     }

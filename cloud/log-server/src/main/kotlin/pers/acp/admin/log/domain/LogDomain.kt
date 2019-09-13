@@ -14,9 +14,8 @@ import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.message.RouteLogMessage
 import pers.acp.admin.log.po.RouteLogPo
-import pers.acp.admin.log.repo.LoginLogRepository
-import pers.acp.admin.log.repo.OperateLogRepository
-import pers.acp.admin.log.repo.RouteLogRepository
+import pers.acp.admin.log.repo.*
+import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
@@ -33,8 +32,11 @@ class LogDomain @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val objectMapper: ObjectMapper,
             private val routeLogRepository: RouteLogRepository,
+            private val routeLogHistoryRepository: RouteLogHistoryRepository,
             private val operateLogRepository: OperateLogRepository,
+            private val operateLogHistoryRepository: OperateLogHistoryRepository,
             private val loginLogRepository: LoginLogRepository,
+            private val loginLogHistoryRepository: LoginLogHistoryRepository,
             private val oauthServer: OauthServer) : BaseDomain() {
 
     /**
@@ -56,6 +58,14 @@ constructor(private val logAdapter: LogAdapter,
                     mapOf<String, String>()
                 }
             } ?: mapOf()
+
+    fun loginStatistics(beginTime: Long): List<LoginLogVo> =
+            loginLogHistoryRepository.loginStatistics(beginTime).let {
+                it.addAll(loginLogRepository.loginStatistics())
+                it.map { item ->
+                    LoginLogVo(item[0].toString(), item[1].toString(), item[2].toString(), item[3].toString().toLong())
+                }
+            }
 
     @Transactional
     suspend fun doLoginLog(routeLogMessage: RouteLogMessage, message: String, maxRetryNumber: Int = 100) {

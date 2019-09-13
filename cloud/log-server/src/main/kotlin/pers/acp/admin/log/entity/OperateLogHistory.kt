@@ -11,7 +11,9 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_operate_history", uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])])
+@Table(name = "t_log_operate_history",
+        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+        indexes = [Index(columnList = "requestTime")])
 @ApiModel("操作日志")
 class OperateLogHistory {
 

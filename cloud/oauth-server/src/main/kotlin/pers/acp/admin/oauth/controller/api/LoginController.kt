@@ -15,7 +15,6 @@ import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.admin.oauth.vo.LoginLogVo
 import pers.acp.admin.oauth.vo.OnlineInfoVo
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
@@ -37,22 +36,6 @@ constructor(private val logAdapter: LogAdapter,
             private val applicationDomain: ApplicationDomain,
             private val userDomain: UserDomain,
             private val securityTokenService: SecurityTokenService) : BaseController() {
-
-    @ApiOperation(value = "获取各应用登录次数统计")
-    @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
-    @GetMapping(value = [OauthApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-    @Throws(ServerException::class)
-    fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
-            mutableListOf<LoginLogVo>().apply {
-                // todo: 获取登录次数统计
-                applicationDomain.getAppList(user).forEach { item ->
-                    //                    val loginLogVos = securityTokenService.getLoginLogList(item.id)
-//                    loginLogVos.forEach { loginLogVO -> loginLogVO.appName = item.appName }
-//                    this.addAll(loginLogVos)
-                }
-            }.let {
-                ResponseEntity.ok(it)
-            }
 
     @ApiOperation(value = "注销当前用户")
     @PostMapping(value = [OauthApi.logOut], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
