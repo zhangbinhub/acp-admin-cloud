@@ -31,7 +31,7 @@ constructor(private val logAdapter: LogAdapter,
     override fun beforeExecuteFun(): Boolean =
             distributedLock.getLock(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
                     logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort,
-                    30 * 60 * 1000)
+                    12 * 60 * 60 * 1000)
 
     override fun executeFun(): Any? {
         val todayBeginTime = CommonTools.getNowDateTime().withTimeAtStartOfDay().millis

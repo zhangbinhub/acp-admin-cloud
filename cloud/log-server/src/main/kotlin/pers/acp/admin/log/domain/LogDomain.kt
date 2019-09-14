@@ -13,6 +13,8 @@ import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.message.RouteLogMessage
+import pers.acp.admin.log.po.LoginLogPo
+import pers.acp.admin.log.po.OperateLogPo
 import pers.acp.admin.log.po.RouteLogPo
 import pers.acp.admin.log.repo.*
 import pers.acp.admin.log.vo.LoginLogVo
@@ -180,31 +182,121 @@ constructor(private val logAdapter: LogAdapter,
         }
     }
 
-    fun doQueryRouteLog(routeLogPo: RouteLogPo): Page<RouteLog> =
-            routeLogRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(routeLogPo.remoteIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + routeLogPo.remoteIp + "%"))
+    fun doQueryRouteLog(routeLogPo: RouteLogPo): Page<out Any> =
+            routeLogPo.let {
+                if (it.history) {
+                    routeLogHistoryRepository
+                } else {
+                    routeLogRepository
                 }
-                if (!CommonTools.isNullStr(routeLogPo.gatewayIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + routeLogPo.gatewayIp + "%"))
+            }.let {
+                it.findAll({ root, _, criteriaBuilder ->
+                    val predicateList: MutableList<Predicate> = mutableListOf()
+                    if (!CommonTools.isNullStr(routeLogPo.remoteIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + routeLogPo.remoteIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(routeLogPo.gatewayIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + routeLogPo.gatewayIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(routeLogPo.path)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + routeLogPo.path + "%"))
+                    }
+                    if (!CommonTools.isNullStr(routeLogPo.serverId)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + routeLogPo.serverId + "%"))
+                    }
+                    if (!CommonTools.isNullStr(routeLogPo.clientName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + routeLogPo.clientName + "%"))
+                    }
+                    if (!CommonTools.isNullStr(routeLogPo.userName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + routeLogPo.userName + "%"))
+                    }
+                    if (routeLogPo.startTime != null) {
+                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPo.startTime))
+                    }
+                    if (routeLogPo.endTime != null) {
+                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPo.endTime))
+                    }
+                    if (routeLogPo.responseStatus != null) {
+                        predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), routeLogPo.responseStatus))
+                    }
+                    criteriaBuilder.and(*predicateList.toTypedArray())
+                }, buildPageRequest(routeLogPo.queryParam!!))
+            }
+
+    fun doQueryOperateLog(operateLogPo: OperateLogPo): Page<out Any> =
+            operateLogPo.let {
+                if (it.history) {
+                    operateLogHistoryRepository
+                } else {
+                    operateLogRepository
                 }
-                if (!CommonTools.isNullStr(routeLogPo.path)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + routeLogPo.path + "%"))
+            }.let {
+                it.findAll({ root, _, criteriaBuilder ->
+                    val predicateList: MutableList<Predicate> = mutableListOf()
+                    if (!CommonTools.isNullStr(operateLogPo.remoteIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + operateLogPo.remoteIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(operateLogPo.gatewayIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + operateLogPo.gatewayIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(operateLogPo.path)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + operateLogPo.path + "%"))
+                    }
+                    if (!CommonTools.isNullStr(operateLogPo.serverId)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + operateLogPo.serverId + "%"))
+                    }
+                    if (!CommonTools.isNullStr(operateLogPo.clientName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + operateLogPo.clientName + "%"))
+                    }
+                    if (!CommonTools.isNullStr(operateLogPo.userName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + operateLogPo.userName + "%"))
+                    }
+                    if (operateLogPo.startTime != null) {
+                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), operateLogPo.startTime))
+                    }
+                    if (operateLogPo.endTime != null) {
+                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), operateLogPo.endTime))
+                    }
+                    criteriaBuilder.and(*predicateList.toTypedArray())
+                }, buildPageRequest(operateLogPo.queryParam!!))
+            }
+
+    fun doQueryLoginLog(loginLogPo: LoginLogPo): Page<out Any> =
+            loginLogPo.let {
+                if (it.history) {
+                    loginLogHistoryRepository
+                } else {
+                    loginLogRepository
                 }
-                if (!CommonTools.isNullStr(routeLogPo.serverId)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + routeLogPo.serverId + "%"))
-                }
-                if (routeLogPo.startTime != null) {
-                    predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPo.startTime))
-                }
-                if (routeLogPo.endTime != null) {
-                    predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPo.endTime))
-                }
-                if (routeLogPo.responseStatus != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), routeLogPo.responseStatus))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(routeLogPo.queryParam!!))
+            }.let {
+                it.findAll({ root, _, criteriaBuilder ->
+                    val predicateList: MutableList<Predicate> = mutableListOf()
+                    if (!CommonTools.isNullStr(loginLogPo.remoteIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + loginLogPo.remoteIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(loginLogPo.gatewayIp)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + loginLogPo.gatewayIp + "%"))
+                    }
+                    if (!CommonTools.isNullStr(loginLogPo.path)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + loginLogPo.path + "%"))
+                    }
+                    if (!CommonTools.isNullStr(loginLogPo.serverId)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + loginLogPo.serverId + "%"))
+                    }
+                    if (!CommonTools.isNullStr(loginLogPo.clientName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + loginLogPo.clientName + "%"))
+                    }
+                    if (!CommonTools.isNullStr(loginLogPo.userName)) {
+                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + loginLogPo.userName + "%"))
+                    }
+                    if (loginLogPo.startTime != null) {
+                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), loginLogPo.startTime))
+                    }
+                    if (loginLogPo.endTime != null) {
+                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), loginLogPo.endTime))
+                    }
+                    criteriaBuilder.and(*predicateList.toTypedArray())
+                }, buildPageRequest(loginLogPo.queryParam!!))
+            }
 
 }

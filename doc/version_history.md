@@ -16,6 +16,7 @@
 > - [Upgrade] log-server 增加接口调用操作日志记录，定时任务将截止前一日的所有数据移入历史表
 > - [Upgrade] log-server 增加用户登录日志记录，登录用户信息取缓存 token 的详细信息，，定时任务将截止前一日的所有数据移入历史表
 > - [Upgrade] log-server 增加登录信息统计接口
+> - [Upgrade] log-server 增加操作日志查询、登录日志查询接口
 > - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.6
 > - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE

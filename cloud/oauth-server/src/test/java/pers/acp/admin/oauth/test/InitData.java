@@ -87,12 +87,59 @@ class InitData extends BaseTest {
     }
 
     private void initMenus(Application application, Role... roles) {
+        Menu sysMonitor = new Menu();
+        sysMonitor.setAppId(application.getId());
+        sysMonitor.setName("系统监控");
+        sysMonitor.setIconType("el-icon-monitor");
+        sysMonitor.setParentId(application.getId());
+        sysMonitor.setSort(0);
+        sysMonitor.setEnabled(true);
+        sysMonitor.setCovert(false);
+        sysMonitor.setOpenType(0);
+        sysMonitor = menuRepository.save(sysMonitor);
+
+        Menu operateLog = new Menu();
+        operateLog.setAppId(application.getId());
+        operateLog.setName("操作日志");
+        operateLog.setIconType("el-icon-s-operation");
+        operateLog.setPath("/operatelog");
+        operateLog.setParentId(sysMonitor.getId());
+        operateLog.setSort(0);
+        operateLog.setEnabled(true);
+        operateLog.setCovert(false);
+        operateLog.setOpenType(0);
+        operateLog = menuRepository.save(operateLog);
+
+        Menu loginLog = new Menu();
+        loginLog.setAppId(application.getId());
+        loginLog.setName("登录日志");
+        loginLog.setIconType("el-icon-coordinate");
+        loginLog.setPath("/loginlog");
+        loginLog.setParentId(sysMonitor.getId());
+        loginLog.setSort(1);
+        loginLog.setEnabled(true);
+        loginLog.setCovert(false);
+        loginLog.setOpenType(0);
+        loginLog = menuRepository.save(loginLog);
+
+        Menu onlineUser = new Menu();
+        onlineUser.setAppId(application.getId());
+        onlineUser.setName("在线用户");
+        onlineUser.setIconType("el-icon-s-marketing");
+        onlineUser.setPath("/onlineuser");
+        onlineUser.setParentId(sysMonitor.getId());
+        onlineUser.setSort(2);
+        onlineUser.setEnabled(true);
+        onlineUser.setCovert(false);
+        onlineUser.setOpenType(0);
+        onlineUser = menuRepository.save(onlineUser);
+
         Menu sysConfig = new Menu();
         sysConfig.setAppId(application.getId());
         sysConfig.setName("系统配置");
         sysConfig.setIconType("el-icon-s-tools");
         sysConfig.setParentId(application.getId());
-        sysConfig.setSort(0);
+        sysConfig.setSort(1);
         sysConfig.setEnabled(true);
         sysConfig.setCovert(false);
         sysConfig.setOpenType(0);
@@ -175,7 +222,7 @@ class InitData extends BaseTest {
         demo.setName("demo");
         demo.setIconType("el-icon-more");
         demo.setParentId(application.getId());
-        demo.setSort(1);
+        demo.setSort(2);
         demo.setEnabled(true);
         demo.setCovert(true);
         demo.setOpenType(0);
@@ -253,6 +300,10 @@ class InitData extends BaseTest {
         demoTopLong = menuRepository.save(demoTopLong);
 
         for (Role role : roles) {
+            role.getMenuSet().add(sysMonitor);
+            role.getMenuSet().add(operateLog);
+            role.getMenuSet().add(loginLog);
+            role.getMenuSet().add(onlineUser);
             role.getMenuSet().add(sysConfig);
             role.getMenuSet().add(appConfig);
             role.getMenuSet().add(roleConfig);
@@ -271,6 +322,14 @@ class InitData extends BaseTest {
     }
 
     private void initModuleAndFunc(Application application, Role... roles) {
+        ModuleFunc sysMonitor = new ModuleFunc();
+        sysMonitor.setAppId(application.getId());
+        sysMonitor.setParentId(application.getId());
+        sysMonitor.setName("系统监控");
+        sysMonitor.setCode(ModuleFuncCode.sysMonitor);
+        sysMonitor.setCovert(false);
+        sysMonitor = moduleFuncRepository.save(sysMonitor);
+
         ModuleFunc sysConfig = new ModuleFunc();
         sysConfig.setAppId(application.getId());
         sysConfig.setParentId(application.getId());
@@ -576,6 +635,7 @@ class InitData extends BaseTest {
         flowDiagram = moduleFuncRepository.save(flowDiagram);
 
         for (Role role : roles) {
+            role.getModuleFuncSet().add(sysMonitor);
             role.getModuleFuncSet().add(sysConfig);
             role.getModuleFuncSet().add(runtimeConfig);
             role.getModuleFuncSet().add(runtimeAdd);

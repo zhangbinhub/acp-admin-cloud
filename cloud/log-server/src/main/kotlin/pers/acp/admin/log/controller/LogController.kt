@@ -14,7 +14,8 @@ import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogFileExpression
 import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
-import pers.acp.admin.log.entity.RouteLog
+import pers.acp.admin.log.po.LoginLogPo
+import pers.acp.admin.log.po.OperateLogPo
 import pers.acp.admin.log.po.RouteLogPo
 import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.admin.permission.BaseExpression
@@ -44,7 +45,7 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
     @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
-    @PreAuthorize(BaseExpression.superOnly)
+    @PreAuthorize(BaseExpression.sysMonitor)
     @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
@@ -52,16 +53,40 @@ constructor(private val logAdapter: LogAdapter,
                 ResponseEntity.ok(logDomain.loginStatistics(it.millis))
             }
 
-    @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、开始时间、结束时间、响应状态")
+    @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间、响应状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @PreAuthorize(BaseExpression.superOnly)
+    @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryRouteLog(@RequestBody routeLogPo: RouteLogPo): ResponseEntity<Page<RouteLog>> {
+    fun queryRouteLog(@RequestBody routeLogPo: RouteLogPo): ResponseEntity<Page<out Any>> {
         if (routeLogPo.queryParam == null) {
             throw ServerException("分页查询参数不能为空")
         }
         return ResponseEntity.ok(logDomain.doQueryRouteLog(routeLogPo))
+    }
+
+    @ApiOperation(value = "查询操作日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun queryOperateLog(@RequestBody operateLogPo: OperateLogPo): ResponseEntity<Page<out Any>> {
+        if (operateLogPo.queryParam == null) {
+            throw ServerException("分页查询参数不能为空")
+        }
+        return ResponseEntity.ok(logDomain.doQueryOperateLog(operateLogPo))
+    }
+
+    @ApiOperation(value = "查询登录日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun queryOperateLog(@RequestBody loginLogPo: LoginLogPo): ResponseEntity<Page<out Any>> {
+        if (loginLogPo.queryParam == null) {
+            throw ServerException("分页查询参数不能为空")
+        }
+        return ResponseEntity.ok(logDomain.doQueryLoginLog(loginLogPo))
     }
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")

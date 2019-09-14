@@ -8,8 +8,8 @@ import pers.acp.admin.common.po.QueryParam
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-@ApiModel("网关路由日志查询参数")
-data class RouteLogPo(
+@ApiModel("操作日志查询参数")
+data class OperateLogPo(
         @ApiModelProperty("是否查询往日历史数据，true-往日历史，false-当日数据")
         var history: Boolean = false,
 
@@ -36,9 +36,6 @@ data class RouteLogPo(
 
         @ApiModelProperty("结束时间")
         var endTime: Long? = null,
-
-        @ApiModelProperty("响应状态码")
-        var responseStatus: Int? = null,
 
         @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
         var queryParam: QueryParam? = null
