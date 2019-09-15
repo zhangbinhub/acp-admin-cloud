@@ -29,7 +29,6 @@ data class MenuPo(
         var iconType: String? = null,
 
         @ApiModelProperty(value = "链接路径", required = true, position = 4)
-        @get:NotBlank(message = "链接路径不能为空")
         var path: String? = null,
 
         @ApiModelProperty(value = "上级菜单ID", required = true, position = 5)

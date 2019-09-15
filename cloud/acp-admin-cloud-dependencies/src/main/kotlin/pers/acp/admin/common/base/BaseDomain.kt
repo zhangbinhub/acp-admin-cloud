@@ -15,9 +15,9 @@ abstract class BaseDomain {
             if (CommonTools.isNullStr(queryParam.orderName)) {
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize)
             } else {
-                var direction: Sort.Direction = Sort.Direction.DESC
-                if (queryParam.orderCommond.equals("asc", ignoreCase = true)) {
-                    direction = Sort.Direction.ASC
+                var direction: Sort.Direction = Sort.Direction.ASC
+                if (queryParam.orderCommond.startsWith("desc", ignoreCase = true)) {
+                    direction = Sort.Direction.DESC
                 }
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize, direction, *queryParam.orderName!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
             }

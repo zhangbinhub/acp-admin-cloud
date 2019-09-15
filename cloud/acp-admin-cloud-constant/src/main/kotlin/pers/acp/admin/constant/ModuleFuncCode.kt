@@ -6,6 +6,7 @@ package pers.acp.admin.constant
  */
 object ModuleFuncCode {
     const val other = "other"
+    const val sysMonitor = "sys_monitor"
     const val sysConfig = "sys_config"
     const val runtimeConfig = "runtime_config"
     const val runtimeAdd = "runtime_add"

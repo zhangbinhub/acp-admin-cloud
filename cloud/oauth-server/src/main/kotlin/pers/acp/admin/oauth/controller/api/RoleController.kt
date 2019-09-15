@@ -14,7 +14,7 @@ import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.RoleConfigExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.RoleDomain
 import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.po.RolePo
@@ -22,7 +22,7 @@ import pers.acp.admin.oauth.vo.RoleVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.annotation.PostConstruct
@@ -84,20 +84,20 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     fun roleList(user: OAuth2Authentication): ResponseEntity<List<Role>> = ResponseEntity.ok(roleDomain.getRoleList(user))
 
     @ApiOperation(value = "新建角色信息", notes = "名称、编码、应用ID、级别、序号、关联用户、关联菜单、关联模块功能")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Role::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Role::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleAdd)
     @PutMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun add(user: OAuth2Authentication, @RequestBody @Valid rolePO: RolePo): ResponseEntity<Role> {
-        if (CommonTools.isNullStr(rolePO.appId)) {
+    fun add(user: OAuth2Authentication, @RequestBody @Valid rolePo: RolePo): ResponseEntity<Role> {
+        if (CommonTools.isNullStr(rolePo.appId)) {
             throw ServerException("应用ID不能为空")
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(roleDomain.doCreate(rolePO, user.name))
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleDomain.doCreate(rolePo, user.name))
     }
 
     @ApiOperation(value = "删除指定的角色信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleDelete)
     @DeleteMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -106,24 +106,24 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVO> =
-            roleDomain.doDelete(user.name, idList).let { ResponseEntity.ok(InfoVO(message = "删除成功")) }
+               idList: MutableList<String>): ResponseEntity<InfoVo> =
+            roleDomain.doDelete(user.name, idList).let { ResponseEntity.ok(InfoVo(message = "删除成功")) }
 
     @ApiOperation(value = "更新角色信息", notes = "名称、编码、级别、序号、关联用户、关联菜单、关联模块功能")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleUpdate)
     @PatchMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun update(user: OAuth2Authentication, @RequestBody @Valid rolePO: RolePo): ResponseEntity<Role> {
-        if (CommonTools.isNullStr(rolePO.id)) {
+    fun update(user: OAuth2Authentication, @RequestBody @Valid rolePo: RolePo): ResponseEntity<Role> {
+        if (CommonTools.isNullStr(rolePo.id)) {
             throw ServerException("ID不能为空")
         }
-        return ResponseEntity.ok(roleDomain.doUpdate(user.name, rolePO))
+        return ResponseEntity.ok(roleDomain.doUpdate(user.name, rolePo))
     }
 
     @ApiOperation(value = "获取角色详细信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleQuery)
     @GetMapping(value = [OauthApi.roleConfig + "/{roleId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)

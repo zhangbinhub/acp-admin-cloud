@@ -1,0 +1,114 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: prod
+  application:
+    name: gateway-server
+  thymeleaf:
+    cache: false
+  cloud:
+    # ===============================
+    # = GateWay Config
+    # ===============================
+    gateway:
+      routes:
+        - id: log-server-api
+          uri: lb://log-server
+          predicates:
+            - Path=/api/log/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: route-server-api
+          uri: lb://route-server
+          predicates:
+            - Path=/api/route/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: config-server-api
+          uri: lb://config-server
+          predicates:
+            - Path=/api/config/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: oauth2-server-api
+          uri: lb://oauth2-server
+          predicates:
+            - Path=/api/oauth/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+        - id: oauth2-server-open
+          uri: lb://oauth2-server
+          predicates:
+            - Path=/open/oauth/**
+          filters:
+            - RewritePath=/open/oauth/(?<segment1>.*),/open/$\{segment}
+            - name: Hystrix
+              args:
+                name: GateWayHystrix
+                fallbackUri: forward:/hystrixhandle
+info:
+  version: 4.0.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Eureka Config
+# ===============================
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+# ===============================
+# = Ribbon Config
+# ===============================
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ServerListRefreshInterval: 5000
+  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
+  eager-load:
+    enabled: true
+    clients: route-server,config-server,oauth2-server,log-server

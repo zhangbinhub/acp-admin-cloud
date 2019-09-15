@@ -10,7 +10,7 @@
 out/
 build/
 logs/
-/file
+/file/
 elasticsearch/
 gradle/deploy.gradle
 /release

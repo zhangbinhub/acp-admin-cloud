@@ -28,9 +28,6 @@ info:
 # = Spring Config
 # ===============================
 spring:
-  devtools:
-    restart:
-      enabled: true
   redis:
     url: redis://127.0.0.1:6379
   servlet:
@@ -64,7 +61,7 @@ spring:
   # = DATA SOURCE
   # ===============================
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
     username: root
     password: test
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -78,7 +75,7 @@ spring:
 security:
   oauth2:
     client:
-      client-id: 8a80cb816c0a5d4f016c0a5e0c020000
+      client-id: 8a80cb816d2eb97f016d2eba04710000
       client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:

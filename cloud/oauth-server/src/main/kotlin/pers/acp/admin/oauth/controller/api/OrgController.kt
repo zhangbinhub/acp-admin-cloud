@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.oauth.constant.OauthApi
 import pers.acp.admin.oauth.constant.OrgConfigExpression
-import pers.acp.admin.common.vo.InfoVO
+import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.OrganizationDomain
 import pers.acp.admin.oauth.entity.Organization
 import pers.acp.admin.oauth.po.OrganizationPo
 import pers.acp.admin.oauth.vo.OrganizationVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
@@ -48,16 +48,16 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
             ResponseEntity.ok(organizationDomain.getModOrgList(user.name))
 
     @ApiOperation(value = "新建机构信息", notes = "名称、编码、上级ID、序号、关联用户")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Organization::class), ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Organization::class), ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(OrgConfigExpression.orgAdd)
     @PutMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun add(user: OAuth2Authentication, @RequestBody @Valid organizationPO: OrganizationPo): ResponseEntity<Organization> =
-            ResponseEntity.status(HttpStatus.CREATED).body(organizationDomain.doCreate(user.name, organizationPO))
+    fun add(user: OAuth2Authentication, @RequestBody @Valid organizationPo: OrganizationPo): ResponseEntity<Organization> =
+            ResponseEntity.status(HttpStatus.CREATED).body(organizationDomain.doCreate(user.name, organizationPo))
 
     @ApiOperation(value = "删除指定的机构信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(OrgConfigExpression.orgDelete)
     @DeleteMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
@@ -66,24 +66,24 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
                @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVO> =
-            organizationDomain.doDelete(user.name, idList).let { ResponseEntity.ok(InfoVO(message = "删除成功")) }
+               idList: MutableList<String>): ResponseEntity<InfoVo> =
+            organizationDomain.doDelete(user.name, idList).let { ResponseEntity.ok(InfoVo(message = "删除成功")) }
 
     @ApiOperation(value = "更新机构信息", notes = "名称、编码、上级ID、序号、关联用户")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(OrgConfigExpression.orgUpdate)
     @PatchMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun update(user: OAuth2Authentication, @RequestBody @Valid organizationPO: OrganizationPo): ResponseEntity<Organization> {
-        if (CommonTools.isNullStr(organizationPO.id)) {
+    fun update(user: OAuth2Authentication, @RequestBody @Valid organizationPo: OrganizationPo): ResponseEntity<Organization> {
+        if (CommonTools.isNullStr(organizationPo.id)) {
             throw ServerException("ID不能为空")
         }
-        return ResponseEntity.ok(organizationDomain.doUpdate(user.name, organizationPO))
+        return ResponseEntity.ok(organizationDomain.doUpdate(user.name, organizationPo))
     }
 
     @ApiOperation(value = "获取机构详细信息")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(OrgConfigExpression.orgQuery)
     @GetMapping(value = [OauthApi.orgConfig + "/{orgId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)

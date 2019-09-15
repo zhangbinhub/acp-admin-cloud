@@ -38,17 +38,17 @@ constructor(userRepository: UserRepository,
             private val securityTokenService: SecurityTokenService) : OauthBaseDomain(userRepository) {
 
     @Throws(ServerException::class)
-    private fun validatePermit(loginNo: String, userPO: UserPo, roleSet: Set<Role>, isCreate: Boolean) {
+    private fun validatePermit(loginNo: String, userPo: UserPo, roleSet: Set<Role>, isCreate: Boolean) {
         val currUserInfo = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         if (!isSuper(currUserInfo)) {
-            if (currUserInfo.levels >= userPO.levels!!) {
+            if (currUserInfo.levels >= userPo.levels!!) {
                 throw ServerException("不能编辑级别比自身大的用户信息")
             }
             currUserInfo.organizationMngSet.forEach {
-                if (!userPO.orgIds.contains(it.id)) {
+                if (!userPo.orgIds.contains(it.id)) {
                     throw ServerException("没有权限编辑机构【${it.name}】下的用户，请联系系统管理员")
                 }
-                if (!userPO.orgMngIds.contains(it.id)) {
+                if (!userPo.orgMngIds.contains(it.id)) {
                     throw ServerException("没有权限编辑机构【${it.name}】下的用户，请联系系统管理员")
                 }
             }
@@ -60,22 +60,22 @@ constructor(userRepository: UserRepository,
             }
         } else {
             if (isCreate) {
-                if (currUserInfo.levels >= userPO.levels!!) {
+                if (currUserInfo.levels >= userPo.levels!!) {
                     throw ServerException("不能创建级别比自身大的用户")
                 }
             }
         }
     }
 
-    private fun doSave(user: User, userPO: UserPo): User =
+    private fun doSave(user: User, userPo: UserPo): User =
             doSaveUser(user.apply {
-                mobile = userPO.mobile!!
-                name = userPO.name!!
-                enabled = userPO.enabled!!
-                levels = userPO.levels!!
-                sort = userPO.sort
-                organizationSet = organizationRepository.findAllById(userPO.orgIds).toMutableSet()
-                organizationMngSet = organizationRepository.findAllById(userPO.orgMngIds).toMutableSet()
+                mobile = userPo.mobile!!
+                name = userPo.name!!
+                enabled = userPo.enabled!!
+                levels = userPo.levels!!
+                sort = userPo.sort
+                organizationSet = organizationRepository.findAllById(userPo.orgIds).toMutableSet()
+                organizationMngSet = organizationRepository.findAllById(userPo.orgMngIds).toMutableSet()
             })
 
     @Transactional
@@ -96,49 +96,49 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(loginNo: String, userPO: UserPo): User {
-        val roleSet = roleRepository.findAllById(userPO.roleIds).toMutableSet()
-        validatePermit(loginNo, userPO, roleSet, true)
-        var checkUser = userRepository.findByLoginNo(userPO.loginNo!!).orElse(null)
+    fun doCreate(loginNo: String, userPo: UserPo): User {
+        val roleSet = roleRepository.findAllById(userPo.roleIds).toMutableSet()
+        validatePermit(loginNo, userPo, roleSet, true)
+        var checkUser = userRepository.findByLoginNo(userPo.loginNo!!).orElse(null)
         if (checkUser != null) {
             throw ServerException("登录账号已存在，请重新输入")
         }
-        checkUser = userRepository.findByMobile(userPO.mobile!!).orElse(null)
+        checkUser = userRepository.findByMobile(userPo.mobile!!).orElse(null)
         if (checkUser != null) {
             throw ServerException("手机号码已存在，请重新输入")
         }
         return doSave(User().apply {
-            this.loginNo = userPO.loginNo!!
-            this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPO.loginNo!!)
+            this.loginNo = userPo.loginNo!!
+            this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
             this.roleSet = roleSet
-        }, userPO)
+        }, userPo)
     }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(loginNo: String, userPO: UserPo): User {
-        val roleSet = roleRepository.findAllById(userPO.roleIds).toMutableSet()
-        validatePermit(loginNo, userPO, roleSet, false)
-        val userOptional = userRepository.findById(userPO.id!!)
+    fun doUpdate(loginNo: String, userPo: UserPo): User {
+        val roleSet = roleRepository.findAllById(userPo.roleIds).toMutableSet()
+        validatePermit(loginNo, userPo, roleSet, false)
+        val userOptional = userRepository.findById(userPo.id!!)
         if (userOptional.isEmpty) {
             throw ServerException("找不到用户信息")
         }
         return doSave(userOptional.get().apply {
-            var checkUser = userRepository.findByLoginNoAndIdNot(userPO.loginNo!!, this.id).orElse(null)
+            var checkUser = userRepository.findByLoginNoAndIdNot(userPo.loginNo!!, this.id).orElse(null)
             if (checkUser != null) {
                 throw ServerException("登录账号已存在，请重新输入")
             }
-            checkUser = userRepository.findByMobileAndIdNot(userPO.mobile!!, this.id).orElse(null)
+            checkUser = userRepository.findByMobileAndIdNot(userPo.mobile!!, this.id).orElse(null)
             if (checkUser != null) {
                 throw ServerException("手机号码已存在，请重新输入")
             }
-            if (this.loginNo != userPO.loginNo) {
-                this.loginNo = userPO.loginNo!!
-                this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPO.loginNo!!)
-                removeToken(userPO.loginNo!!)
+            if (this.loginNo != userPo.loginNo) {
+                this.loginNo = userPo.loginNo!!
+                this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
+                removeToken(userPo.loginNo!!)
             }
             this.roleSet = roleSet
-        }, userPO)
+        }, userPo)
     }
 
     @Transactional
@@ -185,28 +185,28 @@ constructor(userRepository: UserRepository,
         applicationRepository.findAllByOrderByAppNameAsc().forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
     }
 
-    fun doQuery(userPO: UserPo): Page<UserVo> =
+    fun doQuery(userPo: UserPo): Page<UserVo> =
             userRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList = ArrayList<Predicate>()
-                if (!CommonTools.isNullStr(userPO.loginNo)) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userPO.loginNo))
+                if (!CommonTools.isNullStr(userPo.loginNo)) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userPo.loginNo))
                 }
-                if (!CommonTools.isNullStr(userPO.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userPO.name + "%"))
+                if (!CommonTools.isNullStr(userPo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userPo.name + "%"))
                 }
-                if (userPO.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userPO.enabled))
+                if (userPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userPo.enabled))
                 }
-                if (!CommonTools.isNullStr(userPO.orgName)) {
+                if (!CommonTools.isNullStr(userPo.orgName)) {
                     val joinOrg = root.join<User, Organization>("organizationSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPO.orgName + "%"))
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPo.orgName + "%"))
                 }
-                if (!CommonTools.isNullStr(userPO.roleName)) {
+                if (!CommonTools.isNullStr(userPo.roleName)) {
                     val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPO.roleName + "%"))
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPo.roleName + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(userPO.queryParam!!))
+            }, buildPageRequest(userPo.queryParam!!))
                     .map { user ->
                         val userVO = UserVo()
                         BeanUtils.copyProperties(user, userVO)

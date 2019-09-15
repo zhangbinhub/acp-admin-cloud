@@ -14,10 +14,7 @@ import pers.acp.admin.route.definition.PredicateDefinition
 import pers.acp.admin.route.definition.RouteConstant
 import pers.acp.admin.route.definition.RouteDefinition
 import pers.acp.admin.route.entity.Route
-import pers.acp.admin.route.entity.RouteLog
-import pers.acp.admin.route.po.RouteLogPo
 import pers.acp.admin.route.po.RoutePo
-import pers.acp.admin.route.repo.RouteLogRepository
 import pers.acp.admin.route.repo.RouteRepository
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -36,7 +33,6 @@ import java.net.URI
 class RouteDomain @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val routeRepository: RouteRepository,
-            private val routeLogRepository: RouteLogRepository,
             private val redisTemplate: RedisTemplate<Any, Any>,
             private val objectMapper: ObjectMapper,
             private val distributedLock: DistributedLock) : BaseDomain() {
@@ -75,33 +71,6 @@ constructor(private val logAdapter: LogAdapter,
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
             }, buildPageRequest(routePo.queryParam!!))
-
-    fun doQueryLog(routeLogPO: RouteLogPo): Page<RouteLog> =
-            routeLogRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(routeLogPO.remoteIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + routeLogPO.remoteIp + "%"))
-                }
-                if (!CommonTools.isNullStr(routeLogPO.gatewayIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + routeLogPO.gatewayIp + "%"))
-                }
-                if (!CommonTools.isNullStr(routeLogPO.path)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + routeLogPO.path + "%"))
-                }
-                if (!CommonTools.isNullStr(routeLogPO.serverId)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + routeLogPO.serverId + "%"))
-                }
-                if (routeLogPO.startTime != null) {
-                    predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPO.startTime))
-                }
-                if (routeLogPO.endTime != null) {
-                    predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), routeLogPO.endTime))
-                }
-                if (routeLogPO.responseStatus != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), routeLogPO.responseStatus))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(routeLogPO.queryParam!!))
 
     @Transactional
     @Throws(ServerException::class)

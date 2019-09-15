@@ -47,7 +47,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "org.springframework.boot:spring-boot-devtools"
 
     // Swagger2
     compile "io.springfox:springfox-swagger2:$versions.swagger"

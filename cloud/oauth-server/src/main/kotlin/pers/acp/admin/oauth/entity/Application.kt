@@ -31,6 +31,12 @@ class Application {
     @Column(nullable = false)
     var secret: String = CommonTools.getUuid32()
 
+    @ApiModelProperty("权限范围，多个权限“,”分隔")
+    var scope: String = ""
+
+    @ApiModelProperty("应用标识")
+    var identify: String = ""
+
     @ApiModelProperty("token 有效期")
     @Column(nullable = false)
     var accessTokenValiditySeconds: Int = 86400

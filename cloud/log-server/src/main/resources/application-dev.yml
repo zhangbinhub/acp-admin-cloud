@@ -28,9 +28,6 @@ info:
 # = Spring Config
 # ===============================
 spring:
-  devtools:
-    restart:
-      enabled: true
   redis:
     url: redis://127.0.0.1:6379
   cloud:
@@ -45,13 +42,86 @@ spring:
           # 1代表：当Leader副本接收成功后，返回接收成功确认信息；
           # -1代表：当Leader和Follower副本都接收成功后，返回接收成功确认信息；
           required-acks: -1
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+# ===============================
+# = Ribbon Config
+# ===============================
+feign:
+  httpclient:
+    enabled: false
+    connection-timeout: ${feign.client.config.default.connectTimeout}
+    max-connections: 1000
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: full
+      oauth2-server:
+        connectTimeout: 30000
+        readTimeout: 30000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 11000
+    "OauthServer#appInfo(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+    "OauthServer#tokenInfo(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+ribbon:
+  ServerListRefreshInterval: 5000
+  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
+  eager-load:
+    enabled: true
+    clients: oauth2-server
 # ===============================
 # = Security Config
 # ===============================
 security:
   oauth2:
     client:
-      client-id: 8a80cb816c0a5d4f016c0a5e0c020000
+      client-id: 8a80cb816d2eb97f016d2eba04710000
       client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:
@@ -59,3 +129,4 @@ acp:
   schedule:
     cron:
       LogFileBackUpTask: 0 0/1 * * * ?
+      LogDailyHistory: 0 0/1 * * * ?

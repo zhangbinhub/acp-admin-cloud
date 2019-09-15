@@ -2,20 +2,28 @@ package pers.acp.admin.log.controller
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogFileExpression
 import pers.acp.admin.log.domain.LogFileDomain
+import pers.acp.admin.log.domain.LogDomain
+import pers.acp.admin.log.po.LoginLogPo
+import pers.acp.admin.log.po.OperateLogPo
+import pers.acp.admin.log.po.RouteLogPo
+import pers.acp.admin.log.vo.LoginLogVo
+import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVO
+import pers.acp.spring.boot.vo.ErrorVo
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -31,21 +39,69 @@ import javax.validation.constraints.NotNull
 @RequestMapping(LogApi.basePath)
 @Api("日志信息")
 class LogController @Autowired
-constructor(private val logAdapter: LogAdapter, private val logFileDomain: LogFileDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter,
+            private val logFileDomain: LogFileDomain,
+            private val logDomain: LogDomain) : BaseController() {
+
+    @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
+    @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
+            CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(3).let {
+                ResponseEntity.ok(logDomain.loginStatistics(it.millis))
+            }
+
+    @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间、响应状态")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun queryRouteLog(@RequestBody routeLogPo: RouteLogPo): ResponseEntity<Page<out Any>> {
+        if (routeLogPo.queryParam == null) {
+            throw ServerException("分页查询参数不能为空")
+        }
+        return ResponseEntity.ok(logDomain.doQueryRouteLog(routeLogPo))
+    }
+
+    @ApiOperation(value = "查询操作日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun queryOperateLog(@RequestBody operateLogPo: OperateLogPo): ResponseEntity<Page<out Any>> {
+        if (operateLogPo.queryParam == null) {
+            throw ServerException("分页查询参数不能为空")
+        }
+        return ResponseEntity.ok(logDomain.doQueryOperateLog(operateLogPo))
+    }
+
+    @ApiOperation(value = "查询登录日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @PreAuthorize(BaseExpression.sysMonitor)
+    @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun queryOperateLog(@RequestBody loginLogPo: LoginLogPo): ResponseEntity<Page<out Any>> {
+        if (loginLogPo.queryParam == null) {
+            throw ServerException("分页查询参数不能为空")
+        }
+        return ResponseEntity.ok(logDomain.doQueryLoginLog(loginLogPo))
+    }
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(LogFileExpression.superOnly)
     @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@ApiParam(value = "开始日期", required = true, example = "0")
-              @NotNull(message = "开始日期不能为空")
-              @RequestParam
-              startDate: Long,
-              @ApiParam(value = "结束日期", required = true, example = "0")
-              @NotNull(message = "结束日期不能为空")
-              @RequestParam
-              endDate: Long): ResponseEntity<List<String>> =
+    fun queryFile(@ApiParam(value = "开始日期", required = true, example = "0")
+                  @NotNull(message = "开始日期不能为空")
+                  @RequestParam
+                  startDate: Long,
+                  @ApiParam(value = "结束日期", required = true, example = "0")
+                  @NotNull(message = "结束日期不能为空")
+                  @RequestParam
+                  endDate: Long): ResponseEntity<List<String>> =
             try {
                 val start = longToDate(startDate)
                 val end = longToDate(endDate)
@@ -66,15 +122,15 @@ constructor(private val logAdapter: LogAdapter, private val logFileDomain: LogFi
             }
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVO::class))
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(LogFileExpression.superOnly)
     @GetMapping(value = [LogApi.logFile + "/{fileName}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
-    fun download(request: HttpServletRequest, response: HttpServletResponse,
-                 @ApiParam(value = "文件名称", required = true)
-                 @NotBlank(message = "文件名称不能为空")
-                 @PathVariable
-                 fileName: String) {
+    fun downloadFile(request: HttpServletRequest, response: HttpServletResponse,
+                     @ApiParam(value = "文件名称", required = true)
+                     @NotBlank(message = "文件名称不能为空")
+                     @PathVariable
+                     fileName: String) {
         logFileDomain.doDownLoadFile(request, response, fileName)
     }
 

@@ -199,6 +199,7 @@
 
 |表达式|描述|
 | ---- | ---- | 
+| #oauth2.hasScope('requiredScope')|赋予scope为requiredScope的权限
 | hasRole([role])| Returns true if the current principal has the specified role. By default if the supplied role does not start with 'ROLE_' it will be added. This can be customized by modifying the defaultRolePrefix on DefaultWebSecurityExpressionHandler.|
 | hasAnyRole([role1,role2])| Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings). By default if the supplied role does not start with 'ROLE_' it will be added. This can be customized by modifying the defaultRolePrefix on DefaultWebSecurityExpressionHandler.|
 | hasAuthority([authority])| Returns true if the current principal has the specified authority.|

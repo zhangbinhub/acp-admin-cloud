@@ -48,6 +48,7 @@ class InitData extends BaseTest {
         application.setAppName("Acp-Admin");
         application.setSecret("2523342F2BD345EA9658452A289364AA");
         application.setCovert(false);
+        application.setScope("ALL");
         application = applicationRepository.save(application);
 
         Role roleAdmin = new Role();
@@ -86,12 +87,47 @@ class InitData extends BaseTest {
     }
 
     private void initMenus(Application application, Role... roles) {
+        Menu sysMonitor = new Menu();
+        sysMonitor.setAppId(application.getId());
+        sysMonitor.setName("系统监控");
+        sysMonitor.setIconType("el-icon-monitor");
+        sysMonitor.setParentId(application.getId());
+        sysMonitor.setSort(0);
+        sysMonitor.setEnabled(true);
+        sysMonitor.setCovert(false);
+        sysMonitor.setOpenType(0);
+        sysMonitor = menuRepository.save(sysMonitor);
+
+        Menu operateLog = new Menu();
+        operateLog.setAppId(application.getId());
+        operateLog.setName("操作日志");
+        operateLog.setIconType("el-icon-s-operation");
+        operateLog.setPath("/operatelog");
+        operateLog.setParentId(sysMonitor.getId());
+        operateLog.setSort(0);
+        operateLog.setEnabled(true);
+        operateLog.setCovert(false);
+        operateLog.setOpenType(0);
+        operateLog = menuRepository.save(operateLog);
+
+        Menu loginLog = new Menu();
+        loginLog.setAppId(application.getId());
+        loginLog.setName("登录日志");
+        loginLog.setIconType("el-icon-coordinate");
+        loginLog.setPath("/loginlog");
+        loginLog.setParentId(sysMonitor.getId());
+        loginLog.setSort(1);
+        loginLog.setEnabled(true);
+        loginLog.setCovert(false);
+        loginLog.setOpenType(0);
+        loginLog = menuRepository.save(loginLog);
+
         Menu sysConfig = new Menu();
         sysConfig.setAppId(application.getId());
         sysConfig.setName("系统配置");
-        sysConfig.setIconType("md-settings");
+        sysConfig.setIconType("el-icon-s-tools");
         sysConfig.setParentId(application.getId());
-        sysConfig.setSort(0);
+        sysConfig.setSort(1);
         sysConfig.setEnabled(true);
         sysConfig.setCovert(false);
         sysConfig.setOpenType(0);
@@ -100,7 +136,7 @@ class InitData extends BaseTest {
         Menu appConfig = new Menu();
         appConfig.setAppId(application.getId());
         appConfig.setName("应用配置");
-        appConfig.setIconType("md-apps");
+        appConfig.setIconType("el-icon-s-platform");
         appConfig.setPath("/appconfig");
         appConfig.setParentId(sysConfig.getId());
         appConfig.setSort(0);
@@ -112,7 +148,7 @@ class InitData extends BaseTest {
         Menu roleConfig = new Menu();
         roleConfig.setAppId(application.getId());
         roleConfig.setName("角色配置");
-        roleConfig.setIconType("md-contacts");
+        roleConfig.setIconType("el-icon-s-check");
         roleConfig.setPath("/roleconfig");
         roleConfig.setParentId(sysConfig.getId());
         roleConfig.setSort(1);
@@ -124,7 +160,7 @@ class InitData extends BaseTest {
         Menu authConfig = new Menu();
         authConfig.setAppId(application.getId());
         authConfig.setName("权限配置");
-        authConfig.setIconType("md-key");
+        authConfig.setIconType("el-icon-key");
         authConfig.setPath("/authconfig");
         authConfig.setParentId(sysConfig.getId());
         authConfig.setSort(2);
@@ -136,7 +172,7 @@ class InitData extends BaseTest {
         Menu userConfig = new Menu();
         userConfig.setAppId(application.getId());
         userConfig.setName("用户配置");
-        userConfig.setIconType("md-people");
+        userConfig.setIconType("el-icon-user-solid");
         userConfig.setPath("/userconfig");
         userConfig.setParentId(sysConfig.getId());
         userConfig.setSort(3);
@@ -148,7 +184,7 @@ class InitData extends BaseTest {
         Menu orgConfig = new Menu();
         orgConfig.setAppId(application.getId());
         orgConfig.setName("机构配置");
-        orgConfig.setIconType("md-git-network");
+        orgConfig.setIconType("el-icon-c-scale-to-original");
         orgConfig.setPath("/orgconfig");
         orgConfig.setParentId(sysConfig.getId());
         orgConfig.setSort(4);
@@ -160,7 +196,7 @@ class InitData extends BaseTest {
         Menu runtimeConfig = new Menu();
         runtimeConfig.setAppId(application.getId());
         runtimeConfig.setName("运行参数配置");
-        runtimeConfig.setIconType("md-build");
+        runtimeConfig.setIconType("el-icon-set-up");
         runtimeConfig.setPath("/runtimeconfig");
         runtimeConfig.setParentId(sysConfig.getId());
         runtimeConfig.setSort(5);
@@ -172,9 +208,9 @@ class InitData extends BaseTest {
         Menu demo = new Menu();
         demo.setAppId(application.getId());
         demo.setName("demo");
-        demo.setIconType("md-laptop");
+        demo.setIconType("el-icon-more");
         demo.setParentId(application.getId());
-        demo.setSort(1);
+        demo.setSort(2);
         demo.setEnabled(true);
         demo.setCovert(true);
         demo.setOpenType(0);
@@ -183,7 +219,7 @@ class InitData extends BaseTest {
         Menu demoUpload = new Menu();
         demoUpload.setAppId(application.getId());
         demoUpload.setName("上传");
-        demoUpload.setIconType("md-cloud-upload");
+        demoUpload.setIconType("el-icon-upload");
         demoUpload.setPath("/demoupload");
         demoUpload.setParentId(demo.getId());
         demoUpload.setSort(0);
@@ -195,7 +231,7 @@ class InitData extends BaseTest {
         Menu demoChildren = new Menu();
         demoChildren.setAppId(application.getId());
         demoChildren.setName("多级菜单");
-        demoChildren.setIconType("md-funnel");
+        demoChildren.setIconType("el-icon-caret-right");
         demoChildren.setParentId(demo.getId());
         demoChildren.setSort(1);
         demoChildren.setEnabled(true);
@@ -206,7 +242,7 @@ class InitData extends BaseTest {
         Menu demoNormal = new Menu();
         demoNormal.setAppId(application.getId());
         demoNormal.setName("普通页面");
-        demoNormal.setIconType("md-funnel");
+        demoNormal.setIconType("el-icon-caret-right");
         demoNormal.setPath("/demo4?name=123");
         demoNormal.setParentId(demoChildren.getId());
         demoNormal.setSort(0);
@@ -218,7 +254,7 @@ class InitData extends BaseTest {
         Menu demoLong = new Menu();
         demoLong.setAppId(application.getId());
         demoLong.setName("很长很长的菜单名称用以测试显示效果");
-        demoLong.setIconType("md-funnel");
+        demoLong.setIconType("el-icon-caret-right");
         demoLong.setPath("/demo4?name=long%20long%20ago");
         demoLong.setParentId(demoChildren.getId());
         demoLong.setSort(1);
@@ -230,7 +266,7 @@ class InitData extends BaseTest {
         Menu demoJump = new Menu();
         demoJump.setAppId(application.getId());
         demoJump.setName("页面跳转");
-        demoJump.setIconType("md-funnel");
+        demoJump.setIconType("el-icon-caret-right");
         demoJump.setPath("http://www.baidu.com");
         demoJump.setParentId(demo.getId());
         demoJump.setSort(2);
@@ -242,7 +278,7 @@ class InitData extends BaseTest {
         Menu demoTopLong = new Menu();
         demoTopLong.setAppId(application.getId());
         demoTopLong.setName("顶层菜单，名字长一点查看显示效果");
-        demoTopLong.setIconType("md-funnel");
+        demoTopLong.setIconType("el-icon-caret-right");
         demoTopLong.setPath("/demo4?name=in%20dialog");
         demoTopLong.setParentId(application.getId());
         demoTopLong.setSort(2);
@@ -252,6 +288,9 @@ class InitData extends BaseTest {
         demoTopLong = menuRepository.save(demoTopLong);
 
         for (Role role : roles) {
+            role.getMenuSet().add(sysMonitor);
+            role.getMenuSet().add(operateLog);
+            role.getMenuSet().add(loginLog);
             role.getMenuSet().add(sysConfig);
             role.getMenuSet().add(appConfig);
             role.getMenuSet().add(roleConfig);
@@ -270,6 +309,14 @@ class InitData extends BaseTest {
     }
 
     private void initModuleAndFunc(Application application, Role... roles) {
+        ModuleFunc sysMonitor = new ModuleFunc();
+        sysMonitor.setAppId(application.getId());
+        sysMonitor.setParentId(application.getId());
+        sysMonitor.setName("系统监控");
+        sysMonitor.setCode(ModuleFuncCode.sysMonitor);
+        sysMonitor.setCovert(false);
+        sysMonitor = moduleFuncRepository.save(sysMonitor);
+
         ModuleFunc sysConfig = new ModuleFunc();
         sysConfig.setAppId(application.getId());
         sysConfig.setParentId(application.getId());
@@ -575,6 +622,7 @@ class InitData extends BaseTest {
         flowDiagram = moduleFuncRepository.save(flowDiagram);
 
         for (Role role : roles) {
+            role.getModuleFuncSet().add(sysMonitor);
             role.getModuleFuncSet().add(sysConfig);
             role.getModuleFuncSet().add(runtimeConfig);
             role.getModuleFuncSet().add(runtimeAdd);

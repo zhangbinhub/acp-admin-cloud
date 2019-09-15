@@ -26,6 +26,5 @@ object OauthApi {
     const val orgConfig = "/org"
     const val runtimeConfig = "/runtime"
     const val logOut = "/logout"
-    const val loginInfo = "/logininfo"
     const val onlineInfo = "/onlineinfo"
 }

@@ -45,31 +45,31 @@ constructor(userRepository: UserRepository,
         }
     }
 
-    private fun doSave(role: Role, rolePO: RolePo): Role =
+    private fun doSave(role: Role, rolePo: RolePo): Role =
             roleRepository.save(role.apply {
-                name = rolePO.name!!
-                code = rolePO.code!!
-                sort = rolePO.sort
-                levels = rolePO.levels
-                userSet = userRepository.findAllById(rolePO.userIds).toMutableSet()
-                menuSet = menuRepository.findAllById(rolePO.menuIds).toMutableSet()
-                moduleFuncSet = moduleFuncRepository.findAllById(rolePO.moduleFuncIds).toMutableSet()
+                name = rolePo.name!!
+                code = rolePo.code!!
+                sort = rolePo.sort
+                levels = rolePo.levels
+                userSet = userRepository.findAllById(rolePo.userIds).toMutableSet()
+                menuSet = menuRepository.findAllById(rolePo.menuIds).toMutableSet()
+                moduleFuncSet = moduleFuncRepository.findAllById(rolePo.moduleFuncIds).toMutableSet()
             })
 
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(rolePO: RolePo, loginNo: String): Role {
+    fun doCreate(rolePo: RolePo, loginNo: String): Role {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         if (!isSuper(user)) {
-            val currLevel = getRoleMinLevel(rolePO.appId!!, user)
-            if (currLevel >= rolePO.levels) {
+            val currLevel = getRoleMinLevel(rolePo.appId!!, user)
+            if (currLevel >= rolePo.levels) {
                 throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
             }
         }
-        if (rolePO.code == RoleCode.SUPER) {
+        if (rolePo.code == RoleCode.SUPER) {
             throw ServerException("不允许创建超级管理员")
         }
-        return doSave(Role().apply { appId = rolePO.appId!! }, rolePO)
+        return doSave(Role().apply { appId = rolePo.appId!! }, rolePo)
     }
 
     @Transactional
@@ -90,33 +90,33 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(loginNo: String, rolePO: RolePo): Role {
+    fun doUpdate(loginNo: String, rolePo: RolePo): Role {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        val roleOptional = roleRepository.findById(rolePO.id!!)
+        val roleOptional = roleRepository.findById(rolePo.id!!)
         if (roleOptional.isEmpty) {
             throw ServerException("找不到角色信息")
         }
         val role = roleOptional.get()
         if (!isSuper(user)) {
             val currLevel = getRoleMinLevel(role.appId, user)
-            if (currLevel > 0 && currLevel >= rolePO.levels) {
+            if (currLevel > 0 && currLevel >= rolePo.levels) {
                 throw ServerException("没有权限做此操作，角色级别必须大于 $currLevel")
             }
             if (currLevel > 0 && currLevel >= role.levels) {
                 throw ServerException("没有权限做此操作，请联系系统管理员")
             }
         } else {
-            if (rolePO.code != role.code && role.code == RoleCode.SUPER) {
+            if (rolePo.code != role.code && role.code == RoleCode.SUPER) {
                 throw ServerException("超级管理员编码不允许修改")
             }
-            if (rolePO.levels != role.levels && role.levels <= 0) {
+            if (rolePo.levels != role.levels && role.levels <= 0) {
                 throw ServerException("超级管理员级别不允许修改")
             }
-            if (rolePO.levels != role.levels && rolePO.levels <= 0) {
-                throw ServerException("不允许修改为超级管理员级别[" + rolePO.levels + "]")
+            if (rolePo.levels != role.levels && rolePo.levels <= 0) {
+                throw ServerException("不允许修改为超级管理员级别[" + rolePo.levels + "]")
             }
         }
-        return doSave(role, rolePO)
+        return doSave(role, rolePo)
     }
 
     @Throws(ServerException::class)

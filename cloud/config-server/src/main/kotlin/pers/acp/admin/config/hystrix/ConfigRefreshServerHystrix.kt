@@ -16,8 +16,8 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 class ConfigRefreshServerHystrix @Autowired
 constructor(logAdapter: LogAdapter, objectMapper: ObjectMapper) : BaseFeignHystrix<ConfigRefreshServer>(logAdapter, objectMapper) {
 
-    override fun create(cause: Throwable): ConfigRefreshServer {
-        logAdapter.error("调用 config-refresh-server 异常: " + cause.message, cause)
+    override fun create(cause: Throwable?): ConfigRefreshServer {
+        logAdapter.error("调用 config-refresh-server 异常: " + cause?.message, cause)
         return object : ConfigRefreshServer {
             @Throws(ServerException::class)
             override fun busRefresh() {

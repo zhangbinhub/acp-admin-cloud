@@ -1,13 +1,13 @@
 # acp-admin-cloud
-###### v3.0.5 [版本更新日志](doc/version_history.md)
+###### v4.0.0 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[请移步](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.0](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.1.7.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Greenwich.SR2](http://projects.spring.io/spring-cloud)
-- [Acp 6.1.4](https://github.com/zhangbin1010/acp)
+- [Spring Boot 2.1.8.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Greenwich.SR3](http://projects.spring.io/spring-cloud)
+- [Acp 6.1.6](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -75,8 +75,8 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.5.1
-- kotlin 1.3.41
+- gradle 5.6.2
+- kotlin 1.3.50
 
 ## 二、gradle 配置及使用
 ### （一）配置文件
@@ -118,7 +118,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=5.5.1 --distribution-type=all
+    gradlew wrapper --gradle-version=5.6.2 --distribution-type=all
 ```
 
 ## 三、工程说明
@@ -132,8 +132,8 @@ ext {
 
 ## 四、启停 springboot 应用
 - [jvm 参考参数](doc/jvm-params.txt)
-- [启停脚本(Linux) server.sh](doc/script/server.sh)，根据实际情况修改第2行 APP_NAME 和第3行 JVM_PARAM 的值即可，和 SpringBoot 应用的 .jar 放在同一路径下
-- [启停脚本(windows) server.bat](doc/script/server.bat)，根据实际情况修改第1行末尾需要执行的 jar 名称，和SpringBoot应用的 .jar 放在同一路径下
+- [启停脚本模板(Linux)](doc/script/server.model)，根据实际情况修改第2行 APP_NAME 和第3行 JVM_PARAM 的值即可，和 SpringBoot 应用的 .jar 放在同一路径下
+- [启停脚本(windows)](doc/script/server.bat)，根据实际情况修改第1行末尾需要执行的 jar 名称，和SpringBoot应用的 .jar 放在同一路径下
 - Linux 命令：
 
 |          命令         |           描述          |
@@ -189,7 +189,7 @@ http://127.0.0.1:5601
 > - 执行 config-server 模块下的 pers.acp.admin.config.test.InitData.doInitAll() 单元测试
 
 ## 七、服务列表
-### （一）[admin-server](cloud/admin-server/README.md)
+### （一）[admin-server](common/admin-server/README.md)
 ###### 1 可视化监控，监控服务状态、信息聚合
 |          url          |  描述                   |
 | --------------------- | ----------------------- | 
@@ -219,7 +219,7 @@ http://127.0.0.1:5601
 > 服务注册发现（支持高可用eureka集群）
 >（1）无需改动代码
 >（2）修改 yml 配置即可
-### （三）[gateway-server](cloud/gateway-server/README.md)
+### （三）[gateway-server](common/gateway-server/README.md)
 > 网关服务，修改 yml
 > 动态路由信息保存在 redis
 ### （四）[config-server](cloud/config-server/README.md)
@@ -241,26 +241,20 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供全套权限体系接口
-### （七）[file-server](cloud/file-server/README.md)
-> - 文件服务
-> - 依赖 
->   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
-> - 提供基本的文件上传、下载服务
-### （八）[route-server](cloud/route-server/README.md)
+### （七）[route-server](cloud/route-server/README.md)
 > - 路由服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供动态路由策略配置及刷新接口
 > - 提供路由日志信息查询接口
-### （九）[workflow-server](cloud/workflow-server/README.md)
+### （八）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供工作流相关接口服务
-### （十）[config-refresh-server](cloud/config-refresh-server/README.md)
+### （九）[config-refresh-server](cloud/config-refresh-server/README.md)
 > - 配置刷新服务
 > - 依赖 cloud:acp-admin-cloud-dependencies
 > - 接收 /actuator 管理接口，向总线发送刷新配置“事件”

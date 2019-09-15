@@ -31,14 +31,14 @@ class InitData extends BaseTest {
     @Transactional
     @Rollback(false)
     void initGateWayRoute() {
-        Route route1 = new Route();
-        route1.setRouteId("log-server-api");
-        route1.setEnabled(true);
-        route1.setUri("lb://log-server");
-        route1.setPredicates("[\"Path=/api/log/**\"]");
-        route1.setFilters("[\"StripPrefix=1\",{\"name\":\"Hystrix\",\"args\":{\"name\":\"GateWayHystrix\",\"fallbackUri\":\"forward:/hystrixhandle\"}}]");
-        route1.setRemarks("日志服务接口");
-        routeRepository.save(route1);
+//        Route route1 = new Route();
+//        route1.setRouteId("log-server-api");
+//        route1.setEnabled(true);
+//        route1.setUri("lb://log-server");
+//        route1.setPredicates("[\"Path=/api/log/**\"]");
+//        route1.setFilters("[\"StripPrefix=1\",{\"name\":\"Hystrix\",\"args\":{\"name\":\"GateWayHystrix\",\"fallbackUri\":\"forward:/hystrixhandle\"}}]");
+//        route1.setRemarks("日志服务接口");
+//        routeRepository.save(route1);
     }
 
 }

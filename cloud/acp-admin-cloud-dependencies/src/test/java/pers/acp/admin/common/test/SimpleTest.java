@@ -1,7 +1,9 @@
 package pers.acp.admin.common.test;
 
+import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 import pers.acp.core.CommonTools;
+import pers.acp.core.task.timer.Calculation;
 import pers.acp.spring.boot.exceptions.ServerException;
 
 /**
@@ -19,6 +21,11 @@ class SimpleTest {
         System.out.println(CommonTools.objectToJson(serverException));
 
         System.out.println("1900-01-01".matches("^(20\\d\\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"));
+
+        DateTime dateTime = CommonTools.getNowDateTime().withTimeAtStartOfDay();
+        System.out.println(dateTime.toString(Calculation.DATETIME_FORMAT));
+        System.out.println(dateTime.getMillis());
+        System.out.println(dateTime.minusMonths(6).toString(Calculation.DATETIME_FORMAT));
     }
 
 }

@@ -83,24 +83,24 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
                 sortMenuList(formatToTreeList(map))
             }
 
-    private fun doSave(menu: Menu, menuPO: MenuPo): Menu =
+    private fun doSave(menu: Menu, menuPo: MenuPo): Menu =
             menuRepository.save(menu.apply {
-                path = menuPO.path
-                enabled = menuPO.enabled
-                iconType = menuPO.iconType
-                name = menuPO.name!!
-                openType = menuPO.openType
-                sort = menuPO.sort
-                roleSet = roleRepository.findAllById(menuPO.roleIds).toMutableSet()
-                parentId = menuPO.parentId!!
+                path = menuPo.path
+                enabled = menuPo.enabled
+                iconType = menuPo.iconType
+                name = menuPo.name!!
+                openType = menuPo.openType
+                sort = menuPo.sort
+                roleSet = roleRepository.findAllById(menuPo.roleIds).toMutableSet()
+                parentId = menuPo.parentId!!
             })
 
     @Transactional
-    fun doCreate(menuPO: MenuPo): Menu =
+    fun doCreate(menuPo: MenuPo): Menu =
             doSave(Menu().apply {
-                appId = menuPO.appId!!
+                appId = menuPo.appId!!
                 covert = true
-            }, menuPO)
+            }, menuPo)
 
     @Transactional
     @Throws(ServerException::class)
@@ -114,12 +114,12 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(menuPO: MenuPo): Menu {
-        val menuOptional = menuRepository.findById(menuPO.id!!)
+    fun doUpdate(menuPo: MenuPo): Menu {
+        val menuOptional = menuRepository.findById(menuPo.id!!)
         if (menuOptional.isEmpty) {
             throw ServerException("找不到菜单信息")
         }
-        return doSave(menuOptional.get(), menuPO)
+        return doSave(menuOptional.get(), menuPo)
     }
 
     @Throws(ServerException::class)

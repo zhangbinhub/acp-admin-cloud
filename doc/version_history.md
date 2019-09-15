@@ -1,4 +1,31 @@
 ## 版本更新记录
+##### v4.0.0
+> - [Upgrade] 调整工程结构，无需依赖Acp核心库的模块放入common
+> - [Upgrade] 去除 file-server 模块
+> - [Upgrade] 取消热部署配置
+> - [Upgrade] 调整BaseDomain中查询排序封装
+> - [Upgrade] oauth-server 调整机构信息 entity，编码可为空
+> - [Upgrade] oauth-server 应用信息表增加 scope、identify 字段，默认可为空
+> - [Upgrade] oauth-server 中的 TokenStore 取消存储登录次数信息
+> - [Upgrade] oauth-server 取消登录信息统计接口
+> - [Upgrade] gateway-server 重写 gateway 路由请求、响应过滤器，路由日志消息
+> - [Upgrade] gateway-server 默认路由增加 log-server 配置
+> - [Upgrade] gateway-server 增加是否允许跨域配置项
+> - [Upgrade] route-server 路由日志相关功能移入 log-server
+> - [Upgrade] log-server 重写路由日志，定时任务将截止前一日的所有数据移入历史表
+> - [Upgrade] log-server 增加接口调用操作日志记录，定时任务将截止前一日的所有数据移入历史表
+> - [Upgrade] log-server 增加用户登录日志记录，登录用户信息取缓存 token 的详细信息，，定时任务将截止前一日的所有数据移入历史表
+> - [Upgrade] log-server 增加登录信息统计接口
+> - [Upgrade] log-server 增加操作日志查询、登录日志查询接口
+> - [Upgrade] 升级 gradle 至 5.6.2
+> - [Upgrade] 升级核心库至 6.1.6
+> - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE
+> - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR3
+> - [Upgrade] 升级依赖项
+>   - netty to "4.1.39.Final"
+>   - kotlinx-coroutines-core to "1.3.1"
+>   - commons-codec to "1.12"
+>   - slf4j to "1.7.28"
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入

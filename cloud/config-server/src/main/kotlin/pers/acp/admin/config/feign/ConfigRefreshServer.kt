@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import pers.acp.admin.api.ConfigRefreshInnerApi
 import pers.acp.admin.config.hystrix.ConfigRefreshServerHystrix
 import pers.acp.spring.boot.exceptions.ServerException
 
@@ -20,7 +21,7 @@ interface ConfigRefreshServer {
      * 刷新配置信息
      * note: 所有服务
      */
-    @RequestMapping(value = ["/actuator/bus-refresh"], method = [RequestMethod.POST])
+    @RequestMapping(value = [ConfigRefreshInnerApi.busRefresh], method = [RequestMethod.POST])
     @Throws(ServerException::class)
     fun busRefresh()
 
@@ -30,7 +31,7 @@ interface ConfigRefreshServer {
      *
      * @param application 服务名
      */
-    @RequestMapping(value = ["/actuator/bus-refresh/{application}:**"], method = [RequestMethod.POST])
+    @RequestMapping(value = [ConfigRefreshInnerApi.busRefresh + "/{application}:**"], method = [RequestMethod.POST])
     @Throws(ServerException::class)
     fun busRefresh(@PathVariable(value = "application") application: String)
 
@@ -44,7 +45,7 @@ interface ConfigRefreshServer {
      * - index is the vcap.application.instance_index, if it exists, spring.application.index, local.server.port, server.port, or 0 (in that order).
      * - id is the vcap.application.instance_id, if it exists, or a random value.
      */
-    @RequestMapping(value = ["/actuator/bus-refresh/{matcher}"], method = [RequestMethod.POST])
+    @RequestMapping(value = [ConfigRefreshInnerApi.busRefresh + "/{matcher}"], method = [RequestMethod.POST])
     @Throws(ServerException::class)
     fun busRefreshMatcher(@PathVariable(value = "matcher") matcher: String)
 

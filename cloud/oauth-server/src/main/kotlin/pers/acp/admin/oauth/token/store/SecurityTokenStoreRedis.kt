@@ -1,7 +1,5 @@
 package pers.acp.admin.oauth.token.store
 
-import com.fasterxml.jackson.databind.ObjectMapper
-
 import org.springframework.data.redis.connection.RedisConnection
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
@@ -13,11 +11,6 @@ import org.springframework.security.oauth2.provider.token.DefaultAuthenticationK
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy
-import pers.acp.admin.oauth.token.LoginLog
-import pers.acp.admin.oauth.token.SecurityTokenStore
-import pers.acp.admin.oauth.vo.LoginLogVo
-import pers.acp.core.CommonTools
-import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 
@@ -28,16 +21,13 @@ import java.util.*
  * @since JDK 11
  */
 class SecurityTokenStoreRedis(private val logAdapter: LogAdapter,
-                              private val redisTemplate: RedisTemplate<Any, Any>,
-                              private val objectMapper: ObjectMapper) : TokenStore, SecurityTokenStore {
+                              private val redisTemplate: RedisTemplate<Any, Any>) : TokenStore {
 
     private var authenticationKeyGenerator: AuthenticationKeyGenerator = DefaultAuthenticationKeyGenerator()
 
     private var serializationStrategy: RedisTokenStoreSerializationStrategy = JdkSerializationStrategy()
 
     private val prefix = ""
-
-    private val loginLogPrefix = "login_"
 
     fun setAuthenticationKeyGenerator(authenticationKeyGenerator: AuthenticationKeyGenerator) {
         this.authenticationKeyGenerator = authenticationKeyGenerator
@@ -72,36 +62,6 @@ class SecurityTokenStoreRedis(private val logAdapter: LogAdapter,
     private fun deserializeRefreshToken(bytes: ByteArray?): OAuth2RefreshToken? {
         if (bytes == null) return null
         return unSerialize(bytes, OAuth2RefreshToken::class.java)
-    }
-
-    /**
-     * 记录获取token的次数
-     *
-     * @param appId 应用id
-     */
-    @Throws(Exception::class)
-    override fun storeLoginNum(appId: String, userId: String) {
-        try {
-            redisTemplate.opsForList().rightPush(loginLogPrefix + appId, objectMapper.writeValueAsString(LoginLog(
-                    appId = appId,
-                    date = CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT),
-                    userId = userId
-            )))
-        } catch (e: Exception) {
-            logAdapter.error(e.message, e)
-        }
-
-    }
-
-    @Throws(Exception::class)
-    override fun getLoginNum(appId: String): MutableList<LoginLogVo> {
-        val loginLogVoList: MutableList<LoginLogVo> = mutableListOf()
-        redisTemplate.opsForList().range(loginLogPrefix + appId, 0, -1)?.apply {
-            this.forEach { loginInfo ->
-                SecurityTokenStoreUtil.parseLoginLogVO(loginLogVoList, objectMapper.readValue(loginInfo as String, LoginLog::class.java))
-            }
-        }
-        return loginLogVoList
     }
 
     override fun readAuthentication(token: OAuth2AccessToken): OAuth2Authentication? {

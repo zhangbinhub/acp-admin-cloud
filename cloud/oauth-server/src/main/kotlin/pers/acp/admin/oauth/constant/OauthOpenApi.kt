@@ -7,5 +7,5 @@ import pers.acp.spring.cloud.constant.RestPrefix
  * @since JDK 11
  */
 object OauthOpenApi {
-    const val openInnerBasePath = RestPrefix.Open + OauthApi.basePath
+    const val openBasePath = RestPrefix.Open + OauthApi.basePath
 }
