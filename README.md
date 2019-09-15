@@ -233,6 +233,10 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
+> - 通过 kafka 收集网关消息，记录路由日志
+> - 根据配置中心参数，压缩备份日志文件
+> - 根据配置中心参数，记录操作日志和登录日志
+> - 每日将路由日志、操作日志、登录日志迁移至历史库
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
 ### （六）[oauth-server](cloud/oauth-server/README.md)
@@ -247,7 +251,6 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 >   - cloud:acp-admin-cloud-constant
 > - 提供动态路由策略配置及刷新接口
-> - 提供路由日志信息查询接口
 ### （八）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
 > - 依赖 
