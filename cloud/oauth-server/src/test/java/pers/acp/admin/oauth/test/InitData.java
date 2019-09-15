@@ -122,18 +122,6 @@ class InitData extends BaseTest {
         loginLog.setOpenType(0);
         loginLog = menuRepository.save(loginLog);
 
-        Menu onlineUser = new Menu();
-        onlineUser.setAppId(application.getId());
-        onlineUser.setName("在线用户");
-        onlineUser.setIconType("el-icon-s-marketing");
-        onlineUser.setPath("/onlineuser");
-        onlineUser.setParentId(sysMonitor.getId());
-        onlineUser.setSort(2);
-        onlineUser.setEnabled(true);
-        onlineUser.setCovert(false);
-        onlineUser.setOpenType(0);
-        onlineUser = menuRepository.save(onlineUser);
-
         Menu sysConfig = new Menu();
         sysConfig.setAppId(application.getId());
         sysConfig.setName("系统配置");
@@ -303,7 +291,6 @@ class InitData extends BaseTest {
             role.getMenuSet().add(sysMonitor);
             role.getMenuSet().add(operateLog);
             role.getMenuSet().add(loginLog);
-            role.getMenuSet().add(onlineUser);
             role.getMenuSet().add(sysConfig);
             role.getMenuSet().add(appConfig);
             role.getMenuSet().add(roleConfig);

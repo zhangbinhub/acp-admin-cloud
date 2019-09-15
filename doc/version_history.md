@@ -20,9 +20,12 @@
 > - [Upgrade] 升级 gradle 至 5.6.2
 > - [Upgrade] 升级核心库至 6.1.6
 > - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE
+> - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR3
 > - [Upgrade] 升级依赖项
 >   - netty to "4.1.39.Final"
 >   - kotlinx-coroutines-core to "1.3.1"
+>   - commons-codec to "1.12"
+>   - slf4j to "1.7.28"
 ##### v3.0.5
 > - [Upgrade] 升级核心库至 6.1.4
 > - [Upgrade] 角色编码可自定义输入
