@@ -55,13 +55,6 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    resource:
-      token-info-uri: http://oauth2-server/oauth/check_token
-# ===============================
 # = ACP Config
 # ===============================
 acp:
