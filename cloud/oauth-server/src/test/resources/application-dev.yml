@@ -63,14 +63,6 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
-# ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    client:
-      client-id: 8a80cb816d2eb97f016d2eba04710000
-      client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:
     enabled: true

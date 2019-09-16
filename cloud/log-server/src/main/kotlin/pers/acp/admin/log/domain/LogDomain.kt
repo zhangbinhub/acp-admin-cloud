@@ -95,7 +95,7 @@ constructor(private val logAdapter: LogAdapter,
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("路由日志迁移失败")
+                    throw ServerException("登录日志记录失败")
                 }
                 delay(5000)
             }
@@ -143,7 +143,7 @@ constructor(private val logAdapter: LogAdapter,
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("路由日志迁移失败")
+                    throw ServerException("路由日志记录失败")
                 }
                 delay(5000)
             }
@@ -175,7 +175,7 @@ constructor(private val logAdapter: LogAdapter,
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("路由日志迁移失败")
+                    throw ServerException("操作日志记录失败")
                 }
                 delay(5000)
             }
