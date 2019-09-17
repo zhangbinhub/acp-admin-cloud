@@ -203,7 +203,6 @@ configure(allprojects) {
                         "config-refresh-server",
                         "config-server",
                         "eureka-server",
-                        "file-server",
                         "gateway-server",
                         "log-server",
                         "oauth-server",
