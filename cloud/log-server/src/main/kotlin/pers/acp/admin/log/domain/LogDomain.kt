@@ -70,115 +70,93 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     @Transactional
-    suspend fun doLoginLog(routeLogMessage: RouteLogMessage, message: String, maxRetryNumber: Int = 100) {
-        var retryCount = 0
-        while (true) {
+    suspend fun doRouteLog(routeLogMessage: RouteLogMessage, message: String) {
+        val routeLog = messageToEntity(message, RouteLog::class.java)
+        if (routeLogMessage.token != null) {
             try {
-                val loginLog = messageToEntity(message, LoginLog::class.java)
                 oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                    routeLog.clientId = app.id
+                    routeLog.clientName = app.appName
+                    routeLog.identify = app.identify
                     if (!CommonTools.isNullStr(app.id)) {
-                        loginLog.clientId = app.id
-                        loginLog.clientName = app.appName
-                        loginLog.identify = app.identify
                         getTokenInfo(routeLogMessage.token!!).let {
                             if (it.isNotEmpty()) {
-                                loginLog.userId = it.getValue(TokenConstant.USER_INFO_ID)
-                                loginLog.loginNo = it.getValue(TokenConstant.USER_INFO_LOGIN_NO)
-                                loginLog.userName = it.getValue(TokenConstant.USER_INFO_NAME)
-                                loginLog.loginDate = CommonTools.getDateTimeString(Calculation.getCalendar(loginLog.requestTime), Calculation.DATE_FORMAT)
-                                loginLogRepository.save(loginLog)
+                                routeLog.userId = it[TokenConstant.USER_INFO_ID]
+                                routeLog.loginNo = it[TokenConstant.USER_INFO_LOGIN_NO]
+                                routeLog.userName = it[TokenConstant.USER_INFO_NAME]
                             }
                         }
                     }
                 }
-                break
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
-                if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("登录日志记录失败")
-                }
-                delay(5000)
             }
+        }
+        if (routeLogMessage.responseStatus != null) {// 响应日志
+            var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
+            while (optionalRouteLog.isEmpty) {
+                delay(1000)
+                optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
+            }
+            optionalRouteLog.ifPresent {
+                it.processTime = routeLog.processTime
+                it.responseTime = routeLog.responseTime
+                it.responseStatus = routeLog.responseStatus
+                routeLogRepository.save(it)
+            }
+        } else {// 请求日志
+            routeLogRepository.save(routeLog)
         }
     }
 
     @Transactional
-    suspend fun doRouteLog(routeLogMessage: RouteLogMessage, message: String, maxRetryNumber: Int = 100) {
-        var retryCount = 0
-        while (true) {
-            try {
-                val routeLog = messageToEntity(message, RouteLog::class.java)
-                if (routeLogMessage.token != null) {
-                    oauthServer.appInfo(routeLogMessage.token!!).let { app ->
-                        routeLog.clientId = app.id
-                        routeLog.clientName = app.appName
-                        routeLog.identify = app.identify
-                        if (!CommonTools.isNullStr(app.id)) {
-                            getTokenInfo(routeLogMessage.token!!).let {
-                                if (it.isNotEmpty()) {
-                                    routeLog.userId = it[TokenConstant.USER_INFO_ID]
-                                    routeLog.loginNo = it[TokenConstant.USER_INFO_LOGIN_NO]
-                                    routeLog.userName = it[TokenConstant.USER_INFO_NAME]
-                                }
-                            }
+    suspend fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
+        try {
+            val operateLog = messageToEntity(message, OperateLog::class.java)
+            oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                operateLog.clientId = app.id
+                operateLog.clientName = app.appName
+                operateLog.identify = app.identify
+                if (!CommonTools.isNullStr(app.id)) {
+                    getTokenInfo(routeLogMessage.token!!).let {
+                        if (it.isNotEmpty()) {
+                            operateLog.userId = it[TokenConstant.USER_INFO_ID]
+                            operateLog.loginNo = it[TokenConstant.USER_INFO_LOGIN_NO]
+                            operateLog.userName = it[TokenConstant.USER_INFO_NAME]
                         }
                     }
+                    operateLogRepository.save(operateLog)
                 }
-                if (routeLogMessage.responseStatus != null) {// 响应日志
-                    var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
-                    while (optionalRouteLog.isEmpty) {
-                        delay(1000)
-                        optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
-                    }
-                    optionalRouteLog.ifPresent {
-                        it.processTime = routeLog.processTime
-                        it.responseTime = routeLog.responseTime
-                        it.responseStatus = routeLog.responseStatus
-                        routeLogRepository.save(it)
-                    }
-                } else {// 请求日志
-                    routeLogRepository.save(routeLog)
-                }
-                break
-            } catch (e: Exception) {
-                logAdapter.error(e.message, e)
-                if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("路由日志记录失败")
-                }
-                delay(5000)
             }
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException("操作日志记录失败")
         }
     }
 
     @Transactional
-    suspend fun doOperateLog(routeLogMessage: RouteLogMessage, message: String, maxRetryNumber: Int = 100) {
-        var retryCount = 0
-        while (true) {
-            try {
-                val operateLog = messageToEntity(message, OperateLog::class.java)
-                oauthServer.appInfo(routeLogMessage.token!!).let { app ->
-                    operateLog.clientId = app.id
-                    operateLog.clientName = app.appName
-                    operateLog.identify = app.identify
-                    if (!CommonTools.isNullStr(app.id)) {
-                        getTokenInfo(routeLogMessage.token!!).let {
-                            if (it.isNotEmpty()) {
-                                operateLog.userId = it[TokenConstant.USER_INFO_ID]
-                                operateLog.loginNo = it[TokenConstant.USER_INFO_LOGIN_NO]
-                                operateLog.userName = it[TokenConstant.USER_INFO_NAME]
-                            }
+    suspend fun doLoginLog(routeLogMessage: RouteLogMessage, message: String) {
+        try {
+            val loginLog = messageToEntity(message, LoginLog::class.java)
+            oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                if (!CommonTools.isNullStr(app.id)) {
+                    loginLog.clientId = app.id
+                    loginLog.clientName = app.appName
+                    loginLog.identify = app.identify
+                    getTokenInfo(routeLogMessage.token!!).let {
+                        if (it.isNotEmpty()) {
+                            loginLog.userId = it.getValue(TokenConstant.USER_INFO_ID)
+                            loginLog.loginNo = it.getValue(TokenConstant.USER_INFO_LOGIN_NO)
+                            loginLog.userName = it.getValue(TokenConstant.USER_INFO_NAME)
+                            loginLog.loginDate = CommonTools.getDateTimeString(Calculation.getCalendar(loginLog.requestTime), Calculation.DATE_FORMAT)
+                            loginLogRepository.save(loginLog)
                         }
-                        operateLogRepository.save(operateLog)
                     }
                 }
-                break
-            } catch (e: Exception) {
-                logAdapter.error(e.message, e)
-                if (++retryCount >= maxRetryNumber) {
-                    throw ServerException("操作日志记录失败")
-                }
-                delay(5000)
             }
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException("登录日志记录失败")
         }
     }
 
