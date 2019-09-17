@@ -44,8 +44,8 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
             Application().apply {
                 appName = applicationPo.appName!!
                 secret = CommonTools.getUuid32()
-                scope = applicationPo.scope!!.trim().replace("，", ",")
-                identify = applicationPo.identify!!
+                scope = applicationPo.scope?.trim()?.replace("，", ",") ?: ""
+                identify = applicationPo.identify?.trim() ?: ""
                 accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
                 refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
                 covert = true
@@ -62,8 +62,8 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
         }
         return applicationOptional.get().let {
             it.appName = applicationPo.appName!!
-            it.scope = applicationPo.scope!!.trim().replace("，", ",")
-            it.identify = applicationPo.identify!!
+            it.scope = applicationPo.scope?.trim()?.replace("，", ",") ?: ""
+            it.identify = applicationPo.identify?.trim() ?: ""
             it.accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
             it.refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
             applicationRepository.save(it)

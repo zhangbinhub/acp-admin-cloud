@@ -44,7 +44,7 @@ constructor(private val logAdapter: LogAdapter, private val applicationRepositor
                         .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                         .accessTokenValiditySeconds(application.accessTokenValiditySeconds)
                         .refreshTokenValiditySeconds(application.refreshTokenValiditySeconds)
-                application.scope.apply {
+                application.scope?.apply {
                     if (!CommonTools.isNullStr(this)) {
                         this.split(",").forEach { scope -> builder!!.scopes(scope) }
                     }
