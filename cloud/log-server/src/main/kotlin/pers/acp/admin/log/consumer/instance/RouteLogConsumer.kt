@@ -25,23 +25,22 @@ constructor(private val logAdapter: LogAdapter,
     fun process(message: String) {
         logAdapter.debug("收到 kafka 消息：$message")
         try {
-            val maxRetryNumber = 200
             objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
                 if (logServerCustomerConfiguration.routeLogEnabled) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        logDomain.doRouteLog(it, message, maxRetryNumber)
+                        logDomain.doRouteLog(it, message)
                     }
                 }
                 it.token?.apply {
                     if (it.responseStatus == 200) {
                         if (logServerCustomerConfiguration.operateLogEnabled) {
                             GlobalScope.launch(Dispatchers.IO) {
-                                logDomain.doOperateLog(it, message, maxRetryNumber)
+                                logDomain.doOperateLog(it, message)
                             }
                         }
                         if (it.applyToken) {
                             GlobalScope.launch(Dispatchers.IO) {
-                                logDomain.doLoginLog(it, message, maxRetryNumber)
+                                logDomain.doLoginLog(it, message)
                             }
                         }
                     }
