@@ -55,6 +55,12 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 # ===============================
+# = Log To File Config
+# ===============================
+# 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释
+#logging:
+#  config: logback-spring.xml
+# ===============================
 # = Security Config
 # ===============================
 security:
