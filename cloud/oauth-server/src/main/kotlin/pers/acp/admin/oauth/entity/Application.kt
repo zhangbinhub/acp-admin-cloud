@@ -32,10 +32,10 @@ class Application {
     var secret: String = CommonTools.getUuid32()
 
     @ApiModelProperty("权限范围，多个权限“,”分隔")
-    var scope: String = ""
+    var scope: String? = null
 
     @ApiModelProperty("应用标识")
-    var identify: String = ""
+    var identify: String? = null
 
     @ApiModelProperty("token 有效期")
     @Column(nullable = false)
