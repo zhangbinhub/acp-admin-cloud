@@ -97,13 +97,23 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
         doDeleteFileForFold(fold, filterLogFileNames)
         // 清理历史备份压缩日志文件
         val backUpFold = File(logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH)
-        doDeleteFileForFold(backUpFold, filterLogZipFileNames)
+        doDeleteFileForFold(backUpFold, filterLogZipFileNames, true)
         logAdapter.info("清理历史备份文件完成！")
     }
 
-    private fun doDeleteFileForFold(fold: File, filterNames: List<String>) {
+    private fun doDeleteFileForFold(fold: File, filterNames: List<String>, zipFile: Boolean = false) {
         if (fold.exists()) {
-            fold.listFiles { pathname -> !filterNames.contains(pathname.name) }?.let {
+            if (zipFile) {
+                fold.listFiles { file ->
+                    if (file.name.contains(logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION, true)) {
+                        !filterNames.contains(file.name)
+                    } else {
+                        false
+                    }
+                }
+            } else {
+                fold.listFiles { file -> !filterNames.contains(file.name) }
+            }?.let {
                 it.forEach { file ->
                     CommonTools.doDeleteFile(file, false)
                 }
