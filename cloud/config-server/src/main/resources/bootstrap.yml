@@ -35,6 +35,8 @@ eureka:
     # EurekaServer一定要设置eureka.server.eviction-interval-timer-in-ms否则这个配置无效
     # 这个配置一般为服务刷新时间配置的三倍，默认90s
     lease-expiration-duration-in-seconds: 9
+    ip-address: ${server.address}
+    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
   client:
     # 定时刷新本地缓存时间
     registry-fetch-interval-seconds: 3
