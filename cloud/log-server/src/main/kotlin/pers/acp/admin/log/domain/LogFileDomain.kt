@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.constant.LogBackUp
+import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.component.FileDownLoadHandle
 import pers.acp.spring.boot.exceptions.ServerException
 
@@ -39,9 +40,9 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         val fold = File(logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH)
         validateFold(fold)
         val fileList: MutableList<String> = mutableListOf()
-        fold.listFiles { pathname ->
-            pathname.name >= LogBackUp.ZIP_FILE_PREFIX + startDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
-                    && pathname.name <= LogBackUp.ZIP_FILE_PREFIX + endDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
+        fold.listFiles { file ->
+            val prefix = file.name.substring(0, LogBackUp.ZIP_FILE_PREFIX.length + Calculation.DATE_FORMAT.length)
+            prefix >= LogBackUp.ZIP_FILE_PREFIX + startDate && prefix <= LogBackUp.ZIP_FILE_PREFIX + endDate
         }?.let {
             for (file in it) {
                 fileList.add(file.name)

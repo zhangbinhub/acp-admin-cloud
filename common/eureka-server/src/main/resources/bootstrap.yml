@@ -30,9 +30,18 @@ management:
 # ===============================
 eureka:
   server:
-    enable-self-preservation: true
+    # 自我保护机制，短时间网络分区故障时（接收心跳缓慢）可以保留注册信息，通常在网络环境恶劣时建议开启
+    enable-self-preservation: false
+    # 主动失效检测间隔
     eviction-interval-timer-in-ms: 3000
-    response-cache-update-interval-ms: 3000
+    # EurekaServer默认有两个缓存，一个是ReadWriteMap，另一个是ReadOnlyMap。
+    # 有服务提供者注册服务或者维持心跳时时，会修改ReadWriteMap。
+    # 当有服务调用者查询服务实例列表时，默认会从ReadOnlyMap读取
+    # 大规模大并发下建议开启，通过设置 response-cache-update-interval-ms 同步时间间隔
+    use-read-only-response-cache: true
+    # ReadWriteMap 同步数据至 ReadOnlyMap 的时间间隔。
+    # use-read-only-response-cache 为 true 时有效
+    response-cache-update-interval-ms: 1000
   instance:
     prefer-ip-address: true
   client:
