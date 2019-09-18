@@ -27,10 +27,10 @@ class RuntimeConfig {
     var name: String = ""
 
     @ApiModelProperty("值")
-    var value: String = ""
+    var value: String? = null
 
     @ApiModelProperty("描述")
-    var configDes: String = ""
+    var configDes: String? = null
 
     @Column(nullable = false)
     @ApiModelProperty("是否启用")

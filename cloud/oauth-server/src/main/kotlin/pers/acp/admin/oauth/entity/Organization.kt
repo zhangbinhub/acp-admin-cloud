@@ -30,7 +30,7 @@ class Organization : OauthBaseTreeEntity<Organization>() {
 
     @Column(length = 100)
     @ApiModelProperty("机构编码")
-    var code: String = ""
+    var code: String? = null
 
     @Column(nullable = false)
     @ApiModelProperty("序号")

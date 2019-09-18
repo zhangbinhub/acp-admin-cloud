@@ -22,10 +22,10 @@ data class RuntimePo(
         var name: String? = null,
 
         @ApiModelProperty(value = "值", position = 2)
-        var value: String = "",
+        var value: String? = null,
 
         @ApiModelProperty(value = "描述", position = 3)
-        var configDes: String = "",
+        var configDes: String? = null,
 
         @ApiModelProperty(value = "是否启用", position = 4)
         @get:NotNull(message = "是否启用不能为空")
