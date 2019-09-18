@@ -20,7 +20,7 @@ data class OrganizationPo(
         var name: String? = null,
 
         @ApiModelProperty(value = "机构编码", position = 2)
-        var code: String = "",
+        var code: String? = null,
 
         @ApiModelProperty(value = "上级机构ID", required = true, position = 3)
         @get:NotBlank(message = "上级机构ID不能为空")
