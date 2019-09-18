@@ -19,7 +19,7 @@ data class RuntimePo(
 
         @ApiModelProperty(value = "名称，查询时可为空", required = true, position = 1)
         @get:NotBlank(message = "参数名称不能为空")
-        var name: String = "",
+        var name: String? = null,
 
         @ApiModelProperty(value = "值", position = 2)
         var value: String? = null,
