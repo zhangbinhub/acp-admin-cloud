@@ -99,6 +99,12 @@ constructor(private val logAdapter: LogAdapter,
                 optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
             }
             optionalRouteLog.ifPresent {
+                it.clientId = routeLog.clientId
+                it.clientName = routeLog.clientName
+                it.identify = routeLog.identify
+                it.userId = routeLog.userId
+                it.loginNo = routeLog.loginNo
+                it.userName = routeLog.userName
                 it.processTime = routeLog.processTime
                 it.responseTime = routeLog.responseTime
                 it.responseStatus = routeLog.responseStatus
