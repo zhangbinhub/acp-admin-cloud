@@ -28,6 +28,7 @@ versions += [
         jaxb_runtime     : "2.3.2",
         spring_boot      : "2.1.8.RELEASE",
         spring_cloud     : "Greenwich.SR3",
+        nacos            : "2.1.0.RELEASE",
         swagger          : "2.9.2",
 
         netty            : "4.1.39.Final",
