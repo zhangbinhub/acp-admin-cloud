@@ -1,0 +1,59 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: dev
+  application:
+    name: workflow-server
+  thymeleaf:
+    cache: false
+  zipkin:
+    sender:
+      type: kafka
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        cluster-name: ${spring.profiles.active}
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        cluster-name: ${spring.profiles.active}
+        group: ${spring.profiles.active}
+info:
+  version: 4.0.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    flowable:
+      enabled: true
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://oauth2-server/oauth/check_token
+flowable:
+  history-level: full
+acp:
+  cloud:
+    log-server:
+      client:
+        enabled: true
+        log-type: WORKFLOW

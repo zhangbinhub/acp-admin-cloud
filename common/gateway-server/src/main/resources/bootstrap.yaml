@@ -4,12 +4,17 @@ server:
     uri-encoding: UTF-8
 spring:
   profiles:
-    active: prod
+    active: dev
   application:
     name: gateway-server
   thymeleaf:
     cache: false
   cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        cluster-name: ${spring.profiles.active}
     # ===============================
     # = GateWay Config
     # ===============================
@@ -82,23 +87,6 @@ management:
     health:
       show-details: always
 # ===============================
-# = Eureka Config
-# ===============================
-eureka:
-  instance:
-    prefer-ip-address: true
-    # 服务刷新时间配置，每隔这个时间会主动心跳一次，默认30s
-    lease-renewal-interval-in-seconds: 3
-    # 服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
-    # EurekaServer一定要设置eureka.server.eviction-interval-timer-in-ms否则这个配置无效
-    # 这个配置一般为服务刷新时间配置的三倍，默认90s
-    lease-expiration-duration-in-seconds: 9
-  client:
-    # 定时刷新本地缓存时间
-    registry-fetch-interval-seconds: 3
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
-# ===============================
 # = Ribbon Config
 # ===============================
 hystrix:
@@ -117,4 +105,4 @@ ribbon:
     enabled: true
   eager-load:
     enabled: true
-    clients: route-server,config-server,oauth2-server,log-server
+    clients: route-server,oauth2-server,log-server

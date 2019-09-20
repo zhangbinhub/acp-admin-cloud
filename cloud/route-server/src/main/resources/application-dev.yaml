@@ -1,4 +1,3 @@
-debug: false
 server:
   address: 127.0.0.1
   port: 8871
@@ -15,15 +14,7 @@ logging:
   file: ${logging.path}/${spring.application.name}.log
 logging.file.max-size: 5MB
 logging.file.max-history: 30
-# ===============================
-# = Eureka Config
-# ===============================
-eureka:
-  instance:
-    ip-address: ${server.address}
-    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
-info:
-  instance-id: ${eureka.instance.instance-id}
+logging.level.com.alibaba.nacos.client.naming: warn
 # ===============================
 # = Spring Config
 # ===============================
@@ -35,8 +26,11 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
   cloud:
+    nacos:
+      discovery:
+        ip: ${server.address}
     bus:
-      id: ${eureka.instance.instance-id}
+      id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
     stream:
       default-binder: kafka
       kafka:

@@ -164,7 +164,7 @@ ext {
 > ```bash
 > docker-compose -f docker-compose-base.yml down
 > ```
-> - docker-compose 文件：[dockerfiles/docker-compose-base.yml](dockerfiles/docker-compose-base.yml)
+> - docker-compose 文件：[dockerfiles/docker-compose-base.yml](dockerfiles/docker-compose-base.yaml)
 
 ##### 1. zipkin 链路监控
 http://127.0.0.1:9411

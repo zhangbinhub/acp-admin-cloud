@@ -1,38 +1,36 @@
-debug: false
 server:
   address: 127.0.0.1
-  port: 8780
+  port: 8875
 management:
   server:
-    port: 8779
+    port: 8874
 # ===============================
 # = Log To File Config
 # ===============================
 logging:
-  path: logs/log-server
+  path: logs/workflow-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
   file: ${logging.path}/${spring.application.name}.log
 logging.file.max-size: 5MB
 logging.file.max-history: 30
-# ===============================
-# = Eureka Config
-# ===============================
-eureka:
-  instance:
-    ip-address: ${server.address}
-    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
-info:
-  instance-id: ${eureka.instance.instance-id}
+logging.level.com.alibaba.nacos.client.naming: warn
 # ===============================
 # = Spring Config
 # ===============================
 spring:
   redis:
     url: redis://127.0.0.1:6379
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   cloud:
+    nacos:
+      discovery:
+        ip: ${server.address}
     bus:
-      id: ${eureka.instance.instance-id}
+      id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
     stream:
       default-binder: kafka
       kafka:
@@ -57,7 +55,7 @@ spring:
   # = DATA SOURCE
   # ===============================
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/acp-admin?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
     username: root
     password: test
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -76,7 +74,3 @@ security:
 acp:
   swagger:
     enabled: true
-  schedule:
-    cron:
-      LogFileBackUpTask: 0 0/1 * * * ?
-      LogDailyHistory: 0 0/1 * * * ?

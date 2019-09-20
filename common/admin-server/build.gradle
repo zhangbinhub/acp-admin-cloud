@@ -30,7 +30,11 @@ dependencies {
     compile "de.codecentric:spring-boot-admin-starter-server:$versions.boot_admin"
 
     compile("org.springframework.cloud:spring-cloud-starter-netflix-turbine") {
+        exclude group: "org.springframework.cloud", module: "spring-cloud-starter-netflix-eureka-client"
         exclude group: "junit", module: "junit"
     }
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard"
+    // 服务注册发现
+    compile "com.alibaba.cloud:spring-cloud-alibaba-nacos-discovery:$versions.nacos"
 }

@@ -56,17 +56,19 @@ dependencies {
     compile "org.jolokia:jolokia-core"
 
     compile "org.glassfish.jaxb:jaxb-runtime:$versions.jaxb_runtime"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
     compile "org.springframework.cloud:spring-cloud-starter-oauth2"
     compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
     compile "org.springframework.cloud:spring-cloud-starter-bus-kafka"
-    compile "org.springframework.cloud:spring-cloud-starter-config"
     compile "org.springframework.retry:spring-retry"
     // monitor : 服务间调用、断路器、链路追踪
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-zipkin"
     compile "io.github.openfeign:feign-okhttp"
+    // 服务注册发现
+    compile "com.alibaba.cloud:spring-cloud-alibaba-nacos-discovery:$versions.nacos"
+    // 配置中心
+    compile "com.alibaba.cloud:spring-cloud-alibaba-nacos-config:$versions.nacos"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-redis"

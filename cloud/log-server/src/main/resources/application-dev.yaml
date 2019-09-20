@@ -1,41 +1,33 @@
-debug: false
+
 server:
   address: 127.0.0.1
-  port: 8999
+  port: 8780
 management:
   server:
-    port: 8998
+    port: 8779
 # ===============================
 # = Log To File Config
 # ===============================
 logging:
-  path: logs/oauth-server
+  path: logs/log-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
   file: ${logging.path}/${spring.application.name}.log
 logging.file.max-size: 5MB
 logging.file.max-history: 30
-# ===============================
-# = Eureka Config
-# ===============================
-eureka:
-  instance:
-    ip-address: ${server.address}
-    instance-id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
-info:
-  instance-id: ${eureka.instance.instance-id}
+logging.level.com.alibaba.nacos.client.naming: warn
 # ===============================
 # = Spring Config
 # ===============================
 spring:
   redis:
     url: redis://127.0.0.1:6379
-  sleuth:
-    sampler:
-      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
   cloud:
+    nacos:
+      discovery:
+        ip: ${server.address}
     bus:
-      id: ${eureka.instance.instance-id}
+      id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
     stream:
       default-binder: kafka
       kafka:
@@ -68,6 +60,18 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    client:
+      client-id: 8a80cb816d2eb97f016d2eba04710000
+      client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:
     enabled: true
+  schedule:
+    cron:
+      LogFileBackUpTask: 0 0/1 * * * ?
+      LogDailyHistory: 0 0/1 * * * ?
