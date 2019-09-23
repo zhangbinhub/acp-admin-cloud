@@ -125,48 +125,55 @@ constructor(private val environment: Environment,
      */
     private fun createRouteLogMessage(serverWebExchange: ServerWebExchange): RouteLogMessage {
         var token: String? = null
-        val authorization = serverWebExchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-        authorization?.apply {
+        serverWebExchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)?.apply {
             val authList = this.split(" ")
             if (authList.size > 1 && (authList[0].equals("Bearer", ignoreCase = true) || authList[0].equals("mac", ignoreCase = true))) {
                 token = authList[1]
             }
         }
-        val routeLogMessage = RouteLogMessage(
+        return RouteLogMessage(
                 logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
                 remoteIp = getRealRemoteIp(serverWebExchange.request),
-                gatewayIp = environment.getProperty("server.address"),
+                gatewayIp = (environment.getProperty("server.address")
+                        ?: "") + ":" + environment.getProperty("server.port"),
                 method = serverWebExchange.request.methodValue,
                 token = token
-        )
-        val uris = serverWebExchange.getAttribute<LinkedHashSet<URI>>(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR)
-        if (uris != null) {
-            for (uri in uris) {
+        ).also { routeLogMessage ->
+            serverWebExchange.getAttribute<LinkedHashSet<URI>>(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR)?.forEach {
                 val prefix = "lb://"
-                val host = routeLogMessage.gatewayIp!! + ":" + environment.getProperty("server.port")!!
-                if (routeLogMessage.path == null && uri.toString().contains(host)) {
-                    routeLogMessage.path = uri.toString().substring(uri.toString().indexOf(host) + host.length)
-                } else if (routeLogMessage.serverId == null && uri.toString().startsWith(prefix)) {
-                    val s1 = uri.toString().substring(prefix.length)
-                    if (s1.contains("/")) {
-                        routeLogMessage.serverId = s1.substring(0, s1.indexOf("/"))
+                val uriStr = it.toString()
+                if (routeLogMessage.path == null && !uriStr.startsWith(prefix)) {
+                    var tmpUri = uriStr
+                    if (tmpUri.startsWith("http://")) {
+                        tmpUri = tmpUri.substring(7)
+                    } else if (tmpUri.startsWith("https://")) {
+                        tmpUri = tmpUri.substring(8)
+                    }
+                    if (tmpUri.contains("/")) {
+                        routeLogMessage.path = tmpUri.substring(tmpUri.indexOf("/"))
                     } else {
-                        routeLogMessage.serverId = s1
+                        routeLogMessage.path = tmpUri
+                    }
+                }
+                if (routeLogMessage.serverId == null && uriStr.startsWith(prefix)) {
+                    val tmpUri = uriStr.substring(prefix.length)
+                    if (tmpUri.contains("/")) {
+                        routeLogMessage.serverId = tmpUri.substring(0, tmpUri.indexOf("/"))
+                    } else {
+                        routeLogMessage.serverId = tmpUri
                     }
                 }
             }
+            serverWebExchange.getAttribute<URI>(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR)?.apply {
+                routeLogMessage.targetIp = this.host
+                routeLogMessage.targetUri = this.toString()
+                routeLogMessage.targetPath = this.path
+            }
+            routeLogMessage.requestTime = System.currentTimeMillis()
+            serverWebExchange.request.headers.getFirst(GateWayConstant.GATEWAY_HEADER_REQUEST_TIME)?.apply {
+                routeLogMessage.requestTime = this.toLong()
+            }
         }
-        val uri = serverWebExchange.getAttribute<URI>(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR)
-        uri?.let {
-            routeLogMessage.targetIp = it.host
-            routeLogMessage.targetUri = it.toString()
-            routeLogMessage.targetPath = it.path
-        }
-        routeLogMessage.requestTime = System.currentTimeMillis()
-        serverWebExchange.request.headers.getFirst(GateWayConstant.GATEWAY_HEADER_REQUEST_TIME)?.let {
-            routeLogMessage.requestTime = it.toLong()
-        }
-        return routeLogMessage
     }
 
 }
