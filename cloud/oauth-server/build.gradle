@@ -13,6 +13,7 @@ dependencyManagement {
             bomProperty("kotlin.version", "${kotlinVersion}")
         }
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud"
+        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$versions.alibaba_cloud"
     }
 }
 bootJar {

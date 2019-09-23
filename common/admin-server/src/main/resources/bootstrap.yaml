@@ -1,0 +1,42 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: dev
+  application:
+    name: admin-server
+  thymeleaf:
+    cache: false
+  # ===============================
+  # = Spring Boot Admin
+  # ===============================
+  boot:
+    admin:
+      ui:
+        resource-locations:
+          - "classpath:/META-INF/spring-boot-admin-server-ui/"
+          - "classpath:/static/"
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        cluster-name: ${spring.profiles.active}
+info:
+  version: 4.0.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

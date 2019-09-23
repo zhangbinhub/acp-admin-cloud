@@ -19,10 +19,12 @@
 > - [Upgrade] log-server 增加操作日志查询、登录日志查询接口
 > - [Upgrade] log-server 优化日志文件备份策略
 > - [Upgrade] 升级 gradle 至 5.6.2
-> - [Upgrade] 升级核心库至 6.1.6
+> - [Upgrade] 升级核心库至 6.2.0
 > - [Upgrade] 升级 Spring Boot 至 2.1.8.RELEASE
 > - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR3
-> - [Upgrade] 调整 eureka 相关参数，感知服务快速上下线
+> - [Upgrade] 修改配置文件，服务注册发现中心和配置中心使用nacos
+> - [Upgrade] 去除 eureka-server、config-server、config-refresh-server 模块
+> - [Upgrade] Hystrix 熔断组件更换为 Sentinel
 > - [Upgrade] 升级依赖项
 >   - netty to "4.1.39.Final"
 >   - kotlinx-coroutines-core to "1.3.1"

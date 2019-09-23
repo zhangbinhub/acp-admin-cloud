@@ -34,13 +34,10 @@ constructor(adminServerProperties: AdminServerProperties) : WebSecurityConfigure
                         "$adminContextPath/instances/**",
                         "$adminContextPath/actuator",
                         "$adminContextPath/actuator/**",
-                        "$adminContextPath/hystrix",
-                        "$adminContextPath/hystrix/**",
                         "$adminContextPath/login",
                         "$adminContextPath/error",
                         "$adminContextPath/webjars/**",
                         "$adminContextPath/notifications/**",
-                        "$adminContextPath/turbine.stream",
                         "$adminContextPath/proxy.stream").permitAll()
                 .anyRequest().authenticated()
                 .and()

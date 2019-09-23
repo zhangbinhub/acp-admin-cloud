@@ -1,0 +1,107 @@
+server:
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+spring:
+  profiles:
+    active: dev
+  application:
+    name: log-server
+  thymeleaf:
+    cache: false
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        cluster-name: ${spring.profiles.active}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yaml
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
+        group: ${spring.profiles.active}
+info:
+  version: 4.0.0
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+# ===============================
+# = Ribbon Config
+# ===============================
+feign:
+  httpclient:
+    enabled: false
+    connection-timeout: ${feign.client.config.default.connectTimeout}
+    max-connections: 1000
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: full
+      oauth2-server:
+        connectTimeout: 30000
+        readTimeout: 30000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 11000
+    "OauthServer#appInfo(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+    "OauthServer#tokenInfo(String)":
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 31000
+ribbon:
+  # ribbon 缓存刷新时间
+  ServerListRefreshInterval: 3000
+  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  okhttp:
+    enabled: true
+  eager-load:
+    enabled: true
+    clients: oauth2-server
+# ===============================
+# = Log To File Config
+# ===============================
+# 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释
+#logging:
+#  config: logback-spring.xml
+# ===============================
+# = Security Config
+# ===============================
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://oauth2-server/oauth/check_token
+acp:
+  cloud:
+    log-server:
+      enabled: true
