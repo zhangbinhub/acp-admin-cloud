@@ -6,8 +6,3 @@ scrape_configs:
 - job_name: 'prometheus'
   static_configs:
   - targets: ['localhost:9090']
-- job_name: 'zipkin'
-  scrape_interval: 5s
-  metrics_path: '/prometheus'
-  static_configs:
-  - targets: ['zipkin:9411']

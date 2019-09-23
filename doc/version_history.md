@@ -24,6 +24,7 @@
 > - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR3
 > - [Upgrade] 修改配置文件，服务注册发现中心和配置中心使用nacos
 > - [Upgrade] 去除 eureka-server、config-server、config-refresh-server 模块
+> - [Upgrade] Hystrix 熔断组件更换为 Sentinel
 > - [Upgrade] 升级依赖项
 >   - netty to "4.1.39.Final"
 >   - kotlinx-coroutines-core to "1.3.1"

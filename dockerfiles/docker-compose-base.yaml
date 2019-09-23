@@ -91,42 +91,6 @@ services:
     depends_on:
       - elasticsearch
 
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin
-    restart: always
-    networks:
-      - elk
-    ports:
-      - 9411:9411
-    environment:
-      - KAFKA_ZOOKEEPER=zookeeper
-      - STORAGE_TYPE=elasticsearch
-      - ES_HOSTS=elasticsearch
-    # Uncomment to enable scribe
-    # - SCRIBE_ENABLED=true
-    # Uncomment to enable self-tracing
-    # - SELF_TRACING_ENABLED=true
-    # Uncomment to enable debug logging
-    # - JAVA_OPTS=-Dlogging.level.zipkin=DEBUG -Dlogging.level.zipkin2=DEBUG
-    depends_on:
-      - zookeeper
-      - elasticsearch
-
-  zipkin-dependencies:
-    image: openzipkin/zipkin-dependencies
-    container_name: zipkin-dependencies
-    restart: always
-    networks:
-      - elk
-    environment:
-      - STORAGE_TYPE=elasticsearch
-      - ES_HOSTS=elasticsearch
-      - ES_INDEX=zipkin
-      - "JAVA_OPTS=-verbose:gc -Xms1g -Xmx1g"
-    depends_on:
-      - elasticsearch
-
   zoonavigator-api:
     image: docker.io/elkozmon/zoonavigator-api
     environment:

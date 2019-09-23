@@ -9,9 +9,6 @@ spring:
     name: log-server
   thymeleaf:
     cache: false
-  zipkin:
-    sender:
-      type: kafka
   cloud:
     nacos:
       discovery:
@@ -19,10 +16,10 @@ spring:
         namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
         cluster-name: ${spring.profiles.active}
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yaml
-        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
-        cluster-name: ${spring.profiles.active}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
 info:
   version: 4.0.0
