@@ -1,5 +1,12 @@
 package pers.acp.admin.gateway.conf
 
+import pers.acp.admin.constant.RouteConstant
+import pers.acp.admin.gateway.constant.GateWayConstant
+import pers.acp.admin.gateway.consumer.UpdateRouteInput
+import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer
+import pers.acp.admin.gateway.domain.RouteLogDomain
+import pers.acp.admin.gateway.producer.RouteLogOutput
+import pers.acp.admin.gateway.repo.RouteRedisRepository
 import org.reactivestreams.Publisher
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,13 +36,6 @@ import org.springframework.web.cors.reactive.CorsUtils
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
-import pers.acp.admin.constant.RouteConstant
-import pers.acp.admin.gateway.constant.GateWayConstant
-import pers.acp.admin.gateway.consumer.UpdateRouteInput
-import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer
-import pers.acp.admin.gateway.domain.RouteLogDomain
-import pers.acp.admin.gateway.producer.RouteLogOutput
-import pers.acp.admin.gateway.repo.RouteRedisRepository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import javax.annotation.PostConstruct
@@ -118,9 +118,10 @@ constructor(private val environment: Environment, private val bindings: BindingS
         exchange.request.mutate().headers { httpHeaders ->
             httpHeaders[GateWayConstant.GATEWAY_HEADER_REQUEST_TIME] = listOf(System.currentTimeMillis().toString())
         }.build().let {
-            val build = exchange.mutate().request(it).build()
-            routeLogDomain.beforeRoute(build)
-            chain!!.filter(build)
+            val webExchange = exchange.mutate().request(it).build()
+            val routeLogMessage = routeLogDomain.createRouteLogMessage(webExchange)
+            routeLogDomain.beforeRoute(routeLogMessage)
+            chain!!.filter(webExchange)
         }
     }
 
@@ -130,15 +131,22 @@ constructor(private val environment: Environment, private val bindings: BindingS
             val bufferFactory: DataBufferFactory = exchange!!.response.bufferFactory()
             val decoratedResponse: ServerHttpResponseDecorator = object : ServerHttpResponseDecorator(exchange.response) {
                 override fun writeWith(body: Publisher<out DataBuffer?>): Mono<Void?> {
-                    return if (body is Flux<*> &&
+                    val routeLogMessage = routeLogDomain.createRouteLogMessage(exchange)
+                    val responseTime = System.currentTimeMillis()
+                    routeLogMessage.processTime = responseTime - routeLogMessage.requestTime!!
+                    routeLogMessage.responseTime = responseTime
+                    exchange.response.statusCode?.let {
+                        routeLogMessage.responseStatus = it.value()
+                    }
+                    return if (routeLogMessage.applyToken && body is Flux<*> &&
                             (exchange.response.headers.getFirst(HttpHeaders.CONTENT_TYPE)
                                     ?: "").contains(MediaType.APPLICATION_JSON_VALUE, true)) {
                         val fluxBody = body as Flux<out DataBuffer?>
                         super.writeWith(fluxBody.buffer().map { dataBuffers ->
-                            bufferFactory.wrap(routeLogDomain.afterRoute(exchange, dataBuffers))
+                            bufferFactory.wrap(routeLogDomain.afterRoute(routeLogMessage, dataBuffers))
                         })
                     } else {
-                        routeLogDomain.afterRoute(exchange)
+                        routeLogDomain.afterRoute(routeLogMessage)
                         super.writeWith(body)
                     }
                 }

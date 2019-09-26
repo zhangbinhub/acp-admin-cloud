@@ -1,6 +1,10 @@
 package pers.acp.admin.gateway.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import pers.acp.admin.gateway.constant.GateWayConstant
+import pers.acp.admin.gateway.message.RouteLogMessage
+import pers.acp.admin.gateway.producer.RouteLogOutput
+import pers.acp.admin.gateway.producer.instance.RouteLogProducer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils
@@ -8,16 +12,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ServerWebExchange
-import pers.acp.admin.gateway.constant.GateWayConstant
-import pers.acp.admin.gateway.message.RouteLogMessage
-import pers.acp.admin.gateway.producer.RouteLogOutput
-import pers.acp.admin.gateway.producer.instance.RouteLogProducer
-import java.lang.StringBuilder
 
 import java.net.URI
 import java.nio.charset.Charset
@@ -71,45 +69,30 @@ constructor(private val environment: Environment,
         }
     }
 
-    fun beforeRoute(serverWebExchange: ServerWebExchange) {
-        doLog(createRouteLogMessage(serverWebExchange))
+    fun beforeRoute(routeLogMessage: RouteLogMessage) {
+        doLog(routeLogMessage)
     }
 
-    fun afterRoute(serverWebExchange: ServerWebExchange, dataBufferList: MutableList<out DataBuffer?>? = null): ByteArray {
+    fun afterRoute(routeLogMessage: RouteLogMessage, dataBufferList: MutableList<out DataBuffer?>? = null): ByteArray {
         try {
-            val routeLogMessage = createRouteLogMessage(serverWebExchange)
-            val responseTime = System.currentTimeMillis()
-            routeLogMessage.processTime = responseTime - routeLogMessage.requestTime!!
-            routeLogMessage.responseTime = responseTime
-            serverWebExchange.response.statusCode?.let {
-                routeLogMessage.responseStatus = it.value()
-            }
-            if (routeLogMessage.targetPath == GateWayConstant.TARGET_APPLY_TOKEN_PATH) {
-                routeLogMessage.applyToken = true
-            }
             var content: ByteArray = byteArrayOf()
-            dataBufferList?.let {
-                if ((serverWebExchange.response.headers.getFirst(HttpHeaders.CONTENT_TYPE) ?: "")
-                                .contains(MediaType.APPLICATION_JSON_VALUE, true)) {
-                    try {
-                        val responseContent = StringBuilder()
-                        dataBufferList.forEach { dataBuffer ->
-                            dataBuffer?.let {
-                                responseContent.append(it.asInputStream(true).readAllBytes().toString(Charset.forName("UTF-8")))
-                            }
+            dataBufferList?.let { list ->
+                try {
+                    list.forEach { dataBuffer ->
+                        dataBuffer?.let {
+                            content = content.plus(it.asInputStream(true).readAllBytes())
                         }
-                        val responseString = responseContent.toString()
-                        content = responseString.toByteArray(Charset.forName("UTF-8"))
-                        objectMapper.readTree(responseString)?.also { json ->
-                            if (json.has(GateWayConstant.GATEWAY_HEADER_RESPONSE_TOKEN_FIELD)) {
-                                json.path(GateWayConstant.GATEWAY_HEADER_RESPONSE_TOKEN_FIELD)?.apply {
-                                    routeLogMessage.token = this.textValue()
-                                }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        log.error(e.message, e)
                     }
+                    val responseString = content.toString(Charset.forName("UTF-8"))
+                    objectMapper.readTree(responseString)?.also { json ->
+                        if (json.has(GateWayConstant.GATEWAY_HEADER_RESPONSE_TOKEN_FIELD)) {
+                            json.path(GateWayConstant.GATEWAY_HEADER_RESPONSE_TOKEN_FIELD)?.apply {
+                                routeLogMessage.token = this.textValue()
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    log.error(e.message, e)
                 }
             }
             doLog(routeLogMessage)
@@ -123,7 +106,7 @@ constructor(private val environment: Environment,
     /**
      * 构建路由日志消息
      */
-    private fun createRouteLogMessage(serverWebExchange: ServerWebExchange): RouteLogMessage {
+    fun createRouteLogMessage(serverWebExchange: ServerWebExchange): RouteLogMessage {
         var token: String? = null
         serverWebExchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)?.apply {
             val authList = this.split(" ")
@@ -168,6 +151,9 @@ constructor(private val environment: Environment,
                 routeLogMessage.targetIp = this.host
                 routeLogMessage.targetUri = this.toString()
                 routeLogMessage.targetPath = this.path
+                if (routeLogMessage.targetPath == GateWayConstant.TARGET_APPLY_TOKEN_PATH) {
+                    routeLogMessage.applyToken = true
+                }
             }
             routeLogMessage.requestTime = System.currentTimeMillis()
             serverWebExchange.request.headers.getFirst(GateWayConstant.GATEWAY_HEADER_REQUEST_TIME)?.apply {
