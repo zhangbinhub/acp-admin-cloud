@@ -82,7 +82,7 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryOperateLog(@RequestBody loginLogPo: LoginLogPo): ResponseEntity<Page<out Any>> {
+    fun queryLoginLog(@RequestBody loginLogPo: LoginLogPo): ResponseEntity<Page<out Any>> {
         if (loginLogPo.queryParam == null) {
             throw ServerException("分页查询参数不能为空")
         }
