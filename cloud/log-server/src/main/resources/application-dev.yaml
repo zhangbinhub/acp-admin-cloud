@@ -21,6 +21,8 @@ logging.level.com.alibaba.nacos.client.naming: warn
 spring:
   redis:
     url: redis://127.0.0.1:6379
+  kafka:
+    bootstrap-servers: ${spring.cloud.stream.kafka.binder.brokers}
   cloud:
     nacos:
       discovery:

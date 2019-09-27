@@ -9,6 +9,9 @@ spring:
     name: gateway-server
   thymeleaf:
     cache: false
+#  zipkin:
+#    sender:
+#      type: kafka
   cloud:
     nacos:
       discovery:
