@@ -171,12 +171,44 @@ http://127.0.0.1:9090
 http://127.0.0.1:5601
 ![Architecture diagram](doc/images/kibana.png)
 
-## 六、系统初始化
+## 六、必要组件及监控
+### （一）Nacos
+> - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
+> - 独立部署，数据库仅支持 MySQL5.6或5.7
+> - 控制台 http://ip:port/nacos
+> - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
+
+### （二）Zipkin
+> - 配合 Spring Cloud Sleuth 进行服务链路追踪分析、统计，Zipkin Server 需要自行安装部署，详情请参考[官网](https://zipkin.io/)
+> - 使用方法：
+>   - 添加依赖
+>        ```groovy
+>        compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+>        ```
+>   - bootstrap.yaml 增加配置
+>        ```yaml
+>        spring:
+>          zipkin:
+>            sender:
+>              type: kafka #默认为http方式，建议使用kafka方式发送链路追踪信息
+>        ```
+>   - application-xxx.yaml 增加配置
+>        ```yaml
+>        spring:
+>          sleuth:
+>            sampler:
+>              probability: 1 #样本采集率，默认0.1，测试环境可以配置为1，生产为了不影响系统能行建议维持默认
+>        ```
+>   - 进行如上配置之后，服务就会自行向kafka推送链路信息
+> - 控制台 http://ip:port/zipkin
+> - 可监控请求链路 traces、消耗时间、服务依赖关系图等
+
+## 七、系统初始化
 ### （一）数据库
 > - 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
 > - 执行 route-server 模块下的 pers.acp.admin.route.test.InitData.doInitAll() 单元测试
 
-## 七、服务列表
+## 八、服务列表
 ### （一）[admin-server](common/admin-server/README.md)
 可视化监控，监控服务状态
 ### （二）[gateway-server](common/gateway-server/README.md)
