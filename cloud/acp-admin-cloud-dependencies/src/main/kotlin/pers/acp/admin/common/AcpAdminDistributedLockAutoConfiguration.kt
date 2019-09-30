@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.data.redis.connection.RedisConnection
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.lock.RedisDistributedLock
 import pers.acp.admin.common.lock.ZkDistributedLock
 import pers.acp.spring.boot.interfaces.LogAdapter
+import pers.acp.spring.cloud.AcpCloudLogAutoConfiguration
 import pers.acp.spring.cloud.lock.DistributedLock
 
 /**
@@ -21,6 +23,7 @@ import pers.acp.spring.cloud.lock.DistributedLock
 @Configuration
 @ConditionalOnMissingBean(DistributedLock::class)
 @AutoConfigureAfter(AcpAdminComponentAutoConfiguration::class)
+@Import(AcpCloudLogAutoConfiguration::class)
 class AcpAdminDistributedLockAutoConfiguration {
 
     @Bean
