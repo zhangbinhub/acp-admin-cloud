@@ -26,6 +26,7 @@
 > - [Upgrade] 去除 eureka-server、config-server、config-refresh-server 模块
 > - [Upgrade] Hystrix 熔断组件更换为 Sentinel
 > - [Upgrade] zipkin-server 单独安装，修改 zipkin client 相关配置
+> - [Upgrade] 分布式锁默认切换为zookeeper实现
 > - [Upgrade] 升级依赖项
 >   - netty to "4.1.39.Final"
 >   - kotlinx-coroutines-core to "1.3.1"

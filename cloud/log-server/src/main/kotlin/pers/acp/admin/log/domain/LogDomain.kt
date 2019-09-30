@@ -94,9 +94,13 @@ constructor(private val logAdapter: LogAdapter,
         }
         if (routeLogMessage.responseStatus != null) {// 响应日志
             var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
+            var count = 1
             while (optionalRouteLog.isEmpty) {
                 delay(1000)
                 optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
+                if (++count >= 300) {
+                    break
+                }
             }
             optionalRouteLog.ifPresent {
                 it.token = routeLog.token

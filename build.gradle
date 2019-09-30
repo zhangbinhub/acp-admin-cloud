@@ -200,9 +200,6 @@ configure(allprojects) {
         doLast {
             def needCopy = {
                 return ["admin-server",
-                        "config-refresh-server",
-                        "config-server",
-                        "eureka-server",
                         "gateway-server",
                         "log-server",
                         "oauth-server",
