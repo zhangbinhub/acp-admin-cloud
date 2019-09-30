@@ -16,6 +16,7 @@ dependencyManagement {
 }
 dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     compile fileTree(dir: "$rootDir/libs", include: "*.jar")
 
