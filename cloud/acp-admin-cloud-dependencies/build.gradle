@@ -73,6 +73,8 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-redis"
+    // zk 客户端
+    compile "org.apache.curator:curator-recipes"
 
     compile project(":cloud:acp-admin-cloud-constant")
 }

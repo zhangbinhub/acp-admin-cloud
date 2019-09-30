@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  pers.acp.admin.common.AcpAdminComponentAutoConfiguration
+  pers.acp.admin.common.AcpAdminComponentAutoConfiguration,\
+  pers.acp.admin.common.AcpAdminDistributedLockAutoConfiguration

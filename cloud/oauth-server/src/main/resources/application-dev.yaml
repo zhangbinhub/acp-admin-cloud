@@ -64,3 +64,6 @@ spring:
 acp:
   swagger:
     enabled: true
+  cloud:
+    zookeeper:
+      connect: 127.0.0.1:2181

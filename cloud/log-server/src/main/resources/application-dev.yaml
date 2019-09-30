@@ -76,3 +76,6 @@ acp:
     cron:
       LogFileBackUpTask: 0 0/1 * * * ?
       LogDailyHistory: 0 0/1 * * * ?
+  cloud:
+    zookeeper:
+      connect: 127.0.0.1:2181
