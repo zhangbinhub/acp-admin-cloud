@@ -6,10 +6,12 @@ import org.apache.curator.retry.RetryForever
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.redis.connection.RedisConnection
+import org.springframework.context.annotation.Import
+import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.conf.ZkClientConfiguration
 import pers.acp.admin.common.serialnumber.GenerateSerialNumber
@@ -22,10 +24,11 @@ import pers.acp.spring.cloud.AcpCloudComponentAutoConfiguration
 @Configuration
 @AutoConfigureBefore(AcpCloudComponentAutoConfiguration::class)
 @EnableConfigurationProperties(ZkClientConfiguration::class)
+@Import(RedisAutoConfiguration::class)
 class AcpAdminComponentAutoConfiguration {
 
     @Bean
-    @ConditionalOnClass(RedisConnection::class)
+    @ConditionalOnClass(RedisOperations::class)
     fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = GenerateSerialNumber(redisTemplate)
 
     @Bean
