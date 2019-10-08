@@ -1,9 +1,12 @@
 package pers.acp.admin.workflow.domain
 
+import org.flowable.bpmn.model.BpmnModel
 import org.flowable.bpmn.model.FlowElement
 import org.flowable.bpmn.model.FlowNode
+import org.flowable.bpmn.model.SequenceFlow
 import org.flowable.engine.*
-import org.flowable.engine.history.*
+import org.flowable.engine.history.HistoricActivityInstance
+import org.flowable.engine.history.HistoricVariableUpdate
 import org.flowable.task.api.TaskInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -16,7 +19,6 @@ import pers.acp.admin.workflow.constant.WorkFlowParamKey
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
-
 import java.io.InputStream
 
 /**
@@ -247,21 +249,24 @@ constructor(private val logAdapter: LogAdapter,
     fun generateDiagram(processInstanceId: String): InputStream =
             try {
                 val processDefinitionId = if (isFinished(processInstanceId)) {
-                    val pi = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult()
-                    pi.processDefinitionId
+                    historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult().processDefinitionId
                 } else {
-                    val pi = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult()
-                    pi.processDefinitionId
+                    runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult().processDefinitionId
                 }
-                val activityIdList: MutableList<String> = mutableListOf()
-                val historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).orderByHistoricActivityInstanceStartTime().asc().list()
-                historicActivityInstanceList.forEach { activityIdList.add(it.activityId) }
-                val flows: MutableList<String> = mutableListOf()
+
+                // 将已经执行的节点ID放入高亮显示节点集合
+                val historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId)
+                        .orderByHistoricActivityInstanceStartTime().asc().list()
+                val highLightedActivityIdList: MutableList<String> = mutableListOf()
+                historicActivityInstanceList.forEach { highLightedActivityIdList.add(it.activityId) }
+
                 //获取流程图
                 val model = repositoryService.getBpmnModel(processDefinitionId)
+                // 获取已流经的流程线，需要高亮显示高亮流程已发生流转的线id集合
+                val flows: MutableList<String> = getHighLightedFlows(model, historicActivityInstanceList)
                 val engineConfiguration = processEngine.processEngineConfiguration
                 val diagramGenerator = engineConfiguration.processDiagramGenerator
-                diagramGenerator.generateDiagram(model, "bmp", activityIdList, flows,
+                diagramGenerator.generateDiagram(model, "bmp", highLightedActivityIdList, flows,
                         engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                         engineConfiguration.classLoader, 1.0, true)
             } catch (e: Exception) {
@@ -277,6 +282,103 @@ constructor(private val logAdapter: LogAdapter,
      */
     fun isFinished(processInstanceId: String): Boolean {
         return historyService.createHistoricProcessInstanceQuery().finished().processInstanceId(processInstanceId).count() > 0
+    }
+
+    /**
+     * 获取已流经的流程线，需要高亮显示高亮流程已发生流转的线id集合
+     * @param model
+     * @param historicActivityInstanceList
+     */
+    private fun getHighLightedFlows(model: BpmnModel, historicActivityInstanceList: List<HistoricActivityInstance>): MutableList<String> {
+        // 已流经的流程线，需要高亮显示
+        val highLightedFlowIdList: MutableList<String> = mutableListOf()
+        // 全部活动节点
+        val allHistoricActivityNodeList: MutableList<FlowNode> = mutableListOf()
+        // 已完成的历史活动节点
+        val finishedActivityInstanceList: MutableList<HistoricActivityInstance> = mutableListOf()
+        historicActivityInstanceList.forEach {
+            // 获取流程节点
+            val flowNode = model.mainProcess.getFlowElement(it.activityId, true) as FlowNode
+            allHistoricActivityNodeList.add(flowNode)
+            // 结束时间不为空，当前节点则已经完成
+            it.endTime?.apply { finishedActivityInstanceList.add(it) }
+        }
+        // 当前流程节点
+        var currentFlowNode: FlowNode?
+        // 目标流程节点
+        var targetFlowNode: FlowNode?
+        // 当前活动实例
+        var currentActivityInstance: HistoricActivityInstance
+        // 遍历已完成的活动实例，从每个实例的outgoingFlows中找到已执行的
+        for (k in finishedActivityInstanceList.indices) {
+            currentActivityInstance = finishedActivityInstanceList[k]
+            currentFlowNode = model.mainProcess.getFlowElement(currentActivityInstance
+                    .activityId, true) as FlowNode
+            // 当前节点的所有流出线
+            val outgoingFlowList: List<SequenceFlow> = currentFlowNode.outgoingFlows
+            /**
+             * 遍历outgoingFlows并找到已流转的 满足如下条件认为已流转：
+             * 1.当前节点是并行网关或兼容网关，则通过outgoingFlows能够在历史活动中找到的全部节点均为已流转
+             * 2.当前节点是以上两种类型之外的，通过outgoingFlows查找到的时间最早的流转节点视为有效流转
+             * (第2点有问题，有过驳回的，会只绘制驳回的流程线，通过走向下一级的流程线没有高亮显示)
+             */
+            if ("parallelGateway" == currentActivityInstance.activityType || "inclusiveGateway" == currentActivityInstance.activityType) {
+                // 遍历历史活动节点，找到匹配流程目标节点的
+                outgoingFlowList.forEach {
+                    // 获取当前节点流程线对应的下级节点
+                    targetFlowNode = model.mainProcess.getFlowElement(it.targetRef,
+                            true) as FlowNode
+                    // 如果下级节点包含在所有历史节点中，则将当前节点的流出线高亮显示
+                    targetFlowNode?.apply {
+                        if (allHistoricActivityNodeList.contains(this)) {
+                            highLightedFlowIdList.add(it.id)
+                        }
+                    }
+                }
+            } else {
+                /**
+                 * 2、当前节点不是并行网关或兼容网关
+                 * 【已解决-问题】如果当前节点有驳回功能，驳回到申请节点，
+                 * 则因为申请节点在历史节点中，导致当前节点驳回到申请节点的流程线被高亮显示，但实际并没有进行驳回操作
+                 */
+                // 当前节点ID
+                val currentActivityId: String = currentActivityInstance.activityId
+                var ifStartFind = false
+                var ifFinded = false
+                var historicActivityInstance: HistoricActivityInstance
+                // 循环当前节点的所有流出线
+                // 循环所有历史节点
+                for (i in historicActivityInstanceList.indices) {
+                    // 如果当前节点流程线对应的下级节点在历史节点中，则该条流程线进行高亮显示（【问题】有驳回流程线时，即使没有进行驳回操作，因为申请节点在历史节点中，也会将驳回流程线高亮显示-_-||）
+                    // 历史节点
+                    historicActivityInstance = historicActivityInstanceList[i]
+                    // 如果循环历史节点中的id等于当前节点id，从当前历史节点继续先后查找是否有当前节点流程线等于的节点
+                    // 历史节点的序号需要大于等于已完成历史节点的序号，防止驳回重审一个节点经过两次是只取第一次的流出线高亮显示，第二次的不显示
+                    if (i >= k && historicActivityInstance.activityId == currentActivityId) {
+                        ifStartFind = true
+                        // 跳过当前节点继续查找下一个节点
+                        continue
+                    }
+                    if (ifStartFind) {
+                        ifFinded = false
+                        for (sequenceFlow in outgoingFlowList) {
+                            // 如果当前节点流程线对应的下级节点在其后面的历史节点中，则该条流程线进行高亮显示
+                            if (historicActivityInstance.activityId == sequenceFlow.targetRef) {
+                                highLightedFlowIdList.add(sequenceFlow.id)
+                                // 暂时默认找到离当前节点最近的下一级节点即退出循环，否则有多条流出线时将全部被高亮显示
+                                ifFinded = true
+                                break
+                            }
+                        }
+                    }
+                    if (ifFinded) {
+                        // 暂时默认找到离当前节点最近的下一级节点即退出历史节点循环，否则有多条流出线时将全部被高亮显示
+                        break
+                    }
+                }
+            }
+        }
+        return highLightedFlowIdList
     }
 
 }
