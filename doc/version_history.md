@@ -1,4 +1,11 @@
 ## 版本更新记录
+##### v4.0.1
+> - [Upgrade] 升级核心库至 6.2.1
+> - [Upgrade] 升级 Spring Boot 至 2.1.9.RELEASE
+> - [Upgrade] 升级依赖项
+>   - joda time to "2.10.4"
+>   - kotlinx-coroutines-core to "1.3.2"
+>   - Postgresql to "42.2.8"
 ##### v4.0.0
 > - [Upgrade] 调整工程结构，无需依赖Acp核心库的模块放入common
 > - [Upgrade] 去除 file-server 模块

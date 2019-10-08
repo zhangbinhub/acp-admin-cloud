@@ -64,7 +64,7 @@ spring:
                 name: GateWayHystrix
                 fallbackUri: forward:/hystrixhandle
 info:
-  version: 4.0.0
+  version: 4.0.1
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
