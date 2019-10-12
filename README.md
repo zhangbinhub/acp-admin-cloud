@@ -2,7 +2,7 @@
 ###### v4.0.1 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.0](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.1](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
 - [Spring Boot 2.1.9.RELEASE](https://projects.spring.io/spring-boot)
@@ -51,7 +51,7 @@
 > - **【依赖中间件 kafka】** 各深度定制开发的服务通过 **kafka** 发送日志消息，**log server** 从 **Kafka** 中消费消息并进行日志的统一记录
 > - **【依赖中间件 kafka、logstash、elasticsearch】 log server** 不仅将日志信息记录在本地，还发送给 **elasticsearch** 进行汇总
 > - **【依赖中间件 redis】** 包路径中包含 **Redis** 时，**oauth server** 将 **token** 信息持久化到 **Redis** 进行统一认证管理，否则仅持久化到内存
-> - **【依赖中间件 redis】** 分布式锁，实现 **pers.acp.spring.cloud.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **spring-data-redis** 时，默认配置一个基于 **Redis** 的分布式锁实现
+> - **【依赖中间件 zookeeper】** 分布式锁，实现 **pers.acp.spring.cloud.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **curator-recipes** 时，默认配置一个基于 **zookeeper** 的分布式锁实现
 > - 需要进行防重请求的 controller 方法上增加注解 **pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission**，默认30秒过期
 > - 前后端交互 **HttpStatus Code** 说明
 > 
@@ -114,18 +114,20 @@ ext {
 ```
 
 ## 三、工程说明
-- doc目录下的files文件夹，当需要用到时放到打包后的jar同目录下即可
 - 工程全局默认使用 UTF-8 字符集
-- libs 下面为 [acp](https://github.com/zhangbin1010/acp) 核心模块包
-- cloud 目录下为基于 Spring Cloud 的一整套组件模块
 - gradle 目录下为相关配置文件
-- test 目录下为测试工程
+- libs 下面为 [acp](https://github.com/zhangbin1010/acp) 核心模块包
+- common 目录下为基于 Spring Cloud 的基础组件模块，含 Spring Boot Admin 和 GateWay
+- cloud 目录下为基于 Spring Cloud 的自定义组件模块
+- dockerfiles 所使用的中间件[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)
+- [数据库表结构](doc/数据结构.docx)
 - swagger url : /swagger-ui.html
 
-## 四、启停 springboot 应用
+## 四、启停 SpringBoot 应用
 - [jvm 参考参数](doc/jvm-params.txt)
 - [启停脚本模板(Linux)](doc/script/server.model)，根据实际情况修改第2行 APP_NAME 和第3行 JVM_PARAM 的值即可，和 SpringBoot 应用的 .jar 放在同一路径下
 - [启停脚本(windows)](doc/script/server.bat)，根据实际情况修改第1行末尾需要执行的 jar 名称，和SpringBoot应用的 .jar 放在同一路径下
+- windows：修改[server.bat](doc/script/server.bat)内相关参数后，直接运行即可
 - Linux 命令：
 
 |          命令         |           描述          |
@@ -137,7 +139,7 @@ ext {
 | ./server.sh restart   | 重启应用                |
 
 ## 五、基础中间件环境搭建
-基础中间件包括：redis、zookeeper、kafka、kafka-manager、elasticsearch、kibana、logstash、zoonavigator-api、zoonavigator-web、prometheus、grafana、setup_grafana_datasource
+基础中间件包括：redis、zookeeper、kafka-manager、elasticsearch、kibana、logstash、zoonavigator-api、zoonavigator-web、prometheus、grafana、setup_grafana_datasource
 > - 启动服务
 > 
 > 命令模式进入dockerfile目录，执行启动命令
@@ -171,14 +173,20 @@ http://127.0.0.1:9090
 http://127.0.0.1:5601
 ![Architecture diagram](doc/images/kibana.png)
 
-## 六、必要组件及监控
+## 六、需独立部署的必要组件及监控
 ### （一）Nacos
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
+> - 使用时需导入初始化配置信息[doc/nacos_config_export_2019-09-20 2023_43_47.zip](doc/nacos_config_export_2019-09-20%2023_43_47.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
-### （二）Zipkin
+### （二）Kafka
+> - 由于最新版kafka需要绑定访问IP，部署于docker中时总是出现外部无法访问的情况（暂时没有解决方案），因此需要单独安装部署
+> - 详情请参考[官网](http://kafka.apache.org/)
+> - 使用[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)中部署的zookeeper
+
+### （三）Zipkin
 > - 配合 Spring Cloud Sleuth 进行服务链路追踪分析、统计，Zipkin Server 需要自行安装部署，详情请参考[官网](https://zipkin.io/)
 > - 使用方法：
 >   - 添加依赖
@@ -207,18 +215,38 @@ http://127.0.0.1:5601
 ### （一）数据库
 > - 执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
 > - 执行 route-server 模块下的 pers.acp.admin.route.test.InitData.doInitAll() 单元测试
+> - [数据库表结构](doc/数据结构.docx)
 
 ## 八、服务列表
 ### （一）[admin-server](common/admin-server/README.md)
 可视化监控，监控服务状态
-### （二）[gateway-server](common/gateway-server/README.md)
-> 网关服务，修改 yml
-> 动态路由信息保存在 redis
-### （三）[log-server](cloud/log-server/README.md)
+### （二）acp-admin-cloud-constant
+> 全局静态常量定义
+> 定义服务间内部访问restful路径
+> 定义角色编码
+> 定义功能权限编码
+> 定义路由相关常量
+> 定义token相关常量
+### （三）[gateway-server](common/gateway-server/README.md)
+> - 网关服务
+> - 依赖，请查看[build.gradle](common/gateway-server/build.gradle)
+> - 动态路由信息保存在 redis
+### （四）acp-admin-cloud-dependencies
+> - 组件依赖模块
+> - controller、domain、feign hystrix、repository 等基类和接口定义
+> - 分布式锁实现
+> - 全局流水号生成实现
+> - 自动配置相关组件
+> - 依赖
+>   - acp-spring-cloud-starter
+>   - spring-boot-starter-data-jpa
+>   - spring-boot-starter-data-redis
+>   - curator-recipes
+>   - cloud:acp-admin-cloud-constant
+### （五）[log-server](cloud/log-server/README.md)
 > - 统一日志服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
 > - 通过 kafka 收集其余服务的日志信息，统一进行记录
 > - 通过 kafka 收集网关消息，记录路由日志
 > - 根据配置中心参数，压缩备份日志文件
@@ -226,23 +254,21 @@ http://127.0.0.1:5601
 > - 每日将路由日志、操作日志、登录日志迁移至历史库
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
-### （四）[oauth-server](cloud/oauth-server/README.md)
+### （六）[oauth-server](cloud/oauth-server/README.md)
 > - 统一认证服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
-> - 提供全套权限体系接口
-### （五）[route-server](cloud/route-server/README.md)
+> - 提供全套权限体系服务，包含客户端应用管理、用户管理、机构管理、角色管理、权限管理、token管理、运行参数管理等
+### （七）[route-server](cloud/route-server/README.md)
 > - 路由服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
-> - 提供动态路由策略配置及刷新接口
-### （六）[workflow-server](cloud/workflow-server/README.md)
+> - 提供动态路由策略配置及刷新
+### （八）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
->   - cloud:acp-admin-cloud-constant
 > - 提供工作流相关接口服务
-### （七）其他自定义服务
-> - 依赖 cloud:acp-admin-cloud-dependencies
+### （九）其他自定义服务
+> - 依赖
+>   - cloud:acp-admin-cloud-dependencies
