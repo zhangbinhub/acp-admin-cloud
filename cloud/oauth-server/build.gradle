@@ -21,6 +21,9 @@ bootJar {
         attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
     }
 }
+test {
+    exclude '**/*nobuild**'
+}
 dependencies {
     compile project(":cloud:acp-admin-cloud-dependencies")
 
