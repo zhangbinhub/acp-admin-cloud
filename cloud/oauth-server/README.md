@@ -16,7 +16,7 @@
   [查看认证过程](../../doc/oauth2.0认证.md)
 
 ##### 二、数据初始化
-执行 oauth-server 模块下的 pers.acp.admin.oauth.test.InitData.doInitAll() 单元测试
+执行 oauth-server 模块下的 pers.acp.admin.oauth.nobuild.InitData.doInitAll() 单元测试
 
 ##### 三、接口功能
 提供生成token、验证token、应用管理、机构管理、参数管理、角色管理、用户管理、菜单管理、权限功能管理等接口，接口详情请在浏览器中访问 /swagger-ui.html 页面

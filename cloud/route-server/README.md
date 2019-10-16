@@ -7,4 +7,4 @@
 - 3、接口详情请在浏览器中访问 /swagger-ui.html 页面
 
 ##### 二、数据初始化
-执行 route-server 模块下的 pers.acp.admin.route.test.InitData.doInitAll() 单元测试
+执行 route-server 模块下的 pers.acp.admin.route.nobuild.InitData.doInitAll() 单元测试
