@@ -27,7 +27,7 @@ data class RuntimePo(
         @ApiModelProperty(value = "描述", position = 3)
         var configDes: String? = null,
 
-        @ApiModelProperty(value = "是否启用", position = 4)
+        @ApiModelProperty(value = "是否启用，查询时可为空", required = true, position = 4)
         @get:NotNull(message = "是否启用不能为空")
         var enabled: Boolean? = null,
 

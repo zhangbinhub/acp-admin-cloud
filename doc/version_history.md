@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.x
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
+> - [Upgrade] 更新文档
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
 > - [Upgrade] 升级 Spring Boot 至 2.1.9.RELEASE
