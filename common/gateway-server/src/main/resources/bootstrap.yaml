@@ -9,9 +9,9 @@ spring:
     name: gateway-server
   thymeleaf:
     cache: false
-#  zipkin:
-#    sender:
-#      type: kafka
+  #  zipkin:
+  #    sender:
+  #      type: kafka
   cloud:
     nacos:
       discovery:
@@ -87,8 +87,13 @@ hystrix:
     default:
       execution:
         isolation:
+          strategy: SEMAPHORE
           thread:
             timeoutInMilliseconds: 60000
+          semaphore:
+            maxConcurrentRequests: ${server.tomcat.max-threads}
+      circuitBreaker:
+        sleepWindowInMilliseconds: 3000
 ribbon:
   # ribbon 缓存刷新时间
   ServerListRefreshInterval: 3000
