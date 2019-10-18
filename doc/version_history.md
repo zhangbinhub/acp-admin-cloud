@@ -5,6 +5,7 @@
 > - [Upgrade] 优化 dependencies 模块 AcpAdminDistributedLockAutoConfiguration 分布式锁定义
 > - [Upgrade] 优化日志记录迁移，分批处理避免内存溢出
 > - [Upgrade] gateway server 去除 hystrix，不进行熔断处理
+> - [Upgrade] gateway server 删除链路监控 zipkin 相关配置
 > - [Upgrade] 日志文件下载请求不进行权限验证
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
