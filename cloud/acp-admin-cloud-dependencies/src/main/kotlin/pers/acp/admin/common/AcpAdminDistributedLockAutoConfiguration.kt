@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.lock.RedisDistributedLock
@@ -33,6 +34,7 @@ class AcpAdminDistributedLockAutoConfiguration {
             RedisDistributedLock(redisTemplate)
 
     @Bean
+    @Primary
     @ConditionalOnBean(CuratorFramework::class)
     fun zkDistributedLock(curatorFramework: CuratorFramework, logAdapter: LogAdapter): DistributedLock =
             ZkDistributedLock(curatorFramework, logAdapter)
