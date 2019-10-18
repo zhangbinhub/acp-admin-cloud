@@ -123,7 +123,6 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @PreAuthorize(LogFileExpression.superOnly)
     @GetMapping(value = [LogApi.logFile + "/{fileName}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun downloadFile(request: HttpServletRequest, response: HttpServletResponse,
