@@ -9,6 +9,7 @@
 > - [Upgrade] 日志文件下载请求不进行权限验证
 > - [Upgrade] 日志文件下载时文件名Base64加密传输，且支持大文件断点续传
 > - [Upgrade] 升级核心库至 6.2.2
+> - [Upgrade] 升级 gradle 至 5.6.3
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
 > - [Upgrade] 升级 Spring Boot 至 2.1.9.RELEASE
