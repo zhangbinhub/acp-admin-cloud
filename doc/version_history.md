@@ -1,12 +1,13 @@
 ## 版本更新记录
-##### v4.x
+##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档
 > - [Upgrade] 优化 dependencies 模块 AcpAdminDistributedLockAutoConfiguration 分布式锁定义
 > - [Upgrade] 优化日志记录迁移，分批处理避免内存溢出
-> - [Upgrade] gateway server 去除 hystrix，不进行熔断处理
-> - [Upgrade] gateway server 删除链路监控 zipkin 相关配置
+> - [Upgrade] gateway-server 去除 hystrix，不进行熔断处理
+> - [Upgrade] gateway-server 删除链路监控 zipkin 相关配置
 > - [Upgrade] 日志文件下载请求不进行权限验证
+> - [Upgrade] 升级核心库至 6.2.2
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
 > - [Upgrade] 升级 Spring Boot 至 2.1.9.RELEASE
