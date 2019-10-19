@@ -7,6 +7,7 @@
 > - [Upgrade] gateway-server 去除 hystrix，不进行熔断处理
 > - [Upgrade] gateway-server 删除链路监控 zipkin 相关配置
 > - [Upgrade] 日志文件下载请求不进行权限验证
+> - [Upgrade] 日志文件下载时文件名Base64加密传输，且支持大文件断点续传
 > - [Upgrade] 升级核心库至 6.2.2
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
