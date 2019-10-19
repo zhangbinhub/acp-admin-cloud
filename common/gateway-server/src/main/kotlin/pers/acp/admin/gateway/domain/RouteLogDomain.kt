@@ -114,6 +114,13 @@ constructor(private val environment: Environment,
                 token = authList[1]
             }
         }
+        token?.apply {
+            serverWebExchange.request.queryParams["access_token"]?.let {
+                if (it.isNotEmpty()) {
+                    token = it[0]
+                }
+            }
+        }
         return RouteLogMessage(
                 logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
                 remoteIp = getRealRemoteIp(serverWebExchange.request),

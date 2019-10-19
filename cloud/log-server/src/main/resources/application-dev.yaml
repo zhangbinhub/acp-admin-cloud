@@ -79,3 +79,6 @@ acp:
   cloud:
     zookeeper:
       connect: 127.0.0.1:2181
+    oauth:
+      resource-server-permit-all-path:
+        - /log/files/**

@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.test;
+package pers.acp.admin.oauth.nobuild;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

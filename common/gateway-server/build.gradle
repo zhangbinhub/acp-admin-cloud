@@ -27,9 +27,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"
     compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
     compile "org.springframework.cloud:spring-cloud-starter-gateway"
-    // monitor : 断路器
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
-//    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
     compile "com.squareup.okhttp3:okhttp"
     // 服务注册发现
     compile "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"

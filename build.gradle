@@ -176,6 +176,13 @@ configure(allprojects) {
         archives javadocJar
     }
 
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events 'started', 'passed'
+        }
+    }
+
     configurations.all {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'// no caching to maven repository
     }

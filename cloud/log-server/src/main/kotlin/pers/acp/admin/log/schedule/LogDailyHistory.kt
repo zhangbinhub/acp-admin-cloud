@@ -38,23 +38,41 @@ constructor(private val logAdapter: LogAdapter,
         runBlocking {
             launch(Dispatchers.IO) {
                 try {
-                    logHistoryDomain.doRouteLogHistory(todayBeginTime)
+                    var entityNumber = 1
+                    var totalNumber = 0
+                    while (entityNumber > 0) {
+                        entityNumber = logHistoryDomain.doRouteLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        totalNumber += entityNumber
+                    }
+                    logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 路由日志共迁移${totalNumber}条 ===================")
                 } catch (e: Exception) {
-                    logAdapter.error("路由日志迁移异常：${e.message}", e)
+                    logAdapter.error(">>>>>>>>>>>>>>>>>>>>>> 路由日志迁移异常：${e.message}", e)
                 }
             }
             launch(Dispatchers.IO) {
                 try {
-                    logHistoryDomain.doOperateLogHistory(todayBeginTime)
+                    var entityNumber = 1
+                    var totalNumber = 0
+                    while (entityNumber > 0) {
+                        entityNumber = logHistoryDomain.doOperateLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        totalNumber += entityNumber
+                    }
+                    logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 操作日志共迁移${totalNumber}条 ===================")
                 } catch (e: Exception) {
-                    logAdapter.error("操作日志迁移异常：${e.message}", e)
+                    logAdapter.error(">>>>>>>>>>>>>>>>>>>>>> 操作日志迁移异常：${e.message}", e)
                 }
             }
             launch(Dispatchers.IO) {
                 try {
-                    logHistoryDomain.doLoginLogHistory(todayBeginTime)
+                    var entityNumber = 1
+                    var totalNumber = 0
+                    while (entityNumber > 0) {
+                        entityNumber = logHistoryDomain.doLoginLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        totalNumber += entityNumber
+                    }
+                    logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 登录日志共迁移${totalNumber}条 ===================")
                 } catch (e: Exception) {
-                    logAdapter.error("登录日志迁移异常：${e.message}", e)
+                    logAdapter.error(">>>>>>>>>>>>>>>>>>>>>> 登录日志迁移异常：${e.message}", e)
                 }
             }
         }

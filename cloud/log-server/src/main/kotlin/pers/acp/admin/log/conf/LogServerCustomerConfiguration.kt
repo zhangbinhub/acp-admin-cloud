@@ -25,24 +25,30 @@ class LogServerCustomerConfiguration {
      * 日志路径
      */
     @Value("\${logging.path}")
-    var logFilePath: String = ""
+    val logFilePath: String = ""
 
     /**
      * 日志最大保留天数，默认 180 天
      */
     @Value("\${log-server.max-history-day-number}")
-    var maxHistoryDayNumber: Int = 180
+    val maxHistoryDayNumber: Int = 180
 
     /**
      * 是否记录路由日志
      */
     @Value("\${log-server.route-log.enabled}")
-    var routeLogEnabled: Boolean = true
+    val routeLogEnabled: Boolean = true
 
     /**
      * 是否记录操作日志
      */
     @Value("\${log-server.operate-log.enabled}")
-    var operateLogEnabled: Boolean = true
+    val operateLogEnabled: Boolean = true
+
+    /**
+     * 日志迁移时，单个事务处理的日志记录数量
+     */
+    @Value("\${log-server.quantity-per-process}")
+    val quantityPerProcess: Int = 100
 
 }

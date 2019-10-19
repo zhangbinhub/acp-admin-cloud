@@ -1,4 +1,4 @@
-package pers.acp.admin.route.test;
+package pers.acp.admin.route.nobuild;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
