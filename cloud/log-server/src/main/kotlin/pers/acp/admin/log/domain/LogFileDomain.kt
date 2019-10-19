@@ -34,7 +34,7 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
             }
         }
         if (!fold.isDirectory) {
-            throw ServerException("路径 " + fold.absolutePath + " 不是文件夹")
+            throw ServerException("路径 " + fold.canonicalPath + " 不是文件夹")
         }
     }
 
@@ -57,8 +57,8 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
 
     @Throws(ServerException::class)
     fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, fileName: String) {
-        val foldPath = logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH.replace("\\", "/")
-        val fold = File(foldPath)
+        val fold = File(logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH)
+        val foldPath = fold.canonicalPath
         validateFold(fold)
         val targetFileName = String(Base64.decode(fileName), Charset.forName(CommonTools.getDefaultCharset()))
         val filePath = "$foldPath/$targetFileName".replace("/", File.separator).replace("\\", File.separator)

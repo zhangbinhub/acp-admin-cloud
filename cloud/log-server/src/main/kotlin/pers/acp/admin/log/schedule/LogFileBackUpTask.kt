@@ -36,7 +36,7 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
             for (i in 0 until logServerCustomerConfiguration.maxHistoryDayNumber) {
                 val logFileDate = CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT)
                 val logFold = File(logServerCustomerConfiguration.logFilePath)
-                val logFoldPath = logFold.absolutePath
+                val logFoldPath = logFold.canonicalPath
                 var zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
                 val zipFile = File(zipFilePath)
                 if (!zipFile.exists()) {
@@ -48,7 +48,7 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
                         logAdapter.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
                         val fileNames: MutableList<String> = mutableListOf()
                         for (file in files) {
-                            fileNames.add(file.absolutePath)
+                            fileNames.add(file.canonicalPath)
                         }
                         logAdapter.info("开始执行文件压缩...")
                         zipFilePath = CommonTools.filesToZip(fileNames, zipFilePath, true)
