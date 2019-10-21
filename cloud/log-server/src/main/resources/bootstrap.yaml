@@ -108,3 +108,6 @@ acp:
   cloud:
     log-server:
       enabled: true
+    oauth:
+      resource-server-permit-all-path:
+        - /log/files/**
