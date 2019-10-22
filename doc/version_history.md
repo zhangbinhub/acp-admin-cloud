@@ -11,6 +11,7 @@
 > - [Upgrade] 升级核心库至 6.2.2
 > - [Upgrade] 升级 gradle 至 5.6.3
 > - [Upgrade] 规范文件绝对路径写法，使用canonicalPath
+> - [Upgrade] log-server 中对各服务的error日志进行单独存储
 ##### v4.0.1
 > - [Upgrade] 升级核心库至 6.2.1
 > - [Upgrade] 升级 Spring Boot 至 2.1.9.RELEASE
