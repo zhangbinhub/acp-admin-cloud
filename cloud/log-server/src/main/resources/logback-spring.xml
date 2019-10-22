@@ -13,7 +13,6 @@
             </pattern>
             <charset>UTF8</charset>
         </encoder>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ALL.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -23,12 +22,32 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
+    </appender>
+    <appender name="ALL-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ALL.error.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
     <appender name="ALL-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>127.0.0.1:9601</destination>
@@ -46,7 +65,6 @@
             </pattern>
             <charset>UTF8</charset>
         </encoder>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/AUTH.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -56,12 +74,32 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
+    </appender>
+    <appender name="AUTH-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/AUTH.error.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
     <appender name="AUTH-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>127.0.0.1:9601</destination>
@@ -72,39 +110,6 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
-            <charset>UTF8</charset>
-        </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/FILE.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
-        </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
-    </appender>
-    <appender name="FILE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>127.0.0.1:9601</destination>
-        <!-- encoder必须配置,有多种可选 -->
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
-            <customFields>{"appname":"log_server_file"}</customFields>
-        </encoder>
-    </appender>
-
     <appender name="ROUTE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>
@@ -112,7 +117,6 @@
             </pattern>
             <charset>UTF8</charset>
         </encoder>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ROUTE.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -122,12 +126,32 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
+    </appender>
+    <appender name="ROUTE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ROUTE.error.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
     <appender name="ROUTE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>127.0.0.1:9601</destination>
@@ -145,7 +169,6 @@
             </pattern>
             <charset>UTF8</charset>
         </encoder>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/WORKFLOW.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -155,12 +178,32 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
-        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-        <prudent>true</prudent>
+    </appender>
+    <appender name="WORKFLOW-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
+            </pattern>
+            <charset>UTF8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/WORKFLOW.error.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>5 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
     <appender name="WORKFLOW-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>127.0.0.1:9601</destination>
@@ -173,22 +216,22 @@
 
     <logger name="ALL" level="INFO" additivity="false">
         <appender-ref ref="ALL"/>
+        <appender-ref ref="ALL-ERROR"/>
         <appender-ref ref="ALL-LOGSTASH"/>
     </logger>
     <logger name="AUTH" level="INFO" additivity="false">
         <appender-ref ref="AUTH"/>
+        <appender-ref ref="AUTH-ERROR"/>
         <appender-ref ref="AUTH-LOGSTASH"/>
-    </logger>
-    <logger name="FILE" level="INFO" additivity="false">
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="FILE-LOGSTASH"/>
     </logger>
     <logger name="ROUTE" level="INFO" additivity="false">
         <appender-ref ref="ROUTE"/>
+        <appender-ref ref="ROUTE-ERROR"/>
         <appender-ref ref="ROUTE-LOGSTASH"/>
     </logger>
     <logger name="WORKFLOW" level="INFO" additivity="false">
         <appender-ref ref="WORKFLOW"/>
+        <appender-ref ref="WORKFLOW-ERROR"/>
         <appender-ref ref="WORKFLOW-LOGSTASH"/>
     </logger>
     <jmxConfigurator/>
