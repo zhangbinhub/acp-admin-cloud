@@ -79,7 +79,7 @@ constructor(private val logAdapter: LogAdapter,
         logAdapter.info("查询到启用的路由信息共 " + routeList.size + " 条")
         try {
             val uuid = CommonTools.getUuid()
-            if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, 30000)) {
+            if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, 1000)) {
                 redisTemplate.delete(RouteConstant.ROUTES_DEFINITION_KEY)
                 logAdapter.info("清理 Redis 缓存完成")
                 for (route in routeList) {

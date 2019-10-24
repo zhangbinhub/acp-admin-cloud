@@ -14,12 +14,23 @@ import java.util.concurrent.TimeUnit
  */
 class ZkDistributedLock(private val curatorFramework: CuratorFramework,
                         private val logAdapter: LogAdapter) : DistributedLock {
+
+    /**
+     * 获取分布式锁
+     * 获取锁的过程会阻塞
+     * 成功时，返回true
+     * 失败时，一直阻塞直到成功获取锁，阻塞时间超过超时时间时返回false
+     * @param lockId   锁ID
+     * @param clientId 客户端ID
+     * @param timeOut  超时时间
+     * @return true|false 是否成功获取锁
+     */
     override fun getLock(lockId: String, clientId: String, timeOut: Long): Boolean {
         val lock = InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
         return try {
             val result = lock.acquire(timeOut, TimeUnit.MILLISECONDS)
             if (result) {
-                distributedLockMap[clientId] = lock
+                distributedLockMap[lockId + "_" + clientId] = lock
             }
             return result
         } catch (e: Exception) {
@@ -30,7 +41,7 @@ class ZkDistributedLock(private val curatorFramework: CuratorFramework,
 
     override fun releaseLock(lockId: String, clientId: String) {
         try {
-            distributedLockMap.remove(clientId)?.release()
+            distributedLockMap.remove(lockId + "_" + clientId)?.release()
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
         }
