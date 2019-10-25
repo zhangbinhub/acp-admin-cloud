@@ -65,6 +65,9 @@ feign:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
+  threadpool:
+    default:
+      maximumSize: 1000
   command:
     default:
       execution:

@@ -2,6 +2,7 @@
 ##### v4.x
 > - [Upgrade] 基于Redis和Zookeeper的分布式锁实现增加注释，两者对于超时时间的作用完全不一样
 > - [Upgrade] log-server 优化日志文件清理时间复杂度，频繁contains的list容器换为set
+> - [Upgrade] hystrix最大线程数设置为1000
 ##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档
