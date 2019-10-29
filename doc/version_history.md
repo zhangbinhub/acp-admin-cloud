@@ -5,6 +5,7 @@
 > - [Upgrade] hystrix最大线程数设置为1000
 > - [Upgrade] 各服务增加spring-boot-configuration-processor依赖
 > - [Upgrade] 修改feign熔断配置，启用sentinel
+> - [Upgrade] sentinel动态规则源使用nacos
 ##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档
