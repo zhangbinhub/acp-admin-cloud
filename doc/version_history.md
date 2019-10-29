@@ -4,6 +4,7 @@
 > - [Upgrade] log-server 优化日志文件清理时间复杂度，频繁contains的list容器换为set
 > - [Upgrade] hystrix最大线程数设置为1000
 > - [Upgrade] 各服务增加spring-boot-configuration-processor依赖
+> - [Upgrade] 修改feign熔断配置，启用sentinel
 ##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档

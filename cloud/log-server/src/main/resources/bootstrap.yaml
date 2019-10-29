@@ -53,7 +53,7 @@ feign:
     follow-redirects: true
   okhttp:
     enabled: true
-  hystrix:
+  sentinel:
     enabled: true
   client:
     config:
@@ -64,26 +64,6 @@ feign:
       oauth2-server:
         connectTimeout: 30000
         readTimeout: 30000
-hystrix:
-  threadpool:
-    default:
-      maximumSize: 1000
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 11000
-    "OauthServer#appInfo(String)":
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 31000
-    "OauthServer#tokenInfo(String)":
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 31000
 ribbon:
   # ribbon 缓存刷新时间
   ServerListRefreshInterval: 3000
