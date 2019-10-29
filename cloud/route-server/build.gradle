@@ -25,6 +25,9 @@ test {
     exclude '**/*nobuild**'
 }
 dependencies {
+    kapt "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     compile project(":cloud:acp-admin-cloud-dependencies")
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {
