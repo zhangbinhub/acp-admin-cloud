@@ -30,6 +30,7 @@ spring:
           nacos:
             server-addr: ${spring.cloud.nacos.discovery.server-addr}
             data-id: ${spring.application.name}-${spring.profiles.active}-sentinel-degrade
+            namespace: ${spring.cloud.nacos.discovery.namespace}
             group-id: ${spring.profiles.active}
             data-type: json
             rule-type: degrade
