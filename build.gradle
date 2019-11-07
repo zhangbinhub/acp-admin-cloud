@@ -1,9 +1,9 @@
 ext {
-    println("gradle version is ${gradleVersion}")
-    println("jdk version is ${javaVersion}")
-    println("kotlin version is ${kotlinVersion}")
-    println("compile : detected JAVA_HOME=$System.env.JAVA_HOME")
-    println("encoding : ${encoding}")
+    println("Environment        : JAVA_HOME=$System.env.JAVA_HOME")
+    println("Gradle Version     : ${gradleVersion}")
+    println("Target JDK Version : ${javaVersion}")
+    println("Kotlin Version     : ${kotlinVersion}")
+    println("Encoding           : ${encoding}")
 }
 
 buildscript {
