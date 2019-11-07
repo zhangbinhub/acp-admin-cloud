@@ -1,13 +1,13 @@
 # acp-admin-cloud
-###### v4.0.2 [版本更新日志](doc/version_history.md)
+###### v4.0.3 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.2](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.3](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.1.9.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.10.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR3](http://projects.spring.io/spring-cloud)
-- [Acp 6.2.2](https://github.com/zhangbin1010/acp)
+- [Acp 6.3.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -67,7 +67,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.6.2
+- gradle 5.6.4
 - kotlin 1.3.50
 
 ## 二、gradle 配置及使用
@@ -110,7 +110,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=5.6.2 --distribution-type=all
+    gradlew wrapper --gradle-version=5.6.4 --distribution-type=all
 ```
 
 ## 三、工程说明

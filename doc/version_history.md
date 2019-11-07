@@ -1,11 +1,23 @@
 ## 版本更新记录
-##### v4.x
+##### v4.0.3
 > - [Upgrade] 基于Redis和Zookeeper的分布式锁实现增加注释，两者对于超时时间的作用完全不一样
 > - [Upgrade] log-server 优化日志文件清理时间复杂度，频繁contains的list容器换为set
 > - [Upgrade] hystrix最大线程数设置为1000
 > - [Upgrade] 各服务增加spring-boot-configuration-processor依赖
 > - [Upgrade] 修改feign熔断配置，启用sentinel
 > - [Upgrade] sentinel动态规则源使用nacos
+> - [Upgrade] 升级 Spring Boot 至 2.1.10.RELEASE
+> - [Upgrade] 升级 gradle 至 5.6.4
+> - [Upgrade] 升级核心库至 6.3.0
+> - [Upgrade] 升级依赖项
+>   - junit5 to 5.5.2
+>   - joda time to 2.10.5
+>   - commons-text to 1.8
+>   - slf4j to 1.7.29
+>   - jackson to 2.9.10
+>   - zip4j to 2.2.4
+>   - mysql to 8.0.18
+>   - netty to 4.1.43.Final
 ##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档
