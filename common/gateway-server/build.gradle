@@ -22,6 +22,9 @@ bootJar {
     }
 }
 dependencies {
+    kapt "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     compile project(":cloud:acp-admin-cloud-constant")
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"

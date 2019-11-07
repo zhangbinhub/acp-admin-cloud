@@ -11,6 +11,16 @@ import pers.acp.spring.cloud.lock.DistributedLock
  */
 class RedisDistributedLock(private val redisTemplate: RedisTemplate<Any, Any>) : DistributedLock {
 
+    /**
+     * 获取分布式锁
+     * 获取锁的过程不会阻塞；
+     * 成功时，返回true，超时时间为redis中锁的有效时间，超过该时间则其他客户端可以获取锁；
+     * 失败时，立马返回false
+     * @param lockId   锁ID
+     * @param clientId 客户端ID
+     * @param timeOut  超时时间
+     * @return true|false 是否成功获取锁
+     */
     override fun getLock(lockId: String, clientId: String, timeOut: Long): Boolean {
         val lock = redisTemplate.execute { connection ->
             connection.execute("set",

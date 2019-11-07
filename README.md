@@ -1,13 +1,13 @@
 # acp-admin-cloud
-###### v4.0.2 [版本更新日志](doc/version_history.md)
+###### v4.0.3 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.2](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.3](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.1.9.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.10.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR3](http://projects.spring.io/spring-cloud)
-- [Acp 6.2.2](https://github.com/zhangbin1010/acp)
+- [Acp 6.3.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -67,7 +67,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 5.6.2
+- gradle 5.6.4
 - kotlin 1.3.50
 
 ## 二、gradle 配置及使用
@@ -110,7 +110,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=5.6.2 --distribution-type=all
+    gradlew wrapper --gradle-version=5.6.4 --distribution-type=all
 ```
 
 ## 三、工程说明
@@ -178,7 +178,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config_export_2019-10-18 23_34_27.zip](doc/nacos_config_export_2019-10-18%2023_34_27.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config_export_2019-10-29 18_41_13.zip](doc/nacos_config_export_2019-10-29 18_41_13.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka

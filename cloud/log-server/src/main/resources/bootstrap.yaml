@@ -24,8 +24,18 @@ spring:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
+    sentinel:
+      datasource:
+        nacos-degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+            data-id: ${spring.application.name}-${spring.profiles.active}-sentinel-degrade
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            group-id: ${spring.profiles.active}
+            data-type: json
+            rule-type: degrade
 info:
-  version: 4.0.2
+  version: 4.0.3
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -46,51 +56,33 @@ management:
 feign:
   httpclient:
     enabled: false
-    connection-timeout: ${feign.client.config.default.connectTimeout}
+    connection-timeout: ${ribbon.ConnectTimeout}
     max-connections: 1000
     time-to-live: 900
     time-to-live-unit: seconds
     follow-redirects: true
   okhttp:
     enabled: true
-  hystrix:
+  sentinel:
     enabled: true
   client:
     config:
       default:
-        connectTimeout: 10000
-        readTimeout: 10000
         loggerLevel: full
-      oauth2-server:
-        connectTimeout: 30000
-        readTimeout: 30000
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 11000
-    "OauthServer#appInfo(String)":
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 31000
-    "OauthServer#tokenInfo(String)":
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 31000
 ribbon:
   # ribbon 缓存刷新时间
   ServerListRefreshInterval: 3000
-  ReadTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
-  ConnectTimeout: ${hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds}
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
   okhttp:
     enabled: true
   eager-load:
     enabled: true
     clients: oauth2-server
+oauth2-server:
+  ribbon:
+    ReadTimeout: 30000
+    ConnectTimeout: 30000
 # ===============================
 # = Log To File Config
 # ===============================

@@ -22,6 +22,9 @@ bootJar {
     }
 }
 dependencies {
+    kapt "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     compile project(":cloud:acp-admin-cloud-dependencies")
 
     compile "org.flowable:flowable-spring-boot-starter:$versions.flowable"

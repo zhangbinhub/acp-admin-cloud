@@ -81,10 +81,10 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
 
     private fun doClearBackUpFiles() {
         logAdapter.info("开始清理历史备份文件，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
-        val filterLogFileNames = ArrayList<String>()
+        val filterLogFileNames: MutableSet<String> = mutableSetOf()
         filterLogFileNames.add(logServerCustomerConfiguration.logFile.substring(logServerCustomerConfiguration.logFilePath.length + 1))
         filterLogFileNames.add(LogBackUp.BACK_UP_PATH.substring(1))
-        val filterLogZipFileNames = ArrayList<String>()
+        val filterLogZipFileNames: MutableSet<String> = mutableSetOf()
         // 保留当天和历史最大天数的文件
         var day = CommonTools.getNowDateTime()
         for (i in 0..logServerCustomerConfiguration.maxHistoryDayNumber) {
@@ -101,7 +101,7 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
         logAdapter.info("清理历史备份文件完成！")
     }
 
-    private fun doDeleteFileForFold(fold: File, filterNames: List<String>, zipFile: Boolean = false) {
+    private fun doDeleteFileForFold(fold: File, filterNames: Set<String>, zipFile: Boolean = false) {
         if (fold.exists()) {
             if (zipFile) {
                 fold.listFiles { file ->
