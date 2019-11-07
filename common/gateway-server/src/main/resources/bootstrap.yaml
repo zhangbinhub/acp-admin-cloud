@@ -55,7 +55,7 @@ spring:
 #                rate-limiter: "#{@myRateLimiter}"
 #                key-resolver: "#{@userKeyResolver}"
 info:
-  version: 4.0.2
+  version: 4.0.3
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
