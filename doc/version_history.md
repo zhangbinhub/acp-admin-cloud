@@ -7,7 +7,7 @@
 > - [Upgrade] 修改feign熔断配置，启用sentinel
 > - [Upgrade] sentinel动态规则源使用nacos
 > - [Upgrade] 升级 Spring Boot 至 2.1.10.RELEASE
-> - [Upgrade] 升级 gradle 至 5.6.4
+> - [Upgrade] 升级 gradle 至 6.0
 > - [Upgrade] 升级核心库至 6.3.0
 > - [Upgrade] 升级依赖项
 >   - junit5 to 5.5.2
