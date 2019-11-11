@@ -93,7 +93,7 @@ configure(allprojects) {
     }
 
     task copyJar(type: Copy) {
-        from(configurations.runtime)
+        from(configurations.runtimeClasspath)
         into('build/libs/dependencies')
     }
 
