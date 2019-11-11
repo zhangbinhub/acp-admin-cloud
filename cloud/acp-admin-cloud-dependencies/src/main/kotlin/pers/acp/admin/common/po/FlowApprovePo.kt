@@ -13,11 +13,11 @@ import javax.validation.constraints.NotNull
 @ApiModel("启动审批参数")
 data class FlowApprovePo(
         @ApiModelProperty(value = "任务id", required = true, position = 1)
-        @NotBlank(message = "任务id不能为空")
+        @get:NotBlank(message = "任务id不能为空")
         var taskId: String? = null,
 
         @ApiModelProperty(value = "审批结果", required = true, example = "true", position = 2)
-        @NotNull(message = "审批结果不能为空")
+        @get:NotNull(message = "审批结果不能为空")
         var approved: Boolean? = null,
 
         @ApiModelProperty(value = "审批意见", required = true, position = 3)
