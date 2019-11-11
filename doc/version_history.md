@@ -18,6 +18,7 @@
 >   - zip4j to 2.2.4
 >   - mysql to 8.0.18
 >   - netty to 4.1.43.Final
+> - [Fix] 修复分页查询参数校验
 ##### v4.0.2
 > - [Upgrade] 优化 build.gradle 脚本，支持junit5
 > - [Upgrade] 更新文档

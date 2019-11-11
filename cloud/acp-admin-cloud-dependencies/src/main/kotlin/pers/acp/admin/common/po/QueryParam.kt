@@ -18,10 +18,10 @@ data class QueryParam(
         var pageSize: Int = 10,
 
         @ApiModelProperty(value = "排序列名，多列以“,”分隔", required = true, position = 3)
-        @NotBlank(message = "排序列名不能为空")
+        @get:NotBlank(message = "排序列名不能为空")
         var orderName: String? = null,
 
         @ApiModelProperty(value = "排序方式", allowableValues = "asc,desc", required = true, position = 4)
-        @NotBlank(message = "排序方式不能为空")
+        @get:NotBlank(message = "排序方式不能为空")
         var orderCommond: String = "desc"
 )
