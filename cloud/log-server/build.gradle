@@ -28,6 +28,6 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile project(":cloud:acp-admin-cloud-dependencies")
-    compile "net.logstash.logback:logstash-logback-encoder:$versions.logstash"
+    implementation project(":cloud:acp-admin-cloud-dependencies")
+    implementation "net.logstash.logback:logstash-logback-encoder:$versions.logstash"
 }

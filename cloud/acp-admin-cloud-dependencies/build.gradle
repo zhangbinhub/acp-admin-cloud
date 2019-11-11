@@ -18,63 +18,63 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile fileTree(dir: "$rootDir/libs", include: "*.jar")
+    api fileTree(dir: "$rootDir/libs", include: "*.jar")
 
-    compile "joda-time:joda-time:$versions.joda_time"
-    compile "org.apache.commons:commons-text:$versions.commons_text"
-    compile "org.apache.commons:commons-lang3:$versions.commons_lang3"
-    compile "org.slf4j:slf4j-api:$versions.slf4j"
-    compile "ch.qos.logback:logback-classic:$versions.logback"
-    compile "com.fasterxml.jackson.core:jackson-databind:$versions.jackson_databind"
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$versions.jackson_databind"
-    compile "org.bouncycastle:bcmail-jdk15on:$versions.bouncycastle"
-    compile "org.bouncycastle:bcprov-ext-jdk15on:$versions.bouncycastle"
-    compile "com.thoughtworks.xstream:xstream:$versions.xstream"
-    compile "dom4j:dom4j:$versions.dom4j"
-    compile "net.lingala.zip4j:zip4j:$versions.zip4j"
+    api "joda-time:joda-time:$versions.joda_time"
+    api "org.apache.commons:commons-text:$versions.commons_text"
+    api "org.apache.commons:commons-lang3:$versions.commons_lang3"
+    api "org.slf4j:slf4j-api:$versions.slf4j"
+    api "ch.qos.logback:logback-classic:$versions.logback"
+    api "com.fasterxml.jackson.core:jackson-databind:$versions.jackson_databind"
+    api "com.fasterxml.jackson.module:jackson-module-kotlin:$versions.jackson_databind"
+    api "org.bouncycastle:bcmail-jdk15on:$versions.bouncycastle"
+    api "org.bouncycastle:bcprov-ext-jdk15on:$versions.bouncycastle"
+    api "com.thoughtworks.xstream:xstream:$versions.xstream"
+    api "dom4j:dom4j:$versions.dom4j"
+    api "net.lingala.zip4j:zip4j:$versions.zip4j"
 
     // sql data base connection
-    compile "com.zaxxer:HikariCP:$versions.hikaricp"
-    compile "mysql:mysql-connector-java:$versions.mysql"
-    compile "com.microsoft.sqlserver:mssql-jdbc:$versions.mssqljdbc"
-    compile "com.hynnet:oracle-driver-ojdbc:$versions.ojdbc"
-    compile "org.postgresql:postgresql:$versions.postgresql"
+    api "com.zaxxer:HikariCP:$versions.hikaricp"
+    api "mysql:mysql-connector-java:$versions.mysql"
+    api "com.microsoft.sqlserver:mssql-jdbc:$versions.mssqljdbc"
+    api "com.hynnet:oracle-driver-ojdbc:$versions.ojdbc"
+    api "org.postgresql:postgresql:$versions.postgresql"
 
     // tcp/udp
-    compile "io.netty:netty-all:$versions.netty"
+    api "io.netty:netty-all:$versions.netty"
 
     // http client
-    compile "com.squareup.okhttp3:okhttp:$versions.okhttp"
+    api "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-aop"
+    api "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework.boot:spring-boot-starter-actuator"
+    api "org.springframework.boot:spring-boot-starter-aop"
 
     // Swagger2
-    compile "io.springfox:springfox-swagger2:$versions.swagger"
-    compile "io.springfox:springfox-swagger-ui:$versions.swagger"
+    api "io.springfox:springfox-swagger2:$versions.swagger"
+    api "io.springfox:springfox-swagger-ui:$versions.swagger"
 
     // log collection
-    compile "org.jolokia:jolokia-core"
+    api "org.jolokia:jolokia-core"
 
-    compile "org.springframework.cloud:spring-cloud-starter-oauth2"
-    compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
-    compile "org.springframework.cloud:spring-cloud-starter-bus-kafka"
+    api "org.springframework.cloud:spring-cloud-starter-oauth2"
+    api "org.springframework.cloud:spring-cloud-starter-stream-kafka"
+    api "org.springframework.cloud:spring-cloud-starter-bus-kafka"
     // monitor : 服务间调用、断路器、链路追踪
-    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-//    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
-    compile "io.github.openfeign:feign-okhttp"
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+//    api "org.springframework.cloud:spring-cloud-starter-zipkin"
+    api "io.github.openfeign:feign-okhttp"
     // 服务注册发现
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     // 配置中心
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
-    compile "com.alibaba.csp:sentinel-datasource-nacos"
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    api "com.alibaba.csp:sentinel-datasource-nacos"
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-data-redis"
+    api "org.springframework.boot:spring-boot-starter-data-jpa"
+    api "org.springframework.boot:spring-boot-starter-data-redis"
     // zk 客户端
-    compile "org.apache.curator:curator-recipes"
+    api "org.apache.curator:curator-recipes"
 
-    compile project(":cloud:acp-admin-cloud-constant")
+    api project(":cloud:acp-admin-cloud-constant")
 }

@@ -191,7 +191,7 @@ http://127.0.0.1:5601
 > - 使用方法：
 >   - 添加依赖
 >        ```groovy
->        compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+>        implementation "org.springframework.cloud:spring-cloud-starter-zipkin"
 >        ```
 >   - bootstrap.yaml 增加配置
 >        ```yaml

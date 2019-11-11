@@ -25,12 +25,12 @@ bootJar {
     }
 }
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-security"
 
-    compile "de.codecentric:spring-boot-admin-starter-server:$versions.boot_admin"
+    implementation "de.codecentric:spring-boot-admin-starter-server:$versions.boot_admin"
     // 服务注册发现
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
 }
