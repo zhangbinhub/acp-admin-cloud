@@ -23,7 +23,7 @@ buildscript {
     }
 }
 
-configure(allprojects) {
+allprojects {
 
     apply plugin: 'java'
     apply plugin: 'kotlin'
@@ -70,14 +70,6 @@ configure(allprojects) {
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         implementation "org.jetbrains.kotlin:kotlin-reflect"
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
-    }
-
-    kapt {
-        javacOptions {
-            // 增加注解处理器的最大错误次数
-            // 默认为 100。
-            option("-Xmaxerrs", 500)
-        }
     }
 
     tasks.withType(JavaCompile) {
@@ -132,14 +124,9 @@ configure(allprojects) {
         }
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        archiveClassifier.set("sources")
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier.set("javadoc")
-        from javadoc.destinationDir
+    java {
+        withJavadocJar()
+        withSourcesJar()
     }
 
     task release(type: Copy, dependsOn: [build, copyJar]) {
@@ -162,7 +149,6 @@ configure(allprojects) {
         options.encoding = "${encoding}"
     }
     compileJava.dependsOn(processResources)
-
     compileTestJava {
         options.encoding = "${encoding}"
     }
@@ -173,27 +159,14 @@ configure(allprojects) {
         }
     }
     compileKotlin.dependsOn(processResources)
-
     compileTestKotlin {
         kotlinOptions {
             jvmTarget = "${javaVersion}"
         }
     }
 
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-
     test {
         useJUnitPlatform()
-        testLogging {
-            events 'started', 'passed'
-        }
-    }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'// no caching to maven repository
     }
 
     def generateShell = { String appJarName ->
