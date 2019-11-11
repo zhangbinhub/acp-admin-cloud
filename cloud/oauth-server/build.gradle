@@ -28,9 +28,9 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile project(":cloud:acp-admin-cloud-dependencies")
+    implementation project(":cloud:acp-admin-cloud-dependencies")
 
-    testCompile("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'junit'
     }
 }

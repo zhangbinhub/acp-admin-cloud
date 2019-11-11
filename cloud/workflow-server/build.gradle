@@ -25,12 +25,12 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile project(":cloud:acp-admin-cloud-dependencies")
+    implementation project(":cloud:acp-admin-cloud-dependencies")
 
-    compile "org.flowable:flowable-spring-boot-starter:$versions.flowable"
-    compile "org.flowable:flowable-spring-boot-starter-actuator:$versions.flowable"
+    implementation "org.flowable:flowable-spring-boot-starter:$versions.flowable"
+    implementation "org.flowable:flowable-spring-boot-starter-actuator:$versions.flowable"
 
-    testCompile("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'junit'
     }
 }

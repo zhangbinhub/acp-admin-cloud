@@ -25,12 +25,12 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    compile project(":cloud:acp-admin-cloud-constant")
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-data-redis-reactive"
-    compile "org.springframework.cloud:spring-cloud-starter-stream-kafka"
-    compile "org.springframework.cloud:spring-cloud-starter-gateway"
-    compile "com.squareup.okhttp3:okhttp"
+    implementation project(":cloud:acp-admin-cloud-constant")
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
+    implementation "org.springframework.cloud:spring-cloud-starter-stream-kafka"
+    implementation "org.springframework.cloud:spring-cloud-starter-gateway"
+    implementation "com.squareup.okhttp3:okhttp"
     // 服务注册发现
-    compile "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
 }

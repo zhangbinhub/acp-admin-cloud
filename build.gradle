@@ -14,7 +14,10 @@ buildscript {
     }
     repositories {
         mavenLocal()
-        maven { url "${mavenCentralUrl}" }
+        maven {
+            url = "${mavenCentralUrl}"
+            allowInsecureProtocol = true
+        }
         mavenCentral()
         jcenter()
     }
@@ -29,7 +32,7 @@ configure(allprojects) {
     apply plugin: 'kotlin-noarg'
     apply plugin: 'kotlin-jpa'
     apply plugin: 'idea'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 
     apply from: "$rootDir/gradle/dependencies.gradle"
 
@@ -39,7 +42,10 @@ configure(allprojects) {
     buildscript {
         repositories {
             mavenLocal()
-            maven { url "${mavenCentralUrl}" }
+            maven {
+                url = "${mavenCentralUrl}"
+                allowInsecureProtocol = true
+            }
             mavenCentral()
             jcenter()
         }
@@ -47,20 +53,23 @@ configure(allprojects) {
 
     repositories {
         mavenLocal()
-        maven { url "${mavenCentralUrl}" }
+        maven {
+            url = "${mavenCentralUrl}"
+            allowInsecureProtocol = true
+        }
         mavenCentral()
         jcenter()
     }
 
     dependencies {
-        testCompile("org.junit.jupiter:junit-jupiter-engine:$versions.jupiter")
-        testCompile("org.junit.jupiter:junit-jupiter-api:$versions.jupiter")
-        testCompile("org.junit.platform:junit-platform-launcher:$versions.junit_platform")
-        testCompile "org.jetbrains.kotlin:kotlin-test"
-        testCompile "org.jetbrains.kotlin:kotlin-test-junit5"
-        compile "org.jetbrains.kotlin:kotlin-stdlib"
-        compile "org.jetbrains.kotlin:kotlin-reflect"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:$versions.jupiter")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:$versions.jupiter")
+        testImplementation("org.junit.platform:junit-platform-launcher:$versions.junit_platform")
+        testImplementation "org.jetbrains.kotlin:kotlin-test"
+        testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "org.jetbrains.kotlin:kotlin-reflect"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
     }
 
     kapt {
