@@ -23,5 +23,5 @@ data class QueryParam(
 
         @ApiModelProperty(value = "排序方式", allowableValues = "asc,desc", required = true, position = 4)
         @get:NotBlank(message = "排序方式不能为空")
-        var orderCommond: String = "desc"
+        var orderCommand: String = "desc"
 )
