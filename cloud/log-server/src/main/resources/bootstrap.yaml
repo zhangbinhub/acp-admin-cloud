@@ -35,7 +35,7 @@ spring:
             data-type: json
             rule-type: degrade
 info:
-  version: 4.0.3
+  version: 4.0.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
