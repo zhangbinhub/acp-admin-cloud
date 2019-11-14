@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller.inner
+package pers.acp.admin.oauth.controller.open.inner
 
 import io.swagger.annotations.*
 import org.springframework.beans.BeanUtils
