@@ -19,5 +19,5 @@ data class RuntimeConfigVo(
         var configDes: String? = null,
 
         @ApiModelProperty("是否启用")
-        var enabled: Boolean = true
+        var enabled: Boolean? = null
 )
