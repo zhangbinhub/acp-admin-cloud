@@ -159,12 +159,8 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> {
-        if (!moduleFuncCodeList.contains(moduleFuncPo.code)) {
-            throw ServerException("模块功能编码非法，请重新输入")
-        }
-        return ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPo))
-    }
+    fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
+            ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPo))
 
     @ApiOperation(value = "获取菜单详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))

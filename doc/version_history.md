@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
+> - [Upgrade] 去除模块功能编码校验
 ##### v4.0.3
 > - [Upgrade] 基于Redis和Zookeeper的分布式锁实现增加注释，两者对于超时时间的作用完全不一样
 > - [Upgrade] log-server 优化日志文件清理时间复杂度，频繁contains的list容器换为set
