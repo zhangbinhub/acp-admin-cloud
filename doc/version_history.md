@@ -2,6 +2,9 @@
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验
+> - [Upgrade] 升级 spring-cloud-alibaba 至 2.1.1.RELEASE
+> - [Upgrade] 升级核心库至 6.3.1
+> - [Upgrade] 修改各模块中的 nacos 配置
 > - [Upgrade] 更新文档
 ##### v4.0.3
 > - [Upgrade] 基于Redis和Zookeeper的分布式锁实现增加注释，两者对于超时时间的作用完全不一样

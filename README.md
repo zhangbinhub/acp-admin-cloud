@@ -7,7 +7,8 @@
 ## 相关组件版本
 - [Spring Boot 2.1.10.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR3](http://projects.spring.io/spring-cloud)
-- [Acp 6.3.0](https://github.com/zhangbin1010/acp)
+- [Spring Cloud Alibaba 2.1.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Acp 6.3.1](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -24,6 +25,7 @@
 - junit5
 - Nacos
 - Sentinel
+- spring-cloud-alibaba
 - spring-cloud
     - spring-boot
         - spring-aop
