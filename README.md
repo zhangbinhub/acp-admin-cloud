@@ -272,3 +272,5 @@ http://127.0.0.1:5601
 ### （九）其他自定义服务
 > - 依赖
 >   - cloud:acp-admin-cloud-dependencies
+
+## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
