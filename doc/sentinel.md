@@ -30,6 +30,7 @@ spring.cloud.sentinel.datasource.ds4.apollo.rule-type=param-flow
 - d1, ds2, ds3, ds4 是 ReadableDataSource 的名字，可随意编写。后面的 file ，zk ，nacos , apollo 就是对应具体的数据源。 它们后面的配置就是这些具体数据源各自的配置。
 - rule-type 配置表示该数据源中的规则属于哪种类型的规则(flow，degrade，authority，system, param-flow, gw-flow, gw-api-group)。
 - 默认情况下，xml 格式是不支持的。需要添加 jackson-dataformat-xml 依赖后才会自动生效。
+
 ## 二、[资源命名](https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel)
 ### （一）Feign 支持
 - 配置文件打开 Sentinel 对 Feign 的支持：
@@ -44,6 +45,7 @@ spring.cloud.sentinel.datasource.ds4.apollo.rule-type=param-flow
 - httpmethod:schema://host:port/path：协议、主机、端口和路径
 - httpmethod:schema://host:port：协议、主机和端口
 - 以 https://www.taobao.com/test 这个 url 并使用 GET 方法为例。对应的资源名有两种粒度，分别是 GET:https://www.taobao.com 以及 GET:https://www.taobao.com/test
+
 ## 三、[规则配置](https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8)
 ### （一）流量控制规则
 rule-type: flow
@@ -98,3 +100,18 @@ rule-type: param-flow
 |paramFlowItemList|参数例外项，可以针对指定的参数值单独设置限流阈值，不受前面 count 阈值的限制。仅支持基本类型和字符串类型	
 |clusterMode|是否是集群参数流控规则|false
 |clusterConfig|集群流控相关配置
+
+## 四、配置中心配置样例
+```json
+[{
+    "resource": "GET:http://oauth2-server/inner/application",
+    "grade": 0,
+    "count": 60000,
+    "timeWindow": 10
+},{
+    "resource": "GET:http://oauth2-server/inner/tokeninfo",
+    "grade": 0,
+    "count": 60000,
+    "timeWindow": 10
+}]
+```
