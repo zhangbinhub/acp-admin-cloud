@@ -4,6 +4,8 @@
 > - [Upgrade] 去除模块功能编码校验
 > - [Upgrade] 升级 spring-cloud-alibaba 至 2.1.1.RELEASE
 > - [Upgrade] 更新 Spring Cloud 至 Greenwich.SR4
+> - [Upgrade] 升级 kotlin 至 1.3.60
+> - [Upgrade] 升级 gradle 至 6.0.1
 > - [Upgrade] 升级核心库至 6.3.1
 > - [Upgrade] 修改各模块中的 nacos 配置
 > - [Upgrade] junit5 降级至 5.3.2
