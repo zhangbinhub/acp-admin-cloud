@@ -12,6 +12,6 @@ import pers.acp.admin.log.entity.RouteLogHistory
  */
 interface RouteLogHistoryRepository : BaseRepository<RouteLogHistory, String> {
     @Modifying(clearAutomatically = true)
-    @Query("delete from OperateLogHistory where requestTime<:time")
+    @Query("delete from RouteLogHistory where requestTime<:time")
     fun deleteAllByRequestTimeLessThan(@Param("time") time: Long)
 }
