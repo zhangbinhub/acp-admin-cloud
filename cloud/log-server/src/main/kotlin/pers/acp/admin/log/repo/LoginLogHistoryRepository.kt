@@ -1,5 +1,6 @@
 package pers.acp.admin.log.repo
 
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import pers.acp.admin.common.base.BaseRepository
@@ -12,4 +13,8 @@ import pers.acp.admin.log.entity.LoginLogHistory
 interface LoginLogHistoryRepository : BaseRepository<LoginLogHistory, String> {
     @Query("select clientId,clientName,loginDate,count(id) from LoginLogHistory where requestTime>=:beginTime group by clientId,clientName,loginDate")
     fun loginStatistics(@Param("beginTime") beginTime: Long): MutableList<Array<Any>>
+
+    @Modifying(clearAutomatically = true)
+    @Query("delete from OperateLogHistory where requestTime<:time")
+    fun deleteAllByRequestTimeLessThan(@Param("time") time: Long)
 }

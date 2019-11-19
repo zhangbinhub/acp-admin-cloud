@@ -1,4 +1,6 @@
 ## 版本更新记录
+##### v4.x
+> - [Upgrade] log-server 增加数据库日志记录历史信息清理策略
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验

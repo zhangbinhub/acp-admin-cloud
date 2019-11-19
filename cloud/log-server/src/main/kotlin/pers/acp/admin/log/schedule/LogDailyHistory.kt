@@ -80,7 +80,25 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     override fun afterExecuteFun(result: Any) {
+        if (logServerCustomerConfiguration.maxHistoryDayNumber > 0)
+            doDeleteHistory()
         distributedLock.releaseLock(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
                 logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort)
+    }
+
+    fun doDeleteHistory() {
+        logAdapter.info("开始清理路由、操作、登录日志，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
+        runBlocking {
+            val time = CommonTools.getNowDateTime().withTimeAtStartOfDay().minusDays(logServerCustomerConfiguration.maxHistoryDayNumber).millis
+            launch(Dispatchers.IO) {
+                logHistoryDomain.doDeleteRouteLogHistory(time)
+            }
+            launch(Dispatchers.IO) {
+                logHistoryDomain.doDeleteOperateLogHistory(time)
+            }
+            launch(Dispatchers.IO) {
+                logHistoryDomain.doDeleteLoginLogHistory(time)
+            }
+        }
     }
 }

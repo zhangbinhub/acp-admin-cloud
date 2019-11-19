@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
+import pers.acp.admin.log.constant.LogBackUp
+import pers.acp.core.CommonTools
 
 /**
  * @author zhang by 12/09/2019
@@ -55,6 +57,13 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     @Transactional
+    fun doDeleteRouteLogHistory(time: Long) {
+        logAdapter.info("开始清理历史路由日志...")
+        routeLogHistoryRepository.deleteAllByRequestTimeLessThan(time)
+        logAdapter.info("历史路由日志清理完成")
+    }
+
+    @Transactional
     fun doOperateLogHistory(timeBegin: Long, quantityPerProcess: Int): Int {
         logAdapter.info("开始执行：操作日志迁移至历史库")
         return operateLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
@@ -71,6 +80,13 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     @Transactional
+    fun doDeleteOperateLogHistory(time: Long) {
+        logAdapter.info("开始清理历史操作日志...")
+        operateLogHistoryRepository.deleteAllByRequestTimeLessThan(time)
+        logAdapter.info("历史操作日志清理完成")
+    }
+
+    @Transactional
     fun doLoginLogHistory(timeBegin: Long, quantityPerProcess: Int): Int {
         logAdapter.info("开始执行：登录日志迁移至历史库")
         return loginLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
@@ -84,6 +100,19 @@ constructor(private val logAdapter: LogAdapter,
             }
             it.content.size
         }
+    }
+
+    @Transactional
+    fun doDeleteLoginLogHistory(time: Long) {
+        logAdapter.info("开始清理历史登录日志...")
+        CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogBackUp.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
+            if (it < time) {
+                loginLogHistoryRepository.deleteAllByRequestTimeLessThan(it)
+            } else {
+                loginLogHistoryRepository.deleteAllByRequestTimeLessThan(time)
+            }
+        }
+        logAdapter.info("历史登录日志清理完成")
     }
 
     private fun <T> logEntityToHistoryEntity(srcObj: Any, cls: Class<T>): T =
