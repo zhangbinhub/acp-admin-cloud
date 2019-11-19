@@ -1,6 +1,4 @@
 ## 版本更新记录
-##### v4.x
-> - [Upgrade] log-server 增加数据库日志记录历史信息清理策略
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验
@@ -8,6 +6,7 @@
 > - [Upgrade] 升级核心库至 6.3.1
 > - [Upgrade] 修改各模块中的 nacos 配置
 > - [Upgrade] junit5 降级至 5.3.2
+> - [Upgrade] log-server 增加数据库日志记录历史信息清理策略
 > - [Upgrade] 更新文档
 ##### v4.0.3
 > - [Upgrade] 基于Redis和Zookeeper的分布式锁实现增加注释，两者对于超时时间的作用完全不一样
