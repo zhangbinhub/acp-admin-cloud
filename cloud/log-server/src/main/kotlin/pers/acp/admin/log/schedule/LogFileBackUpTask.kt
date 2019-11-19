@@ -33,7 +33,12 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
     override fun executeFun(): Any? {
         try {
             var day = CalendarTools.getPrevDay(CommonTools.getNowDateTime())
-            for (i in 0 until logServerCustomerConfiguration.maxHistoryDayNumber) {
+            val dayNumber = if (logServerCustomerConfiguration.maxHistoryDayNumber > 0) {
+                logServerCustomerConfiguration.maxHistoryDayNumber
+            } else {
+                1
+            }
+            for (i in 0 until dayNumber) {
                 val logFileDate = CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT)
                 val logFold = File(logServerCustomerConfiguration.logFilePath)
                 val logFoldPath = logFold.canonicalPath
@@ -72,7 +77,8 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
 
     override fun afterExecuteFun(result: Any) {
         try {
-            doClearBackUpFiles()
+            if (logServerCustomerConfiguration.maxHistoryDayNumber > 0)
+                doClearBackUpFiles()
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
         }
