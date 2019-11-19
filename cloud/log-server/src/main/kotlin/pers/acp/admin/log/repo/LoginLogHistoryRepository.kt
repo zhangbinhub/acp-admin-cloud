@@ -15,6 +15,6 @@ interface LoginLogHistoryRepository : BaseRepository<LoginLogHistory, String> {
     fun loginStatistics(@Param("beginTime") beginTime: Long): MutableList<Array<Any>>
 
     @Modifying(clearAutomatically = true)
-    @Query("delete from OperateLogHistory where requestTime<:time")
+    @Query("delete from LoginLogHistory where requestTime<:time")
     fun deleteAllByRequestTimeLessThan(@Param("time") time: Long)
 }
