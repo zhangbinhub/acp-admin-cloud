@@ -86,7 +86,7 @@ constructor(private val logAdapter: LogAdapter,
                 logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort)
     }
 
-    fun doDeleteHistory() {
+    private fun doDeleteHistory() {
         logAdapter.info("开始清理路由、操作、登录日志，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
         runBlocking {
             val time = CommonTools.getNowDateTime().withTimeAtStartOfDay().minusDays(logServerCustomerConfiguration.maxHistoryDayNumber).millis
