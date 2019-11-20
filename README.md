@@ -100,8 +100,6 @@ gradle全局参数：
 ### （二）自定义任务
 - clearPj 清理所有输出文件
 - release 编译、打包并输出
-- install 打包部署至本地 maven 仓库
-- uploadArchives 打包部署至远程 maven 仓库，需自行创建文件 gradle/deploy.gradle，配置对应的参数，文件内容参考如下：
 ```groovy
 ext {
     mavenUploadUrl = "http://localhost:8081/nexus/content/repositories/thirdparty"
