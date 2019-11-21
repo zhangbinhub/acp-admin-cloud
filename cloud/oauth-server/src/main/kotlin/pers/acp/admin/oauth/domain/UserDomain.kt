@@ -182,7 +182,7 @@ constructor(userRepository: UserRepository,
     }
 
     private fun removeToken(loginNo: String) {
-        applicationRepository.findAllByOrderByAppNameAsc().forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
+        applicationRepository.findAllByOrderByIdentifyAscAppNameAsc().forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
     }
 
     fun doQuery(userPo: UserPo): Page<UserVo> =

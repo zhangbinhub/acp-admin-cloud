@@ -1,4 +1,6 @@
 ## 版本更新记录
+##### v4.x
+> - [Upgrade] 修改应用列表获取排序规则
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验
