@@ -1,6 +1,5 @@
 package pers.acp.admin.oauth.base
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.constant.RoleCode
@@ -12,8 +11,7 @@ import pers.acp.admin.oauth.repo.UserRepository
  * @since JDK 11
  */
 @Transactional(readOnly = true)
-abstract class OauthBaseDomain @Autowired
-constructor(protected val userRepository: UserRepository) : BaseDomain() {
+abstract class OauthBaseDomain(protected val userRepository: UserRepository) : BaseDomain() {
 
     fun findCurrUserInfo(loginNo: String): User? = userRepository.findByLoginNo(loginNo).orElse(null)
 
