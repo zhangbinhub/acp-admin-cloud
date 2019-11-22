@@ -39,8 +39,9 @@ constructor(userRepository: UserRepository,
                         sortModuleFuncList(organization.children)
                     }
                 }
-                moduleFuncList.sortBy { it.code }
-                moduleFuncList
+                moduleFuncList.apply {
+                    this.sortBy { it.code }
+                }
             }
 
     fun getModuleFuncListByAppId(appId: String): List<ModuleFunc> =
@@ -53,19 +54,20 @@ constructor(userRepository: UserRepository,
             }
 
     private fun doSave(moduleFunc: ModuleFunc, moduleFuncPo: ModuleFuncPo): ModuleFunc =
-            moduleFuncRepository.save(moduleFunc.apply {
-                name = moduleFuncPo.name!!
-                code = moduleFuncPo.code!!
-                roleSet = roleRepository.findAllById(moduleFuncPo.roleIds).toMutableSet()
+            moduleFuncRepository.save(moduleFunc.copy(
+                    name = moduleFuncPo.name!!,
+                    code = moduleFuncPo.code!!,
+                    roleSet = roleRepository.findAllById(moduleFuncPo.roleIds).toMutableSet()
+            ).apply {
                 parentId = moduleFuncPo.parentId!!
             })
 
     @Transactional
     fun doCreate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
-            doSave(ModuleFunc().apply {
-                appId = moduleFuncPo.appId!!
-                covert = true
-            }, moduleFuncPo)
+            doSave(ModuleFunc(
+                    appId = moduleFuncPo.appId!!,
+                    covert = true
+            ), moduleFuncPo)
 
     @Transactional
     @Throws(ServerException::class)
@@ -79,30 +81,19 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc {
-        val moduleFuncOptional = moduleFuncRepository.findById(moduleFuncPo.id!!)
-        if (moduleFuncOptional.isEmpty) {
-            throw ServerException("找不到模块功能信息")
-        }
-        return doSave(moduleFuncOptional.get(), moduleFuncPo)
-    }
+    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc = doSave(moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
 
     @Throws(ServerException::class)
-    fun getModuleFuncInfo(moduleFuncId: String): ModuleFuncVo {
-        val moduleFuncOptional = moduleFuncRepository.findById(moduleFuncId)
-        if (moduleFuncOptional.isEmpty) {
-            throw ServerException("找不到模块功能信息")
-        }
-        return moduleFuncOptional.get().let { item ->
-            ModuleFuncVo(
-                    id = item.id,
-                    appId = item.appId,
-                    code = item.code,
-                    name = item.name,
-                    parentId = item.parentId,
-                    roleIds = item.roleSet.map { it.id }.toMutableList()
-            )
-        }
-    }
+    fun getModuleFuncInfo(moduleFuncId: String): ModuleFuncVo =
+            moduleFuncRepository.getOne(moduleFuncId).let { item ->
+                ModuleFuncVo(
+                        id = item.id,
+                        appId = item.appId,
+                        code = item.code,
+                        name = item.name,
+                        parentId = item.parentId,
+                        roleIds = item.roleSet.map { it.id }.toMutableList()
+                )
+            }
 
 }

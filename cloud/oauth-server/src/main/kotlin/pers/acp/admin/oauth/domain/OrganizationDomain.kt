@@ -37,16 +37,18 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                         sortOrganizationList(organization.children)
                     }
                 }
-                organizationList.sortBy { it.sort }
-                organizationList
+                organizationList.apply {
+                    this.sortBy { it.sort }
+                }
             }
 
     private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
-            organizationRepository.save(organization.apply {
-                name = organizationPo.name!!
-                code = organizationPo.code
-                sort = organizationPo.sort
-                userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
+            organizationRepository.save(organization.copy(
+                    name = organizationPo.name!!,
+                    code = organizationPo.code,
+                    sort = organizationPo.sort,
+                    userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
+            ).apply {
                 parentId = organizationPo.parentId!!
             })
 
@@ -101,11 +103,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization {
-        val organizationOptional = organizationRepository.findById(organizationPo.id!!)
-        if (organizationOptional.isEmpty) {
-            throw ServerException("找不到机构信息")
-        }
-        val organization = organizationOptional.get()
+        val organization = organizationRepository.getOne(organizationPo.id!!)
         if (isNotPermit(loginNo, organization.id)) {
             throw ServerException("没有权限做此操作，请联系系统管理员")
         }
@@ -116,21 +114,16 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).organizationMngSet.toMutableList()
 
     @Throws(ServerException::class)
-    fun getOrgInfo(orgId: String): OrganizationVo {
-        val organizationOptional = organizationRepository.findById(orgId)
-        if (organizationOptional.isEmpty) {
-            throw ServerException("找不到机构信息")
-        }
-        return organizationOptional.get().let { item ->
-            OrganizationVo(
-                    id = item.id,
-                    code = item.code,
-                    name = item.name,
-                    parentId = item.parentId,
-                    sort = item.sort,
-                    userIds = item.userSet.map { it.id }.toMutableList()
-            )
-        }
-    }
+    fun getOrgInfo(orgId: String): OrganizationVo =
+            organizationRepository.getOne(orgId).let { item ->
+                OrganizationVo(
+                        id = item.id,
+                        code = item.code,
+                        name = item.name,
+                        parentId = item.parentId,
+                        sort = item.sort,
+                        userIds = item.userSet.map { it.id }.toMutableList()
+                )
+            }
 
 }

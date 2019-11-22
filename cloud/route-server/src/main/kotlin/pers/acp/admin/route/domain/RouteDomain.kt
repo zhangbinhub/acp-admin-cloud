@@ -38,15 +38,15 @@ constructor(private val logAdapter: LogAdapter,
             private val distributedLock: DistributedLock) : BaseDomain() {
 
     private fun doSave(route: Route, routePo: RoutePo): Route =
-            route.apply {
-                uri = routePo.uri
-                routeId = routePo.routeId
-                predicates = routePo.predicates!!
-                filters = routePo.filters
-                enabled = routePo.enabled ?: false
-                orderNum = routePo.orderNum
-                remarks = routePo.remarks
-            }.let {
+            route.copy(
+                    uri = routePo.uri,
+                    routeId = routePo.routeId,
+                    predicates = routePo.predicates!!,
+                    filters = routePo.filters,
+                    enabled = routePo.enabled ?: false,
+                    orderNum = routePo.orderNum,
+                    remarks = routePo.remarks
+            ).let {
                 routeRepository.save(it)
             }
 

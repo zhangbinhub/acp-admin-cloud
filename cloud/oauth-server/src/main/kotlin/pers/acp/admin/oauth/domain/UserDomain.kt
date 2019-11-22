@@ -68,15 +68,15 @@ constructor(userRepository: UserRepository,
     }
 
     private fun doSave(user: User, userPo: UserPo): User =
-            doSaveUser(user.apply {
-                mobile = userPo.mobile!!
-                name = userPo.name!!
-                enabled = userPo.enabled!!
-                levels = userPo.levels!!
-                sort = userPo.sort
-                organizationSet = organizationRepository.findAllById(userPo.orgIds).toMutableSet()
-                organizationMngSet = organizationRepository.findAllById(userPo.orgMngIds).toMutableSet()
-            })
+            doSaveUser(user.copy(
+                    mobile = userPo.mobile!!,
+                    name = userPo.name!!,
+                    enabled = userPo.enabled!!,
+                    levels = userPo.levels!!,
+                    sort = userPo.sort,
+                    organizationSet = organizationRepository.findAllById(userPo.orgIds).toMutableSet(),
+                    organizationMngSet = organizationRepository.findAllById(userPo.orgMngIds).toMutableSet()
+            ))
 
     @Transactional
     fun doSaveUser(user: User): User = userRepository.save(user)
@@ -107,11 +107,11 @@ constructor(userRepository: UserRepository,
         if (checkUser != null) {
             throw ServerException("手机号码已存在，请重新输入")
         }
-        return doSave(User().apply {
-            this.loginNo = userPo.loginNo!!
-            this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
-            this.roleSet = roleSet
-        }, userPo)
+        return doSave(User(
+                loginNo = userPo.loginNo!!,
+                password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!),
+                roleSet = roleSet
+        ), userPo)
     }
 
     @Transactional
@@ -119,11 +119,7 @@ constructor(userRepository: UserRepository,
     fun doUpdate(loginNo: String, userPo: UserPo): User {
         val roleSet = roleRepository.findAllById(userPo.roleIds).toMutableSet()
         validatePermit(loginNo, userPo, roleSet, false)
-        val userOptional = userRepository.findById(userPo.id!!)
-        if (userOptional.isEmpty) {
-            throw ServerException("找不到用户信息")
-        }
-        return doSave(userOptional.get().apply {
+        return doSave(userRepository.getOne(userPo.id!!).apply {
             var checkUser = userRepository.findByLoginNoAndIdNot(userPo.loginNo!!, this.id).orElse(null)
             if (checkUser != null) {
                 throw ServerException("登录账号已存在，请重新输入")
@@ -143,24 +139,19 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdatePwd(loginNo: String, userId: String) {
-        val userOptional = userRepository.findById(userId)
-        if (userOptional.isEmpty) {
-            throw ServerException("找不到用户信息")
-        }
-        userOptional.get().apply {
-            (findCurrUserInfo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
-                if (!isSuper(it)) {
-                    if (it.levels >= this.levels) {
-                        throw ServerException("不能修改级别比自身大或相等的用户信息")
+    fun doUpdatePwd(loginNo: String, userId: String): User =
+            userRepository.getOne(userId).apply {
+                (findCurrUserInfo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
+                    if (!isSuper(it)) {
+                        if (it.levels >= this.levels) {
+                            throw ServerException("不能修改级别比自身大或相等的用户信息")
+                        }
                     }
+                    this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + this.loginNo)
+                    userRepository.save(this)
+                    removeToken(loginNo)
                 }
-                this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + this.loginNo)
-                userRepository.save(this)
-                removeToken(loginNo)
             }
-        }
-    }
 
     @Transactional
     @Throws(ServerException::class)
@@ -216,7 +207,6 @@ constructor(userRepository: UserRepository,
     fun getUserInfo(userId: String): User? = userRepository.findById(userId).orElse(null)
 
     companion object {
-
         private const val DEFAULT_PASSWORD = "000000"
     }
 

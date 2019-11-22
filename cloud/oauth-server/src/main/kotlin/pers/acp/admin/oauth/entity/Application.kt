@@ -14,39 +14,37 @@ import javax.persistence.*
 @Entity
 @Table(name = "t_application")
 @ApiModel("应用信息")
-class Application {
+data class Application(
+        @Id
+        @GenericGenerator(name = "idGenerator", strategy = "uuid")
+        @GeneratedValue(generator = "idGenerator")
+        @Column(length = 36, nullable = false)
+        @ApiModelProperty("应用ID")
+        var id: String = "",
 
-    @Id
-    @GenericGenerator(name = "idGenerator", strategy = "uuid")
-    @GeneratedValue(generator = "idGenerator")
-    @Column(length = 36, nullable = false)
-    @ApiModelProperty("应用ID")
-    var id: String = ""
+        @ApiModelProperty("应用名称")
+        @Column(nullable = false)
+        var appName: String = "",
 
-    @ApiModelProperty("应用名称")
-    @Column(nullable = false)
-    var appName: String = ""
+        @ApiModelProperty("密钥")
+        @Column(nullable = false)
+        var secret: String = CommonTools.getUuid32(),
 
-    @ApiModelProperty("密钥")
-    @Column(nullable = false)
-    var secret: String = CommonTools.getUuid32()
+        @ApiModelProperty("权限范围，多个权限“,”分隔")
+        var scope: String? = null,
 
-    @ApiModelProperty("权限范围，多个权限“,”分隔")
-    var scope: String? = null
+        @ApiModelProperty("应用标识")
+        var identify: String? = null,
 
-    @ApiModelProperty("应用标识")
-    var identify: String? = null
+        @ApiModelProperty("token 有效期")
+        @Column(nullable = false)
+        var accessTokenValiditySeconds: Int = 86400,
 
-    @ApiModelProperty("token 有效期")
-    @Column(nullable = false)
-    var accessTokenValiditySeconds: Int = 86400
+        @ApiModelProperty("refresh token 有效期")
+        @Column(nullable = false)
+        var refreshTokenValiditySeconds: Int = 2592000,
 
-    @ApiModelProperty("refresh token 有效期")
-    @Column(nullable = false)
-    var refreshTokenValiditySeconds: Int = 2592000
-
-    @ApiModelProperty("是否可删除")
-    @Column(nullable = false)
-    var covert: Boolean = true
-
-}
+        @ApiModelProperty("是否可删除")
+        @Column(nullable = false)
+        var covert: Boolean = true
+)

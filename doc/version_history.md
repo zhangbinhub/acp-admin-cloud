@@ -1,7 +1,7 @@
 ## 版本更新记录
-##### v4.x
+##### v4.0.5
 > - [Upgrade] 修改应用列表获取排序规则
-> - [Upgrade] 优化代码
+> - [Upgrade] 调整所有 Entity 写法，统一使用 data class
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验
