@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.log.constant.LogApi
-import pers.acp.admin.log.constant.LogBackUp
+import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.constant.LogFileExpression
 import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
@@ -50,7 +50,7 @@ constructor(private val logAdapter: LogAdapter,
     @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
-            CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogBackUp.LOGIN_LOG_STATISTICS_MAX_MONTH).let {
+            CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).let {
                 ResponseEntity.ok(logDomain.loginStatistics(it.millis))
             }
 

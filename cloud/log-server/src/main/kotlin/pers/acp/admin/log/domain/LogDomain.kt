@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.constant.TokenConstant
+import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.entity.LoginLog
 import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
@@ -96,9 +97,9 @@ constructor(private val logAdapter: LogAdapter,
             var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
             var count = 1
             while (optionalRouteLog.isEmpty) {
-                delay(1000)
+                delay(LogConstant.ROUTE_LOG_QUERY_INTERVAL_TIME)
                 optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
-                if (++count >= 300) {
+                if (++count >= LogConstant.ROUTE_LOG_QUERY_MAX_NUMBER) {
                     break
                 }
             }
