@@ -47,30 +47,25 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
         if (runtimeConfigOptional.isPresent) {
             throw ServerException("参数信息已存在")
         }
-        return RuntimeConfig().apply {
-            name = runtimePo.name!!
-            value = runtimePo.value
-            configDes = runtimePo.configDes
-            enabled = runtimePo.enabled ?: true
-            covert = true
-        }.let {
+        return RuntimeConfig(
+                name = runtimePo.name!!,
+                value = runtimePo.value,
+                configDes = runtimePo.configDes,
+                enabled = runtimePo.enabled ?: true,
+                covert = true
+        ).let {
             runtimeConfigRepository.save(it)
         }
     }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(runtimePo: RuntimePo): RuntimeConfig {
-        val runtimeConfigOptional = runtimeConfigRepository.findById(runtimePo.id!!)
-        if (runtimeConfigOptional.isEmpty) {
-            throw ServerException("找不到参数信息")
-        }
-        return runtimeConfigRepository.save(runtimeConfigOptional.get().apply {
-            value = runtimePo.value
-            enabled = runtimePo.enabled ?: true
-            configDes = runtimePo.configDes
-        })
-    }
+    fun doUpdate(runtimePo: RuntimePo): RuntimeConfig =
+            runtimeConfigRepository.save(runtimeConfigRepository.getOne(runtimePo.id!!).apply {
+                value = runtimePo.value
+                enabled = runtimePo.enabled ?: true
+                configDes = runtimePo.configDes
+            })
 
     @Transactional
     fun doDelete(idList: MutableList<String>) = runtimeConfigRepository.deleteByIdInAndCovert(idList, true)

@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.cloud.stream.annotation.StreamListener
+import org.springframework.http.HttpStatus
 import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.domain.LogDomain
@@ -32,7 +33,7 @@ constructor(private val logAdapter: LogAdapter,
                     }
                 }
                 it.token?.apply {
-                    if (it.responseStatus == 200) {
+                    if (it.responseStatus == HttpStatus.OK.value()) {
                         if (logServerCustomerConfiguration.operateLogEnabled) {
                             GlobalScope.launch(Dispatchers.IO) {
                                 logDomain.doOperateLog(it, message)

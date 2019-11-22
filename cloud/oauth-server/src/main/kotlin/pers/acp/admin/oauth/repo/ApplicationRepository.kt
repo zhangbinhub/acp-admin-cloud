@@ -11,6 +11,6 @@ interface ApplicationRepository : OauthBaseRepository<Application, String> {
 
     fun deleteByIdInAndCovert(idList: MutableList<String>, covert: Boolean)
 
-    fun findAllByOrderByAppNameAsc(): MutableList<Application>
+    fun findAllByOrderByIdentifyAscAppNameAsc(): MutableList<Application>
 
 }

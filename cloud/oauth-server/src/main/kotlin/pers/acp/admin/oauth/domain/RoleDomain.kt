@@ -46,15 +46,15 @@ constructor(userRepository: UserRepository,
     }
 
     private fun doSave(role: Role, rolePo: RolePo): Role =
-            roleRepository.save(role.apply {
-                name = rolePo.name!!
-                code = rolePo.code!!
-                sort = rolePo.sort
-                levels = rolePo.levels
-                userSet = userRepository.findAllById(rolePo.userIds).toMutableSet()
-                menuSet = menuRepository.findAllById(rolePo.menuIds).toMutableSet()
-                moduleFuncSet = moduleFuncRepository.findAllById(rolePo.moduleFuncIds).toMutableSet()
-            })
+            roleRepository.save(role.copy(
+                    name = rolePo.name!!,
+                    code = rolePo.code!!,
+                    sort = rolePo.sort,
+                    levels = rolePo.levels,
+                    userSet = userRepository.findAllById(rolePo.userIds).toMutableSet(),
+                    menuSet = menuRepository.findAllById(rolePo.menuIds).toMutableSet(),
+                    moduleFuncSet = moduleFuncRepository.findAllById(rolePo.moduleFuncIds).toMutableSet()
+            ))
 
     @Transactional
     @Throws(ServerException::class)
@@ -69,7 +69,7 @@ constructor(userRepository: UserRepository,
         if (rolePo.code == RoleCode.SUPER) {
             throw ServerException("不允许创建超级管理员")
         }
-        return doSave(Role().apply { appId = rolePo.appId!! }, rolePo)
+        return doSave(Role(appId = rolePo.appId!!), rolePo)
     }
 
     @Transactional
@@ -92,11 +92,7 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, rolePo: RolePo): Role {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        val roleOptional = roleRepository.findById(rolePo.id!!)
-        if (roleOptional.isEmpty) {
-            throw ServerException("找不到角色信息")
-        }
-        val role = roleOptional.get()
+        val role = roleRepository.getOne(rolePo.id!!)
         if (!isSuper(user)) {
             val currLevel = getRoleMinLevel(role.appId, user)
             if (currLevel > 0 && currLevel >= rolePo.levels) {
@@ -120,23 +116,18 @@ constructor(userRepository: UserRepository,
     }
 
     @Throws(ServerException::class)
-    fun getRoleInfo(roleId: String): RoleVo {
-        val roleOptional = roleRepository.findById(roleId)
-        if (roleOptional.isEmpty) {
-            throw ServerException("找不到角色信息")
-        }
-        return roleOptional.get().let { item ->
-            RoleVo(
-                    id = item.id,
-                    appId = item.appId,
-                    code = item.code,
-                    levels = item.levels,
-                    name = item.name,
-                    sort = item.sort,
-                    userIds = item.userSet.map { it.id }.toMutableList(),
-                    menuIds = item.menuSet.map { it.id }.toMutableList(),
-                    moduleFuncIds = item.moduleFuncSet.map { it.id }.toMutableList()
-            )
-        }
-    }
+    fun getRoleInfo(roleId: String): RoleVo =
+            roleRepository.getOne(roleId).let { item ->
+                RoleVo(
+                        id = item.id,
+                        appId = item.appId,
+                        code = item.code,
+                        levels = item.levels,
+                        name = item.name,
+                        sort = item.sort,
+                        userIds = item.userSet.map { it.id }.toMutableList(),
+                        menuIds = item.menuSet.map { it.id }.toMutableList(),
+                        moduleFuncIds = item.moduleFuncSet.map { it.id }.toMutableList()
+                )
+            }
 }

@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
-import pers.acp.admin.log.constant.LogBackUp
+import pers.acp.admin.log.constant.LogConstant
 import pers.acp.core.CommonTools
 
 /**
@@ -105,7 +105,7 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     fun doDeleteLoginLogHistory(time: Long) {
         logAdapter.info("开始清理历史登录日志...")
-        CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogBackUp.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
+        CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
             if (it < time) {
                 loginLogHistoryRepository.deleteAllByRequestTimeLessThan(it)
             } else {

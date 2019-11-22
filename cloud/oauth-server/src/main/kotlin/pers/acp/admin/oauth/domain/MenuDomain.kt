@@ -37,8 +37,9 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
                         sortMenuList(menu.children)
                     }
                 }
-                menuList.sortBy { it.sort }
-                menuList
+                menuList.apply {
+                    this.sortBy { it.sort }
+                }
             }
 
     fun getMenuList(appId: String, loginNo: String): MutableList<Menu> =
@@ -84,23 +85,24 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
             }
 
     private fun doSave(menu: Menu, menuPo: MenuPo): Menu =
-            menuRepository.save(menu.apply {
-                path = menuPo.path
-                enabled = menuPo.enabled
-                iconType = menuPo.iconType
-                name = menuPo.name!!
-                openType = menuPo.openType
-                sort = menuPo.sort
-                roleSet = roleRepository.findAllById(menuPo.roleIds).toMutableSet()
+            menuRepository.save(menu.copy(
+                    path = menuPo.path,
+                    enabled = menuPo.enabled,
+                    iconType = menuPo.iconType,
+                    name = menuPo.name!!,
+                    openType = menuPo.openType,
+                    sort = menuPo.sort,
+                    roleSet = roleRepository.findAllById(menuPo.roleIds).toMutableSet()
+            ).apply {
                 parentId = menuPo.parentId!!
             })
 
     @Transactional
     fun doCreate(menuPo: MenuPo): Menu =
-            doSave(Menu().apply {
-                appId = menuPo.appId!!
-                covert = true
-            }, menuPo)
+            doSave(Menu(
+                    appId = menuPo.appId!!,
+                    covert = true
+            ), menuPo)
 
     @Transactional
     @Throws(ServerException::class)
@@ -114,34 +116,23 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(menuPo: MenuPo): Menu {
-        val menuOptional = menuRepository.findById(menuPo.id!!)
-        if (menuOptional.isEmpty) {
-            throw ServerException("找不到菜单信息")
-        }
-        return doSave(menuOptional.get(), menuPo)
-    }
+    fun doUpdate(menuPo: MenuPo): Menu = doSave(menuRepository.getOne(menuPo.id!!), menuPo)
 
     @Throws(ServerException::class)
-    fun getMenuInfo(menuId: String): MenuVo {
-        val menuOptional = menuRepository.findById(menuId)
-        if (menuOptional.isEmpty) {
-            throw ServerException("找不到菜单信息")
-        }
-        return menuOptional.get().let { item ->
-            MenuVo(
-                    id = item.id,
-                    appId = item.appId,
-                    enabled = item.enabled,
-                    iconType = item.iconType,
-                    name = item.name,
-                    openType = item.openType,
-                    parentId = item.parentId,
-                    path = item.path,
-                    sort = item.sort,
-                    roleIds = item.roleSet.map { it.id }.toMutableList()
-            )
-        }
-    }
+    fun getMenuInfo(menuId: String): MenuVo =
+            menuRepository.getOne(menuId).let { item ->
+                MenuVo(
+                        id = item.id,
+                        appId = item.appId,
+                        enabled = item.enabled,
+                        iconType = item.iconType,
+                        name = item.name,
+                        openType = item.openType,
+                        parentId = item.parentId,
+                        path = item.path,
+                        sort = item.sort,
+                        roleIds = item.roleSet.map { it.id }.toMutableList()
+                )
+            }
 
 }

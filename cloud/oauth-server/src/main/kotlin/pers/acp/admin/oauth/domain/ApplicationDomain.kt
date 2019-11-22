@@ -27,7 +27,7 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     fun getAppList(user: OAuth2Authentication): MutableList<Application> {
         val currUserInfo = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(currUserInfo)) {
-            applicationRepository.findAllByOrderByAppNameAsc()
+            applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
         } else {
             applicationRepository.findById(user.oAuth2Request.clientId).let {
                 if (it.isPresent) {
@@ -41,47 +41,39 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
 
     @Transactional
     fun doCreate(applicationPo: ApplicationPo): Application =
-            Application().apply {
-                appName = applicationPo.appName!!
-                secret = CommonTools.getUuid32()
-                scope = applicationPo.scope?.trim()?.replace("，", ",") ?: ""
-                identify = applicationPo.identify?.trim() ?: ""
-                accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
-                refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
-                covert = true
-            }.let {
+            Application(
+                    appName = applicationPo.appName!!,
+                    secret = CommonTools.getUuid32(),
+                    scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
+                    identify = applicationPo.identify?.trim() ?: "",
+                    accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
+                    refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds,
+                    covert = true
+            ).let {
                 applicationRepository.save(it)
             }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(applicationPo: ApplicationPo): Application {
-        val applicationOptional = applicationRepository.findById(applicationPo.id!!)
-        if (applicationOptional.isEmpty) {
-            throw ServerException("找不到信息")
-        }
-        return applicationOptional.get().let {
-            it.appName = applicationPo.appName!!
-            it.scope = applicationPo.scope?.trim()?.replace("，", ",") ?: ""
-            it.identify = applicationPo.identify?.trim() ?: ""
-            it.accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds
-            it.refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
-            applicationRepository.save(it)
-        }
-    }
+    fun doUpdate(applicationPo: ApplicationPo): Application =
+            applicationRepository.getOne(applicationPo.id!!).copy(
+                    appName = applicationPo.appName!!,
+                    scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
+                    identify = applicationPo.identify?.trim() ?: "",
+                    accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
+                    refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
+            ).let {
+                applicationRepository.save(it)
+            }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdateSecret(appId: String): Application {
-        val applicationOptional = applicationRepository.findById(appId)
-        if (applicationOptional.isEmpty) {
-            throw ServerException("找不到信息")
-        }
-        return applicationOptional.get().let {
-            it.secret = CommonTools.getUuid32()
-            applicationRepository.save(it)
-        }
-    }
+    fun doUpdateSecret(appId: String): Application =
+            applicationRepository.getOne(appId).copy(
+                    secret = CommonTools.getUuid32()
+            ).let {
+                applicationRepository.save(it)
+            }
 
     @Transactional
     fun doDelete(idList: MutableList<String>) = applicationRepository.deleteByIdInAndCovert(idList, true)
