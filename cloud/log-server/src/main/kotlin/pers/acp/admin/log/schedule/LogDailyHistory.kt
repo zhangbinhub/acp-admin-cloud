@@ -34,14 +34,17 @@ constructor(private val logAdapter: LogAdapter,
                     60 * 1000)
 
     override fun executeFun(): Any? {
-        val todayBeginTime = CommonTools.getNowDateTime().withTimeAtStartOfDay().millis
+        /**
+         * 迁移T-1之前的数据，保留T-1和T日
+         */
+        val beginTime = CommonTools.getNowDateTime().minusDays(1).withTimeAtStartOfDay().millis
         runBlocking {
             launch(Dispatchers.IO) {
                 try {
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doRouteLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doRouteLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 路由日志共迁移${totalNumber}条 ===================")
@@ -54,7 +57,7 @@ constructor(private val logAdapter: LogAdapter,
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doOperateLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doOperateLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 操作日志共迁移${totalNumber}条 ===================")
@@ -67,7 +70,7 @@ constructor(private val logAdapter: LogAdapter,
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doLoginLogHistory(todayBeginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doLoginLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 登录日志共迁移${totalNumber}条 ===================")
