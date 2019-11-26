@@ -16,6 +16,7 @@ import pers.acp.admin.route.constant.RouteApi
 import pers.acp.admin.route.domain.RouteDomain
 import pers.acp.admin.route.po.RoutePo
 import pers.acp.admin.route.entity.Route
+import pers.acp.admin.route.po.RouteQueryPo
 import pers.acp.admin.route.producer.instance.UpdateRouteProducer
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -80,12 +81,8 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody routePo: RoutePo): ResponseEntity<Page<Route>> {
-        if (routePo.queryParam == null) {
-            throw ServerException("分页查询参数不能为空")
-        }
-        return ResponseEntity.ok(routeDomain.doQuery(routePo))
-    }
+    fun query(@RequestBody routeQueryPo: RouteQueryPo): ResponseEntity<Page<Route>> =
+            ResponseEntity.ok(routeDomain.doQuery(routeQueryPo))
 
     @ApiOperation(value = "刷新路由配置信息")
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))

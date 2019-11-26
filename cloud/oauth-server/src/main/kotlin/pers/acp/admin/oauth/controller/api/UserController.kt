@@ -18,6 +18,7 @@ import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.UserInfoPo
 import pers.acp.admin.oauth.po.UserPo
+import pers.acp.admin.oauth.po.UserQueryPo
 import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -135,12 +136,8 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @PreAuthorize(UserConfigExpression.userQuery)
     @PostMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody userPo: UserPo): ResponseEntity<Page<UserVo>> {
-        if (userPo.queryParam == null) {
-            throw ServerException("分页查询参数不能为空")
-        }
-        return ResponseEntity.ok(userDomain.doQuery(userPo))
-    }
+    fun query(@RequestBody @Valid userQueryPo: UserQueryPo): ResponseEntity<Page<UserVo>> =
+            ResponseEntity.ok(userDomain.doQuery(userQueryPo))
 
     @ApiOperation(value = "查询用户信息", notes = "根据用户ID查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))

@@ -18,6 +18,7 @@ import pers.acp.admin.oauth.bus.publish.RefreshEventPublish
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.admin.oauth.po.ApplicationPo
+import pers.acp.admin.oauth.po.ApplicationQueryPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
@@ -87,10 +88,8 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
     @PreAuthorize(AppConfigExpression.appQuery)
     @PostMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody applicationPo: ApplicationPo): ResponseEntity<Page<Application>> =
-            (applicationPo.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
-                return ResponseEntity.ok(applicationDomain.doQuery(applicationPo))
-            }
+    fun query(@RequestBody @Valid applicationQueryPo: ApplicationQueryPo): ResponseEntity<Page<Application>> =
+            ResponseEntity.ok(applicationDomain.doQuery(applicationQueryPo))
 
     @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")
     @PreAuthorize(AppConfigExpression.sysConfig)

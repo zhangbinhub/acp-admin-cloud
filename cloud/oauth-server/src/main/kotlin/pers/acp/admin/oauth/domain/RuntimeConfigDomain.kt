@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.admin.oauth.po.RuntimePo
+import pers.acp.admin.oauth.po.RuntimeQueryPo
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
@@ -70,19 +71,19 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
     @Transactional
     fun doDelete(idList: MutableList<String>) = runtimeConfigRepository.deleteByIdInAndCovert(idList, true)
 
-    fun doQuery(runtimePo: RuntimePo): Page<RuntimeConfig> =
+    fun doQuery(runtimeQueryPo: RuntimeQueryPo): Page<RuntimeConfig> =
             runtimeConfigRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(runtimePo.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + runtimePo.name + "%"))
+                if (!CommonTools.isNullStr(runtimeQueryPo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + runtimeQueryPo.name + "%"))
                 }
-                if (!CommonTools.isNullStr(runtimePo.value)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("value").`as`(String::class.java), "%" + runtimePo.value + "%"))
+                if (!CommonTools.isNullStr(runtimeQueryPo.value)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("value").`as`(String::class.java), "%" + runtimeQueryPo.value + "%"))
                 }
-                if (runtimePo.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), runtimePo.enabled))
+                if (runtimeQueryPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), runtimeQueryPo.enabled))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(runtimePo.queryParam!!))
+            }, buildPageRequest(runtimeQueryPo.queryParam!!))
 
 }
