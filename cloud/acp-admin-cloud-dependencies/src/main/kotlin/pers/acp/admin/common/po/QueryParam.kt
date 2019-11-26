@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank
  * @author zhang by 11/01/2019
  * @since JDK 11
  */
-@ApiModel(value = "分页查询参数", description = "非查询请求时可为空")
+@ApiModel(value = "分页查询参数")
 data class QueryParam(
         @ApiModelProperty(value = "当前页号", required = true, position = 1)
         var currPage: Int = 1,

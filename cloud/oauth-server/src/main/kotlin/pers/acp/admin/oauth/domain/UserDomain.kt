@@ -10,6 +10,7 @@ import pers.acp.admin.oauth.entity.Organization
 import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.UserPo
+import pers.acp.admin.oauth.po.UserQueryPo
 import pers.acp.admin.oauth.repo.ApplicationRepository
 import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.RoleRepository
@@ -176,28 +177,28 @@ constructor(userRepository: UserRepository,
         applicationRepository.findAllByOrderByIdentifyAscAppNameAsc().forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
     }
 
-    fun doQuery(userPo: UserPo): Page<UserVo> =
+    fun doQuery(userQueryPo: UserQueryPo): Page<UserVo> =
             userRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList = ArrayList<Predicate>()
-                if (!CommonTools.isNullStr(userPo.loginNo)) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userPo.loginNo))
+                if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userQueryPo.loginNo))
                 }
-                if (!CommonTools.isNullStr(userPo.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userPo.name + "%"))
+                if (!CommonTools.isNullStr(userQueryPo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.name + "%"))
                 }
-                if (userPo.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userPo.enabled))
+                if (userQueryPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
                 }
-                if (!CommonTools.isNullStr(userPo.orgName)) {
+                if (!CommonTools.isNullStr(userQueryPo.orgName)) {
                     val joinOrg = root.join<User, Organization>("organizationSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPo.orgName + "%"))
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
                 }
-                if (!CommonTools.isNullStr(userPo.roleName)) {
+                if (!CommonTools.isNullStr(userQueryPo.roleName)) {
                     val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userPo.roleName + "%"))
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(userPo.queryParam!!))
+            }, buildPageRequest(userQueryPo.queryParam!!))
                     .map { user ->
                         val userVO = UserVo()
                         BeanUtils.copyProperties(user, userVO)

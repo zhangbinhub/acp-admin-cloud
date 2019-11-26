@@ -15,6 +15,7 @@ import pers.acp.admin.route.definition.RouteConstant
 import pers.acp.admin.route.definition.RouteDefinition
 import pers.acp.admin.route.entity.Route
 import pers.acp.admin.route.po.RoutePo
+import pers.acp.admin.route.po.RouteQueryPo
 import pers.acp.admin.route.repo.RouteRepository
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -60,17 +61,17 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     fun doDelete(idList: List<String>) = routeRepository.deleteByIdInAndEnabled(idList, false)
 
-    fun doQuery(routePo: RoutePo): Page<Route> =
+    fun doQuery(routeQueryPo: RouteQueryPo): Page<Route> =
             routeRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList: MutableList<Predicate> = mutableListOf()
-                if (routePo.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), routePo.enabled))
+                if (routeQueryPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), routeQueryPo.enabled))
                 }
-                if (!CommonTools.isNullStr(routePo.routeId)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("routeId").`as`(String::class.java), "%" + routePo.routeId + "%"))
+                if (!CommonTools.isNullStr(routeQueryPo.routeId)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("routeId").`as`(String::class.java), "%" + routeQueryPo.routeId + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(routePo.queryParam!!))
+            }, buildPageRequest(routeQueryPo.queryParam!!))
 
     @Transactional
     @Throws(ServerException::class)

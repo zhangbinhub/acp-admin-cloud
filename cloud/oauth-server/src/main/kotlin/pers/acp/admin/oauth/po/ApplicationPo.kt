@@ -2,7 +2,6 @@ package pers.acp.admin.oauth.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import pers.acp.admin.common.po.QueryParam
 
 import javax.validation.constraints.NotBlank
 
@@ -29,8 +28,5 @@ data class ApplicationPo(
         var accessTokenValiditySeconds: Int = 86400,
 
         @ApiModelProperty(value = "refresh token 有效期，单位秒", required = true, position = 5)
-        var refreshTokenValiditySeconds: Int = 2592000,
-
-        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
-        var queryParam: QueryParam? = null
+        var refreshTokenValiditySeconds: Int = 2592000
 )

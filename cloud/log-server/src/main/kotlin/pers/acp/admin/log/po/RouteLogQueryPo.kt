@@ -2,14 +2,14 @@ package pers.acp.admin.log.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import pers.acp.admin.common.po.QueryParam
+import pers.acp.admin.common.base.BaseQueryPo
 
 /**
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
 @ApiModel("网关路由日志查询参数")
-data class RouteLogPo(
+data class RouteLogQueryPo(
         @ApiModelProperty("是否查询往日历史数据，true-往日历史，false-当日数据")
         var history: Boolean = false,
 
@@ -38,8 +38,5 @@ data class RouteLogPo(
         var endTime: Long? = null,
 
         @ApiModelProperty("响应状态码")
-        var responseStatus: Int? = null,
-
-        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
-        var queryParam: QueryParam? = null
-)
+        var responseStatus: Int? = null
+) : BaseQueryPo()

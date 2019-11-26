@@ -5,6 +5,7 @@
 > - [Upgrade] 修改 log-server 历史数据迁移策略，保留T-1和T日数据
 > - [Upgrade] 优化 log-server 代码
 > - [Upgrade] 升级核心库至 6.3.2
+> - [Upgrade] 分页查询参数使用单独的po对象，分页参数使用Valid校验
 ##### v4.0.4
 > - [Upgrade] acp-admin-cloud-dependencies 模块增加feign client，获取运行参数
 > - [Upgrade] 去除模块功能编码校验

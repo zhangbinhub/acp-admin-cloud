@@ -2,7 +2,6 @@ package pers.acp.admin.oauth.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import pers.acp.admin.common.po.QueryParam
 
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -53,9 +52,5 @@ data class UserPo(
         var orgName: String? = null,
 
         @ApiModelProperty(value = "角色名称，查询时使用", position = 11)
-        var roleName: String? = null,
-
-        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
-        var queryParam: QueryParam? = null
-
+        var roleName: String? = null
 )

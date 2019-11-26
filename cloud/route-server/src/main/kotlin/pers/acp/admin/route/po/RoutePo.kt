@@ -2,7 +2,6 @@ package pers.acp.admin.route.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import pers.acp.admin.common.po.QueryParam
 
 import javax.validation.constraints.NotBlank
 
@@ -37,8 +36,5 @@ data class RoutePo(
         var enabled: Boolean? = null,
 
         @ApiModelProperty(value = "备注", position = 7)
-        var remarks: String? = null,
-
-        @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
-        var queryParam: QueryParam? = null
+        var remarks: String? = null
 )

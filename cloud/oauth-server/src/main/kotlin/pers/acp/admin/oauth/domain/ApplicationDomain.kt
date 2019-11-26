@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.admin.oauth.po.ApplicationPo
+import pers.acp.admin.oauth.po.ApplicationQueryPo
 import pers.acp.admin.oauth.repo.ApplicationRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
@@ -78,14 +79,14 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     @Transactional
     fun doDelete(idList: MutableList<String>) = applicationRepository.deleteByIdInAndCovert(idList, true)
 
-    fun doQuery(applicationPo: ApplicationPo): Page<Application> =
+    fun doQuery(applicationQueryPo: ApplicationQueryPo): Page<Application> =
             applicationRepository.findAll({ root, _, criteriaBuilder ->
                 val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(applicationPo.appName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("appName").`as`(String::class.java), "%" + applicationPo.appName + "%"))
+                if (!CommonTools.isNullStr(applicationQueryPo.appName)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("appName").`as`(String::class.java), "%" + applicationQueryPo.appName + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(applicationPo.queryParam!!))
+            }, buildPageRequest(applicationQueryPo.queryParam!!))
 
     fun getApp(appId: String): Application? = applicationRepository.findById(appId).orElse(null)
 

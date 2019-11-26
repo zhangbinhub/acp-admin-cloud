@@ -19,6 +19,7 @@ import pers.acp.admin.oauth.controller.open.inner.InnerRuntimeController
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.admin.oauth.po.RuntimePo
+import pers.acp.admin.oauth.po.RuntimeQueryPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
@@ -90,10 +91,8 @@ constructor(private val innerRuntimeController: InnerRuntimeController, private 
     @PreAuthorize(RuntimeConfigExpression.runtimeQuery)
     @PostMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun query(@RequestBody runtimePo: RuntimePo): ResponseEntity<Page<RuntimeConfig>> =
-            (runtimePo.queryParam ?: throw ServerException("分页查询参数不能为空")).let {
-                ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimePo))
-            }
+    fun query(@RequestBody @Valid runtimeQueryPo: RuntimeQueryPo): ResponseEntity<Page<RuntimeConfig>> =
+            ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimeQueryPo))
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))
