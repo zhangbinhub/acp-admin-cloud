@@ -87,7 +87,9 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid userPo: UserPo): ResponseEntity<User> =
-            ResponseEntity.status(HttpStatus.CREATED).body(userDomain.doCreate(user.name, userPo))
+            userDomain.doCreate(user.name, userPo).let {
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @ApiOperation(value = "删除指定的用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
@@ -124,9 +126,6 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun resetPwd(user: OAuth2Authentication, @PathVariable userId: String): ResponseEntity<InfoVo> {
-        if (CommonTools.isNullStr(userId)) {
-            throw ServerException("ID不能为空")
-        }
         userDomain.doUpdatePwd(user.name, userId)
         return ResponseEntity.ok(InfoVo(message = "操作成功"))
     }
@@ -144,11 +143,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> {
-        if (CommonTools.isNullStr(userId)) {
-            throw ServerException("ID不能为空")
-        }
-        return (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
-    }
+    fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
+            (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
 }
