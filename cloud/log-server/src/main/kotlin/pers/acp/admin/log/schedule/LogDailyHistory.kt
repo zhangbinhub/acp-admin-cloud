@@ -31,7 +31,7 @@ constructor(private val logAdapter: LogAdapter,
     override fun beforeExecuteFun(): Boolean =
             distributedLock.getLock(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
                     logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort,
-                    60 * 1000)
+                    LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_TIME_OUT)
 
     override fun executeFun(): Any? {
         /**

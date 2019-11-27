@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.constant.RouteConstant.ROUTES_DEFINITION_KEY
 import pers.acp.admin.route.definition.FilterDefinition
 import pers.acp.admin.route.definition.PredicateDefinition
 import pers.acp.admin.route.definition.RouteConstant
@@ -80,8 +81,8 @@ constructor(private val logAdapter: LogAdapter,
         logAdapter.info("查询到启用的路由信息共 " + routeList.size + " 条")
         try {
             val uuid = CommonTools.getUuid()
-            if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, 1000)) {
-                redisTemplate.delete(RouteConstant.ROUTES_DEFINITION_KEY)
+            if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, RouteConstant.ROUTES_LOCK_TIME_OUT)) {
+                redisTemplate.delete(ROUTES_DEFINITION_KEY)
                 logAdapter.info("清理 Redis 缓存完成")
                 for (route in routeList) {
                     val routeDefinition = RouteDefinition()
@@ -90,7 +91,7 @@ constructor(private val logAdapter: LogAdapter,
                     routeDefinition.order = route.orderNum
                     routeDefinition.predicates = objectMapper.readValue(route.predicates, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, PredicateDefinition::class.java))
                     routeDefinition.filters = objectMapper.readValue(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
-                    redisTemplate.opsForList().rightPush(RouteConstant.ROUTES_DEFINITION_KEY, objectMapper.writeValueAsBytes(routeDefinition))
+                    redisTemplate.opsForList().rightPush(ROUTES_DEFINITION_KEY, objectMapper.writeValueAsBytes(routeDefinition))
                 }
                 logAdapter.info("路由信息更新至 Redis，共 " + routeList.size + " 条")
                 distributedLock.releaseLock(RouteConstant.ROUTES_LOCK_KEY, uuid)
