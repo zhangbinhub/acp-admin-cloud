@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull
  * @since JDK 11
  */
 abstract class BaseQueryPo {
-    @ApiModelProperty(value = "分页查询参数", position = Int.MAX_VALUE)
+    @ApiModelProperty(value = "分页查询参数", required = true, position = Int.MAX_VALUE)
     @get:NotNull(message = "分页查询参数不能为空")
     @field:Valid
     var queryParam: QueryParam? = null
