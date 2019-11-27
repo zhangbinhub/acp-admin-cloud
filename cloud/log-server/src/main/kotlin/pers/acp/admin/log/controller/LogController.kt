@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogConstant
-import pers.acp.admin.log.constant.LogFileExpression
 import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
 import pers.acp.admin.log.po.LoginLogQueryPo
@@ -81,7 +80,7 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @PreAuthorize(LogFileExpression.superOnly)
+    @PreAuthorize(BaseExpression.superOnly)
     @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun queryFile(@ApiParam(value = "开始日期", required = true, example = "0")

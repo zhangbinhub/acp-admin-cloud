@@ -10,9 +10,7 @@ import pers.acp.admin.permission.BaseExpression
  * @author zhang by 28/12/2018
  * @since JDK 11
  */
-object RoleConfigExpression : BaseExpression() {
-    const val superOnly = BaseExpression.superOnly
-    const val sysConfig = BaseExpression.sysConfig
+object RoleConfigExpression {
     /**
      * 角色配置
      */

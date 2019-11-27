@@ -19,6 +19,7 @@ import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.admin.oauth.po.ApplicationPo
 import pers.acp.admin.oauth.po.ApplicationQueryPo
+import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
@@ -92,7 +93,7 @@ constructor(private val applicationDomain: ApplicationDomain, private val refres
             ResponseEntity.ok(applicationDomain.doQuery(applicationQueryPo))
 
     @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")
-    @PreAuthorize(AppConfigExpression.sysConfig)
+    @PreAuthorize(BaseExpression.sysConfig)
     @GetMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun appList(user: OAuth2Authentication): ResponseEntity<List<Application>> = ResponseEntity.ok(applicationDomain.getAppList(user))
 

@@ -8,9 +8,7 @@ import pers.acp.admin.permission.BaseExpression
  * @author zhang by 13/01/2019
  * @since JDK 11
  */
-object AppConfigExpression : BaseExpression() {
-    const val superOnly = BaseExpression.superOnly
-    const val sysConfig = BaseExpression.sysConfig
+object AppConfigExpression {
     /**
      * 应用配置
      */
