@@ -22,7 +22,6 @@ import pers.acp.admin.oauth.po.MenuPo
 import pers.acp.admin.oauth.po.ModuleFuncPo
 import pers.acp.admin.oauth.vo.MenuVo
 import pers.acp.admin.oauth.vo.ModuleFuncVo
-import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
