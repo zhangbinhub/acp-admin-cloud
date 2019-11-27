@@ -77,23 +77,15 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = [OauthApi.menuList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun menuList(@PathVariable appId: String): ResponseEntity<List<Menu>> {
-        if (CommonTools.isNullStr(appId)) {
-            throw ServerException("应用ID不能为空")
-        }
-        return ResponseEntity.ok(menuDomain.getMenuListByAppId(appId))
-    }
+    fun menuList(@PathVariable appId: String): ResponseEntity<List<Menu>> =
+            ResponseEntity.ok(menuDomain.getMenuListByAppId(appId))
 
     @ApiOperation(value = "获取指定应用下的模块功能列表", notes = "查询指定应用的模块功能列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = [OauthApi.moduleFuncList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun moduleFuncList(@PathVariable appId: String): ResponseEntity<List<ModuleFunc>> {
-        if (CommonTools.isNullStr(appId)) {
-            throw ServerException("应用ID不能为空")
-        }
-        return ResponseEntity.ok(moduleFuncDomain.getModuleFuncListByAppId(appId))
-    }
+    fun moduleFuncList(@PathVariable appId: String): ResponseEntity<List<ModuleFunc>> =
+            ResponseEntity.ok(moduleFuncDomain.getModuleFuncListByAppId(appId))
 
     @ApiOperation(value = "获取菜单列表", notes = "查询所有菜单列表")
     @PreAuthorize(AuthConfigExpression.authQuery)
@@ -110,7 +102,10 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
-    fun addMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> = ResponseEntity.status(HttpStatus.CREATED).body(menuDomain.doCreate(menuPo))
+    fun addMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> =
+            menuDomain.doCreate(menuPo).let {
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @ApiOperation(value = "新建模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
@@ -118,7 +113,9 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     fun addModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
-            ResponseEntity.status(HttpStatus.CREATED).body(moduleFuncDomain.doCreate(moduleFuncPo))
+            moduleFuncDomain.doCreate(moduleFuncPo).let {
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @ApiOperation(value = "删除指定的菜单信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVo::class))

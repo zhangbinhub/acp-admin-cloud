@@ -54,7 +54,9 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid organizationPo: OrganizationPo): ResponseEntity<Organization> =
-            ResponseEntity.status(HttpStatus.CREATED).body(organizationDomain.doCreate(user.name, organizationPo))
+            organizationDomain.doCreate(user.name, organizationPo).let {
+                ResponseEntity.status(HttpStatus.CREATED).body(it)
+            }
 
     @ApiOperation(value = "删除指定的机构信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
@@ -92,5 +94,4 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
                 @PathVariable
                 orgId: String): ResponseEntity<OrganizationVo> =
             ResponseEntity.ok(organizationDomain.getOrgInfo(orgId))
-
 }

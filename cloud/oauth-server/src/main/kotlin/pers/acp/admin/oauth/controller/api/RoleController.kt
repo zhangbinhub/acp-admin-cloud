@@ -71,12 +71,8 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @PreAuthorize(BaseExpression.sysConfig)
     @GetMapping(value = [OauthApi.roleList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun getRoleList(user: OAuth2Authentication, @PathVariable appId: String): ResponseEntity<List<Role>> {
-        if (CommonTools.isNullStr(appId)) {
-            throw ServerException("应用ID不能为空，请重新输入")
-        }
-        return ResponseEntity.ok(roleDomain.getRoleListByAppId(user.name, appId))
-    }
+    fun getRoleList(user: OAuth2Authentication, @PathVariable appId: String): ResponseEntity<List<Role>> =
+            ResponseEntity.ok(roleDomain.getRoleListByAppId(user.name, appId))
 
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")
     @PreAuthorize(RoleConfigExpression.roleQuery)
@@ -127,10 +123,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @PreAuthorize(RoleConfigExpression.roleQuery)
     @GetMapping(value = [OauthApi.roleConfig + "/{roleId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun orgInfo(@ApiParam(value = "角色id", required = true)
-                @NotBlank(message = "角色id不能为空")
-                @PathVariable
-                roleId: String): ResponseEntity<RoleVo> =
+    fun orgInfo(@PathVariable roleId: String): ResponseEntity<RoleVo> =
             ResponseEntity.ok(roleDomain.getRoleInfo(roleId))
 
 }
