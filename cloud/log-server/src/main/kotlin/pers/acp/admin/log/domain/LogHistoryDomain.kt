@@ -1,6 +1,6 @@
 package pers.acp.admin.log.domain
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +24,6 @@ import pers.acp.core.CommonTools
 @Transactional(readOnly = true)
 class LogHistoryDomain @Autowired
 constructor(private val logAdapter: LogAdapter,
-            private val objectMapper: ObjectMapper,
             private val routeLogRepository: RouteLogRepository,
             private val operateLogRepository: OperateLogRepository,
             private val loginLogRepository: LoginLogRepository,
@@ -46,7 +45,11 @@ constructor(private val logAdapter: LogAdapter,
         return routeLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
             logAdapter.info("本次处理${it.content.size}条路由日志")
             it.forEach { item ->
-                routeLogHistoryRepository.save(logEntityToHistoryEntity(item, RouteLogHistory::class.java))
+                RouteLogHistory().apply {
+                    BeanUtils.copyProperties(item, this)
+                }.apply {
+                    routeLogHistoryRepository.save(this)
+                }
             }
             routeLogRepository.deleteAll(it.content)
             if (it.isEmpty) {
@@ -69,7 +72,11 @@ constructor(private val logAdapter: LogAdapter,
         return operateLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
             logAdapter.info("本次处理${it.content.size}条操作日志")
             it.forEach { item ->
-                operateLogHistoryRepository.save(logEntityToHistoryEntity(item, OperateLogHistory::class.java))
+                OperateLogHistory().apply {
+                    BeanUtils.copyProperties(item, this)
+                }.apply {
+                    operateLogHistoryRepository.save(this)
+                }
             }
             operateLogRepository.deleteAll(it.content)
             if (it.isEmpty) {
@@ -92,7 +99,11 @@ constructor(private val logAdapter: LogAdapter,
         return loginLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
             logAdapter.info("本次处理${it.content.size}条登录日志")
             it.forEach { item ->
-                loginLogHistoryRepository.save(logEntityToHistoryEntity(item, LoginLogHistory::class.java))
+                LoginLogHistory().apply {
+                    BeanUtils.copyProperties(item, this)
+                }.apply {
+                    loginLogHistoryRepository.save(this)
+                }
             }
             loginLogRepository.deleteAll(it.content)
             if (it.isEmpty) {
@@ -114,8 +125,4 @@ constructor(private val logAdapter: LogAdapter,
         }
         logAdapter.info("历史登录日志清理完成")
     }
-
-    private fun <T> logEntityToHistoryEntity(srcObj: Any, cls: Class<T>): T =
-            objectMapper.readValue(objectMapper.writeValueAsBytes(srcObj), cls)
-
 }
