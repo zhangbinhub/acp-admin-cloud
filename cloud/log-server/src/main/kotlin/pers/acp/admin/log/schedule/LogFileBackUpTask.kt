@@ -48,7 +48,7 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
                     if (!logFold.exists() || !logFold.isDirectory) {
                         throw ServerException("路径 $logFoldPath 不存在或不是文件夹")
                     }
-                    val files = logFold.listFiles { pathname -> pathname.name.contains(logFileDate) }
+                    val files = logFold.listFiles { pathname -> pathname.name.contains(logFileDate) && !pathname.name.endsWith(".tmp", true) }
                     if (files != null && files.isNotEmpty()) {
                         logAdapter.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
                         val fileNames: MutableList<String> = mutableListOf()
