@@ -2,6 +2,7 @@
 ##### v4.x
 > - [Upgrade] 各服务增加feign配置
 > - [Upgrade] 优化entity超类写法
+> - [Upgrade] controller中update时校验id
 ##### v4.0.5
 > - [Upgrade] 修改应用列表获取排序规则
 > - [Upgrade] 调整所有 Entity 写法，统一使用 data class
