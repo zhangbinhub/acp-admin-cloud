@@ -5,6 +5,7 @@
 > - [Upgrade] controller中update时校验id
 > - [Upgrade] 删除多余代码
 > - [Upgrade] 优化gradle脚本
+> - [Upgrade] 更新初始化方法，规范菜单指向url
 ##### v4.0.5
 > - [Upgrade] 修改应用列表获取排序规则
 > - [Upgrade] 调整所有 Entity 写法，统一使用 data class
