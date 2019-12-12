@@ -24,7 +24,7 @@ spring:
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
 info:
-  version: 4.0.5
+  version: 4.0.6
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -39,6 +39,35 @@ management:
   endpoint:
     health:
       show-details: always
+# ===============================
+# = Ribbon Config
+# ===============================
+feign:
+  httpclient:
+    enabled: false
+    connection-timeout: ${ribbon.ConnectTimeout}
+    max-connections: 1000
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        loggerLevel: full
+ribbon:
+  # ribbon 缓存刷新时间
+  ServerListRefreshInterval: 3000
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  okhttp:
+    enabled: true
+  eager-load:
+    enabled: true
+    clients: oauth2-server
 # ===============================
 # = Security Config
 # ===============================

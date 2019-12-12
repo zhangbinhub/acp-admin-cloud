@@ -7,12 +7,12 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.entity.LoginLog
 import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
-import pers.acp.admin.log.feign.OauthServer
 import pers.acp.admin.log.message.RouteLogMessage
 import pers.acp.admin.log.po.LoginLogQueryPo
 import pers.acp.admin.log.po.OperateLogQueryPo
@@ -40,7 +40,7 @@ constructor(private val logAdapter: LogAdapter,
             private val operateLogHistoryRepository: OperateLogHistoryRepository,
             private val loginLogRepository: LoginLogRepository,
             private val loginLogHistoryRepository: LoginLogHistoryRepository,
-            private val oauthServer: OauthServer) : BaseDomain() {
+            private val commonOauthServer: CommonOauthServer) : BaseDomain() {
 
     /**
      * 路由消息转为对应的实体对象
@@ -50,7 +50,7 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     private fun getTokenInfo(token: String): Map<String, String> =
-            oauthServer.tokenInfo(token)?.let { oAuth2AccessToken ->
+            commonOauthServer.tokenInfo(token)?.let { oAuth2AccessToken ->
                 if (oAuth2AccessToken.additionalInformation.containsKey(TokenConstant.USER_INFO_ID)) {
                     mutableMapOf<String, String>().apply {
                         this[TokenConstant.USER_INFO_ID] = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]!!.toString()
@@ -75,7 +75,7 @@ constructor(private val logAdapter: LogAdapter,
         val routeLog = messageToEntity(message, RouteLog::class.java)
         if (routeLogMessage.token != null) {
             try {
-                oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
                     routeLog.clientId = app.id
                     routeLog.clientName = app.appName
                     routeLog.identify = app.identify
@@ -125,7 +125,7 @@ constructor(private val logAdapter: LogAdapter,
     suspend fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
         try {
             val operateLog = messageToEntity(message, OperateLog::class.java)
-            oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+            commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
                 operateLog.clientId = app.id
                 operateLog.clientName = app.appName
                 operateLog.identify = app.identify
@@ -150,7 +150,7 @@ constructor(private val logAdapter: LogAdapter,
     suspend fun doLoginLog(routeLogMessage: RouteLogMessage, message: String) {
         try {
             val loginLog = messageToEntity(message, LoginLog::class.java)
-            oauthServer.appInfo(routeLogMessage.token!!).let { app ->
+            commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
                 if (!CommonTools.isNullStr(app.id)) {
                     loginLog.clientId = app.id
                     loginLog.clientName = app.appName

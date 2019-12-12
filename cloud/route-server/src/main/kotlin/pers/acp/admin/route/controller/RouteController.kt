@@ -71,9 +71,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
         if (CommonTools.isNullStr(routePo.id)) {
             throw ServerException("配置ID不能为空")
         }
-        routeDomain.doUpdate(routePo).let {
-            return ResponseEntity.ok(it)
-        }
+        return ResponseEntity.ok(routeDomain.doUpdate(routePo))
     }
 
     @ApiOperation(value = "查询路由信息列表", notes = "查询条件：路由ID、是否启用")

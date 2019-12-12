@@ -102,7 +102,7 @@ class InitData extends BaseTest {
         operateLog.setAppId(application.getId());
         operateLog.setName("操作日志");
         operateLog.setIconType("el-icon-s-operation");
-        operateLog.setPath("/operatelog");
+        operateLog.setPath("/operate-log");
         operateLog.setParentId(sysMonitor.getId());
         operateLog.setSort(0);
         operateLog.setEnabled(true);
@@ -114,7 +114,7 @@ class InitData extends BaseTest {
         loginLog.setAppId(application.getId());
         loginLog.setName("登录日志");
         loginLog.setIconType("el-icon-coordinate");
-        loginLog.setPath("/loginlog");
+        loginLog.setPath("/login-log");
         loginLog.setParentId(sysMonitor.getId());
         loginLog.setSort(1);
         loginLog.setEnabled(true);
@@ -137,7 +137,7 @@ class InitData extends BaseTest {
         appConfig.setAppId(application.getId());
         appConfig.setName("应用配置");
         appConfig.setIconType("el-icon-s-platform");
-        appConfig.setPath("/appconfig");
+        appConfig.setPath("/app-config");
         appConfig.setParentId(sysConfig.getId());
         appConfig.setSort(0);
         appConfig.setEnabled(true);
@@ -149,7 +149,7 @@ class InitData extends BaseTest {
         roleConfig.setAppId(application.getId());
         roleConfig.setName("角色配置");
         roleConfig.setIconType("el-icon-s-check");
-        roleConfig.setPath("/roleconfig");
+        roleConfig.setPath("/role-config");
         roleConfig.setParentId(sysConfig.getId());
         roleConfig.setSort(1);
         roleConfig.setEnabled(true);
@@ -161,7 +161,7 @@ class InitData extends BaseTest {
         authConfig.setAppId(application.getId());
         authConfig.setName("权限配置");
         authConfig.setIconType("el-icon-key");
-        authConfig.setPath("/authconfig");
+        authConfig.setPath("/auth-config");
         authConfig.setParentId(sysConfig.getId());
         authConfig.setSort(2);
         authConfig.setEnabled(true);
@@ -173,7 +173,7 @@ class InitData extends BaseTest {
         userConfig.setAppId(application.getId());
         userConfig.setName("用户配置");
         userConfig.setIconType("el-icon-user-solid");
-        userConfig.setPath("/userconfig");
+        userConfig.setPath("/user-config");
         userConfig.setParentId(sysConfig.getId());
         userConfig.setSort(3);
         userConfig.setEnabled(true);
@@ -185,7 +185,7 @@ class InitData extends BaseTest {
         orgConfig.setAppId(application.getId());
         orgConfig.setName("机构配置");
         orgConfig.setIconType("el-icon-c-scale-to-original");
-        orgConfig.setPath("/orgconfig");
+        orgConfig.setPath("/org-config");
         orgConfig.setParentId(sysConfig.getId());
         orgConfig.setSort(4);
         orgConfig.setEnabled(true);
@@ -197,7 +197,7 @@ class InitData extends BaseTest {
         runtimeConfig.setAppId(application.getId());
         runtimeConfig.setName("运行参数配置");
         runtimeConfig.setIconType("el-icon-set-up");
-        runtimeConfig.setPath("/runtimeconfig");
+        runtimeConfig.setPath("/runtime-config");
         runtimeConfig.setParentId(sysConfig.getId());
         runtimeConfig.setSort(5);
         runtimeConfig.setEnabled(true);
@@ -220,7 +220,7 @@ class InitData extends BaseTest {
         demoUpload.setAppId(application.getId());
         demoUpload.setName("上传");
         demoUpload.setIconType("el-icon-upload");
-        demoUpload.setPath("/demoupload");
+        demoUpload.setPath("/demo-upload");
         demoUpload.setParentId(demo.getId());
         demoUpload.setSort(0);
         demoUpload.setEnabled(true);

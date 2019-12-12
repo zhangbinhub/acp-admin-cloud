@@ -22,6 +22,7 @@ import pers.acp.admin.oauth.po.MenuPo
 import pers.acp.admin.oauth.po.ModuleFuncPo
 import pers.acp.admin.oauth.vo.MenuVo
 import pers.acp.admin.oauth.vo.ModuleFuncVo
+import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
@@ -146,8 +147,12 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> =
-            ResponseEntity.ok(menuDomain.doUpdate(menuPo))
+    fun updateMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> {
+        if (CommonTools.isNullStr(menuPo.id)) {
+            throw ServerException("配置ID不能为空")
+        }
+        return ResponseEntity.ok(menuDomain.doUpdate(menuPo))
+    }
 
     @ApiOperation(value = "更新模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；模块功能编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
@@ -155,8 +160,12 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
-            ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPo))
+    fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> {
+        if (CommonTools.isNullStr(moduleFuncPo.id)) {
+            throw ServerException("配置ID不能为空")
+        }
+        return ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPo))
+    }
 
     @ApiOperation(value = "获取菜单详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))

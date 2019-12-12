@@ -1,4 +1,22 @@
 ## 版本更新记录
+##### v4.0.6
+> - [Upgrade] 各服务增加feign配置
+> - [Upgrade] 优化entity超类写法
+> - [Upgrade] controller中update时校验id
+> - [Upgrade] 删除多余代码
+> - [Upgrade] 优化gradle脚本
+> - [Upgrade] 更新初始化方法，规范菜单指向url
+> - [Upgrade] 优化log-server代码，避免在集群模式下多实例重复执行历史数据迁移定时任务
+> - [Upgrade] dependencies 增加 oauthServer 的 feign 客户端
+> - [Upgrade] 升级核心库至 6.3.3
+> - [Upgrade] 升级 Spring Boot 至 2.1.11.RELEASE
+> - [Upgrade] 升级 kotlin 至 1.3.61
+> - [Upgrade] 升级依赖项
+>   - zip4j to 2.2.7
+>   - sshd-sftp to 2.3.0
+>   - freemarker to 2.3.29
+>   - batik to 1.12
+>   - poi to 4.1.1
 ##### v4.0.5
 > - [Upgrade] 修改应用列表获取排序规则
 > - [Upgrade] 调整所有 Entity 写法，统一使用 data class
