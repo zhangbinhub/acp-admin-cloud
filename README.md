@@ -1,14 +1,14 @@
 # acp-admin-cloud
-###### v4.0.5 [版本更新日志](doc/version_history.md)
+###### v4.0.6 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.5](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.0.6](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.1.10.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.1.11.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Greenwich.SR4](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.1.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
-- [Acp 6.3.2](https://github.com/zhangbin1010/acp)
+- [Acp 6.3.3](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable

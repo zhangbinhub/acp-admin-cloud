@@ -17,7 +17,7 @@ versions += [
         logback          : "1.2.3",
         xstream          : "1.4.11.1",
         jackson_databind : "2.9.10",
-        zip4j            : "2.2.4",
+        zip4j            : "2.2.7",
 
         hikaricp         : "3.2.0",
         mysql            : "8.0.18",
@@ -25,7 +25,7 @@ versions += [
         ojdbc            : "12.1.0.2",
         postgresql       : "42.2.8",
 
-        spring_boot      : "2.1.10.RELEASE",
+        spring_boot      : "2.1.11.RELEASE",
         spring_cloud     : "Greenwich.SR4",
         alibaba_cloud    : "2.1.1.RELEASE",
         swagger          : "2.9.2",
