@@ -7,6 +7,7 @@
 > - [Upgrade] 优化gradle脚本
 > - [Upgrade] 更新初始化方法，规范菜单指向url
 > - [Upgrade] 优化log-server代码，避免在集群模式下多实例重复执行历史数据迁移定时任务
+> - [Upgrade] dependencies 增加 oauthServer 的 feign 客户端
 ##### v4.0.5
 > - [Upgrade] 修改应用列表获取排序规则
 > - [Upgrade] 调整所有 Entity 写法，统一使用 data class

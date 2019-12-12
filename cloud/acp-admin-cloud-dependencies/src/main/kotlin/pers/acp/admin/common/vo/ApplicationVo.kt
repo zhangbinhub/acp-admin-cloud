@@ -1,4 +1,4 @@
-package pers.acp.admin.log.vo
+package pers.acp.admin.common.vo
 
 /**
  * @author zhangbin by 2018-1-17 14:56
