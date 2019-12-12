@@ -1,6 +1,7 @@
 package pers.acp.admin.log.schedule
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,6 +79,7 @@ constructor(private val logAdapter: LogAdapter,
                     logAdapter.error(">>>>>>>>>>>>>>>>>>>>>> 登录日志迁移异常：${e.message}", e)
                 }
             }
+            delay(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_TIME_OUT)
         }
         return true
     }
