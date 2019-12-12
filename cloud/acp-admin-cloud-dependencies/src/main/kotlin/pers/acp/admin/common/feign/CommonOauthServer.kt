@@ -40,12 +40,28 @@ interface CommonOauthServer {
     fun tokenInfo(@RequestParam(name = "access_token") token: String): OAuth2AccessToken?
 
     /**
+     * 获取token详细信息
+     */
+    @RequestMapping(value = [CommonPath.innerBasePath + OauthInnerApi.currToken], method = [RequestMethod.GET],
+            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun tokenInfo(): OAuth2AccessToken?
+
+    /**
      * 获取用户详细信息
      */
     @RequestMapping(value = [CommonPath.innerBasePath + OauthInnerApi.currUser], method = [RequestMethod.GET],
             produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun userInfo(@RequestParam(name = "access_token") token: String): UserVo?
+
+    /**
+     * 获取用户详细信息
+     */
+    @RequestMapping(value = [CommonPath.innerBasePath + OauthInnerApi.currUser], method = [RequestMethod.GET],
+            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun userInfo(): UserVo?
 
     /**
      * 获取运行参数

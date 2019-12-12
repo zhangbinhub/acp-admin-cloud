@@ -35,8 +35,22 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
+                override fun tokenInfo(): OAuth2AccessToken? {
+                    val errMsg = "找不到对应的用户信息"
+                    logAdapter.info(errMsg)
+                    return null
+                }
+
+                @Throws(ServerException::class)
                 override fun userInfo(token: String): UserVo? {
                     val errMsg = "该token找不到对应的用户详细信息【$token】"
+                    logAdapter.info(errMsg)
+                    return null
+                }
+
+                @Throws(ServerException::class)
+                override fun userInfo(): UserVo? {
+                    val errMsg = "找不到对应的用户详细信息"
                     logAdapter.info(errMsg)
                     return null
                 }
