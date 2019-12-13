@@ -93,9 +93,10 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
         if (isNotPermit(loginNo, *idList.toTypedArray())) {
             throw ServerException("没有权限做此操作，请联系系统管理员")
         }
-        val organizationList = organizationRepository.findByParentIdIn(idList)
-        if (organizationList.isNotEmpty()) {
-            throw ServerException("存在下级机构，不允许删除")
+        organizationRepository.findByParentIdIn(idList).apply {
+            if (this.isNotEmpty()) {
+                throw ServerException("存在下级机构，不允许删除")
+            }
         }
         organizationRepository.deleteByIdIn(idList)
     }
