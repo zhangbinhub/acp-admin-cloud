@@ -27,7 +27,7 @@ import javax.validation.constraints.NotBlank
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api("运行参数配置")
+@Api(tags = ["运行参数配置（内部接口）"])
 class InnerRuntimeController @Autowired
 constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController() {
 

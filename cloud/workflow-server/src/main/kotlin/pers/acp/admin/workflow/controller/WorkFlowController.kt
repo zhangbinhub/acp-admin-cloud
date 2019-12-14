@@ -33,7 +33,7 @@ import java.io.*
 @Validated
 @RestController
 @RequestMapping(WorkFlowApi.basePath)
-@Api("工作流控制")
+@Api(tags = ["工作流控制"])
 class WorkFlowController @Autowired
 constructor(private val logAdapter: LogAdapter, private val workFlowDomain: WorkFlowDomain) : BaseController() {
 

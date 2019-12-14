@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
-@Api("权限信息")
+@Api(tags = ["权限信息"])
 class AuthController @Autowired
 constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDomain, private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
 

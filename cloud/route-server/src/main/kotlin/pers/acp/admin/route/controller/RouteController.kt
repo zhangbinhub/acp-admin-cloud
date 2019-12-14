@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(RouteApi.basePath)
-@Api("网关路由信息")
+@Api(tags = ["网关路由信息"])
 class RouteController @Autowired
 constructor(private val routeDomain: RouteDomain, private val updateRouteProducer: UpdateRouteProducer) : BaseController() {
 

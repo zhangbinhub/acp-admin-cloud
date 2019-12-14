@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
-@Api("机构信息")
+@Api(tags = ["机构信息"])
 class OrgController @Autowired
 constructor(private val organizationDomain: OrganizationDomain) : BaseController() {
 

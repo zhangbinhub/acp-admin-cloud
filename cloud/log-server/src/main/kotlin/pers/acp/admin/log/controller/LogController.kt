@@ -38,7 +38,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(LogApi.basePath)
-@Api("日志信息")
+@Api(tags = ["日志信息"])
 class LogController @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val logFileDomain: LogFileDomain,
