@@ -10,17 +10,17 @@ import javax.validation.constraints.NotNull
  * @author zhang by 14/06/2019
  * @since JDK 11
  */
-@ApiModel("启动审批参数")
-data class FlowApprovePo(
+@ApiModel("流程任务处理参数")
+data class ProcessHandlingPo(
         @ApiModelProperty(value = "任务id", required = true, position = 1)
         @get:NotBlank(message = "任务id不能为空")
         var taskId: String? = null,
 
-        @ApiModelProperty(value = "审批结果", required = true, example = "true", position = 2)
-        @get:NotNull(message = "审批结果不能为空")
-        var approved: Boolean? = null,
+        @ApiModelProperty(value = "处理结果", required = true, example = "true", position = 2)
+        @get:NotNull(message = "处理结果不能为空")
+        var pass: Boolean? = null,
 
-        @ApiModelProperty(value = "审批意见", required = true, position = 3)
+        @ApiModelProperty(value = "处理意见", required = true, position = 3)
         var comment: String? = null,
 
         @ApiModelProperty(value = "自定义流程参数", position = 4)

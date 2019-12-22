@@ -10,10 +10,10 @@ import pers.acp.admin.common.base.BaseQueryPo
  */
 @ApiModel("运行配置查询参数")
 data class RuntimeQueryPo(
-        @ApiModelProperty(value = "名称，查询时可为空", required = true, position = 1)
+        @ApiModelProperty(value = "名称，查询时可为空", position = 1)
         var name: String? = null,
         @ApiModelProperty(value = "值", position = 2)
         var value: String? = null,
-        @ApiModelProperty(value = "是否启用，查询时可为空", required = true, position = 4)
+        @ApiModelProperty(value = "是否启用，查询时可为空", position = 4)
         var enabled: Boolean? = null
 ) : BaseQueryPo()

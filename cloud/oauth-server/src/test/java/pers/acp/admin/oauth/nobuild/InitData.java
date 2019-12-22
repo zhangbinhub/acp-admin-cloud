@@ -205,6 +205,18 @@ class InitData extends BaseTest {
         runtimeConfig.setOpenType(0);
         runtimeConfig = menuRepository.save(runtimeConfig);
 
+        Menu workFlowDeploy = new Menu();
+        workFlowDeploy.setAppId(application.getId());
+        workFlowDeploy.setName("工作流部署");
+        workFlowDeploy.setIconType("el-icon-s-ticket");
+        workFlowDeploy.setPath("/workflow-deploy");
+        workFlowDeploy.setParentId(sysConfig.getId());
+        workFlowDeploy.setSort(6);
+        workFlowDeploy.setEnabled(true);
+        workFlowDeploy.setCovert(false);
+        workFlowDeploy.setOpenType(0);
+        workFlowDeploy = menuRepository.save(workFlowDeploy);
+
         Menu demo = new Menu();
         demo.setAppId(application.getId());
         demo.setName("demo");
@@ -298,6 +310,7 @@ class InitData extends BaseTest {
             role.getMenuSet().add(userConfig);
             role.getMenuSet().add(orgConfig);
             role.getMenuSet().add(runtimeConfig);
+            role.getMenuSet().add(workFlowDeploy);
             role.getMenuSet().add(demo);
             role.getMenuSet().add(demoUpload);
             role.getMenuSet().add(demoChildren);
@@ -573,50 +586,58 @@ class InitData extends BaseTest {
         userQuery.setCovert(false);
         userQuery = moduleFuncRepository.save(userQuery);
 
-        ModuleFunc flowProcess = new ModuleFunc();
-        flowProcess.setAppId(application.getId());
-        flowProcess.setParentId(application.getId());
-        flowProcess.setName("工作流处理");
-        flowProcess.setCode(ModuleFuncCode.flowProcess);
-        flowProcess.setCovert(false);
-        flowProcess = moduleFuncRepository.save(flowProcess);
+        ModuleFunc flowManage = new ModuleFunc();
+        flowManage.setAppId(application.getId());
+        flowManage.setParentId(application.getId());
+        flowManage.setName("工作流管理");
+        flowManage.setCode(ModuleFuncCode.flowManage);
+        flowManage.setCovert(false);
+        flowManage = moduleFuncRepository.save(flowManage);
 
-        ModuleFunc flowStart = new ModuleFunc();
-        flowStart.setAppId(application.getId());
-        flowStart.setParentId(flowProcess.getId());
-        flowStart.setName("发起流程");
-        flowStart.setCode(ModuleFuncCode.flowStart);
-        flowStart.setCovert(false);
-        flowStart = moduleFuncRepository.save(flowStart);
+        ModuleFunc flowAdmin = new ModuleFunc();
+        flowAdmin.setAppId(application.getId());
+        flowAdmin.setParentId(flowManage.getId());
+        flowAdmin.setName("流程管理");
+        flowAdmin.setCode(ModuleFuncCode.flowAdmin);
+        flowAdmin.setCovert(false);
+        flowAdmin = moduleFuncRepository.save(flowAdmin);
+
+        ModuleFunc flowDefinition = new ModuleFunc();
+        flowDefinition.setAppId(application.getId());
+        flowDefinition.setParentId(flowManage.getId());
+        flowDefinition.setName("流程定义");
+        flowDefinition.setCode(ModuleFuncCode.flowDefinition);
+        flowDefinition.setCovert(false);
+        flowDefinition = moduleFuncRepository.save(flowDefinition);
 
         ModuleFunc flowPending = new ModuleFunc();
         flowPending.setAppId(application.getId());
-        flowPending.setParentId(flowProcess.getId());
-        flowPending.setName("查看待办任务");
+        flowPending.setParentId(flowManage.getId());
+        flowPending.setName("获取流程待办任务");
         flowPending.setCode(ModuleFuncCode.flowPending);
         flowPending.setCovert(false);
         flowPending = moduleFuncRepository.save(flowPending);
 
-        ModuleFunc flowApprove = new ModuleFunc();
-        flowApprove.setAppId(application.getId());
-        flowApprove.setParentId(flowProcess.getId());
-        flowApprove.setName("审批");
-        flowApprove.setCode(ModuleFuncCode.flowApprove);
-        flowApprove.setCovert(false);
-        flowApprove = moduleFuncRepository.save(flowApprove);
+        ModuleFunc flowProcess = new ModuleFunc();
+        flowProcess.setAppId(application.getId());
+        flowProcess.setParentId(flowManage.getId());
+        flowProcess.setName("流程处理");
+        flowProcess.setCode(ModuleFuncCode.flowProcess);
+        flowProcess.setCovert(false);
+        flowProcess = moduleFuncRepository.save(flowProcess);
 
         ModuleFunc flowHistory = new ModuleFunc();
         flowHistory.setAppId(application.getId());
-        flowHistory.setParentId(flowProcess.getId());
-        flowHistory.setName("历史记录查看");
+        flowHistory.setParentId(flowManage.getId());
+        flowHistory.setName("获取流程处理历史");
         flowHistory.setCode(ModuleFuncCode.flowHistory);
         flowHistory.setCovert(false);
         flowHistory = moduleFuncRepository.save(flowHistory);
 
         ModuleFunc flowDiagram = new ModuleFunc();
         flowDiagram.setAppId(application.getId());
-        flowDiagram.setParentId(flowProcess.getId());
-        flowDiagram.setName("流程图查看");
+        flowDiagram.setParentId(flowManage.getId());
+        flowDiagram.setName("获取流程图");
         flowDiagram.setCode(ModuleFuncCode.flowDiagram);
         flowDiagram.setCovert(false);
         flowDiagram = moduleFuncRepository.save(flowDiagram);
@@ -655,10 +676,11 @@ class InitData extends BaseTest {
             role.getModuleFuncSet().add(userDelete);
             role.getModuleFuncSet().add(userUpdate);
             role.getModuleFuncSet().add(userQuery);
-            role.getModuleFuncSet().add(flowProcess);
-            role.getModuleFuncSet().add(flowStart);
+            role.getModuleFuncSet().add(flowManage);
+            role.getModuleFuncSet().add(flowAdmin);
+            role.getModuleFuncSet().add(flowDefinition);
             role.getModuleFuncSet().add(flowPending);
-            role.getModuleFuncSet().add(flowApprove);
+            role.getModuleFuncSet().add(flowProcess);
             role.getModuleFuncSet().add(flowHistory);
             role.getModuleFuncSet().add(flowDiagram);
         }

@@ -4,17 +4,26 @@ import org.flowable.bpmn.model.BpmnModel
 import org.flowable.bpmn.model.FlowElement
 import org.flowable.bpmn.model.FlowNode
 import org.flowable.bpmn.model.SequenceFlow
+import org.flowable.common.engine.impl.identity.Authentication
 import org.flowable.engine.*
 import org.flowable.engine.history.HistoricActivityInstance
+import org.flowable.engine.history.HistoricProcessInstance
 import org.flowable.engine.history.HistoricVariableUpdate
+import org.flowable.engine.runtime.ProcessInstance
+import org.flowable.task.api.DelegationState
 import org.flowable.task.api.TaskInfo
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
-import pers.acp.admin.common.vo.FlowHistoryVo
-import pers.acp.admin.common.vo.FlowTaskVo
+import pers.acp.admin.common.feign.CommonOauthServer
+import pers.acp.admin.common.po.*
+import pers.acp.admin.common.vo.CustomerQueryPageVo
+import pers.acp.admin.common.vo.ProcessHistoryActivityVo
+import pers.acp.admin.common.vo.ProcessInstanceVo
+import pers.acp.admin.common.vo.ProcessTaskVo
 import pers.acp.admin.workflow.constant.WorkFlowParamKey
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -29,6 +38,8 @@ import java.io.InputStream
 @Transactional(readOnly = true)
 class WorkFlowDomain @Autowired
 constructor(private val logAdapter: LogAdapter,
+            private val commonOauthServer: CommonOauthServer,
+            private val formService: FormService,
             private val runtimeService: RuntimeService,
             private val taskService: TaskService,
             private val repositoryService: RepositoryService,
@@ -41,18 +52,30 @@ constructor(private val logAdapter: LogAdapter,
      * @param task 任务对象
      * @return 转换后任务对象
      */
-    private fun taskToVO(task: TaskInfo) = FlowTaskVo(
-            processInstanceId = task.processInstanceId,
-            name = task.name,
-            taskId = task.id,
-            parentTaskId = task.parentTaskId,
-            executionId = task.executionId,
-            businessKey = runtimeService.getVariable(task.executionId, WorkFlowParamKey.businessKey, String::class.java),
-            params = runtimeService.getVariables(task.executionId),
-            userId = task.assignee,
-            localParams = task.taskLocalVariables,
-            createTime = task.createTime.time
-    )
+    private fun taskToVo(task: TaskInfo) =
+            runtimeService.createProcessInstanceQuery().processInstanceId(task.processInstanceId).singleResult().let { processInstance ->
+                val params = runtimeService.getVariables(task.executionId)
+                ProcessTaskVo(
+                        processInstanceId = task.processInstanceId,
+                        name = task.name,
+                        taskId = task.id,
+                        parentTaskId = task.parentTaskId,
+                        executionId = task.executionId,
+                        params = params,
+                        businessKey = params[WorkFlowParamKey.businessKey]?.toString() ?: "",
+                        userId = task.assignee,
+                        localParams = task.taskLocalVariables,
+                        properties = formService.getTaskFormData(task.id).formProperties.associateBy({ it.name }, { it.value }).toMutableMap(),
+                        createTime = task.createTime.time,
+                        claimTime = task.claimTime?.time,
+                        processDefinitionKey = processInstance.processDefinitionKey,
+                        flowName = processInstance.processDefinitionName,
+                        title = params[WorkFlowParamKey.title]?.toString() ?: "",
+                        description = params[WorkFlowParamKey.description]?.toString() ?: "",
+                        startUserId = processInstance.startUserId,
+                        taskOwnerUserId = task.owner
+                )
+            }
 
     /**
      * 历史记录实例转换
@@ -60,47 +83,103 @@ constructor(private val logAdapter: LogAdapter,
      * @param historicActivityInstance 历史记录
      * @return 转换后对象
      */
-    private fun actToVO(historicActivityInstance: HistoricActivityInstance, businessKey: String): FlowHistoryVo {
-        val historicDetailQuery = historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id)
-        val params: MutableMap<String, Any> = mutableMapOf()
-        val localParams: MutableMap<String, Any> = mutableMapOf()
-        historicDetailQuery.list().filter { historicDetail -> CommonTools.isNullStr(historicDetail.taskId) }.forEach { historicDetail ->
-            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
-        }
-        historicDetailQuery.taskId(historicActivityInstance.taskId).list().forEach { historicDetail ->
-            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
+    private fun actToVo(historicActivityInstance: HistoricActivityInstance, businessKey: String): ProcessHistoryActivityVo =
+            historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id).let { historicDetailQuery ->
+                val params: MutableMap<String, Any> = mutableMapOf()
+                val localParams: MutableMap<String, Any> = mutableMapOf()
+                historicDetailQuery.list()
+                        .filter { historicDetail -> CommonTools.isNullStr(historicDetail.taskId) }
+                        .forEach { historicDetail ->
+                            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
+                        }
+                historicDetailQuery.taskId(historicActivityInstance.taskId).list()
+                        .forEach { historicDetail ->
+                            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
 
-        }
-        return FlowHistoryVo(
-                processInstanceId = historicActivityInstance.processInstanceId,
-                activityId = historicActivityInstance.activityId,
-                activityName = historicActivityInstance.activityName,
-                taskId = historicActivityInstance.taskId,
-                executionId = historicActivityInstance.executionId,
-                businessKey = businessKey,
-                userId = historicActivityInstance.assignee,
-                isApproved = params[WorkFlowParamKey.approved] as Boolean,
-                comment = params[WorkFlowParamKey.comment].toString(),
-                params = params,
-                localParams = localParams,
-                createTime = historicActivityInstance.startTime.time,
-                endTime = historicActivityInstance.endTime.time
-        )
-    }
+                        }
+                ProcessHistoryActivityVo(
+                        processInstanceId = historicActivityInstance.processInstanceId,
+                        activityId = historicActivityInstance.activityId,
+                        activityName = historicActivityInstance.activityName,
+                        taskId = historicActivityInstance.taskId,
+                        executionId = historicActivityInstance.executionId,
+                        businessKey = businessKey,
+                        userId = historicActivityInstance.assignee,
+                        pass = params[WorkFlowParamKey.pass] as Boolean,
+                        comment = params[WorkFlowParamKey.comment].toString(),
+                        params = params,
+                        localParams = localParams,
+                        startTime = historicActivityInstance.startTime.time,
+                        endTime = historicActivityInstance.endTime.time
+                )
+            }
+
+    /**
+     * 流程实例转换
+     * @param processInstance 流程实例
+     * @return 转换后的对象
+     */
+    @Throws(ServerException::class)
+    private fun instanceToVo(processInstance: Any): ProcessInstanceVo =
+            when (processInstance) {
+                is ProcessInstance -> {
+                    val params = processInstance.processVariables
+                    ProcessInstanceVo(
+                            isFinished = false,
+                            processDefinitionKey = processInstance.processDefinitionKey,
+                            businessKey = processInstance.businessKey,
+                            flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
+                            title = params[WorkFlowParamKey.title]?.toString() ?: "",
+                            description = params[WorkFlowParamKey.description]?.toString() ?: "",
+                            startUserId = processInstance.startUserId,
+                            params = params,
+                            startTime = processInstance.startTime!!.time
+                    )
+                }
+                is HistoricProcessInstance -> {
+                    val params = processInstance.processVariables
+                    ProcessInstanceVo(
+                            isFinished = true,
+                            processDefinitionKey = processInstance.processDefinitionKey,
+                            businessKey = processInstance.businessKey,
+                            flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
+                            title = params[WorkFlowParamKey.title]?.toString() ?: "",
+                            description = params[WorkFlowParamKey.description]?.toString() ?: "",
+                            startUserId = processInstance.startUserId,
+                            params = params,
+                            startTime = processInstance.startTime!!.time,
+                            endTime = processInstance.endTime!!.time
+                    )
+                }
+                else -> {
+                    throw ServerException("流程实例对象转换失败")
+                }
+            }
 
     /**
      * 启动流程
      *
-     * @param processDefinitionKey 流程键
-     * @param businessKey          业务键
+     * @param processStartPo 流程启动参数
      * @return 流程实例id
      */
     @Transactional
     @Throws(ServerException::class)
-    fun startFlow(processDefinitionKey: String, businessKey: String, params: MutableMap<String, Any>): String =
+    fun startFlow(processStartPo: ProcessStartPo): String =
             try {
-                params[WorkFlowParamKey.businessKey] = businessKey
-                runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, params)
+                val params = processStartPo.params
+                repositoryService.createProcessDefinitionQuery()
+                        .processDefinitionKey(processStartPo.processDefinitionKey)
+                        .orderByProcessDefinitionVersion().desc().list().apply {
+                            if (this.isEmpty()) {
+                                throw ServerException("找不到对应的流程定义【${processStartPo.processDefinitionKey}】")
+                            }
+                            params[WorkFlowParamKey.flowName] = this[0].name
+                        }
+                params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
+                params[WorkFlowParamKey.title] = processStartPo.title!!
+                params[WorkFlowParamKey.description] = processStartPo.description!!
+                Authentication.setAuthenticatedUserId(processStartPo.startUserId)
+                runtimeService.startProcessInstanceByKey(processStartPo.processDefinitionKey, processStartPo.businessKey, params)
                         .id
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
@@ -108,85 +187,270 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     /**
-     * 获取用户待办任务
+     * 获取任务信息
      *
-     * @param userId 用户id
+     * @param taskId 任务ID
      * @return 任务列表
      */
     @Throws(ServerException::class)
-    fun findTaskListByUserId(userId: String): List<FlowTaskVo> =
+    fun findTaskId(taskId: String): ProcessTaskVo =
             try {
-                taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list()
-                        .map { task -> taskToVO(task) }
+                taskService.createTaskQuery().taskId(taskId).singleResult()?.let {
+                    taskToVo(it)
+                } ?: throw ServerException("找不到信息")
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
             }
 
     /**
-     * 审批通过
+     * 获取待办任务
      *
-     * @param taskId  当前任务id
-     * @param comment 审批意见
-     * @param params  附加参数变量
-     * @throws ServerException 异常
-     */
-    @Transactional
-    @Throws(ServerException::class)
-    fun pass(taskId: String, comment: String?, params: Map<String, Any>, taskParams: Map<String, Any>) {
-        var text = comment
-        if (CommonTools.isNullStr(text)) {
-            text = "审批通过"
-        }
-        approved(taskId, true, text!!, params, taskParams)
-    }
-
-    /**
-     * 审批不通过
-     *
-     * @param taskId  当前任务id
-     * @param comment 审批意见
-     * @param params  附加参数变量
-     * @throws ServerException 异常
-     */
-    @Transactional
-    @Throws(ServerException::class)
-    fun noPass(taskId: String, comment: String?, params: Map<String, Any>, taskParams: Map<String, Any>) {
-        var text = comment
-        if (CommonTools.isNullStr(text)) {
-            text = "审批不通过"
-        }
-        approved(taskId, false, text!!, params, taskParams)
-    }
-
-    /**
-     * 审批处理
-     *
-     * @param taskId   当前任务id
-     * @param approved 审批结果（true-通过，false-不通过）
-     * @param comment  审批意见
-     * @param params   附加参数变量
-     * @throws ServerException 异常
+     * @return 任务列表
      */
     @Throws(ServerException::class)
-    private fun approved(taskId: String, approved: Boolean, comment: String, params: Map<String, Any>, taskParams: Map<String, Any>) =
+    fun findTaskList(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessTaskVo> =
             try {
+                val firstResult = processQueryPo.queryParam!!.currPage - 1 * processQueryPo.queryParam!!.pageSize
+                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize
+                commonOauthServer.userInfo()?.let { userInfo ->
+                    val taskQuery = taskService.createTaskQuery().or()
+                            .taskCandidateGroupIn(userInfo.roleSet.map { role -> role.code }.toList())
+                            .taskCandidateOrAssigned(userInfo.id).endOr()
+                    if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
+                        taskQuery.processInstanceIdIn(processQueryPo.processInstanceIds!!)
+                    }
+                    if (processQueryPo.startTime != null) {
+                        taskQuery.taskCreatedAfter(DateTime(processQueryPo.startTime!!).toDate())
+                    }
+                    if (processQueryPo.endTime != null) {
+                        taskQuery.taskCreatedBefore(DateTime(processQueryPo.endTime!!).toDate())
+                    }
+                    val total = taskQuery.list().count()
+                    val list = taskQuery.orderByTaskCreateTime().asc()
+                            .listPage(firstResult, maxResult)
+                            .map { task -> taskToVo(task) }
+                    CustomerQueryPageVo<ProcessTaskVo>(
+                            currPage = processQueryPo.queryParam!!.currPage.toLong(),
+                            pageSize = processQueryPo.queryParam!!.pageSize.toLong(),
+                            totalElements = total.toLong(),
+                            content = list
+                    )
+                } ?: throw ServerException("获取当前登录用户信息失败！")
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                throw ServerException(e.message)
+            }
+
+    /**
+     * 签收任务
+     *
+     * @param taskId 任务id
+     */
+    @Transactional
+    @Throws(ServerException::class)
+    fun claimTask(taskId: String) {
+        try {
+            commonOauthServer.userInfo()?.let { userInfo ->
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
                     logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
-                //通过审核
-                val map: MutableMap<String, Any> = mutableMapOf()
-                map[WorkFlowParamKey.approved] = approved
-                map[WorkFlowParamKey.comment] = comment
-                params.forEach { (key, value) ->
-                    if (!map.containsKey(key)) {
-                        map[key] = value
+                taskService.claim(taskId, userInfo.id)
+            } ?: throw ServerException("获取当前登录用户信息失败！")
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException(e.message)
+        }
+    }
+
+    /**
+     * 转办任务
+     *
+     * @param taskId 任务id
+     */
+    @Transactional
+    @Throws(ServerException::class)
+    fun turnTask(taskId: String, acceptUserId: String) {
+        try {
+            commonOauthServer.userInfo()?.let { userInfo ->
+                val task = taskService.createTaskQuery().taskId(taskId).singleResult()
+                if (task == null) {
+                    logAdapter.error("流程任务【$taskId】不存在！")
+                    throw ServerException("流程任务不存在！")
+                }
+                taskService.setOwner(taskId, userInfo.id)
+                taskService.setAssignee(taskId, acceptUserId)
+            } ?: throw ServerException("获取当前登录用户信息失败！")
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException(e.message)
+        }
+    }
+
+    /**
+     * 委派任务
+     *
+     * @param taskId 任务id
+     */
+    @Transactional
+    @Throws(ServerException::class)
+    fun delegateTask(taskId: String, acceptUserId: String) {
+        try {
+            commonOauthServer.userInfo()?.let { userInfo ->
+                val task = taskService.createTaskQuery().taskId(taskId).singleResult()
+                if (task == null) {
+                    logAdapter.error("流程任务【$taskId】不存在！")
+                    throw ServerException("流程任务不存在！")
+                }
+                taskService.setOwner(taskId, userInfo.id)
+                taskService.delegateTask(taskId, acceptUserId)
+            } ?: throw ServerException("获取当前登录用户信息失败！")
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException(e.message)
+        }
+    }
+
+    /**
+     * 任务处理
+     *
+     * @param processHandlingPo 任务处理参数
+     */
+    @Transactional
+    @Throws(ServerException::class)
+    fun processTask(processHandlingPo: ProcessHandlingPo) {
+        try {
+            commonOauthServer.userInfo()?.let { userInfo ->
+                val task = taskService.createTaskQuery().taskId(processHandlingPo.taskId).singleResult()
+                if (task == null) {
+                    logAdapter.error("流程任务【${processHandlingPo.taskId}】不存在！")
+                    throw ServerException("流程任务不存在！")
+                }
+                val params: MutableMap<String, Any> = mutableMapOf()
+                var comment = processHandlingPo.comment
+                if (CommonTools.isNullStr(comment)) {
+                    comment = if (processHandlingPo.pass!!) {
+                        "通过"
+                    } else {
+                        "不通过"
                     }
                 }
-                runtimeService.setVariablesLocal(task.executionId, taskParams)
-                taskService.complete(taskId, map)
+                params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
+                params[WorkFlowParamKey.comment] = comment!!
+                processHandlingPo.params.forEach { (key, value) ->
+                    if (!params.containsKey(key)) {
+                        params[key] = value
+                    }
+                }
+                runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
+                if (task.delegationState == DelegationState.PENDING) {
+                    taskService.resolveTask(task.id, params)
+                } else {
+                    taskService.complete(task.id, params)
+                }
+            } ?: throw ServerException("获取当前登录用户信息失败！")
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException(e.message)
+        }
+    }
+
+    @Transactional
+    @Throws(ServerException::class)
+    fun deleteProcessInstance(processTerminationPo: ProcessTerminationPo) {
+        runtimeService.deleteProcessInstance(processTerminationPo.processInstanceId, processTerminationPo.reason)
+    }
+
+    @Throws(ServerException::class)
+    fun findProcessInstance(processInstanceId: String): ProcessInstanceVo =
+            try {
+                if (isFinished(processInstanceId)) {
+                    historyService.createHistoricProcessInstanceQuery()
+                            .processInstanceId(processInstanceId).singleResult()
+                            .let { instance ->
+                                instanceToVo(instance)
+                            }
+                } else {
+                    runtimeService.createProcessInstanceQuery()
+                            .processInstanceId(processInstanceId).singleResult()
+                            .let { instance ->
+                                instanceToVo(instance)
+                            }
+                }
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                throw ServerException(e.message)
+            }
+
+    /**
+     * 查询流程实例
+     */
+    @Throws(ServerException::class)
+    fun findProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
+            try {
+                val firstResult = processQueryPo.queryParam!!.currPage - 1 * processQueryPo.queryParam!!.pageSize
+                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize
+                val processInstanceQuery = runtimeService.createProcessInstanceQuery()
+                if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
+                    processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
+                }
+                if (!CommonTools.isNullStr(processQueryPo.startUserId)) {
+                    processInstanceQuery.startedBy(processQueryPo.startUserId)
+                }
+                if (processQueryPo.startTime != null) {
+                    processInstanceQuery.startedAfter(DateTime(processQueryPo.startTime!!).toDate())
+                }
+                if (processQueryPo.endTime != null) {
+                    processInstanceQuery.startedBefore(DateTime(processQueryPo.endTime!!).toDate())
+                }
+                val total = processInstanceQuery.list().count()
+                val list = processInstanceQuery.orderByStartTime().asc()
+                        .listPage(firstResult, maxResult)
+                        .map { instance -> instanceToVo(instance) }
+                CustomerQueryPageVo<ProcessInstanceVo>(
+                        currPage = processQueryPo.queryParam!!.currPage.toLong(),
+                        pageSize = processQueryPo.queryParam!!.pageSize.toLong(),
+                        totalElements = total.toLong(),
+                        content = list
+                )
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                throw ServerException(e.message)
+            }
+
+    /**
+     * 查询流程实例
+     */
+    @Throws(ServerException::class)
+    fun findHistoryProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
+            try {
+                val firstResult = processQueryPo.queryParam!!.currPage - 1 * processQueryPo.queryParam!!.pageSize
+                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize
+                val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+                if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
+                    processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
+                }
+                if (!CommonTools.isNullStr(processQueryPo.startUserId)) {
+                    processInstanceQuery.startedBy(processQueryPo.startUserId)
+                }
+                if (processQueryPo.startTime != null) {
+                    processInstanceQuery.startedAfter(DateTime(processQueryPo.startTime!!).toDate())
+                }
+                if (processQueryPo.endTime != null) {
+                    processInstanceQuery.startedBefore(DateTime(processQueryPo.endTime!!).toDate())
+                }
+                val total = processInstanceQuery.list().count()
+                val list = processInstanceQuery.orderByProcessInstanceStartTime().asc()
+                        .listPage(firstResult, maxResult)
+                        .map { instance -> instanceToVo(instance) }
+                CustomerQueryPageVo<ProcessInstanceVo>(
+                        currPage = processQueryPo.queryParam!!.currPage.toLong(),
+                        pageSize = processQueryPo.queryParam!!.pageSize.toLong(),
+                        totalElements = total.toLong(),
+                        content = list
+                )
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
@@ -199,7 +463,7 @@ constructor(private val logAdapter: LogAdapter,
      * @return 流程历史信息
      */
     @Throws(ServerException::class)
-    fun findHistoryInfo(processInstanceId: String): List<FlowHistoryVo> =
+    fun findHistoryActivity(processInstanceId: String): List<ProcessHistoryActivityVo> =
             try {
                 val historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult()
                 if (historicProcessInstance == null) {
@@ -209,7 +473,7 @@ constructor(private val logAdapter: LogAdapter,
                 historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).finished()
                         .orderByHistoricActivityInstanceEndTime().asc().list()
                         .filter { historicActivityInstance -> !CommonTools.isNullStr(historicActivityInstance.taskId) }
-                        .map { historicActivityInstance -> actToVO(historicActivityInstance, historicProcessInstance.businessKey) }
+                        .map { historicActivityInstance -> actToVo(historicActivityInstance, historicProcessInstance.businessKey) }
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
@@ -242,18 +506,18 @@ constructor(private val logAdapter: LogAdapter,
      * 生成流程图
      *
      * @param processInstanceId 流程实例id
+     * @param imgType 图片格式
      * @return 流程图输入流
      * @throws ServerException 异常
      */
     @Throws(ServerException::class)
-    fun generateDiagram(processInstanceId: String): InputStream =
+    fun generateDiagram(processInstanceId: String, imgType: String): InputStream =
             try {
                 val processDefinitionId = if (isFinished(processInstanceId)) {
                     historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult().processDefinitionId
                 } else {
                     runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult().processDefinitionId
                 }
-
                 // 将已经执行的节点ID放入高亮显示节点集合
                 val historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId)
                         .orderByHistoricActivityInstanceStartTime().asc().list()
@@ -266,7 +530,7 @@ constructor(private val logAdapter: LogAdapter,
                 val flows: MutableList<String> = getHighLightedFlows(model, historicActivityInstanceList)
                 val engineConfiguration = processEngine.processEngineConfiguration
                 val diagramGenerator = engineConfiguration.processDiagramGenerator
-                diagramGenerator.generateDiagram(model, "bmp", highLightedActivityIdList, flows,
+                diagramGenerator.generateDiagram(model, imgType.toLowerCase(), highLightedActivityIdList, flows,
                         engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                         engineConfiguration.classLoader, 1.0, true)
             } catch (e: Exception) {
@@ -298,10 +562,12 @@ constructor(private val logAdapter: LogAdapter,
         val finishedActivityInstanceList: MutableList<HistoricActivityInstance> = mutableListOf()
         historicActivityInstanceList.forEach {
             // 获取流程节点
-            val flowNode = model.mainProcess.getFlowElement(it.activityId, true) as FlowNode
-            allHistoricActivityNodeList.add(flowNode)
-            // 结束时间不为空，当前节点则已经完成
-            it.endTime?.apply { finishedActivityInstanceList.add(it) }
+            val element = model.mainProcess.getFlowElement(it.activityId, true)
+            if (element is FlowNode) {
+                allHistoricActivityNodeList.add(element)
+                // 结束时间不为空，当前节点则已经完成
+                it.endTime?.apply { finishedActivityInstanceList.add(it) }
+            }
         }
         // 当前流程节点
         var currentFlowNode: FlowNode?

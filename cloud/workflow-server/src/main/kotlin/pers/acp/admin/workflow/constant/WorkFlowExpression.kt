@@ -2,7 +2,6 @@ package pers.acp.admin.workflow.constant
 
 import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.constant.RoleCode
-import pers.acp.admin.permission.BaseExpression
 
 /**
  * @author zhang by 14/06/2019
@@ -10,9 +9,19 @@ import pers.acp.admin.permission.BaseExpression
  */
 object WorkFlowExpression {
     /**
-     * 启动流程
+     * 工作流管理
      */
-    const val flowStart = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowStart + "')"
+    const val flowManage = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowManage + "')"
+
+    /**
+     * 流程管理
+     */
+    const val flowAdmin = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "')"
+
+    /**
+     * 流程定义
+     */
+    const val flowDefinition = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"
 
     /**
      * 获取流程待办任务
@@ -20,9 +29,9 @@ object WorkFlowExpression {
     const val flowPending = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowPending + "')"
 
     /**
-     * 审批
+     * 流程处理
      */
-    const val flowApprove = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowApprove + "')"
+    const val flowProcess = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowProcess + "')"
 
     /**
      * 获取流程处理历史

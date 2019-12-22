@@ -24,7 +24,7 @@ spring:
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
 info:
-  version: 4.0.6
+  version: 4.0.7
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -79,9 +79,13 @@ security:
       token-info-uri: http://oauth2-server/oauth/check_token
 flowable:
   history-level: full
+  check-process-definitions: false
 acp:
   cloud:
     log-server:
       client:
         enabled: true
         log-type: WORKFLOW
+    oauth:
+      resource-server-permit-all-path:
+        - /workflow/definition/file/**
