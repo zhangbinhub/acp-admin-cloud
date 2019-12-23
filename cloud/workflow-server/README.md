@@ -1,5 +1,5 @@
 ### workflow-server
-工作流服务，集成[flowable v6.4.1](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
+工作流服务，集成[FlowAble v6.4.2](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
 
 ##### 一、流程编辑器
 - 1、请前往flowable[官网](https://www.flowable.org)或[GitHub](https://github.com/flowable/flowable-engine/releases)下载并部署 flowable-modeler 至 tomcat9 并启动
@@ -20,12 +20,20 @@ docker run -p8080:8080 flowable/all-in-one
 - 1、工作流服务目前已封装如下5个接口，接口详情请在浏览器中访问 /swagger-ui.html 页面
     - 启动流程
     - 获取用户待办任务列表
-    - 流程审批
+    - 流程处理
     - 流程处理历史查询
     - 生成流程图
-- 2、工作流服务独立于具体业务的一个流程引擎，具体应用需整合进具体的业务场景，由其他服务进行服务内部调用，而不应该暴露给前端直接调用，因此在网关中无需配置该服务的路由策略。
+- 2、需动态配置路由策略。
 
-##### 四、流程示例
-- [流程定义文件](src/main/resources/processes/测试请假流程.bpmn20.xml)
+##### 四、固定必要的流程变量
+- businessKey - 业务键
+- flowName - 流程名称
+- title - 流程标题
+- description - 流程描述
+- startUserId - 业务键
+- pass - 处理结果：true-通过，false-不通过
+- comment - 处理意见
+
+##### 五、流程示例
 - 流程图：
 ![流程图](../../doc/images/diagram.png)

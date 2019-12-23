@@ -1,13 +1,13 @@
 package pers.acp.admin.oauth.repo
 
-import pers.acp.admin.oauth.base.OauthBaseRepository
+import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.oauth.entity.Menu
 
 /**
  * @author zhangbin by 2018-1-17 17:46
  * @since JDK 11
  */
-interface MenuRepository : OauthBaseRepository<Menu, String> {
+interface MenuRepository : BaseRepository<Menu, String> {
 
     fun findByAppId(appId: String): MutableList<Menu>
 

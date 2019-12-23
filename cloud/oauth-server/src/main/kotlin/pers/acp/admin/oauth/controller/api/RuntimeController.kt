@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
-@Api("运行参数配置")
+@Api(tags = ["运行参数配置"])
 class RuntimeController @Autowired
 constructor(private val innerRuntimeController: InnerRuntimeController, private val runtimeConfigDomain: RuntimeConfigDomain, private val refreshEventPublish: RefreshEventPublish) : BaseController() {
 

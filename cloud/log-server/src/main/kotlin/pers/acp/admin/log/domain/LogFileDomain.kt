@@ -65,7 +65,7 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         if (!File(filePath).exists()) {
             throw ServerException("文件[$fileName]不存在")
         }
-        fileDownLoadHandle.downLoadFile(request, response, filePath, false, listOf("$foldPath/.*"))
+        fileDownLoadHandle.downLoadFile(request, response, filePath, listOf("$foldPath/.*"))
     }
 
 }

@@ -22,7 +22,7 @@ import pers.acp.spring.boot.exceptions.ServerException
 @Validated
 @RestController
 @RequestMapping(CommonPath.innerBasePath)
-@Api("应用信息")
+@Api(tags = ["应用信息（内部接口）"])
 class InnerApplicationController @Autowired
 constructor(private val applicationDomain: ApplicationDomain) : BaseController() {
 

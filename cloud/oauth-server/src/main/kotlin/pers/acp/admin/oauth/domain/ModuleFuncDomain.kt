@@ -72,9 +72,10 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doDelete(idList: MutableList<String>) {
-        val menuList = moduleFuncRepository.findByParentIdIn(idList)
-        if (menuList.isNotEmpty()) {
-            throw ServerException("存在下级模块功能，不允许删除")
+        moduleFuncRepository.findByParentIdIn(idList).apply {
+            if (this.isNotEmpty()) {
+                throw ServerException("存在下级模块功能，不允许删除")
+            }
         }
         moduleFuncRepository.deleteByIdInAndCovert(idList, true)
     }

@@ -1,4 +1,9 @@
 ## 版本更新记录
+##### v4.0.7
+> - [Upgrade] 优化菜单管理、模块管理、机构管理，删除时候校验下级是否存在的写法
+> - [Upgrade] 修改@Api写法
+> - [Upgrade] 完善WorkFlow服务
+> - [Upgrade] 升级核心库至6.3.4
 ##### v4.0.6
 > - [Upgrade] 各服务增加feign配置
 > - [Upgrade] 优化entity超类写法

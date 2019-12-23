@@ -1,6 +1,6 @@
 package pers.acp.admin.oauth.repo
 
-import pers.acp.admin.oauth.base.OauthBaseRepository
+import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.oauth.entity.User
 import java.util.Optional
 
@@ -8,7 +8,7 @@ import java.util.Optional
  * @author zhangbin by 2018-1-17 17:48
  * @since JDK 11
  */
-interface UserRepository : OauthBaseRepository<User, String> {
+interface UserRepository : BaseRepository<User, String> {
 
     fun findByLoginNo(loginNo: String): Optional<User>
 

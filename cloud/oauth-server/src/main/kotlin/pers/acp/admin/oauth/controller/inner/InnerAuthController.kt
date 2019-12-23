@@ -26,7 +26,7 @@ import pers.acp.spring.boot.exceptions.ServerException
 @Validated
 @RestController
 @RequestMapping(CommonPath.innerBasePath)
-@Api("权限信息")
+@Api(tags = ["权限信息（内部接口）"])
 class InnerAuthController @Autowired
 constructor(private val userDomain: UserDomain,
             private val securityTokenService: SecurityTokenService) : BaseController() {
