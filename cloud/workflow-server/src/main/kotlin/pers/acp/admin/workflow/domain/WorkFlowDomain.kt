@@ -230,7 +230,7 @@ constructor(private val logAdapter: LogAdapter,
                     val list = taskQuery.orderByTaskCreateTime().asc()
                             .listPage(firstResult, maxResult)
                             .map { task -> taskToVo(task) }
-                    CustomerQueryPageVo<ProcessTaskVo>(
+                    CustomerQueryPageVo(
                             currPage = processQueryPo.queryParam!!.currPage.toLong(),
                             pageSize = processQueryPo.queryParam!!.pageSize.toLong(),
                             totalElements = total.toLong(),
