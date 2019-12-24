@@ -19,11 +19,7 @@ data class ProcessStartPo(
         @get:NotBlank(message = "业务键不能为空")
         var businessKey: String? = null,
 
-        @ApiModelProperty(value = "流程名称", required = true, position = 3)
-        @get:NotBlank(message = "流程名称不能为空")
-        var flowName: String? = null,
-
-        @ApiModelProperty(value = "标题", required = true, position = 4)
+        @ApiModelProperty(value = "标题", required = true, position = 3)
         @get:NotBlank(message = "标题不能为空")
         var title: String? = null,
 
