@@ -14,9 +14,7 @@ import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
-import pers.acp.admin.log.po.LoginLogQueryPo
-import pers.acp.admin.log.po.OperateLogQueryPo
-import pers.acp.admin.log.po.RouteLogQueryPo
+import pers.acp.admin.log.po.LogQueryPo
 import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
@@ -59,24 +57,24 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryRouteLog(@RequestBody @Valid routeLogQueryPo: RouteLogQueryPo): ResponseEntity<Page<out Any>> =
-            ResponseEntity.ok(logDomain.doQueryRouteLog(routeLogQueryPo))
+    fun queryRouteLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+            ResponseEntity.ok(logDomain.doQueryRouteLog(logQueryPo))
 
     @ApiOperation(value = "查询操作日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryOperateLog(@RequestBody @Valid operateLogQueryPo: OperateLogQueryPo): ResponseEntity<Page<out Any>> =
-            ResponseEntity.ok(logDomain.doQueryOperateLog(operateLogQueryPo))
+    fun queryOperateLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+            ResponseEntity.ok(logDomain.doQueryOperateLog(logQueryPo))
 
     @ApiOperation(value = "查询登录日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryLoginLog(@RequestBody @Valid loginLogQueryPo: LoginLogQueryPo): ResponseEntity<Page<out Any>> =
-            ResponseEntity.ok(logDomain.doQueryLoginLog(loginLogQueryPo))
+    fun queryLoginLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+            ResponseEntity.ok(logDomain.doQueryLoginLog(logQueryPo))
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
