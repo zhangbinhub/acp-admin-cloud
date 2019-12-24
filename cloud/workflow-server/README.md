@@ -12,9 +12,8 @@ docker run -p8080:8080 flowable/all-in-one
 - 5、编辑好一个流程之后，导出为 xxxx.bpmn20.xml 文件
 
 ##### 二、流程部署
-- 1、将生成的 xxxx.bpmn20.xml 流程定义文件放到 resources/processes 路径下即可，每次启动时系统会自动装载并部署 resources/processes 路径下的所有流程
-- 2、流程更新重新部署后，只有新发起的流程会使用新流程，之前尚未结束的流程，仍然走老版本的流程
-- 3、有许多配置参数可以灵活更改达到不同的效果，请[参考文档](https://www.flowable.org/docs/userguide/index.html)
+- 1、流程更新重新部署后，只有新发起的流程会使用新流程，之前尚未结束的流程，仍然走老版本的流程
+- 2、管理界面进行工作流部署，上传 xxxx.bpmn20.xml 文件
 
 ##### 三、接口说明
 - 1、工作流服务目前已封装如下5个接口，接口详情请在浏览器中访问 /swagger-ui.html 页面
