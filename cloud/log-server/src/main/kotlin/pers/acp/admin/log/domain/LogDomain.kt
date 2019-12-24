@@ -7,16 +7,17 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.common.base.BaseRepository
 import pers.acp.admin.common.feign.CommonOauthServer
+import pers.acp.admin.common.vo.ApplicationVo
 import pers.acp.admin.constant.TokenConstant
+import pers.acp.admin.log.base.BaseLogEntity
 import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.entity.LoginLog
 import pers.acp.admin.log.entity.OperateLog
 import pers.acp.admin.log.entity.RouteLog
 import pers.acp.admin.log.message.RouteLogMessage
-import pers.acp.admin.log.po.LoginLogQueryPo
-import pers.acp.admin.log.po.OperateLogQueryPo
-import pers.acp.admin.log.po.RouteLogQueryPo
+import pers.acp.admin.log.po.LogQueryPo
 import pers.acp.admin.log.repo.*
 import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.core.CommonTools
@@ -62,20 +63,14 @@ constructor(private val logAdapter: LogAdapter,
                 }
             } ?: mapOf()
 
-    fun loginStatistics(beginTime: Long): List<LoginLogVo> =
-            loginLogHistoryRepository.loginStatistics(beginTime).let {
-                it.addAll(loginLogRepository.loginStatistics())
-                it.map { item ->
-                    LoginLogVo(item[0].toString(), item[1].toString(), item[2].toString(), item[3].toString().toLong())
-                }
-            }
+    private fun getAppInfo(token: String): ApplicationVo = commonOauthServer.appInfo(token)
 
     @Transactional
     suspend fun doRouteLog(routeLogMessage: RouteLogMessage, message: String) {
         val routeLog = messageToEntity(message, RouteLog::class.java)
         if (routeLogMessage.token != null) {
             try {
-                commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
+                getAppInfo(routeLogMessage.token!!).let { app ->
                     routeLog.clientId = app.id
                     routeLog.clientName = app.appName
                     routeLog.identify = app.identify
@@ -125,7 +120,7 @@ constructor(private val logAdapter: LogAdapter,
     suspend fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
         try {
             val operateLog = messageToEntity(message, OperateLog::class.java)
-            commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
+            getAppInfo(routeLogMessage.token!!).let { app ->
                 operateLog.clientId = app.id
                 operateLog.clientName = app.appName
                 operateLog.identify = app.identify
@@ -150,7 +145,7 @@ constructor(private val logAdapter: LogAdapter,
     suspend fun doLoginLog(routeLogMessage: RouteLogMessage, message: String) {
         try {
             val loginLog = messageToEntity(message, LoginLog::class.java)
-            commonOauthServer.appInfo(routeLogMessage.token!!).let { app ->
+            getAppInfo(routeLogMessage.token!!).let { app ->
                 if (!CommonTools.isNullStr(app.id)) {
                     loginLog.clientId = app.id
                     loginLog.clientName = app.appName
@@ -172,121 +167,78 @@ constructor(private val logAdapter: LogAdapter,
         }
     }
 
-    fun doQueryRouteLog(routeLogQueryPo: RouteLogQueryPo): Page<out Any> =
-            routeLogQueryPo.let {
+    fun loginStatistics(beginTime: Long): List<LoginLogVo> =
+            loginLogHistoryRepository.loginStatistics(beginTime).let {
+                it.addAll(loginLogRepository.loginStatistics())
+                it.map { item ->
+                    LoginLogVo(item[0].toString(), item[1].toString(), item[2].toString(), item[3].toString().toLong())
+                }
+            }
+
+    fun doPageQuery(baseRepository: BaseRepository<out BaseLogEntity, String>, logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
+            baseRepository.findAll({ root, _, criteriaBuilder ->
+                val predicateList: MutableList<Predicate> = mutableListOf()
+                if (!CommonTools.isNullStr(logQueryPo.remoteIp)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + logQueryPo.remoteIp + "%"))
+                }
+                if (!CommonTools.isNullStr(logQueryPo.gatewayIp)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + logQueryPo.gatewayIp + "%"))
+                }
+                if (!CommonTools.isNullStr(logQueryPo.path)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + logQueryPo.path + "%"))
+                }
+                if (!CommonTools.isNullStr(logQueryPo.serverId)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + logQueryPo.serverId + "%"))
+                }
+                if (!CommonTools.isNullStr(logQueryPo.clientName)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + logQueryPo.clientName + "%"))
+                }
+                if (!CommonTools.isNullStr(logQueryPo.userName)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + logQueryPo.userName + "%"))
+                }
+                if (logQueryPo.startTime != null) {
+                    predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), logQueryPo.startTime))
+                }
+                if (logQueryPo.endTime != null) {
+                    predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), logQueryPo.endTime))
+                }
+                if (logQueryPo.responseStatus != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), logQueryPo.responseStatus))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(logQueryPo.queryParam!!))
+
+    fun doQueryRouteLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
+            logQueryPo.let {
                 if (it.history) {
                     routeLogHistoryRepository
                 } else {
                     routeLogRepository
                 }
             }.let {
-                it.findAll({ root, _, criteriaBuilder ->
-                    val predicateList: MutableList<Predicate> = mutableListOf()
-                    if (!CommonTools.isNullStr(routeLogQueryPo.remoteIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + routeLogQueryPo.remoteIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(routeLogQueryPo.gatewayIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + routeLogQueryPo.gatewayIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(routeLogQueryPo.path)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + routeLogQueryPo.path + "%"))
-                    }
-                    if (!CommonTools.isNullStr(routeLogQueryPo.serverId)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + routeLogQueryPo.serverId + "%"))
-                    }
-                    if (!CommonTools.isNullStr(routeLogQueryPo.clientName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + routeLogQueryPo.clientName + "%"))
-                    }
-                    if (!CommonTools.isNullStr(routeLogQueryPo.userName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + routeLogQueryPo.userName + "%"))
-                    }
-                    if (routeLogQueryPo.startTime != null) {
-                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), routeLogQueryPo.startTime))
-                    }
-                    if (routeLogQueryPo.endTime != null) {
-                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), routeLogQueryPo.endTime))
-                    }
-                    if (routeLogQueryPo.responseStatus != null) {
-                        predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), routeLogQueryPo.responseStatus))
-                    }
-                    criteriaBuilder.and(*predicateList.toTypedArray())
-                }, buildPageRequest(routeLogQueryPo.queryParam!!))
+                doPageQuery(it, logQueryPo)
             }
 
-    fun doQueryOperateLog(operateLogQueryPo: OperateLogQueryPo): Page<out Any> =
-            operateLogQueryPo.let {
+    fun doQueryOperateLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
+            logQueryPo.let {
                 if (it.history) {
                     operateLogHistoryRepository
                 } else {
                     operateLogRepository
                 }
             }.let {
-                it.findAll({ root, _, criteriaBuilder ->
-                    val predicateList: MutableList<Predicate> = mutableListOf()
-                    if (!CommonTools.isNullStr(operateLogQueryPo.remoteIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + operateLogQueryPo.remoteIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(operateLogQueryPo.gatewayIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + operateLogQueryPo.gatewayIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(operateLogQueryPo.path)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + operateLogQueryPo.path + "%"))
-                    }
-                    if (!CommonTools.isNullStr(operateLogQueryPo.serverId)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + operateLogQueryPo.serverId + "%"))
-                    }
-                    if (!CommonTools.isNullStr(operateLogQueryPo.clientName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + operateLogQueryPo.clientName + "%"))
-                    }
-                    if (!CommonTools.isNullStr(operateLogQueryPo.userName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + operateLogQueryPo.userName + "%"))
-                    }
-                    if (operateLogQueryPo.startTime != null) {
-                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), operateLogQueryPo.startTime))
-                    }
-                    if (operateLogQueryPo.endTime != null) {
-                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), operateLogQueryPo.endTime))
-                    }
-                    criteriaBuilder.and(*predicateList.toTypedArray())
-                }, buildPageRequest(operateLogQueryPo.queryParam!!))
+                doPageQuery(it, logQueryPo)
             }
 
-    fun doQueryLoginLog(loginLogQueryPo: LoginLogQueryPo): Page<out Any> =
-            loginLogQueryPo.let {
+    fun doQueryLoginLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
+            logQueryPo.let {
                 if (it.history) {
                     loginLogHistoryRepository
                 } else {
                     loginLogRepository
                 }
             }.let {
-                it.findAll({ root, _, criteriaBuilder ->
-                    val predicateList: MutableList<Predicate> = mutableListOf()
-                    if (!CommonTools.isNullStr(loginLogQueryPo.remoteIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + loginLogQueryPo.remoteIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(loginLogQueryPo.gatewayIp)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + loginLogQueryPo.gatewayIp + "%"))
-                    }
-                    if (!CommonTools.isNullStr(loginLogQueryPo.path)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + loginLogQueryPo.path + "%"))
-                    }
-                    if (!CommonTools.isNullStr(loginLogQueryPo.serverId)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + loginLogQueryPo.serverId + "%"))
-                    }
-                    if (!CommonTools.isNullStr(loginLogQueryPo.clientName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + loginLogQueryPo.clientName + "%"))
-                    }
-                    if (!CommonTools.isNullStr(loginLogQueryPo.userName)) {
-                        predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + loginLogQueryPo.userName + "%"))
-                    }
-                    if (loginLogQueryPo.startTime != null) {
-                        predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), loginLogQueryPo.startTime))
-                    }
-                    if (loginLogQueryPo.endTime != null) {
-                        predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), loginLogQueryPo.endTime))
-                    }
-                    criteriaBuilder.and(*predicateList.toTypedArray())
-                }, buildPageRequest(loginLogQueryPo.queryParam!!))
+                doPageQuery(it, logQueryPo)
             }
 
 }

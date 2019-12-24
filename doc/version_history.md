@@ -4,6 +4,7 @@
 > - [Upgrade] 修改@Api写法
 > - [Upgrade] 完善WorkFlow服务
 > - [Upgrade] 升级核心库至6.3.4
+> - [Upgrade] 优化代码，去除冗余
 ##### v4.0.6
 > - [Upgrade] 各服务增加feign配置
 > - [Upgrade] 优化entity超类写法

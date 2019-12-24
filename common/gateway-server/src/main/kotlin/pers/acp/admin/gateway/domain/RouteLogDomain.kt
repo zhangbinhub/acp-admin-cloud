@@ -8,7 +8,6 @@ import pers.acp.admin.gateway.producer.instance.RouteLogProducer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils
-import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
@@ -28,14 +27,13 @@ import java.util.LinkedHashSet
 @Service
 @Transactional(readOnly = true)
 class RouteLogDomain @Autowired
-constructor(private val environment: Environment,
-            private val routeLogOutput: RouteLogOutput,
+constructor(routeLogOutput: RouteLogOutput,
+            private val environment: Environment,
             private val objectMapper: ObjectMapper) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Bean
-    fun routeLogProducer() = RouteLogProducer(routeLogOutput, objectMapper)
+    private val routeLogProducer = RouteLogProducer(routeLogOutput, objectMapper)
 
     private fun getRealRemoteIp(request: ServerHttpRequest): String {
         var ipAddress: String? = request.headers.getFirst("X-Forwarded-For")
@@ -63,7 +61,7 @@ constructor(private val environment: Environment,
 
     private fun doLog(routeLogMessage: RouteLogMessage) {
         try {
-            routeLogProducer().doNotifyRouteLog(routeLogMessage)
+            routeLogProducer.doNotifyRouteLog(routeLogMessage)
         } catch (e: Exception) {
             log.error(e.message, e)
         }

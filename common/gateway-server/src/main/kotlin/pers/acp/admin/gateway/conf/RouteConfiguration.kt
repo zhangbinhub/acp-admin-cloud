@@ -48,7 +48,9 @@ import javax.annotation.PostConstruct
 @AutoConfigureBefore(BindingServiceConfiguration::class)
 @EnableBinding(UpdateRouteInput::class, RouteLogOutput::class)
 class RouteConfiguration @Autowired
-constructor(private val environment: Environment, private val bindings: BindingServiceProperties, private val routeLogDomain: RouteLogDomain) {
+constructor(private val environment: Environment,
+            private val bindings: BindingServiceProperties,
+            private val routeLogDomain: RouteLogDomain) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
