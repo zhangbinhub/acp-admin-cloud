@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
+import pers.acp.admin.log.base.BaseLogEntity
 import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.domain.LogFileDomain
@@ -57,7 +58,7 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryRouteLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+    fun queryRouteLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryRouteLog(logQueryPo))
 
     @ApiOperation(value = "查询操作日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
@@ -65,7 +66,7 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryOperateLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+    fun queryOperateLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryOperateLog(logQueryPo))
 
     @ApiOperation(value = "查询登录日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
@@ -73,7 +74,7 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
-    fun queryLoginLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out Any>> =
+    fun queryLoginLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryLoginLog(logQueryPo))
 
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
