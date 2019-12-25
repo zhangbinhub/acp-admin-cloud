@@ -7,7 +7,4 @@ import pers.acp.admin.log.entity.OperateLog
  * @author zhang by 21/05/2019
  * @since JDK 11
  */
-interface OperateLogRepository : BaseRepository<OperateLog, String>{
-    fun findAllByRequestTimeLessThan(time: Long): MutableList<OperateLog>
-    fun deleteAllByRequestTimeLessThan(time: Long)
-}
+interface OperateLogRepository : BaseRepository<OperateLog, String>

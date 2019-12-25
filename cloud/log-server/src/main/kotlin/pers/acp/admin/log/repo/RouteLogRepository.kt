@@ -10,6 +10,4 @@ import java.util.*
  */
 interface RouteLogRepository : BaseRepository<RouteLog, String> {
     fun findByLogIdAndRequestTime(logId: String, requestParam: Long): Optional<RouteLog>
-    fun findAllByRequestTimeLessThan(time: Long): MutableList<RouteLog>
-    fun deleteAllByRequestTimeLessThan(time: Long)
 }
