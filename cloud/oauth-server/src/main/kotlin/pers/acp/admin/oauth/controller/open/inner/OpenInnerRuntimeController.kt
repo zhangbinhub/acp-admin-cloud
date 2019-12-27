@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
-import pers.acp.admin.api.OauthOpenInnerApi
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.spring.boot.exceptions.ServerException
@@ -27,13 +27,13 @@ import javax.validation.constraints.NotBlank
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api(tags = ["运行参数配置（内部接口）"])
-class InnerRuntimeController @Autowired
+@Api(tags = ["运行参数配置（内部开放接口）"])
+class OpenInnerRuntimeController @Autowired
 constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController() {
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))
-    @GetMapping(value = [OauthOpenInnerApi.runtimeConfig + "/{name}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.runtime + "/{name}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun find(@ApiParam(value = "参数名称", required = true)
              @NotBlank(message = "参数名称不能为空")

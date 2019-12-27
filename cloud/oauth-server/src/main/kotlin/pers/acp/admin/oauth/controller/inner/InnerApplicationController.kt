@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
-import pers.acp.admin.api.OauthInnerApi
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.spring.boot.exceptions.ServerException
@@ -27,7 +27,7 @@ class InnerApplicationController @Autowired
 constructor(private val applicationDomain: ApplicationDomain) : BaseController() {
 
     @ApiOperation(value = "获取应用信息", notes = "根据token查询应用详细信息")
-    @GetMapping(value = [OauthInnerApi.appInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.appInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @Throws(ServerException::class)
     fun appInfo(user: OAuth2Authentication): ResponseEntity<Application> =
             applicationDomain.getApp(user.oAuth2Request.clientId)?.let {

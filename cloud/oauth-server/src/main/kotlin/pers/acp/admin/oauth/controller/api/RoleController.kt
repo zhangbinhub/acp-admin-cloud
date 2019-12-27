@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.permission.BaseExpression
-import pers.acp.admin.oauth.constant.OauthApi
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.constant.RoleConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.RoleDomain

@@ -25,8 +25,8 @@ import javax.validation.Valid
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api(tags = ["工作流引擎（内部接口）"])
-class InnerWorkFlowController @Autowired
+@Api(tags = ["工作流引擎（内部开放接口）"])
+class OpenInnerWorkFlowController @Autowired
 constructor(private val workFlowDomain: WorkFlowDomain) : BaseController() {
 
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")

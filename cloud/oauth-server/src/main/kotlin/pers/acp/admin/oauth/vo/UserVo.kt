@@ -2,8 +2,6 @@ package pers.acp.admin.oauth.vo
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import pers.acp.admin.oauth.entity.Organization
-import pers.acp.admin.oauth.entity.Role
 
 /**
  * @author zhangbin by 2018-1-17 15:50
@@ -34,12 +32,12 @@ data class UserVo(
         var sort: Int = 0,
 
         @ApiModelProperty(value = "所属机构", position = 7)
-        var organizationSet: MutableSet<Organization> = mutableSetOf(),
+        var organizationSet: MutableSet<OrganizationVo> = mutableSetOf(),
 
         @ApiModelProperty(value = "可管理的机构", position = 8)
-        var organizationMngSet: MutableSet<Organization> = mutableSetOf(),
+        var organizationMngSet: MutableSet<OrganizationVo> = mutableSetOf(),
 
         @ApiModelProperty(value = "所属角色", position = 9)
-        var roleSet: MutableSet<Role> = mutableSetOf()
+        var roleSet: MutableSet<RoleVo> = mutableSetOf()
 
 )

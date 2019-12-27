@@ -25,10 +25,11 @@ constructor(private val userRepository: UserRepository) : TokenEnhancer {
         if (accessToken is DefaultOAuth2AccessToken) {
             val additionalInformation: MutableMap<String, Any> = mutableMapOf()
             userRepository.findByLoginNo(authentication.name).ifPresent { user ->
-                additionalInformation[TokenConstant.USER_INFO_APPID] = authentication.oAuth2Request.clientId
+                additionalInformation[TokenConstant.USER_INFO_APP_ID] = authentication.oAuth2Request.clientId
                 additionalInformation[TokenConstant.USER_INFO_ID] = user.id
                 additionalInformation[TokenConstant.USER_INFO_NAME] = user.name
                 additionalInformation[TokenConstant.USER_INFO_LOGIN_NO] = user.loginNo
+                additionalInformation[TokenConstant.USER_INFO_MOBILE] = user.mobile
                 additionalInformation[TokenConstant.USER_INFO_LOGIN_TIME] = CommonTools.getDateTimeString(null, Calculation.DATETIME_FORMAT)
             }
             accessToken.additionalInformation = additionalInformation

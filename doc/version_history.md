@@ -1,4 +1,9 @@
 ## 版本更新记录
+##### v4.x
+> - [Upgrade] 用户手机号放入token额外附加信息中
+> - [Upgrade] oauth增加一系列用户查询接口
+> - [Upgrade] dependency中的oauth客户端增加对应查询接口
+> - [Upgrade] 规范API接口URL命名
 ##### v4.0.7
 > - [Upgrade] 优化菜单管理、模块管理、机构管理，删除时候校验下级是否存在的写法
 > - [Upgrade] 修改@Api写法

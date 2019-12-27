@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.oauth.constant.OauthApi
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.constant.UserConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.UserDomain
@@ -26,6 +26,7 @@ import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
@@ -146,4 +147,47 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
             (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
+    @ApiOperation(value = "查询用户信息")
+    @PreAuthorize(UserConfigExpression.userQuery)
+    @GetMapping(value = [OauthApi.currOrgUserList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
+                                    @ApiParam(value = "角色编码", required = true)
+                                    @NotBlank(message = "角色编码不能为空")
+                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+            ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode))
+
+    @ApiOperation(value = "查询用户信息")
+    @PreAuthorize(UserConfigExpression.userQuery)
+    @GetMapping(value = [OauthApi.currOrgUserList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByRelativeOrgAndRole(user: OAuth2Authentication,
+                                        @ApiParam(value = "机构层级", required = true)
+                                        @NotBlank(message = "机构层级不能为空")
+                                        @RequestParam orgLevel: Int,
+                                        @ApiParam(value = "角色编码", required = true)
+                                        @NotBlank(message = "角色编码不能为空")
+                                        @RequestParam roleCode: String): ResponseEntity<List<User>> =
+            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode))
+
+    @ApiOperation(value = "查询用户信息")
+    @PreAuthorize(UserConfigExpression.userQuery)
+    @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
+                                    @NotBlank(message = "机构编码不能为空")
+                                    @RequestParam orgCode: String,
+                                    @ApiParam(value = "角色编码", required = true)
+                                    @NotBlank(message = "角色编码不能为空")
+                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+            ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode, roleCode))
+
+    @ApiOperation(value = "查询用户信息")
+    @PreAuthorize(UserConfigExpression.userQuery)
+    @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
+                          @NotBlank(message = "角色编码不能为空")
+                          @RequestParam roleCode: String): ResponseEntity<List<User>> =
+            ResponseEntity.ok(userDomain.getUserListByRole(roleCode))
 }
