@@ -46,7 +46,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
     @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
-    @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
             CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).let {
@@ -56,7 +56,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "查询路由日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间、响应状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
-    @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [LogApi.gateWayRouteLog], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryRouteLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryRouteLog(logQueryPo))
@@ -64,7 +64,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "查询操作日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
-    @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [LogApi.operateLog], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryOperateLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryOperateLog(logQueryPo))
@@ -72,7 +72,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "查询登录日志列表", notes = "查询条件：客户端ip、网关ip、请求路径、路由服务id、应用名称、用户名称、开始时间、结束时间")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.sysMonitor)
-    @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [LogApi.loginLog], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryLoginLog(@RequestBody @Valid logQueryPo: LogQueryPo): ResponseEntity<Page<out BaseLogEntity>> =
             ResponseEntity.ok(logDomain.doQueryLoginLog(logQueryPo))
@@ -80,7 +80,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "查询指定日期范围的日志备份文件", notes = "查询条件：开始日期、结束日期")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [LogApi.logFile], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryFile(@ApiParam(value = "开始日期", required = true, example = "0")
                   @NotNull(message = "开始日期不能为空")

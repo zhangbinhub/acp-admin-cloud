@@ -34,7 +34,7 @@ constructor(private val logAdapter: LogAdapter,
             private val workFlowDomain: WorkFlowDomain) : BaseController() {
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun start(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
@@ -45,7 +45,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "查询待办任务", notes = "获取当前用户的待办任务列表")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowPending)
-    @PostMapping(value = [WorkFlowApi.pending], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [WorkFlowApi.pending], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun pending(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessTaskVo>> =
             workFlowDomain.findTaskList(processQueryPo).let {
@@ -55,7 +55,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "领取任务", notes = "签收指定的任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowProcess)
-    @PatchMapping(value = [WorkFlowApi.claim + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [WorkFlowApi.claim + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun claim(@ApiParam(value = "任务ID", required = true) @PathVariable taskId: String): ResponseEntity<InfoVo> =
@@ -66,7 +66,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "转办任务", notes = "转办指定的任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowProcess)
-    @PatchMapping(value = [WorkFlowApi.transfer + "/{taskId}/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [WorkFlowApi.transfer + "/{taskId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun transfer(@ApiParam(value = "任务ID", required = true) @PathVariable taskId: String,
@@ -78,7 +78,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "委托办理任务", notes = "委托办理指定的任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowProcess)
-    @PatchMapping(value = [WorkFlowApi.delegate + "/{taskId}/{acceptUserId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [WorkFlowApi.delegate + "/{taskId}/{acceptUserId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun delegate(@ApiParam(value = "任务ID", required = true) @PathVariable taskId: String,
@@ -90,7 +90,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "流程处理", notes = "可选通过或不通过")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowProcess)
-    @PostMapping(value = [WorkFlowApi.process], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [WorkFlowApi.process], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun process(@RequestBody @Valid processHandlingPo: ProcessHandlingPo): ResponseEntity<InfoVo> =
@@ -101,7 +101,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "流程强制结束")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowAdmin)
-    @PostMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun delete(@RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
@@ -112,7 +112,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取流程实例", notes = "获取指定流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowManage)
-    @GetMapping(value = [WorkFlowApi.instance + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [WorkFlowApi.instance + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryInstance(@ApiParam(value = "流程实例id", required = true)
                       @PathVariable
@@ -124,7 +124,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取流程实例", notes = "获取流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowManage)
-    @PostMapping(value = [WorkFlowApi.instance], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [WorkFlowApi.instance], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryInstance(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
             workFlowDomain.findProcessInstance(processQueryPo).let {
@@ -134,7 +134,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取流程实例", notes = "获取流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowHistory)
-    @PostMapping(value = [WorkFlowApi.history], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [WorkFlowApi.history], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryHistoryInstance(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
             workFlowDomain.findHistoryProcessInstance(processQueryPo).let {
@@ -144,7 +144,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取流程历史记录", notes = "获取指定流程实例的历史处理记录")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowHistory)
-    @GetMapping(value = [WorkFlowApi.history + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [WorkFlowApi.history + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryHistoryActivity(@ApiParam(value = "流程实例id", required = true)
                              @PathVariable
@@ -156,7 +156,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取流程任务信息", notes = "获取指定流程任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowManage)
-    @GetMapping(value = [WorkFlowApi.task + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [WorkFlowApi.task + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryTaskInfo(@ApiParam(value = "流程任务ID", required = true)
                       @PathVariable

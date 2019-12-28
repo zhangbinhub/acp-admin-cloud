@@ -11,6 +11,8 @@ interface OrganizationRepository : BaseRepository<Organization, String> {
 
     fun findByParentIdIn(idList: MutableList<String>): MutableList<Organization>
 
+    fun findAllByCodeOrderBySortAsc(code: String): MutableList<Organization>
+
     fun deleteByIdIn(idList: MutableList<String>)
 
 }

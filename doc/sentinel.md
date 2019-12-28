@@ -65,7 +65,7 @@ rule-type: degrade
 | ---- | ---- | ---- |
 |resource|资源名，即限流规则的作用对象	
 |count|阈值
-|grade|熔断策略，支持秒级 RT/秒级异常比例/分钟级异常数(0: average RT, 1: exception ratio)|秒级平均 RT
+|grade|熔断策略，支持秒级 RT/秒级异常比例/分钟级异常数(0: average RT, 1: exception ratio, 2: exception count)
 |timeWindow|降级的时间，单位为 s	
 ### （三）系统保护规则
 rule-type: system

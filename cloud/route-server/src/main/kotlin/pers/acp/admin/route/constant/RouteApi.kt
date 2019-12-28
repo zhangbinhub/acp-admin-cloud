@@ -6,6 +6,6 @@ package pers.acp.admin.route.constant
  */
 object RouteApi {
     const val basePath = "/route"
-    const val gateWayRouteConfig = "/gatewayroute"
+    const val gateWayRouteConfig = "/gateway-route"
     const val gateWayRouteRefresh = "$gateWayRouteConfig/refresh"
 }

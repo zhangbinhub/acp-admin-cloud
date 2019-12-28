@@ -7,8 +7,8 @@ package pers.acp.admin.log.constant
 object LogApi {
     const val basePath = "/log"
     const val logFile = "/files"
-    const val gateWayRouteLog = "/gatewayroutelog"
-    const val operateLog = "/operatelog"
-    const val loginLog = "/loginlog"
-    const val loginInfo = "/logininfo"
+    const val gateWayRouteLog = "/gateway-route-log"
+    const val operateLog = "/operate-log"
+    const val loginLog = "/login-log"
+    const val loginInfo = "/login-info"
 }

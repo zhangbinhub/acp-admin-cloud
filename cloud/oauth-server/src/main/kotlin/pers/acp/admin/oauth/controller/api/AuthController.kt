@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.constant.ModuleFuncCode
-import pers.acp.admin.oauth.constant.OauthApi
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.constant.AuthConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.MenuDomain
@@ -49,7 +49,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
 
     @ApiOperation(value = "获取模块功能编码列表")
     @PreAuthorize(AuthConfigExpression.authConfig)
-    @GetMapping(value = [OauthApi.moduleFuncCodes], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.moduleFuncCodes], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun findModuleFuncCode(): ResponseEntity<List<String>> = ResponseEntity.ok(moduleFuncCodeList)
 
     @PostConstruct
@@ -69,38 +69,38 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     }
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
-    @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun currMenuList(user: OAuth2Authentication): ResponseEntity<List<Menu>> =
             ResponseEntity.ok(menuDomain.getMenuList(user.oAuth2Request.clientId, user.name))
 
     @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.menuList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.menuList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun menuList(@PathVariable appId: String): ResponseEntity<List<Menu>> =
             ResponseEntity.ok(menuDomain.getMenuListByAppId(appId))
 
     @ApiOperation(value = "获取指定应用下的模块功能列表", notes = "查询指定应用的模块功能列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.moduleFuncList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.moduleFuncList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun moduleFuncList(@PathVariable appId: String): ResponseEntity<List<ModuleFunc>> =
             ResponseEntity.ok(moduleFuncDomain.getModuleFuncListByAppId(appId))
 
     @ApiOperation(value = "获取菜单列表", notes = "查询所有菜单列表")
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun allMenuList(): ResponseEntity<List<Menu>> = ResponseEntity.ok(menuDomain.getAllMenuList())
 
     @ApiOperation(value = "获取模块功能列表", notes = "查询所有模块功能列表")
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun allModuleFuncList(): ResponseEntity<List<ModuleFunc>> = ResponseEntity.ok(moduleFuncDomain.getAllModuleFuncList())
 
     @ApiOperation(value = "新建菜单信息", notes = "名称、应用ID、图标、链接、上级、序号、模式、状态、关联角色")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
-    @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     fun addMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> =
             menuDomain.doCreate(menuPo).let {
@@ -110,7 +110,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "新建模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Menu::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authAdd)
-    @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     fun addModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
             moduleFuncDomain.doCreate(moduleFuncPo).let {
@@ -120,7 +120,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "删除指定的菜单信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authDelete)
-    @DeleteMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun deleteMenu(@ApiParam(value = "id列表", required = true)
                    @NotEmpty(message = "id不能为空")
@@ -132,7 +132,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "删除指定的模块功能信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；存在下级，不允许删除；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authDelete)
-    @DeleteMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun deleteModuleFunc(@ApiParam(value = "id列表", required = true)
                          @NotEmpty(message = "id不能为空")
@@ -144,7 +144,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "更新菜单信息", notes = "名称、应用ID、图标、链接、上级、序号、模式、状态、关联角色")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
-    @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> {
@@ -157,7 +157,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "更新模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；模块功能编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authUpdate)
-    @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> {
@@ -170,7 +170,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "获取菜单详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.menuConfig + "/{menuId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.menuConfig + "/{menuId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun menuInfo(@ApiParam(value = "菜单id", required = true)
                  @NotBlank(message = "菜单id不能为空")
@@ -181,7 +181,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     @ApiOperation(value = "获取模块功能详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(AuthConfigExpression.authQuery)
-    @GetMapping(value = [OauthApi.moduleFuncConfig + "/{moduleFuncId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.moduleFuncConfig + "/{moduleFuncId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun moduleFuncInfo(@ApiParam(value = "模块功能id", required = true)
                        @NotBlank(message = "模块功能id不能为空")

@@ -1,4 +1,32 @@
 ## 版本更新记录
+##### v4.1.0
+> - [Upgrade] 用户手机号放入token额外附加信息中
+> - [Upgrade] oauth增加一系列用户查询接口
+> - [Upgrade] dependency中的oauth客户端增加对应查询接口
+> - [Upgrade] 规范API接口URL命名
+> - [Upgrade] 升级核心库至6.4.0
+> - [Upgrade] 升级 Spring Boot 至 2.2.2.RELEASE
+> - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR1
+> - [Upgrade] 修改application.yaml中logging配置
+> - [Upgrade] 去除application.yaml中对hibernate.dialect方言的显示配置
+> - [Upgrade] MediaType.APPLICATION_JSON_UTF8_VALUE 替换为 MediaType.APPLICATION_JSON_VALUE
+> - [Upgrade] 修改test依赖
+> - [Upgrade] cloud中使用spring-cloud-loadbalancer替换ribbon
+> - [Upgrade] cloud中修改feign相关配置
+> - [Upgrade] 升级依赖项
+>   - jupiter to 5.5.2
+>   - junit_platform to 1.5.2
+>   - kotlin_coroutines to 1.3.3
+>   - commons_codec to 1.13
+>   - bouncycastle to 1.64
+>   - jackson to 2.10.1
+>   - zip4j to 2.2.8
+>   - hikaricp to 3.4.1
+>   - mssqljdbc to 7.4.1.jre8
+>   - spring boot admin to 2.2.1
+>   - flying_saucer to 9.1.19
+>   - netty to 4.1.44.Final
+>   - okhttp to 3.12.0
 ##### v4.0.7
 > - [Upgrade] 优化菜单管理、模块管理、机构管理，删除时候校验下级是否存在的写法
 > - [Upgrade] 修改@Api写法

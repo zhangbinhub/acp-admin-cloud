@@ -62,8 +62,7 @@ allprojects {
     }
 
     dependencies {
-        testImplementation("org.junit.jupiter:junit-jupiter-engine:$versions.jupiter")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:$versions.jupiter")
+        testImplementation("org.junit.jupiter:junit-jupiter:$versions.jupiter")
         testImplementation("org.junit.platform:junit-platform-launcher:$versions.junit_platform")
         testImplementation "org.jetbrains.kotlin:kotlin-test"
         testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"

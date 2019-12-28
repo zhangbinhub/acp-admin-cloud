@@ -30,7 +30,5 @@ dependencies {
     implementation "org.flowable:flowable-spring-boot-starter:$versions.flowable"
     implementation "org.flowable:flowable-spring-boot-starter-actuator:$versions.flowable"
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: 'junit'
-    }
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

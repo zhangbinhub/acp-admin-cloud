@@ -62,6 +62,7 @@ dependencies {
     api "org.springframework.cloud:spring-cloud-starter-bus-kafka"
     // monitor : 服务间调用、断路器、链路追踪
     api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    api "org.springframework.cloud:spring-cloud-loadbalancer"
 //    api "org.springframework.cloud:spring-cloud-starter-zipkin"
     api "io.github.openfeign:feign-okhttp"
     // 服务注册发现

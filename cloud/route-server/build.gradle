@@ -30,7 +30,5 @@ dependencies {
 
     implementation project(":cloud:acp-admin-cloud-dependencies")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: 'junit'
-    }
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
