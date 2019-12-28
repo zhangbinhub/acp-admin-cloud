@@ -31,7 +31,7 @@ constructor(private val workFlowDomain: WorkFlowDomain) : BaseController() {
 
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun create(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =

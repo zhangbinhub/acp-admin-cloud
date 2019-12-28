@@ -38,7 +38,7 @@ constructor(private val logAdapter: LogAdapter,
             private val securityTokenService: SecurityTokenService) : BaseController() {
 
     @ApiOperation(value = "注销当前用户")
-    @PostMapping(value = [OauthApi.logOut], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [OauthApi.logOut], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun doLogOut(user: OAuth2Authentication): ResponseEntity<InfoVo> =
             try {
@@ -50,7 +50,7 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     @ApiOperation(value = "获取各应用在线用户数统计")
-    @GetMapping(value = [OauthApi.onlineInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.onlineInfo], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getOnlineInfo(user: OAuth2Authentication): ResponseEntity<List<OnlineInfoVo>> =
             try {
@@ -72,7 +72,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取用户在线情况")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过，找不到用户信息；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @GetMapping(value = [OauthApi.onlineInfo + "/{userId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.onlineInfo + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getOnlineInfo(user: OAuth2Authentication,
                       @ApiParam(value = "用户id", required = true)
@@ -98,7 +98,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "指定应用下的用户强制下线")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @DeleteMapping(value = [OauthApi.onlineInfo + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [OauthApi.onlineInfo + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun delete(@ApiParam(value = "应用id", required = true)
                @PathVariable

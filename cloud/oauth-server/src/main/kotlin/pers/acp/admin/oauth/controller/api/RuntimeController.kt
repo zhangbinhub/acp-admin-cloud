@@ -43,7 +43,7 @@ constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, 
     @ApiOperation(value = "新建参数信息", notes = "参数名称、参数值、描述、状态")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
-    @PutMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(@RequestBody @Valid runtimePo: RuntimePo): ResponseEntity<RuntimeConfig> =
@@ -56,7 +56,7 @@ constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, 
     @ApiOperation(value = "删除指定的参数信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeDelete)
-    @DeleteMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun delete(@ApiParam(value = "id列表", required = true)
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
@@ -71,7 +71,7 @@ constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新参数值、描述、状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeUpdate)
-    @PatchMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid runtimePo: RuntimePo): ResponseEntity<RuntimeConfig> {
@@ -88,14 +88,14 @@ constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, 
     @ApiOperation(value = "查询参数信息列表", notes = "查询条件：参数名称、值、状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeQuery)
-    @PostMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun query(@RequestBody @Valid runtimeQueryPo: RuntimeQueryPo): ResponseEntity<Page<RuntimeConfig>> =
             ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimeQueryPo))
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))
-    @GetMapping(value = [OauthApi.runtimeConfig + "/{name}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.runtimeConfig + "/{name}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun find(@PathVariable name: String): ResponseEntity<RuntimeConfigVo> = openInnerRuntimeController.find(name)
 

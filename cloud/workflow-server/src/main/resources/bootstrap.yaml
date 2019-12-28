@@ -13,6 +13,9 @@ spring:
   #    sender:
   #      type: kafka
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     nacos:
       server-addr: 127.0.0.1:8848
       discovery:
@@ -24,7 +27,7 @@ spring:
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
 info:
-  version: 4.0.7
+  version: 4.1.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -42,12 +45,11 @@ management:
     flowable:
       enabled: true
 # ===============================
-# = Ribbon Config
+# = Feign Config
 # ===============================
 feign:
   httpclient:
     enabled: false
-    connection-timeout: ${ribbon.ConnectTimeout}
     max-connections: 1000
     time-to-live: 900
     time-to-live-unit: seconds
@@ -59,17 +61,9 @@ feign:
   client:
     config:
       default:
+        connect-timeout: 30000
+        read-timeout: 30000
         loggerLevel: full
-ribbon:
-  # ribbon 缓存刷新时间
-  ServerListRefreshInterval: 3000
-  ReadTimeout: 10000
-  ConnectTimeout: 10000
-  okhttp:
-    enabled: true
-  eager-load:
-    enabled: true
-    clients: oauth2-server
 # ===============================
 # = Security Config
 # ===============================

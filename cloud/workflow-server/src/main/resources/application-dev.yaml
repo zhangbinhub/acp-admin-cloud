@@ -8,13 +8,15 @@ management:
 # = Log To File Config
 # ===============================
 logging:
-  path: logs/workflow-server
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
-  file: ${logging.path}/${spring.application.name}.log
-logging.file.max-size: 5MB
-logging.file.max-history: 30
-logging.level.com.alibaba.nacos.client.naming: warn
+  file:
+    path: logs/workflow-server
+    name: ${logging.file.path}/${spring.application.name}.log
+    max-size: 5MB
+    max-history: 30
+  level:
+    com.alibaba.nacos.client.naming: warn
 # ===============================
 # = Spring Config
 # ===============================
@@ -51,8 +53,6 @@ spring:
       ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-    properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   # ===============================
   # = DATA SOURCE
   # ===============================

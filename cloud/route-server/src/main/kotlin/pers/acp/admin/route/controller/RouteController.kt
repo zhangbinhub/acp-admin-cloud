@@ -41,7 +41,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiOperation(value = "新建路由信息", notes = "路由ID、路由URI、断言、过滤器、序号")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Route::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @PutMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     fun add(@RequestBody @Valid routePo: RoutePo): ResponseEntity<Route> =
             routeDomain.doCreate(routePo).let {
@@ -51,7 +51,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiOperation(value = "删除路由配置信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @DeleteMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun delete(@ApiParam(value = "id列表", required = true)
                @NotEmpty(message = "id不能为空")
                @NotNull(message = "id不能为空")
@@ -64,7 +64,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiOperation(value = "更新路由信息", notes = "可更新路由ID、路由URI、断言、过滤器、序号")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；路由信息ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @PatchMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(@RequestBody @Valid routePo: RoutePo): ResponseEntity<Route> {
@@ -77,7 +77,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiOperation(value = "查询路由信息列表", notes = "查询条件：路由ID、是否启用")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @PostMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun query(@RequestBody routeQueryPo: RouteQueryPo): ResponseEntity<Page<Route>> =
             ResponseEntity.ok(routeDomain.doQuery(routeQueryPo))
@@ -85,7 +85,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     @ApiOperation(value = "刷新路由配置信息")
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
-    @PostMapping(value = [RouteApi.gateWayRouteRefresh], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(value = [RouteApi.gateWayRouteRefresh], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVo> {

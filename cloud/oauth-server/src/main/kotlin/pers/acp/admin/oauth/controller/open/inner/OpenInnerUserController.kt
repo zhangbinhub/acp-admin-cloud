@@ -25,7 +25,7 @@ import javax.validation.constraints.NotBlank
 class OpenInnerUserController @Autowired
 constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiOperation(value = "查询用户信息")
-    @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
                                     @NotBlank(message = "机构编码不能为空")
@@ -36,7 +36,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode, roleCode))
 
     @ApiOperation(value = "查询用户信息")
-    @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")

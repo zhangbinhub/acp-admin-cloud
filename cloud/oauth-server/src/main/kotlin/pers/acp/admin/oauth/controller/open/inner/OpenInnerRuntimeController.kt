@@ -33,7 +33,7 @@ constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseControll
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))
-    @GetMapping(value = [OauthApi.runtime + "/{name}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.runtime + "/{name}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun find(@ApiParam(value = "参数名称", required = true)
              @NotBlank(message = "参数名称不能为空")

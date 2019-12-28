@@ -24,7 +24,7 @@ interface WorkFlowServer {
      * 启动流程
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.start], method = [RequestMethod.PUT],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun start(@RequestBody processStartPo: ProcessStartPo): InfoVo
 
@@ -32,7 +32,7 @@ interface WorkFlowServer {
      * 领取任务
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.claim + "/{taskId}"], method = [RequestMethod.PATCH],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun claim(@PathVariable taskId: String): InfoVo
 
@@ -40,7 +40,7 @@ interface WorkFlowServer {
      * 转办任务
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.transfer + "/{taskId}/{userId}"], method = [RequestMethod.PATCH],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun transfer(@PathVariable taskId: String, @PathVariable userId: String): InfoVo
 
@@ -48,7 +48,7 @@ interface WorkFlowServer {
      * 委托任务
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.delegate + "/{taskId}/{acceptUserId}"], method = [RequestMethod.PATCH],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun delegate(@PathVariable taskId: String, @PathVariable acceptUserId: String): InfoVo
 
@@ -56,7 +56,7 @@ interface WorkFlowServer {
      * 流程处理
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.process], method = [RequestMethod.POST],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun process(@RequestBody processHandlingPo: ProcessHandlingPo): InfoVo
 
@@ -64,7 +64,7 @@ interface WorkFlowServer {
      * 强制终止流程实例
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.termination], method = [RequestMethod.POST],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun termination(@RequestBody processTerminationPo: ProcessTerminationPo): InfoVo
 
@@ -72,7 +72,7 @@ interface WorkFlowServer {
      * 获取流程实例信息
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.instance + "/{processInstanceId}"], method = [RequestMethod.GET],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getInstance(@PathVariable processInstanceId: String): ProcessInstanceVo?
 
@@ -80,7 +80,7 @@ interface WorkFlowServer {
      * 获取流程处理记录
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.history + "/{processInstanceId}"], method = [RequestMethod.GET],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getHistoryActivity(@PathVariable processInstanceId: String): MutableList<ProcessHistoryActivityVo>
 
@@ -88,7 +88,7 @@ interface WorkFlowServer {
      * 获取任务信息
      */
     @RequestMapping(value = [WorkFlowApi.basePath + WorkFlowApi.task + "/{taskId}"], method = [RequestMethod.GET],
-            produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getTaskInfo(@PathVariable taskId: String): ProcessTaskVo?
 }

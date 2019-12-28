@@ -46,7 +46,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
 
     @ApiOperation(value = "获取角色编码列表")
     @PreAuthorize(RoleConfigExpression.roleConfig)
-    @GetMapping(value = [OauthApi.roleCodes], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.roleCodes], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun findModuleFuncCode(): ResponseEntity<List<String>> = ResponseEntity.ok(roleCodeList)
 
     @PostConstruct
@@ -69,20 +69,20 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
 
     @ApiOperation(value = "获取指定应用下可编辑的角色列表", notes = "查询指定应用下可编辑的角色列表")
     @PreAuthorize(BaseExpression.sysConfig)
-    @GetMapping(value = [OauthApi.roleList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.roleList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getRoleList(user: OAuth2Authentication, @PathVariable appId: String): ResponseEntity<List<Role>> =
             ResponseEntity.ok(roleDomain.getRoleListByAppId(user.name, appId))
 
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")
     @PreAuthorize(RoleConfigExpression.roleQuery)
-    @GetMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun roleList(user: OAuth2Authentication): ResponseEntity<List<Role>> = ResponseEntity.ok(roleDomain.getRoleList(user))
 
     @ApiOperation(value = "新建角色信息", notes = "名称、编码、应用ID、级别、序号、关联用户、关联菜单、关联模块功能")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Role::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleAdd)
-    @PutMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid rolePo: RolePo): ResponseEntity<Role> {
@@ -95,7 +95,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiOperation(value = "删除指定的角色信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleDelete)
-    @DeleteMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @DeleteMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun delete(user: OAuth2Authentication,
                @ApiParam(value = "id列表", required = true)
@@ -108,7 +108,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiOperation(value = "更新角色信息", notes = "名称、编码、级别、序号、关联用户、关联菜单、关联模块功能")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleUpdate)
-    @PatchMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PatchMapping(value = [OauthApi.roleConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun update(user: OAuth2Authentication, @RequestBody @Valid rolePo: RolePo): ResponseEntity<Role> {
@@ -121,7 +121,7 @@ constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDoma
     @ApiOperation(value = "获取角色详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
     @PreAuthorize(RoleConfigExpression.roleQuery)
-    @GetMapping(value = [OauthApi.roleConfig + "/{roleId}"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.roleConfig + "/{roleId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun orgInfo(@PathVariable roleId: String): ResponseEntity<RoleVo> =
             ResponseEntity.ok(roleDomain.getRoleInfo(roleId))

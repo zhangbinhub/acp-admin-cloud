@@ -27,7 +27,7 @@ import pers.acp.admin.oauth.token.SecurityTokenService
 class InnerAuthController @Autowired
 constructor(private val securityTokenService: SecurityTokenService) : BaseController() {
     @ApiOperation(value = "获取当前用户token信息", notes = "根据当前登录的用户token值，返回详细信息")
-    @GetMapping(value = [OauthApi.currToken], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.currToken], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun currToken(user: OAuth2Authentication): ResponseEntity<OAuth2AccessToken> =
             ResponseEntity.ok(securityTokenService.getToken(user))
 }

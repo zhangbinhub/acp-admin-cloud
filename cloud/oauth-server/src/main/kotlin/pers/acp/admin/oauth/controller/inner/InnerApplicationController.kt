@@ -27,7 +27,7 @@ class InnerApplicationController @Autowired
 constructor(private val applicationDomain: ApplicationDomain) : BaseController() {
 
     @ApiOperation(value = "获取应用信息", notes = "根据token查询应用详细信息")
-    @GetMapping(value = [OauthApi.appInfo], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.appInfo], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun appInfo(user: OAuth2Authentication): ResponseEntity<Application> =
             applicationDomain.getApp(user.oAuth2Request.clientId)?.let {

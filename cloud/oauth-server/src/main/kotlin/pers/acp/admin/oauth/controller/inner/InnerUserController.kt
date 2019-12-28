@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull
 class InnerUserController @Autowired
 constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户token，返回详细信息")
-    @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun currUser(user: OAuth2Authentication): ResponseEntity<*> =
             if (user.isClientOnly) {
@@ -48,7 +48,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
             }
 
     @ApiOperation(value = "查询用户信息")
-    @GetMapping(value = [OauthApi.userList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
                                     @ApiParam(value = "角色编码", required = true)
@@ -57,7 +57,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
             ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode))
 
     @ApiOperation(value = "查询用户信息")
-    @GetMapping(value = [OauthApi.userList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRelativeOrgAndRole(user: OAuth2Authentication,
                                         @ApiParam(value = "机构层级", required = true)
