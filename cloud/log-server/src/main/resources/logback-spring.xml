@@ -5,12 +5,11 @@
     <!--<logger name="pers.acp" level="DEBUG"/>-->
 
     <property name="LOG_HOME" value="logs/log-server"/>
-
+    <property name="logPatternFileServer" value="[%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n"/>
+    
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -31,9 +30,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -60,9 +57,7 @@
 
     <appender name="AUTH" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -83,9 +78,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -112,9 +105,7 @@
 
     <appender name="ROUTE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -135,9 +126,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -164,9 +153,7 @@
 
     <appender name="WORKFLOW" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -187,9 +174,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>
-                [%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n
-            </pattern>
+            <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
