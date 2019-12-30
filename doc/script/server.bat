@@ -1,2 +1,2 @@
-java -server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xlog:age*,gc*=info:file=gc-%t.log:time,tid,tags:filecount=3,filesize=20m -Djava.io.tmpdir=jvmlogs -Xms1024m -Xmx4086m -Dfile.encoding=utf-8 -jar xxx.jar
+java -server -Xms128m -Xmx512m -Dfile.encoding=utf-8 -jar xxx.jar
 echo. & pause
