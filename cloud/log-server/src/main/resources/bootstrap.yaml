@@ -36,9 +36,6 @@ spring:
             group-id: ${spring.profiles.active}
             data-type: json
             rule-type: degrade
-logging:
-  pattern:
-    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
   version: 4.1.0
   app-name: ${spring.application.name}
@@ -79,8 +76,10 @@ feign:
 # = Log To File Config
 # ===============================
 # 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释
-#logging:
+logging:
 #  config: logback-spring.xml
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 # ===============================
 # = Security Config
 # ===============================
