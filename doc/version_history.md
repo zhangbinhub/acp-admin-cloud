@@ -26,7 +26,6 @@
 >   - mssqljdbc to 7.4.1.jre8
 >   - spring boot admin to 2.2.1
 >   - flying_saucer to 9.1.19
->   - netty to 4.1.44.Final
 >   - okhttp to 3.12.0
 ##### v4.0.7
 > - [Upgrade] 优化菜单管理、模块管理、机构管理，删除时候校验下级是否存在的写法

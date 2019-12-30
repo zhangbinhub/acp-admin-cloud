@@ -30,7 +30,7 @@ versions += [
         alibaba_cloud    : "2.1.1.RELEASE",
         swagger          : "2.9.2",
 
-        netty            : "4.1.44.Final",
+        netty            : "4.1.43.Final",
         okhttp           : "3.12.0",
 
         flowable         : "6.4.2"

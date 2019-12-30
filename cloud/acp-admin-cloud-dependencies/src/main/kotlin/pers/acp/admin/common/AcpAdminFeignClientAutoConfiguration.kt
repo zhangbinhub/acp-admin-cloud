@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pers.acp.admin.common.hystrix.CommonOauthServerHystrix
+import pers.acp.admin.common.hystrix.WorkFlowServerHystrix
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -16,4 +17,8 @@ class AcpAdminFeignClientAutoConfiguration {
     @Bean
     fun commonOauthServerHystrix(logAdapter: LogAdapter): CommonOauthServerHystrix =
             CommonOauthServerHystrix(logAdapter)
+
+    @Bean
+    fun workFlowServerHystrix(logAdapter: LogAdapter): WorkFlowServerHystrix =
+            WorkFlowServerHystrix(logAdapter)
 }
