@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
-import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter
 import org.springframework.cloud.stream.annotation.EnableBinding
 import org.springframework.cloud.stream.config.BindingProperties
 import org.springframework.cloud.stream.config.BindingServiceConfiguration
@@ -22,7 +21,6 @@ import org.springframework.cloud.stream.config.BindingServiceProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
-import org.springframework.core.annotation.Order
 import org.springframework.core.env.Environment
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferFactory
@@ -115,7 +113,6 @@ constructor(private val environment: Environment,
     }
 
     @Bean
-    @Order(LoadBalancerClientFilter.LOAD_BALANCER_CLIENT_FILTER_ORDER + 100)
     fun logRequestFilter(): GlobalFilter = GlobalFilter { exchange, chain ->
         exchange.request.mutate().headers { httpHeaders ->
             httpHeaders[GateWayConstant.GATEWAY_HEADER_REQUEST_TIME] = listOf(System.currentTimeMillis().toString())
