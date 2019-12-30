@@ -24,6 +24,9 @@ spring:
       discovery:
         namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
         cluster-name: ${spring.profiles.active}
+logging:
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
   version: 4.1.0
   app-name: ${spring.application.name}

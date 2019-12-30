@@ -8,8 +8,6 @@ management:
 # = Log To File Config
 # ===============================
 logging:
-  pattern:
-    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
   file:
     path: logs/admin-server
     name: ${logging.file.path}/${spring.application.name}.log
