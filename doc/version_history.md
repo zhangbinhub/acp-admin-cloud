@@ -13,6 +13,7 @@
 > - [Upgrade] 修改test依赖
 > - [Upgrade] cloud中使用spring-cloud-loadbalancer替换ribbon
 > - [Upgrade] cloud中修改feign相关配置
+> - [Upgrade] gateway中logRequestFilter修改
 > - [Upgrade] 升级依赖项
 >   - jupiter to 5.5.2
 >   - junit_platform to 1.5.2
