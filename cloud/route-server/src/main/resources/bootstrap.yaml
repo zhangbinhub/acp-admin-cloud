@@ -14,6 +14,8 @@ spring:
   #      type: kafka
   cloud:
     loadbalancer:
+      cache:
+        ttl: 5s
       ribbon:
         enabled: false
     nacos:
