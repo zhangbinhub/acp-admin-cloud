@@ -1,5 +1,7 @@
 package pers.acp.admin.common
 
+import org.springframework.boot.autoconfigure.AutoConfigureAfter
+import org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,6 +15,7 @@ import pers.acp.spring.boot.interfaces.LogAdapter
  */
 @Configuration
 @EnableFeignClients
+@AutoConfigureAfter(BlockingLoadBalancerClientAutoConfiguration::class)
 class AcpAdminFeignClientAutoConfiguration {
     @Bean
     fun commonOauthServerHystrix(logAdapter: LogAdapter): CommonOauthServerHystrix =

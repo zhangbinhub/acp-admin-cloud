@@ -27,6 +27,7 @@
 >   - spring boot admin to 2.2.1
 >   - flying_saucer to 9.1.19
 >   - okhttp to 3.12.0
+> - [Fix] 修改dependencies中AcpAdminFeignClientAutoConfiguration，修复feign偶尔无法找到loadbalancer的异常
 ##### v4.0.7
 > - [Upgrade] 优化菜单管理、模块管理、机构管理，删除时候校验下级是否存在的写法
 > - [Upgrade] 修改@Api写法
