@@ -19,6 +19,8 @@ spring:
     # = GateWay Config
     # ===============================
     gateway:
+      loadbalancer:
+        use404: true
       routes:
         - id: log-server-api
           uri: lb://log-server
