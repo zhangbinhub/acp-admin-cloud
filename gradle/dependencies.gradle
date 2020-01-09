@@ -21,9 +21,6 @@ versions += [
 
         hikaricp         : "3.4.1",
         mysql            : "8.0.18",
-        mssqljdbc        : "7.4.1.jre8",
-        ojdbc            : "12.1.0.2",
-        postgresql       : "42.2.8",
 
         spring_boot      : "2.2.2.RELEASE",
         spring_cloud     : "Hoxton.SR1",
