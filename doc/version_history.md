@@ -1,6 +1,8 @@
 ## 版本更新记录
 ##### v4.1.x
 > - [Upgrade] 去除多余无用依赖
+> - [Upgrade] 修改feign客户端写法
+> - [Upgrade] 修改zk端口号
 ##### v4.1.0
 > - [Upgrade] 用户手机号放入token额外附加信息中
 > - [Upgrade] oauth增加一系列用户查询接口
