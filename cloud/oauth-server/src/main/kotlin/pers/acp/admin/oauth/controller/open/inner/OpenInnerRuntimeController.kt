@@ -15,6 +15,7 @@ import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
+import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
 
@@ -46,5 +47,10 @@ constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseControll
                     ResponseEntity.ok(it)
                 }
             }
+
+    @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
+    @GetMapping(value = [OauthApi.runtime], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findList(): ResponseEntity<Map<String, RuntimeConfigVo>> = ResponseEntity.ok(runtimeConfigDomain.findAll())
 
 }

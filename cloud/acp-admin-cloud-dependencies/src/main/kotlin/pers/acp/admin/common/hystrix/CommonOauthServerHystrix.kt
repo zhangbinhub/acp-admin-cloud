@@ -88,6 +88,12 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                     logAdapter.error("获取运行参数失败 【$name】")
                     return RuntimeConfigVo()
                 }
+
+                @Throws(ServerException::class)
+                override fun findRuntimeConfigMap(): Map<String, RuntimeConfigVo> {
+                    logAdapter.error("获取运行参数失败")
+                    return mapOf()
+                }
             }
         } else {
             val errMsg = "调用 oauth2-server 异常: " + cause?.message

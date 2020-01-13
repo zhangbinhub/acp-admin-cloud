@@ -99,4 +99,9 @@ constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, 
     @Throws(ServerException::class)
     fun find(@PathVariable name: String): ResponseEntity<RuntimeConfigVo> = openInnerRuntimeController.find(name)
 
+    @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
+    @GetMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findList(): ResponseEntity<Map<String, RuntimeConfigVo>> = openInnerRuntimeController.findList()
+
 }

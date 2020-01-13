@@ -4,6 +4,7 @@
 > - [Upgrade] 修改feign客户端写法
 > - [Upgrade] 修改zk端口号
 > - [Upgrade] 优化HTTP返回状态码
+> - [Upgrade] 增加运行参数全量查询接口
 ##### v4.1.0
 > - [Upgrade] 用户手机号放入token额外附加信息中
 > - [Upgrade] oauth增加一系列用户查询接口

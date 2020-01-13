@@ -90,4 +90,12 @@ interface CommonOauthServer {
     @Throws(ServerException::class)
     fun findRuntimeConfigByName(@PathVariable name: String): RuntimeConfigVo
 
+    /**
+     * 获取运行参数
+     * 参数为空或调用异常均返回默认值的 RuntimeConfigVo 对象
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.runtime], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findRuntimeConfigMap(): Map<String, RuntimeConfigVo>
+
 }
