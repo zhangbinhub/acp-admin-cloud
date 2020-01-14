@@ -9,6 +9,8 @@ import pers.acp.admin.oauth.entity.Menu
  */
 interface MenuRepository : BaseRepository<Menu, String> {
 
+    fun findAllByOrderBySortAsc(): MutableList<Menu>
+
     fun findByAppId(appId: String): MutableList<Menu>
 
     fun findByParentIdIn(idList: MutableList<String>): MutableList<Menu>
