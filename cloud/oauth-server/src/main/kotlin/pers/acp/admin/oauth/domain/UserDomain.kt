@@ -194,8 +194,8 @@ constructor(userRepository: UserRepository,
                     predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
                 }
                 if (!CommonTools.isNullStr(userQueryPo.roleName)) {
-                    val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
+                    val joinRole = root.join<User, Role>("roleSet", JoinType.LEFT)
+                    predicateList.add(criteriaBuilder.like(joinRole.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
             }, buildPageRequest(userQueryPo.queryParam!!))
