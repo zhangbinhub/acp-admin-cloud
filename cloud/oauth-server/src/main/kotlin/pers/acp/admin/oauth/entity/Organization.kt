@@ -78,5 +78,6 @@ data class Organization(
                     .append(",code=$code")
                     .append(",sort=$sort")
                     .append(",parentId=$parentId")
+                    .append(")")
                     .toString()
 }

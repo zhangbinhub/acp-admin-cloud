@@ -106,5 +106,6 @@ data class Menu(
                     .append(",openType=$openType")
                     .append(",sort=$sort")
                     .append(",parentId=$parentId")
+                    .append(")")
                     .toString()
 }

@@ -93,5 +93,6 @@ data class Role(
                     .append(",code=$code")
                     .append(",levels=$levels")
                     .append(",sort=$sort")
+                    .append(")")
                     .toString()
 }

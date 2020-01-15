@@ -108,5 +108,6 @@ data class User(
                     .append(",levels=$levels")
                     .append(",enabled=$enabled")
                     .append(",sort=$sort")
+                    .append(")")
                     .toString()
 }
