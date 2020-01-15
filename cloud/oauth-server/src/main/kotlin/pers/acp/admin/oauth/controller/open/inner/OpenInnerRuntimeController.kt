@@ -15,7 +15,6 @@ import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
-import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
 

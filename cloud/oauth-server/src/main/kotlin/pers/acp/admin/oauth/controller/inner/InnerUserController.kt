@@ -16,12 +16,9 @@ import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
 /**
  * @author zhang by 16/01/2019
@@ -53,7 +50,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode))
 
     @ApiOperation(value = "查询用户信息")
@@ -65,6 +62,6 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                         @RequestParam orgLevel: Int,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
-                                        @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                        @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode))
 }

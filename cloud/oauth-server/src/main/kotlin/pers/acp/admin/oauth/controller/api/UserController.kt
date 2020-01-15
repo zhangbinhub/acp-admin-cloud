@@ -78,7 +78,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userConfig)
     @GetMapping(value = [OauthApi.modifiableUser], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun modifiableUser(user: OAuth2Authentication): ResponseEntity<List<User>> =
+    fun modifiableUser(user: OAuth2Authentication): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.findModifiableUserList(user.name))
 
     @ApiOperation(value = "新建用户信息", notes = "名称、登录账号、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
@@ -154,7 +154,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode))
 
     @ApiOperation(value = "查询用户信息")
@@ -167,7 +167,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                         @RequestParam orgLevel: Int,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
-                                        @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                        @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode))
 
     @ApiOperation(value = "查询用户信息")
@@ -179,7 +179,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam orgCode: String,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode, roleCode))
 
     @ApiOperation(value = "查询用户信息")
@@ -188,6 +188,6 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
-                          @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                          @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByRole(roleCode))
 }

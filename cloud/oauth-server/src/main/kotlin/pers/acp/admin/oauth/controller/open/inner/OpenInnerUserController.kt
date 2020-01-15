@@ -10,7 +10,7 @@ import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.entity.User
+import pers.acp.admin.oauth.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
 import javax.validation.constraints.NotBlank
 
@@ -32,7 +32,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam orgCode: String,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode, roleCode))
 
     @ApiOperation(value = "查询用户信息")
@@ -40,6 +40,6 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
-                          @RequestParam roleCode: String): ResponseEntity<List<User>> =
+                          @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByRole(roleCode))
 }
