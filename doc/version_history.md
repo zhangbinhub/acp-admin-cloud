@@ -7,6 +7,7 @@
 > - [Upgrade] 增加运行参数全量查询接口
 > - [Upgrade] 优化菜单排序
 > - [Upgrade] 优化用户列表查询，去除头像字段
+> - [Upgrade] 优化jpa删除写法
 ##### v4.1.0
 > - [Upgrade] 用户手机号放入token额外附加信息中
 > - [Upgrade] oauth增加一系列用户查询接口
