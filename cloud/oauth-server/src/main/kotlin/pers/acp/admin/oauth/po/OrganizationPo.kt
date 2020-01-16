@@ -23,7 +23,7 @@ data class OrganizationPo(
         @get:NotBlank(message = "机构区域不能为空")
         var area: String? = null,
 
-        @ApiModelProperty(value = "机构编码", position = 3)
+        @ApiModelProperty(value = "机构编码", required = true, position = 3)
         @get:NotBlank(message = "机构编码不能为空")
         var code: String? = null,
 
