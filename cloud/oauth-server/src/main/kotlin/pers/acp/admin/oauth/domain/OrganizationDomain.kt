@@ -45,7 +45,8 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
             organizationRepository.save(organization.copy(
                     name = organizationPo.name!!,
-                    code = organizationPo.code,
+                    code = organizationPo.code!!,
+                    area = organizationPo.area!!,
                     sort = organizationPo.sort,
                     userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
             ).apply {
