@@ -11,7 +11,7 @@ import org.flowable.engine.history.HistoricProcessInstance
 import org.flowable.engine.history.HistoricVariableUpdate
 import org.flowable.engine.runtime.ProcessInstance
 import org.flowable.task.api.DelegationState
-import org.flowable.task.api.TaskInfo
+import org.flowable.task.api.Task
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -52,7 +52,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param task 任务对象
      * @return 转换后任务对象
      */
-    private fun taskToVo(task: TaskInfo) =
+    private fun taskToVo(task: Task) =
             runtimeService.createProcessInstanceQuery().processInstanceId(task.processInstanceId).singleResult().let { processInstance ->
                 val params = runtimeService.getVariables(task.executionId)
                 ProcessTaskVo(
@@ -74,7 +74,8 @@ constructor(private val logAdapter: LogAdapter,
                         title = params[WorkFlowParamKey.title]?.toString() ?: "",
                         description = params[WorkFlowParamKey.description]?.toString() ?: "",
                         startUserId = processInstance.startUserId,
-                        taskOwnerUserId = task.owner
+                        taskOwnerUserId = task.owner,
+                        delegated = task.delegationState == DelegationState.PENDING
                 )
             }
 

@@ -67,5 +67,8 @@ data class ProcessTaskVo(
         var startUserId: String? = null,
 
         @ApiModelProperty(value = "任务拥有者", position = 19)
-        var taskOwnerUserId: String? = null
+        var taskOwnerUserId: String? = null,
+
+        @ApiModelProperty(value = "任务是否已委派", position = 20)
+        var delegated: Boolean = false
 )
