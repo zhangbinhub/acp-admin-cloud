@@ -155,7 +155,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode))
+            ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
     @ApiOperation(value = "查询用户信息")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -168,7 +168,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
                                         @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode))
+            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode.split(",")))
 
     @ApiOperation(value = "查询用户信息")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -180,7 +180,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode, roleCode))
+            ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
     @ApiOperation(value = "查询用户信息")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -189,5 +189,5 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
                           @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRole(roleCode))
+            ResponseEntity.ok(userDomain.getUserListByRole(roleCode.split(",")))
 }

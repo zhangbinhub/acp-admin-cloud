@@ -210,10 +210,10 @@ constructor(userRepository: UserRepository,
     /**
      * 获取指定部门下所有符合角色编码的用户
      */
-    private fun getUserListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: String): MutableList<UserVo> =
+    private fun getUserListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: List<String>): MutableList<UserVo> =
             mutableListOf<UserVo>().apply {
                 organizations.forEach { org ->
-                    this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> role.code == roleCode } }
+                    this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> roleCode.contains(role.code) } }
                             .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
                             .toMutableList())
                 }
@@ -235,7 +235,7 @@ constructor(userRepository: UserRepository,
                 }
             }
 
-    fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: String): MutableList<UserVo> =
+    fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 getUserListInOrgListByRoleCode(currUser.organizationSet, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
@@ -244,7 +244,7 @@ constructor(userRepository: UserRepository,
      * 获取上级部门指定角色的用户
      * @param orgLevel >0上级部门，1上一级，2上二级...；<=0：本部门
      */
-    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevel: Int, roleCode: String): MutableList<UserVo> =
+    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevel: Int, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 val orgList = mutableListOf<Organization>()
                 currUser.organizationSet.forEach { org ->
@@ -268,11 +268,11 @@ constructor(userRepository: UserRepository,
                 getUserListInOrgListByRoleCode(orgList, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
 
-    fun getUserListByOrgCodeAndRole(orgCode: String, roleCode: String): MutableList<UserVo> =
-            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeOrderBySortAsc(orgCode), roleCode)
+    fun getUserListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
+            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeInOrderBySortAsc(orgCode), roleCode)
 
-    fun getUserListByRole(roleCode: String): MutableList<UserVo> =
-            getUserListDistinct(roleRepository.findAllByCodeOrderBySortAsc(roleCode)
+    fun getUserListByRole(roleCode: List<String>): MutableList<UserVo> =
+            getUserListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
                     .flatMap { role -> role.userSet }
                     .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
                     .toMutableList())

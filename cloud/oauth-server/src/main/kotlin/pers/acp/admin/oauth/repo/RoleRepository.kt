@@ -9,7 +9,7 @@ import pers.acp.admin.oauth.entity.Role
  */
 interface RoleRepository : BaseRepository<Role, String> {
 
-    fun findAllByCodeOrderBySortAsc(code: String): MutableList<Role>
+    fun findAllByCodeInOrderBySortAsc(code: List<String>): MutableList<Role>
 
     fun findAllByOrderBySortAsc(): MutableList<Role>
 
