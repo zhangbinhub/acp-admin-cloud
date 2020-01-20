@@ -59,9 +59,11 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserListByRelativeOrgAndRole(user: OAuth2Authentication,
                                         @ApiParam(value = "机构层级", required = true)
                                         @NotBlank(message = "机构层级不能为空")
-                                        @RequestParam orgLevel: Int,
+                                        @RequestParam orgLevel: String,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
                                         @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name, orgLevel, roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name,
+                    orgLevel.split(",").map { item -> item.toInt() },
+                    roleCode.split(",")))
 }

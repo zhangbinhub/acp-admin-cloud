@@ -66,7 +66,7 @@ interface CommonOauthServer {
      */
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun findUserList(@RequestParam orgLevel: Int, @RequestParam roleCode: String): List<UserVo>
+    fun findUserListByOrgLevel(@RequestParam orgLevel: String, @RequestParam roleCode: String): List<UserVo>
 
     /**
      * 获取用户列表

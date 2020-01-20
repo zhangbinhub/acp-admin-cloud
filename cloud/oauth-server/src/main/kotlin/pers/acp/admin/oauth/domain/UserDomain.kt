@@ -242,27 +242,43 @@ constructor(userRepository: UserRepository,
 
     /**
      * 获取上级部门指定角色的用户
-     * @param orgLevel >0上级部门，1上一级，2上二级...；<=0：本部门
+     * @param orgLevelList >0 下级部门，1下一级，2下二级...；=0：本部门；<0 上级部门，-1上一级，-2上二级...
      */
-    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevel: Int, roleCode: List<String>): MutableList<UserVo> =
+    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 val orgList = mutableListOf<Organization>()
-                currUser.organizationSet.forEach { org ->
-                    if (orgLevel > 0) {
-                        var organization = org
-                        for (index in 0 until orgLevel) {
-                            val orgOptional = organizationRepository.findById(organization.parentId)
-                            if (orgOptional.isPresent) {
-                                organization = orgOptional.get()
-                                if (index == orgLevel - 1) {
-                                    orgList.add(organization)
+                orgLevelList.forEach { orgLevel ->
+                    when {
+                        orgLevel > 0 -> { // 获取下级
+                            val tmpOrg = currUser.organizationSet
+                            for (index in 1..orgLevel) {
+                                val children = getRelativeOrgList(index, tmpOrg)
+                                if (children.isNotEmpty()) {
+                                    tmpOrg.clear()
+                                    tmpOrg.addAll(children)
+                                } else {
+                                    tmpOrg.clear()
+                                    break
                                 }
-                            } else {
-                                break
+                            }
+                            orgList.addAll(tmpOrg)
+                        }
+                        orgLevel < 0 -> { // 获取上级
+                            val tmpOrg = currUser.organizationSet
+                            for (index in orgLevel until 0) {
+                                val parent = getRelativeOrgList(index, tmpOrg)
+                                if (parent.isNotEmpty()) {
+                                    tmpOrg.clear()
+                                    tmpOrg.addAll(parent)
+                                } else {
+                                    tmpOrg.clear()
+                                    break
+                                }
                             }
                         }
-                    } else {
-                        orgList.add(org)
+                        else -> { // 本部门
+                            orgList.addAll(currUser.organizationSet)
+                        }
                     }
                 }
                 getUserListInOrgListByRoleCode(orgList, roleCode)
@@ -276,6 +292,31 @@ constructor(userRepository: UserRepository,
                     .flatMap { role -> role.userSet }
                     .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
                     .toMutableList())
+
+    /**
+     * 获取相对部门集合
+     * @param flag 标识，>0下级，<0上级
+     * @param orgList 参考部门集合
+     * @return 相对部门集合
+     */
+    private fun getRelativeOrgList(flag: Int, orgList: Collection<Organization>): Collection<Organization> = when {
+        flag > 0 -> { // 获取下级
+            organizationRepository.findByParentIdIn(orgList.map { org -> org.id }.toMutableList())
+        }
+        flag < 0 -> { // 获取上级
+            mutableListOf<Organization>().apply {
+                orgList.forEach { org ->
+                    val parent = organizationRepository.findById(org.parentId)
+                    if (parent.isPresent) {
+                        this.add(parent.get())
+                    }
+                }
+            }
+        }
+        else -> {
+            orgList
+        }
+    }
 
     companion object {
         private const val DEFAULT_PASSWORD = "000000"

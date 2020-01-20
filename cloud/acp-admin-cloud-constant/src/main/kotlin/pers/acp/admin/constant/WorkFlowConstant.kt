@@ -10,7 +10,7 @@ object WorkFlowConstant {
     const val delegate = "isDelegate"
     //是否手动选择分配处理人（或候选人）
     const val selectUser = "selectUser"
-    //待发送用户部门级别；0-当前用户所在部门，1-上一级部门，2-上两级部门...依次类推
+    //待发送用户部门级别，负数|零|正数；0-当前用户所在部门，-1上一级部门，-2上两级部门...依次类推，1下一级部门，2下两级部门...依次类推，多个code时使用“,”分隔
     const val orgLevel = "orgLevel"
     //待发送用户所属角色code，多个code时使用“,”分隔
     const val roleCode = "roleCode"
