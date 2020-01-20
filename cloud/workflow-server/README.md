@@ -32,7 +32,18 @@ docker run -p8080:8080 flowable/all-in-one
 - startUserId - 业务键
 - pass - 处理结果：true-通过，false-不通过
 - comment - 处理意见
+- candidateUser:String ，节点任务候选人ID（一人或多人），多个候选人时使用“,”分隔；任务处理完成后需修改（变更为下一节点人或置空）
+- assigneeUser:String ，节点任务处理人ID（只能一人）；任务处理完成后需修改（变更为下一节点人或置空）
 
-##### 五、流程示例
+##### 五、内置任务动态表单字段
+- isTransfer:Boolean ，当前任务是否可以转办（任务处理人变更，处理完毕后进入下一节点）
+- isDelegate:Boolean ，当前任务是否可以委派他人办理（任务处理人变更，处理完毕后返回至当前处理人继续办理）
+- selectUser:Boolean ，是否手动选择分配处理人（或候选人）
+- orgLevel:Boolean ，待发送用户部门级别，负数|零|正数；0-当前用户所在部门，-1上一级部门，-2上两级部门...依次类推，1下一级部门，2下两级部门...依次类推，多个code时使用“,”分隔
+- roleCode:Boolean ，待发送用户所属角色code，多个code时使用“,”分隔
+- taskCode:Boolean ，任务编码，用于自定义判断任务处理方式
+- isReject:Boolean ，当前任务是否允许驳回
+
+##### 六、流程示例
 - 流程图：
 ![流程图](../../doc/images/diagram.png)
