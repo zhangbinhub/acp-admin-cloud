@@ -84,6 +84,7 @@ constructor(userRepository: UserRepository,
 
     fun getMobileForOtherUser(mobile: String, userId: String): User? = userRepository.findByMobileAndIdNot(mobile, userId).orElse(null)
 
+    @Throws(ServerException::class)
     fun findModifiableUserList(loginNo: String): MutableList<UserVo> {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {
@@ -207,6 +208,21 @@ constructor(userRepository: UserRepository,
 
     fun getUserInfo(userId: String): User? = userRepository.findById(userId).orElse(null)
 
+    @Throws(ServerException::class)
+    fun getUserInfoById(userId: String): UserVo = userRepository.getOne(userId).let {
+        UserVo().apply {
+            BeanUtils.copyProperties(it, this)
+        }
+    }
+
+    @Throws(ServerException::class)
+    fun getUserInfoByLoginNo(loginNo: String): UserVo = userRepository.findByLoginNo(loginNo).let {
+        if (it.isEmpty) throw ServerException("找不到用户信息")
+        UserVo().apply {
+            BeanUtils.copyProperties(it.get(), this)
+        }
+    }
+
     /**
      * 获取指定部门下所有符合角色编码的用户
      */
@@ -235,6 +251,7 @@ constructor(userRepository: UserRepository,
                 }
             }
 
+    @Throws(ServerException::class)
     fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 getUserListInOrgListByRoleCode(currUser.organizationSet, roleCode)
@@ -244,6 +261,7 @@ constructor(userRepository: UserRepository,
      * 获取上级部门指定角色的用户
      * @param orgLevelList >0 下级部门，1下一级，2下二级...；=0：本部门；<0 上级部门，-1上一级，-2上二级...
      */
+    @Throws(ServerException::class)
     fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 val orgList = mutableListOf<Organization>()

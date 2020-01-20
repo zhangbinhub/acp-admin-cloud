@@ -24,7 +24,7 @@ docker run -p8080:8080 flowable/all-in-one
     - 生成流程图
 - 2、需动态配置路由策略。
 
-##### 四、固定必要的流程变量
+##### 四、固定必要的流程变量，自定义变量不能与之重复
 - businessKey - 业务键
 - flowName - 流程名称
 - title - 流程标题

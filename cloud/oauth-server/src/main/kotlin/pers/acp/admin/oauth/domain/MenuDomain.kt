@@ -42,6 +42,7 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
                 }
             }
 
+    @Throws(ServerException::class)
     fun getMenuList(appId: String, loginNo: String): MutableList<Menu> =
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
                 val menuIds: MutableSet<String> = mutableSetOf()

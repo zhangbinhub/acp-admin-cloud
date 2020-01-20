@@ -70,6 +70,7 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
     fun currMenuList(user: OAuth2Authentication): ResponseEntity<List<Menu>> =
             ResponseEntity.ok(menuDomain.getMenuList(user.oAuth2Request.clientId, user.name))
 

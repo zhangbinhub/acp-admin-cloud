@@ -13,6 +13,7 @@
 > - [Upgrade] 工作流任务对象，增加 delegated 字段
 > - [Upgrade] 修改用户查询接口，支持多个机构号、角色编码
 > - [Upgrade] constant 增加工作流相关常量
+> - [Upgrade] 优化工作流服务，返回对象中的用户信息均使用UserVo对象
 ##### v4.1.0
 > - [Upgrade] 用户手机号放入token额外附加信息中
 > - [Upgrade] oauth增加一系列用户查询接口

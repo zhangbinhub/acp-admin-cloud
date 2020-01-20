@@ -54,6 +54,14 @@ interface CommonOauthServer {
     @Throws(ServerException::class)
     fun userInfo(): UserVo?
 
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findUserById(@RequestParam id: String): UserVo
+
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findUserByLoginNo(@RequestParam loginNo: String): UserVo
+
     /**
      * 获取用户列表
      */

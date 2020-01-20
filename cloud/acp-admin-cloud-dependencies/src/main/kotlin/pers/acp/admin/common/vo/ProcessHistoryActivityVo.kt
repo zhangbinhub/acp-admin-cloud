@@ -27,8 +27,8 @@ data class ProcessHistoryActivityVo(
         @ApiModelProperty(value = "业务键", position = 6)
         var businessKey: String? = null,
 
-        @ApiModelProperty(value = "处理人id", position = 7)
-        var userId: String? = null,
+        @ApiModelProperty(value = "处理人", position = 7)
+        var user: UserVo? = null,
 
         @ApiModelProperty(value = "审批意见", position = 8)
         var comment: String? = null,

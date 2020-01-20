@@ -19,8 +19,8 @@ object WorkFlowConstant {
     /**
      * 工作流自定义参数
      */
-    //节点任务候选人ID（一人或多人），多个候选人时使用“,”分隔
+    //节点任务候选人ID（一人或多人），多个候选人时使用“,”分隔；任务处理完成后需修改（变更为下一节点人或置空）
     const val candidateUser = "candidateUser"
-    //节点任务处理人ID（只能一人）
+    //节点任务处理人ID（只能一人）；任务处理完成后需修改（变更为下一节点人或置空）
     const val assigneeUser = "assigneeUser"
 }

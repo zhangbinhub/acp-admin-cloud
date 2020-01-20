@@ -44,6 +44,7 @@ constructor(private val organizationDomain: OrganizationDomain) : BaseController
 
     @ApiOperation(value = "获取可编辑的机构列表", notes = "查询所有可编辑的机构列表")
     @GetMapping(value = [OauthApi.modifiableOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
     fun modOrgList(user: OAuth2Authentication): ResponseEntity<List<Organization>> =
             ResponseEntity.ok(organizationDomain.getModOrgList(user.name))
 

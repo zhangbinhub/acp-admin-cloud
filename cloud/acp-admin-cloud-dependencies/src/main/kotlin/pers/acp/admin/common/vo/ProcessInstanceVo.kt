@@ -25,7 +25,7 @@ data class ProcessInstanceVo(
         var description: String? = null,
 
         @ApiModelProperty(value = "发起人", position = 5)
-        var startUserId: String? = null,
+        var startUser: UserVo? = null,
 
         @ApiModelProperty(value = "自定义参数", position = 6)
         var params: MutableMap<String, Any> = mutableMapOf(),

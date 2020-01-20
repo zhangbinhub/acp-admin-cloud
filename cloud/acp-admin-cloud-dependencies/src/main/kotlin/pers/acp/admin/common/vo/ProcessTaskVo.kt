@@ -31,8 +31,8 @@ data class ProcessTaskVo(
         @ApiModelProperty(value = "是否未被认领", position = 7)
         var unClaimed: Boolean = true,
 
-        @ApiModelProperty(value = "处理人id", position = 8)
-        var userId: String? = null,
+        @ApiModelProperty(value = "处理人", position = 8)
+        var user: UserVo? = null,
 
         @ApiModelProperty(value = "流程自定义参数", position = 9)
         var params: MutableMap<String, Any> = mutableMapOf(),
@@ -64,10 +64,10 @@ data class ProcessTaskVo(
         var description: String? = null,
 
         @ApiModelProperty(value = "流程发起人", position = 18)
-        var startUserId: String? = null,
+        var startUser: UserVo? = null,
 
         @ApiModelProperty(value = "任务拥有者", position = 19)
-        var taskOwnerUserId: String? = null,
+        var taskOwnerUser: UserVo? = null,
 
         @ApiModelProperty(value = "任务是否已委派", position = 20)
         var delegated: Boolean = false
