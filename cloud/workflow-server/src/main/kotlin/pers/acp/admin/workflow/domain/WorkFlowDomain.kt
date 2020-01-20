@@ -166,11 +166,12 @@ constructor(private val logAdapter: LogAdapter,
      * 启动流程
      *
      * @param processStartPo 流程启动参数
+     * @param loginNo 流程发起人登录号
      * @return 流程实例id
      */
     @Transactional
     @Throws(ServerException::class)
-    fun startFlow(processStartPo: ProcessStartPo): String =
+    fun startFlow(processStartPo: ProcessStartPo, loginNo: String? = null): String =
             try {
                 val params = processStartPo.params
                 repositoryService.createProcessDefinitionQuery()
@@ -184,7 +185,13 @@ constructor(private val logAdapter: LogAdapter,
                 params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
                 params[WorkFlowParamKey.title] = processStartPo.title!!
                 params[WorkFlowParamKey.description] = processStartPo.description!!
-                Authentication.setAuthenticatedUserId(processStartPo.startUserId)
+                if (loginNo != null) {
+                    commonOauthServer.findUserByLoginNo(loginNo).id
+                } else {
+                    null
+                }.let {
+                    Authentication.setAuthenticatedUserId(it)
+                }
                 runtimeService.startProcessInstanceByKey(processStartPo.processDefinitionKey, processStartPo.businessKey, params)
                         .id
             } catch (e: Exception) {
