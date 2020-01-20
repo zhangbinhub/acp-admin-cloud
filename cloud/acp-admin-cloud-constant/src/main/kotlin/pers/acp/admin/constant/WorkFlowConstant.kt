@@ -16,6 +16,8 @@ object WorkFlowConstant {
     const val roleCode = "roleCode"
     //任务编码，用于自定义判断任务处理方式
     const val taskCode = "taskCode"
+    //当前任务是否允许驳回
+    const val reject = "isReject"
     /**
      * 工作流自定义参数
      */
