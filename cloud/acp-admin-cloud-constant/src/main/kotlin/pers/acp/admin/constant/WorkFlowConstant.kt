@@ -14,6 +14,8 @@ object WorkFlowConstant {
     const val orgLevel = "orgLevel"
     //待发送用户所属角色code，多个code时使用“,”分隔
     const val roleCode = "roleCode"
+    //任务编码，用于自定义判断任务处理方式
+    const val taskCode = "taskCode"
     /**
      * 工作流自定义参数
      */
