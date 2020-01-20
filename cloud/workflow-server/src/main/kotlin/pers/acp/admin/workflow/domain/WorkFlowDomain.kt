@@ -474,7 +474,7 @@ constructor(private val logAdapter: LogAdapter,
     /**
      * 查询指定流程的历史信息
      *
-     * @param processInstanceId 流程id，为空或null表示查询所有
+     * @param processInstanceId 流程id
      * @return 流程历史信息
      */
     @Throws(ServerException::class)
