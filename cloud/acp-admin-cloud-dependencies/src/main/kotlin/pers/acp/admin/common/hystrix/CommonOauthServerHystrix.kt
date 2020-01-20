@@ -59,14 +59,14 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 override fun findUserById(id: String): UserVo {
                     val errMsg = "找不到对应的用户信息"
                     logAdapter.info(errMsg)
-                    return UserVo()
+                    return UserVo(id = id)
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserByLoginNo(loginNo: String): UserVo {
                     val errMsg = "找不到对应的用户信息"
                     logAdapter.info(errMsg)
-                    return UserVo()
+                    return UserVo(loginNo = loginNo)
                 }
 
                 @Throws(ServerException::class)
