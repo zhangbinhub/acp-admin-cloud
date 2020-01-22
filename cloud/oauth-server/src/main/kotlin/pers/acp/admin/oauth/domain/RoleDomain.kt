@@ -27,6 +27,7 @@ constructor(userRepository: UserRepository,
             private val menuRepository: MenuRepository,
             private val moduleFuncRepository: ModuleFuncRepository) : OauthBaseDomain(userRepository) {
 
+    @Throws(ServerException::class)
     fun getRoleList(user: OAuth2Authentication): MutableList<Role> {
         val currUser = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(currUser)) {
@@ -36,6 +37,7 @@ constructor(userRepository: UserRepository,
         }
     }
 
+    @Throws(ServerException::class)
     fun getRoleListByAppId(loginNo: String, appId: String): List<Role> {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {

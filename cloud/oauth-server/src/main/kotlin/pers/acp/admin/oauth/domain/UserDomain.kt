@@ -84,13 +84,14 @@ constructor(userRepository: UserRepository,
 
     fun getMobileForOtherUser(mobile: String, userId: String): User? = userRepository.findByMobileAndIdNot(mobile, userId).orElse(null)
 
-    fun findModifiableUserList(loginNo: String): MutableList<User> {
+    @Throws(ServerException::class)
+    fun findModifiableUserList(loginNo: String): MutableList<UserVo> {
         val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {
-            userRepository.findAll()
+            userRepository.findAll().map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }.toMutableList()
         } else {
             user.let {
-                userRepository.findByLevelsGreaterThan(it.levels)
+                userRepository.findByLevelsGreaterThan(it.levels).map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }.toMutableList()
             }
         }
     }
@@ -207,68 +208,133 @@ constructor(userRepository: UserRepository,
 
     fun getUserInfo(userId: String): User? = userRepository.findById(userId).orElse(null)
 
+    @Throws(ServerException::class)
+    fun getUserInfoById(userId: String): UserVo = userRepository.getOne(userId).let {
+        UserVo().apply {
+            BeanUtils.copyProperties(it, this)
+        }
+    }
+
+    @Throws(ServerException::class)
+    fun getUserInfoByLoginNo(loginNo: String): UserVo = userRepository.findByLoginNo(loginNo).let {
+        if (it.isEmpty) throw ServerException("找不到用户信息")
+        UserVo().apply {
+            BeanUtils.copyProperties(it.get(), this)
+        }
+    }
+
     /**
      * 获取指定部门下所有符合角色编码的用户
      */
-    private fun getUserListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: String): MutableList<User> =
-            mutableListOf<User>().apply {
+    private fun getUserListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: List<String>): MutableList<UserVo> =
+            mutableListOf<UserVo>().apply {
                 organizations.forEach { org ->
-                    getUserListDistinct(org.userSet.filter { user -> user.roleSet.any { role -> role.code == roleCode } })
+                    this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> roleCode.contains(role.code) } }
+                            .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
+                            .toMutableList())
                 }
+            }.let {
+                getUserListDistinct(it)
             }
 
     /**
      * User集合去重，返回List
      */
-    private fun getUserListDistinct(users: Collection<User>): MutableList<User> =
-            mutableListOf<User>().apply {
+    private fun getUserListDistinct(users: Collection<UserVo>): MutableList<UserVo> =
+            mutableListOf<UserVo>().apply {
                 val userIdList = mutableListOf<String>()
                 users.forEach { user ->
                     if (!userIdList.contains(user.id)) {
                         this.add(user)
-                        userIdList.add(user.id)
+                        userIdList.add(user.id!!)
                     }
                 }
             }
 
-    fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: String): MutableList<User> =
+    @Throws(ServerException::class)
+    fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 getUserListInOrgListByRoleCode(currUser.organizationSet, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
 
     /**
      * 获取上级部门指定角色的用户
-     * @param orgLevel >0上级部门，1上一级，2上二级...；<=0：本部门
+     * @param orgLevelList >0 下级部门，1下一级，2下二级...；=0：本部门；<0 上级部门，-1上一级，-2上二级...
      */
-    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevel: Int, roleCode: String): MutableList<User> =
+    @Throws(ServerException::class)
+    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
             findCurrUserInfo(loginNo)?.let { currUser ->
                 val orgList = mutableListOf<Organization>()
-                currUser.organizationSet.forEach { org ->
-                    if (orgLevel > 0) {
-                        var organization = org
-                        for (index in 0 until orgLevel) {
-                            val orgOptional = organizationRepository.findById(organization.parentId)
-                            if (orgOptional.isPresent) {
-                                organization = orgOptional.get()
-                                if (index == orgLevel - 1) {
-                                    orgList.add(organization)
+                orgLevelList.forEach { orgLevel ->
+                    when {
+                        orgLevel > 0 -> { // 获取下级
+                            val tmpOrg = currUser.organizationSet
+                            for (index in 1..orgLevel) {
+                                val children = getRelativeOrgList(index, tmpOrg)
+                                if (children.isNotEmpty()) {
+                                    tmpOrg.clear()
+                                    tmpOrg.addAll(children)
+                                } else {
+                                    tmpOrg.clear()
+                                    break
                                 }
-                            } else {
-                                break
+                            }
+                            orgList.addAll(tmpOrg)
+                        }
+                        orgLevel < 0 -> { // 获取上级
+                            val tmpOrg = currUser.organizationSet
+                            for (index in orgLevel until 0) {
+                                val parent = getRelativeOrgList(index, tmpOrg)
+                                if (parent.isNotEmpty()) {
+                                    tmpOrg.clear()
+                                    tmpOrg.addAll(parent)
+                                } else {
+                                    tmpOrg.clear()
+                                    break
+                                }
                             }
                         }
-                    } else {
-                        orgList.add(org)
+                        else -> { // 本部门
+                            orgList.addAll(currUser.organizationSet)
+                        }
                     }
                 }
                 getUserListInOrgListByRoleCode(orgList, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
 
-    fun getUserListByOrgCodeAndRole(orgCode: String, roleCode: String): MutableList<User> =
-            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeOrderBySortAsc(orgCode), roleCode)
+    fun getUserListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
+            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeInOrderBySortAsc(orgCode), roleCode)
 
-    fun getUserListByRole(roleCode: String): MutableList<User> =
-            getUserListDistinct(roleRepository.findAllByCodeOrderBySortAsc(roleCode).flatMap { role -> role.userSet })
+    fun getUserListByRole(roleCode: List<String>): MutableList<UserVo> =
+            getUserListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
+                    .flatMap { role -> role.userSet }
+                    .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
+                    .toMutableList())
+
+    /**
+     * 获取相对部门集合
+     * @param flag 标识，>0下级，<0上级
+     * @param orgList 参考部门集合
+     * @return 相对部门集合
+     */
+    private fun getRelativeOrgList(flag: Int, orgList: Collection<Organization>): Collection<Organization> = when {
+        flag > 0 -> { // 获取下级
+            organizationRepository.findByParentIdIn(orgList.map { org -> org.id }.toMutableList())
+        }
+        flag < 0 -> { // 获取上级
+            mutableListOf<Organization>().apply {
+                orgList.forEach { org ->
+                    val parent = organizationRepository.findById(org.parentId)
+                    if (parent.isPresent) {
+                        this.add(parent.get())
+                    }
+                }
+            }
+        }
+        else -> {
+            orgList
+        }
+    }
 
     companion object {
         private const val DEFAULT_PASSWORD = "000000"

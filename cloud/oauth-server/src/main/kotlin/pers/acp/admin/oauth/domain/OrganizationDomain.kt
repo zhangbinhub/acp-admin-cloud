@@ -45,7 +45,8 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
             organizationRepository.save(organization.copy(
                     name = organizationPo.name!!,
-                    code = organizationPo.code,
+                    code = organizationPo.code!!,
+                    area = organizationPo.area!!,
                     sort = organizationPo.sort,
                     userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
             ).apply {
@@ -69,6 +70,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
      * @param orgIds  机构ID
      * @return true|false
      */
+    @Throws(ServerException::class)
     private fun isNotPermit(loginNo: String, vararg orgIds: String): Boolean =
             isNotPermit(findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息"), *orgIds)
 
@@ -111,6 +113,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
         return doSave(organization, organizationPo)
     }
 
+    @Throws(ServerException::class)
     fun getModOrgList(loginNo: String): MutableList<Organization> =
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).organizationMngSet.toMutableList()
 

@@ -56,6 +56,20 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
+                override fun findUserById(id: String): UserVo {
+                    val errMsg = "找不到对应的用户信息"
+                    logAdapter.info(errMsg)
+                    return UserVo(id = id)
+                }
+
+                @Throws(ServerException::class)
+                override fun findUserByLoginNo(loginNo: String): UserVo {
+                    val errMsg = "找不到对应的用户信息"
+                    logAdapter.info(errMsg)
+                    return UserVo(loginNo = loginNo)
+                }
+
+                @Throws(ServerException::class)
                 override fun findUserListInCurrOrg(roleCode: String): List<UserVo> {
                     val errMsg = "找不到当前部门下对应的用户信息【role=$roleCode】"
                     logAdapter.info(errMsg)
@@ -63,7 +77,7 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
-                override fun findUserList(orgLevel: Int, roleCode: String): List<UserVo> {
+                override fun findUserListByOrgLevel(orgLevel: String, roleCode: String): List<UserVo> {
                     val errMsg = "找不到对应的用户信息【orgLevel=$orgLevel,role=$roleCode】"
                     logAdapter.info(errMsg)
                     return listOf()
@@ -87,6 +101,12 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 override fun findRuntimeConfigByName(name: String): RuntimeConfigVo {
                     logAdapter.error("获取运行参数失败 【$name】")
                     return RuntimeConfigVo()
+                }
+
+                @Throws(ServerException::class)
+                override fun findRuntimeConfigMap(): Map<String, RuntimeConfigVo> {
+                    logAdapter.error("获取运行参数失败")
+                    return mapOf()
                 }
             }
         } else {

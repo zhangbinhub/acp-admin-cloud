@@ -27,10 +27,6 @@ data class ProcessStartPo(
         @get:NotBlank(message = "流程描述不能为空")
         var description: String? = null,
 
-        @ApiModelProperty(value = "发起人", required = true, position = 5)
-        @get:NotBlank(message = "发起人不能为空")
-        var startUserId: String? = null,
-
-        @ApiModelProperty(value = "自定义参数", position = 6)
+        @ApiModelProperty(value = "自定义参数", position = 5)
         var params: MutableMap<String, Any> = mutableMapOf()
 )

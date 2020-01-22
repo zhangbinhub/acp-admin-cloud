@@ -11,7 +11,7 @@ import org.flowable.engine.history.HistoricProcessInstance
 import org.flowable.engine.history.HistoricVariableUpdate
 import org.flowable.engine.runtime.ProcessInstance
 import org.flowable.task.api.DelegationState
-import org.flowable.task.api.TaskInfo
+import org.flowable.task.api.Task
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.common.po.*
-import pers.acp.admin.common.vo.CustomerQueryPageVo
-import pers.acp.admin.common.vo.ProcessHistoryActivityVo
-import pers.acp.admin.common.vo.ProcessInstanceVo
-import pers.acp.admin.common.vo.ProcessTaskVo
+import pers.acp.admin.common.vo.*
 import pers.acp.admin.workflow.constant.WorkFlowParamKey
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
@@ -46,13 +43,20 @@ constructor(private val logAdapter: LogAdapter,
             private val historyService: HistoryService,
             @param:Qualifier("processEngine") private val processEngine: ProcessEngine) : BaseDomain() {
 
+    private fun getUserById(id: String?): UserVo =
+            if (CommonTools.isNullStr(id)) {
+                UserVo()
+            } else {
+                commonOauthServer.findUserById(id!!)
+            }
+
     /**
      * 任务实体转换
      *
      * @param task 任务对象
      * @return 转换后任务对象
      */
-    private fun taskToVo(task: TaskInfo) =
+    private fun taskToVo(task: Task) =
             runtimeService.createProcessInstanceQuery().processInstanceId(task.processInstanceId).singleResult().let { processInstance ->
                 val params = runtimeService.getVariables(task.executionId)
                 ProcessTaskVo(
@@ -63,7 +67,8 @@ constructor(private val logAdapter: LogAdapter,
                         executionId = task.executionId,
                         params = params,
                         businessKey = params[WorkFlowParamKey.businessKey]?.toString() ?: "",
-                        userId = task.assignee,
+                        unClaimed = task.assignee == null,
+                        user = getUserById(task.assignee),
                         localParams = task.taskLocalVariables,
                         properties = formService.getTaskFormData(task.id).formProperties.associateBy({ it.name }, { it.value }).toMutableMap(),
                         createTime = task.createTime.time,
@@ -72,8 +77,9 @@ constructor(private val logAdapter: LogAdapter,
                         flowName = processInstance.processDefinitionName,
                         title = params[WorkFlowParamKey.title]?.toString() ?: "",
                         description = params[WorkFlowParamKey.description]?.toString() ?: "",
-                        startUserId = processInstance.startUserId,
-                        taskOwnerUserId = task.owner
+                        startUser = getUserById(processInstance.startUserId),
+                        taskOwnerUser = getUserById(task.owner),
+                        delegated = task.delegationState == DelegationState.PENDING
                 )
             }
 
@@ -104,7 +110,7 @@ constructor(private val logAdapter: LogAdapter,
                         taskId = historicActivityInstance.taskId,
                         executionId = historicActivityInstance.executionId,
                         businessKey = businessKey,
-                        userId = historicActivityInstance.assignee,
+                        user = getUserById(historicActivityInstance.assignee),
                         pass = params[WorkFlowParamKey.pass] as Boolean,
                         comment = params[WorkFlowParamKey.comment].toString(),
                         params = params,
@@ -131,7 +137,7 @@ constructor(private val logAdapter: LogAdapter,
                             flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
                             title = params[WorkFlowParamKey.title]?.toString() ?: "",
                             description = params[WorkFlowParamKey.description]?.toString() ?: "",
-                            startUserId = processInstance.startUserId,
+                            startUser = getUserById(processInstance.startUserId),
                             params = params,
                             startTime = processInstance.startTime!!.time
                     )
@@ -145,7 +151,7 @@ constructor(private val logAdapter: LogAdapter,
                             flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
                             title = params[WorkFlowParamKey.title]?.toString() ?: "",
                             description = params[WorkFlowParamKey.description]?.toString() ?: "",
-                            startUserId = processInstance.startUserId,
+                            startUser = getUserById(processInstance.startUserId),
                             params = params,
                             startTime = processInstance.startTime!!.time,
                             endTime = processInstance.endTime!!.time
@@ -160,11 +166,12 @@ constructor(private val logAdapter: LogAdapter,
      * 启动流程
      *
      * @param processStartPo 流程启动参数
+     * @param loginNo 流程发起人登录号
      * @return 流程实例id
      */
     @Transactional
     @Throws(ServerException::class)
-    fun startFlow(processStartPo: ProcessStartPo): String =
+    fun startFlow(processStartPo: ProcessStartPo, loginNo: String? = null): String =
             try {
                 val params = processStartPo.params
                 repositoryService.createProcessDefinitionQuery()
@@ -178,7 +185,13 @@ constructor(private val logAdapter: LogAdapter,
                 params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
                 params[WorkFlowParamKey.title] = processStartPo.title!!
                 params[WorkFlowParamKey.description] = processStartPo.description!!
-                Authentication.setAuthenticatedUserId(processStartPo.startUserId)
+                if (loginNo != null) {
+                    commonOauthServer.findUserByLoginNo(loginNo).id
+                } else {
+                    null
+                }.let {
+                    Authentication.setAuthenticatedUserId(it)
+                }
                 runtimeService.startProcessInstanceByKey(processStartPo.processDefinitionKey, processStartPo.businessKey, params)
                         .id
             } catch (e: Exception) {
@@ -329,21 +342,23 @@ constructor(private val logAdapter: LogAdapter,
                     throw ServerException("流程任务不存在！")
                 }
                 val params: MutableMap<String, Any> = mutableMapOf()
-                var comment = processHandlingPo.comment
-                if (CommonTools.isNullStr(comment)) {
-                    comment = if (processHandlingPo.pass!!) {
-                        "通过"
-                    } else {
-                        "不通过"
-                    }
-                }
-                params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
-                params[WorkFlowParamKey.comment] = comment!!
                 processHandlingPo.params.forEach { (key, value) ->
                     if (!params.containsKey(key)) {
                         params[key] = value
                     }
                 }
+                var comment = processHandlingPo.comment
+                if (processHandlingPo.pass!!) {
+                    if (CommonTools.isNullStr(comment)) {
+                        comment = "通过"
+                    }
+                } else {
+                    if (CommonTools.isNullStr(comment)) {
+                        comment = "不通过"
+                    }
+                }
+                params[WorkFlowParamKey.comment] = comment!!
+                params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
                 runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
                 if (task.delegationState == DelegationState.PENDING) {
                     taskService.resolveTask(task.id, params)
@@ -459,7 +474,7 @@ constructor(private val logAdapter: LogAdapter,
     /**
      * 查询指定流程的历史信息
      *
-     * @param processInstanceId 流程id，为空或null表示查询所有
+     * @param processInstanceId 流程id
      * @return 流程历史信息
      */
     @Throws(ServerException::class)
@@ -610,7 +625,7 @@ constructor(private val logAdapter: LogAdapter,
                 // 当前节点ID
                 val currentActivityId: String = currentActivityInstance.activityId
                 var ifStartFind = false
-                var ifFinded = false
+                var ifFound = false
                 var historicActivityInstance: HistoricActivityInstance
                 // 循环当前节点的所有流出线
                 // 循环所有历史节点
@@ -626,18 +641,18 @@ constructor(private val logAdapter: LogAdapter,
                         continue
                     }
                     if (ifStartFind) {
-                        ifFinded = false
+                        ifFound = false
                         for (sequenceFlow in outgoingFlowList) {
                             // 如果当前节点流程线对应的下级节点在其后面的历史节点中，则该条流程线进行高亮显示
                             if (historicActivityInstance.activityId == sequenceFlow.targetRef) {
                                 highLightedFlowIdList.add(sequenceFlow.id)
                                 // 暂时默认找到离当前节点最近的下一级节点即退出循环，否则有多条流出线时将全部被高亮显示
-                                ifFinded = true
+                                ifFound = true
                                 break
                             }
                         }
                     }
-                    if (ifFinded) {
+                    if (ifFound) {
                         // 暂时默认找到离当前节点最近的下一级节点即退出历史节点循环，否则有多条流出线时将全部被高亮显示
                         break
                     }

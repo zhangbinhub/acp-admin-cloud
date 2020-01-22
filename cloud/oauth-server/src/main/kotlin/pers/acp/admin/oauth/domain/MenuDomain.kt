@@ -22,12 +22,12 @@ class MenuDomain @Autowired
 constructor(userRepository: UserRepository, private val roleRepository: RoleRepository, private val menuRepository: MenuRepository) : OauthBaseDomain(userRepository) {
 
     fun getAllMenuList(): MutableList<Menu> =
-            menuRepository.findAll().let {
+            menuRepository.findAllByOrderBySortAsc().let {
                 val map: MutableMap<String, Menu> = mutableMapOf()
                 it.forEach { item ->
                     map[item.id] = item
                 }
-                sortMenuList(formatToTreeList(map))
+                formatToTreeList(map)
             }
 
     private fun sortMenuList(menuList: MutableList<Menu>): MutableList<Menu> =
@@ -42,6 +42,7 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
                 }
             }
 
+    @Throws(ServerException::class)
     fun getMenuList(appId: String, loginNo: String): MutableList<Menu> =
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
                 val menuIds: MutableSet<String> = mutableSetOf()

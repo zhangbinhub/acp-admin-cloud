@@ -100,7 +100,7 @@ data class User(
                     .toHashCode()
 
     override fun toString(): String =
-            StringBuilder("Role(")
+            StringBuilder("User(")
                     .append("id=$id")
                     .append(",name=$name")
                     .append(",loginNo=$loginNo")
@@ -108,5 +108,6 @@ data class User(
                     .append(",levels=$levels")
                     .append(",enabled=$enabled")
                     .append(",sort=$sort")
+                    .append(")")
                     .toString()
 }

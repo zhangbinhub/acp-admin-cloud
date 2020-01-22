@@ -91,7 +91,7 @@ constructor(private val routeDomain: RouteDomain, private val updateRouteProduce
     fun refresh(): ResponseEntity<InfoVo> {
         routeDomain.doRefresh()
         updateRouteProducer.doNotifyUpdateRoute()
-        return ResponseEntity.ok(InfoVo(message = "刷新路由缓存成功，稍后网关将刷新路由配置信息"))
+        return ResponseEntity.accepted().body(InfoVo(message = "刷新路由缓存成功，稍后网关将刷新路由配置信息"))
     }
 
 }

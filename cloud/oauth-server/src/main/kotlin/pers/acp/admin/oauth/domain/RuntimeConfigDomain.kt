@@ -13,7 +13,9 @@ import pers.acp.admin.oauth.po.RuntimeQueryPo
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
+import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.spring.boot.exceptions.ServerException
+import org.springframework.beans.BeanUtils
 
 import javax.annotation.PostConstruct
 import javax.persistence.criteria.Predicate
@@ -36,6 +38,12 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
         synchronized(this) {
             runtimeConfigConcurrentHashMap.clear()
             runtimeConfigRepository.findAll().forEach { runtimeConfig -> runtimeConfigConcurrentHashMap[runtimeConfig.name] = runtimeConfig }
+        }
+    }
+
+    fun findAll(): Map<String, RuntimeConfigVo> = runtimeConfigConcurrentHashMap.mapValues { entry ->
+        RuntimeConfigVo().apply {
+            BeanUtils.copyProperties(entry.value, this)
         }
     }
 

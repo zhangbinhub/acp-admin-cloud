@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -37,8 +38,8 @@ constructor(private val logAdapter: LogAdapter,
     @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun start(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
-            workFlowDomain.startFlow(processStartPo).let {
+    fun start(user: OAuth2Authentication, @RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
+            workFlowDomain.startFlow(processStartPo, user.name).let {
                 ResponseEntity.status(HttpStatus.CREATED).body(InfoVo(message = it))
             }
 

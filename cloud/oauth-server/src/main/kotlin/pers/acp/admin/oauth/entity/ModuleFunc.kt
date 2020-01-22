@@ -80,5 +80,6 @@ data class ModuleFunc(
                     .append(",code=$code")
                     .append(",covert=$covert")
                     .append(",parentId=$parentId")
+                    .append(")")
                     .toString()
 }

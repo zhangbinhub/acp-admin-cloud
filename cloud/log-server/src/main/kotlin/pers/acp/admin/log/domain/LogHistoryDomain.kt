@@ -51,7 +51,7 @@ constructor(private val logAdapter: LogAdapter,
                     routeLogHistoryRepository.save(this)
                 }
             }
-            routeLogRepository.deleteAll(it.content)
+            routeLogRepository.deleteInBatch(it.content)
             if (it.isEmpty) {
                 logAdapter.info("路由日志迁移完成")
             }
@@ -78,7 +78,7 @@ constructor(private val logAdapter: LogAdapter,
                     operateLogHistoryRepository.save(this)
                 }
             }
-            operateLogRepository.deleteAll(it.content)
+            operateLogRepository.deleteInBatch(it.content)
             if (it.isEmpty) {
                 logAdapter.info("操作日志迁移完成")
             }
@@ -105,7 +105,7 @@ constructor(private val logAdapter: LogAdapter,
                     loginLogHistoryRepository.save(this)
                 }
             }
-            loginLogRepository.deleteAll(it.content)
+            loginLogRepository.deleteInBatch(it.content)
             if (it.isEmpty) {
                 logAdapter.info("登录日志迁移完成")
             }

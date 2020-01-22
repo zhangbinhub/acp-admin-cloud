@@ -36,9 +36,6 @@ dependencies {
     // sql data base connection
     api "com.zaxxer:HikariCP:$versions.hikaricp"
     api "mysql:mysql-connector-java:$versions.mysql"
-    api "com.microsoft.sqlserver:mssql-jdbc:$versions.mssqljdbc"
-    api "com.hynnet:oracle-driver-ojdbc:$versions.ojdbc"
-    api "org.postgresql:postgresql:$versions.postgresql"
 
     // tcp/udp
     api "io.netty:netty-all:$versions.netty"

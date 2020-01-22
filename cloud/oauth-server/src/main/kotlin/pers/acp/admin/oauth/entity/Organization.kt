@@ -15,7 +15,10 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_organization")
+@Table(name = "t_organization", indexes = [
+    Index(columnList = "area"),
+    Index(columnList = "code"),
+    Index(columnList = "parentId")])
 @ApiModel("机构信息")
 data class Organization(
         @Id
@@ -29,9 +32,13 @@ data class Organization(
         @ApiModelProperty("机构名称")
         var name: String = "",
 
-        @Column(length = 100)
+        @Column(length = 100, nullable = false)
+        @ApiModelProperty("机构区域")
+        var area: String = "",
+
+        @Column(length = 100, nullable = false)
         @ApiModelProperty("机构编码")
-        var code: String? = null,
+        var code: String = "",
 
         @Column(nullable = false)
         @ApiModelProperty("序号")
@@ -55,6 +62,7 @@ data class Organization(
                 .appendSuper(super.equals(other))
                 .append(id, organization.id)
                 .append(name, organization.name)
+                .append(area, organization.area)
                 .append(code, organization.code)
                 .append(sort, organization.sort)
                 .append(parentId, organization.parentId)
@@ -66,6 +74,7 @@ data class Organization(
                     .appendSuper(super.hashCode())
                     .append(id)
                     .append(name)
+                    .append(area)
                     .append(code)
                     .append(sort)
                     .append(parentId)
@@ -75,8 +84,10 @@ data class Organization(
             StringBuilder("Organization(")
                     .append("id=$id")
                     .append(",name=$name")
+                    .append(",area=$area")
                     .append(",code=$code")
                     .append(",sort=$sort")
                     .append(",parentId=$parentId")
+                    .append(")")
                     .toString()
 }

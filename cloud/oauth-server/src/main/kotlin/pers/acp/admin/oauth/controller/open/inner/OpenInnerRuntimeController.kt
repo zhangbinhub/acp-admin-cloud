@@ -47,4 +47,9 @@ constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseControll
                 }
             }
 
+    @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
+    @GetMapping(value = [OauthApi.runtime], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findList(): ResponseEntity<Map<String, RuntimeConfigVo>> = ResponseEntity.ok(runtimeConfigDomain.findAll())
+
 }
