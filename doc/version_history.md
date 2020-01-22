@@ -1,5 +1,5 @@
 ## 版本更新记录
-##### v4.1.x
+##### v4.1.1
 > - [Upgrade] 去除多余无用依赖
 > - [Upgrade] 修改feign客户端写法
 > - [Upgrade] 修改zk端口号
@@ -14,6 +14,17 @@
 > - [Upgrade] 修改用户查询接口，支持多个机构号、角色编码
 > - [Upgrade] constant 增加工作流相关常量
 > - [Upgrade] 优化工作流服务，返回对象中的用户信息均使用UserVo对象
+> - [Upgrade] 升级核心库至6.4.1
+> - [Upgrade] 升级 Spring Boot 至 2.2.4.RELEASE
+> - [Upgrade] 升级 Gradle 至 6.1
+> - [Upgrade] 升级依赖项
+>   - netty to 4.1.45.Final
+>   - okhttp to 3.14.6
+>   - mysql to 8.0.19
+>   - postgresql to 42.2.9
+>   - slf4j to 1.7.30
+>   - jackson to 2.10.2
+>   - hikaricp to 3.4.2
 ##### v4.1.0
 > - [Upgrade] 用户手机号放入token额外附加信息中
 > - [Upgrade] oauth增加一系列用户查询接口
