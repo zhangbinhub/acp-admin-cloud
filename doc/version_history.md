@@ -14,6 +14,7 @@
 > - [Upgrade] 修改用户查询接口，支持多个机构号、角色编码
 > - [Upgrade] constant 增加工作流相关常量
 > - [Upgrade] 优化工作流服务，返回对象中的用户信息均使用UserVo对象
+> - [Upgrade] 优化工作流服务生成流程图，增加文档
 > - [Upgrade] 升级核心库至6.4.1
 > - [Upgrade] 升级 Spring Boot 至 2.2.4.RELEASE
 > - [Upgrade] 升级 Gradle 至 6.1

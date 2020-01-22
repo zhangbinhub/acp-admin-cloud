@@ -24,6 +24,8 @@ import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
+import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -129,15 +131,15 @@ constructor(private val logAdapter: LogAdapter,
                 @PathVariable
                 imgType: String): ResponseEntity<String> =
             workFlowDefinitionDomain.generateDefinitionDiagram(deploymentId, imgType).let { inputStream ->
+                var out: ByteArrayOutputStream? = null
                 try {
-                    val bytes = ByteArray(inputStream.available())
-                    if (inputStream.read(bytes) == -1) {
-                        logAdapter.error("图片生成失败，流程引擎生成为空")
-                        throw ServerException("图片生成失败")
-                    }
-                    ResponseEntity.ok("data:image/$imgType;base64," + Base64.toBase64String(bytes))
+                    out = ByteArrayOutputStream()
+                    val buffImg = ImageIO.read(inputStream)
+                    ImageIO.write(buffImg, imgType, out)
+                    ResponseEntity.ok("data:image/$imgType;base64," + Base64.toBase64String(out.toByteArray()))
                 } finally {
                     try {
+                        out?.close()
                         inputStream.close()
                     } catch (ex: Exception) {
                         logAdapter.error(ex.message, ex)
