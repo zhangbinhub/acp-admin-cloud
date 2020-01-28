@@ -50,10 +50,11 @@ docker run -p8080:8080 flowable/all-in-one
 - isTransfer:Boolean ，当前任务是否可以转办（任务处理人变更，处理完毕后进入下一节点）
 - isDelegate:Boolean ，当前任务是否可以委派他人办理（任务处理人变更，处理完毕后返回至当前处理人继续办理）
 - selectUser:Boolean ，是否手动选择分配处理人（或候选人）
-- orgLevel:Boolean ，待发送用户部门级别，负数|零|正数；0-当前用户所在部门，-1上一级部门，-2上两级部门...依次类推，1下一级部门，2下两级部门...依次类推，多个code时使用“,”分隔
-- roleCode:Boolean ，待发送用户所属角色code，多个code时使用“,”分隔
-- taskCode:Boolean ，任务编码，用于自定义判断任务处理方式
+- orgLevel:Int ，待发送用户部门级别，负数|零|正数；0-当前用户所在部门，-1上一级部门，-2上两级部门...依次类推，1下一级部门，2下两级部门...依次类推，多个code时使用“,”分隔
+- roleCode:String ，待发送用户所属角色code，多个code时使用“,”分隔
+- taskCode:String ，任务编码，用于自定义判断任务处理方式
 - isReject:Boolean ，当前任务是否允许驳回
+- rejectToTask:String ，当前任务是否允许驳回
 
 ##### 七、流程示例
 - 流程图：
