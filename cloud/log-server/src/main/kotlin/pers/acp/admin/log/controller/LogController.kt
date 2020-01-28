@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -48,7 +47,7 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysMonitor)
     @GetMapping(value = [LogApi.loginInfo], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun findLoginLog(user: OAuth2Authentication): ResponseEntity<List<LoginLogVo>> =
+    fun findLoginLog(): ResponseEntity<List<LoginLogVo>> =
             CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).let {
                 ResponseEntity.ok(logDomain.loginStatistics(it.millis))
             }
