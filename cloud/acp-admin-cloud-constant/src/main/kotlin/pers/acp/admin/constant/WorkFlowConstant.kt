@@ -18,6 +18,8 @@ object WorkFlowConstant {
     const val taskCode = "taskCode"
     //当前任务是否允许驳回
     const val reject = "isReject"
+    //驳回至目标任务的定义ID，多个值时使用“,”分隔
+    const val rejectToTask = "rejectToTask"
     /**
      * 工作流自定义参数
      */

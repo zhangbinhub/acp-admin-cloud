@@ -63,6 +63,7 @@ constructor(private val logAdapter: LogAdapter,
                         processInstanceId = task.processInstanceId,
                         name = task.name,
                         taskId = task.id,
+                        taskDefinitionKey = task.taskDefinitionKey,
                         parentTaskId = task.parentTaskId,
                         executionId = task.executionId,
                         params = params,
@@ -103,11 +104,13 @@ constructor(private val logAdapter: LogAdapter,
                             params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
 
                         }
+                val task = taskService.createTaskQuery().taskId(historicActivityInstance.taskId).singleResult()
                 ProcessHistoryActivityVo(
                         processInstanceId = historicActivityInstance.processInstanceId,
                         activityId = historicActivityInstance.activityId,
                         activityName = historicActivityInstance.activityName,
                         taskId = historicActivityInstance.taskId,
+                        taskDefinitionKey = task.taskDefinitionKey,
                         executionId = historicActivityInstance.executionId,
                         businessKey = businessKey,
                         user = getUserById(historicActivityInstance.assignee),
@@ -166,12 +169,12 @@ constructor(private val logAdapter: LogAdapter,
      * 启动流程
      *
      * @param processStartPo 流程启动参数
-     * @param loginNo 流程发起人登录号
+     * @param userId 流程发起人ID
      * @return 流程实例id
      */
     @Transactional
     @Throws(ServerException::class)
-    fun startFlow(processStartPo: ProcessStartPo, loginNo: String? = null): String =
+    fun startFlow(processStartPo: ProcessStartPo, userId: String? = null): String =
             try {
                 val params = processStartPo.params
                 repositoryService.createProcessDefinitionQuery()
@@ -185,15 +188,11 @@ constructor(private val logAdapter: LogAdapter,
                 params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
                 params[WorkFlowParamKey.title] = processStartPo.title!!
                 params[WorkFlowParamKey.description] = processStartPo.description!!
-                if (loginNo != null) {
-                    commonOauthServer.findUserByLoginNo(loginNo).id
-                } else {
-                    null
-                }.let {
-                    Authentication.setAuthenticatedUserId(it)
-                }
-                runtimeService.startProcessInstanceByKey(processStartPo.processDefinitionKey, processStartPo.businessKey, params)
-                        .id
+                Authentication.setAuthenticatedUserId(userId)
+                runtimeService.startProcessInstanceByKey(
+                        processStartPo.processDefinitionKey,
+                        processStartPo.businessKey,
+                        params).id
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)

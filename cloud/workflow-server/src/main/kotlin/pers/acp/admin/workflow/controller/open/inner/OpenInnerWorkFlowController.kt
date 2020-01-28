@@ -34,7 +34,7 @@ constructor(private val workFlowDomain: WorkFlowDomain) : BaseController() {
     @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun create(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
+    fun start(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
             workFlowDomain.startFlow(processStartPo).let {
                 ResponseEntity.status(HttpStatus.CREATED).body(InfoVo(message = it))
             }

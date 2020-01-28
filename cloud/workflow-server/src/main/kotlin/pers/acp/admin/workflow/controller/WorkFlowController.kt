@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.vo.*
 import pers.acp.admin.api.WorkFlowApi
+import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.common.po.*
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
@@ -34,16 +34,19 @@ import javax.validation.Valid
 @Api(tags = ["工作流引擎"])
 class WorkFlowController @Autowired
 constructor(private val logAdapter: LogAdapter,
+            private val commonOauthServer: CommonOauthServer,
             private val workFlowDomain: WorkFlowDomain) : BaseController() {
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun start(user: OAuth2Authentication, @RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
-            workFlowDomain.startFlow(processStartPo, user.name).let {
-                ResponseEntity.status(HttpStatus.CREATED).body(InfoVo(message = it))
-            }
+    fun start(@RequestBody @Valid processStartPo: ProcessStartPo): ResponseEntity<InfoVo> =
+            commonOauthServer.userInfo()?.let { user ->
+                workFlowDomain.startFlow(processStartPo, user.id).let {
+                    ResponseEntity.status(HttpStatus.CREATED).body(InfoVo(message = it))
+                }
+            } ?: throw ServerException("获取当前登录用户信息失败！")
 
     @ApiOperation(value = "查询待办任务", notes = "获取当前用户的待办任务列表")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
