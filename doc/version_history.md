@@ -17,7 +17,7 @@
 > - [Upgrade] 修改 token 附加信息key值
 > - [Upgrade] 升级核心库至6.4.1
 > - [Upgrade] 升级 Spring Boot 至 2.2.4.RELEASE
-> - [Upgrade] 升级 Gradle 至 6.1
+> - [Upgrade] 升级 Gradle 至 6.1.1
 > - [Upgrade] 升级依赖项
 >   - netty to 4.1.45.Final
 >   - okhttp to 3.14.6
