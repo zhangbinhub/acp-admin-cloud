@@ -1,6 +1,6 @@
 group "${group}.cloud"
 versions += [
-        logstash: "5.3"
+        logstash: "6.3"
 ]
 buildscript {
     dependencies {
