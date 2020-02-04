@@ -53,7 +53,7 @@ constructor(private val logAdapter: LogAdapter,
     fun create(@ApiParam(value = "流程配置文件", required = true)
                @NotNull(message = "流程配置文件不能为空")
                @RequestParam file: MultipartFile,
-               @ApiParam(value = "备注", required = true)
+               @ApiParam(value = "备注", required = false)
                @RequestParam(required = false) remarks: String?): ResponseEntity<WorkFlowDefinition> {
         if (file.isEmpty) {
             throw ServerException("请选择流程配置文件")
