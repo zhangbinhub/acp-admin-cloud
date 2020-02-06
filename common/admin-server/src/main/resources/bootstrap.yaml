@@ -19,6 +19,11 @@ spring:
           - "classpath:/META-INF/spring-boot-admin-server-ui/"
           - "classpath:/static/"
   cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
+      ribbon:
+        enabled: false
     nacos:
       server-addr: 127.0.0.1:8848
       discovery:

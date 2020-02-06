@@ -7,7 +7,7 @@
 ## 相关组件版本
 - [Spring Boot 2.2.4.RELEASE](https://projects.spring.io/spring-boot)
 - [Spring Cloud Hoxton.SR1](http://projects.spring.io/spring-cloud)
-- [Spring Cloud Alibaba 2.1.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Spring Cloud Alibaba 2.2.0.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.4.1](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
