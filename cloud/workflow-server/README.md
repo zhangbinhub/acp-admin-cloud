@@ -54,7 +54,7 @@ docker run -p8080:8080 flowable/all-in-one
 - roleCode:String ，待发送用户所属角色code，多个code时使用“,”分隔
 - taskCode:String ，任务编码，用于自定义判断任务处理方式
 - isReject:Boolean ，当前任务是否允许驳回
-- rejectToTask:String ，当前任务是否允许驳回
+- rejectToTask:String ，驳回至目标任务的定义ID，多个值时使用“,”分隔
 
 ##### 七、流程示例
 - 流程图：
