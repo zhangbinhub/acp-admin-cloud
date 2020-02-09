@@ -1,5 +1,5 @@
 ### workflow-server
-工作流服务，集成[FlowAble v6.4.2](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
+工作流服务，集成[FlowAble v6.5.0](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
 
 ##### 一、操作系统增加字体文件
 ###### （一）windows
