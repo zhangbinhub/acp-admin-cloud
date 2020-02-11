@@ -5,6 +5,7 @@
 > - [Upgrade] Spring Cloud Alibaba 升级至 2.2.0.RELEASE
 > - [Upgrade] gateway 中启用 spring-cloud-loadbalancer
 > - [Upgrade] Spring Boot Admin 中启用 spring-cloud-loadbalancer
+> - [Upgrade] 优化工作流图片生成
 ##### v4.1.1
 > - [Upgrade] 去除多余无用依赖
 > - [Upgrade] 修改feign客户端写法

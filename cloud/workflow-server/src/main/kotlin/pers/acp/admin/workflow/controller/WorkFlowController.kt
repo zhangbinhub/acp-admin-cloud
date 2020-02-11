@@ -21,7 +21,6 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 import java.io.ByteArrayOutputStream
-import javax.imageio.ImageIO
 import javax.validation.Valid
 
 /**
@@ -186,8 +185,7 @@ constructor(private val logAdapter: LogAdapter,
                 var out: ByteArrayOutputStream? = null
                 try {
                     out = ByteArrayOutputStream()
-                    val buffImg = ImageIO.read(inputStream)
-                    ImageIO.write(buffImg, imgType, out)
+                    inputStream.transferTo(out)
                     ResponseEntity.ok("data:image/$imgType;base64," + Base64.toBase64String(out.toByteArray()))
                 } finally {
                     try {
