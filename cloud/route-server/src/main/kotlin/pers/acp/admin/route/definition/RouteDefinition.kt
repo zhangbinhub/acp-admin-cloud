@@ -1,10 +1,9 @@
 package pers.acp.admin.route.definition
 
-import javax.validation.ValidationException
-import java.net.URI
-import java.util.UUID
-
 import org.springframework.util.StringUtils.tokenizeToStringArray
+import java.net.URI
+import java.util.*
+import javax.validation.ValidationException
 
 /**
  * @author zhang by 17/03/2019
@@ -19,6 +18,8 @@ class RouteDefinition {
     var filters: MutableList<FilterDefinition> = mutableListOf()
 
     var uri: URI? = null
+
+    var metadata: MutableMap<String, Any> = mutableMapOf()
 
     var order = 0
 

@@ -45,6 +45,7 @@ constructor(private val logAdapter: LogAdapter,
                     routeId = routePo.routeId,
                     predicates = routePo.predicates!!,
                     filters = routePo.filters,
+                    metadata = routePo.metadata,
                     enabled = routePo.enabled ?: false,
                     orderNum = routePo.orderNum,
                     remarks = routePo.remarks
@@ -90,7 +91,16 @@ constructor(private val logAdapter: LogAdapter,
                     routeDefinition.uri = URI(route.uri!!)
                     routeDefinition.order = route.orderNum
                     routeDefinition.predicates = objectMapper.readValue(route.predicates, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, PredicateDefinition::class.java))
-                    routeDefinition.filters = objectMapper.readValue(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
+                    routeDefinition.filters = if (!CommonTools.isNullStr(route.filters)) {
+                        objectMapper.readValue<MutableList<FilterDefinition>>(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
+                    } else {
+                        mutableListOf()
+                    }
+                    routeDefinition.metadata = if (!CommonTools.isNullStr(route.metadata)) {
+                        objectMapper.readValue<MutableMap<String, Any>>(route.metadata, TypeFactory.defaultInstance().constructMapLikeType(MutableMap::class.java, String::class.java, Any::class.java))
+                    } else {
+                        mutableMapOf()
+                    }
                     redisTemplate.opsForList().rightPush(ROUTES_DEFINITION_KEY, objectMapper.writeValueAsBytes(routeDefinition))
                 }
                 logAdapter.info("路由信息更新至 Redis，共 " + routeList.size + " 条")

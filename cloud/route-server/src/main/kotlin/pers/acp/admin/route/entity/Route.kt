@@ -38,6 +38,10 @@ data class Route(
         @Lob
         var filters: String? = null,
 
+        @ApiModelProperty("元数据")
+        @Lob
+        var metadata: String? = null,
+
         @ApiModelProperty("路由序号")
         var orderNum: Int = 0,
 
