@@ -1,7 +1,6 @@
 package pers.acp.admin.workflow.controller
 
 import io.swagger.annotations.*
-import org.bouncycastle.util.encoders.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -21,10 +20,8 @@ import pers.acp.admin.workflow.po.WorkFlowDefinitionPo
 import pers.acp.admin.workflow.po.WorkFlowDefinitionQueryPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
-import java.io.ByteArrayOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -40,8 +37,7 @@ import javax.validation.constraints.NotNull
 @RequestMapping(WorkFlowApi.basePath)
 @Api(tags = ["工作流部署"])
 class WorkFlowDefinitionController @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val workFlowDefinitionDomain: WorkFlowDefinitionDomain) : BaseController() {
+constructor(private val workFlowDefinitionDomain: WorkFlowDefinitionDomain) : BaseController() {
 
     @ApiOperation(value = "新建工作流信息")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = WorkFlowDefinition::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
@@ -123,25 +119,15 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(WorkFlowExpression.flowDefinition)
     @GetMapping(value = [WorkFlowApi.definitionDiagram + "/{deploymentId}/{imgType}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
-    fun diagram(@ApiParam(value = "流程部署ID", required = true)
+    fun diagram(response: HttpServletResponse,
+                @ApiParam(value = "流程部署ID", required = true)
                 @PathVariable
                 deploymentId: String,
-                @ApiParam(value = "图片格式", example = "png;bmp", required = true)
+                @ApiParam(value = "图片格式", example = "png;bmp;jpg;gif", required = true)
                 @PathVariable
-                imgType: String): ResponseEntity<String> =
-            workFlowDefinitionDomain.generateDefinitionDiagram(deploymentId, imgType).let { inputStream ->
-                var out: ByteArrayOutputStream? = null
-                try {
-                    out = ByteArrayOutputStream()
-                    inputStream.transferTo(out)
-                    ResponseEntity.ok("data:image/$imgType;base64," + Base64.toBase64String(out.toByteArray()))
-                } finally {
-                    try {
-                        out?.close()
-                        inputStream.close()
-                    } catch (ex: Exception) {
-                        logAdapter.error(ex.message, ex)
-                    }
-                }
-            }
+                imgType: String) {
+        response.contentType = "image/$imgType"
+        workFlowDefinitionDomain.generateDefinitionDiagram(deploymentId, imgType)
+                .transferTo(response.outputStream)
+    }
 }
