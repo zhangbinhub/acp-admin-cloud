@@ -29,12 +29,15 @@ data class RoutePo(
         @ApiModelProperty(value = "路由过滤器", position = 4)
         var filters: String? = null,
 
-        @ApiModelProperty(value = "路由序号", position = 5)
+        @ApiModelProperty("元数据", position = 5)
+        var metadata: String? = null,
+
+        @ApiModelProperty(value = "路由序号", position = 6)
         var orderNum: Int = 0,
 
-        @ApiModelProperty(value = "是否启用", required = true, position = 6)
+        @ApiModelProperty(value = "是否启用", required = true, position = 7)
         var enabled: Boolean? = null,
 
-        @ApiModelProperty(value = "备注", position = 7)
+        @ApiModelProperty(value = "备注", position = 8)
         var remarks: String? = null
 )

@@ -1,7 +1,6 @@
 package pers.acp.admin.workflow.controller
 
 import io.swagger.annotations.*
-import org.bouncycastle.util.encoders.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -17,10 +16,9 @@ import pers.acp.admin.common.po.*
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
-import java.io.ByteArrayOutputStream
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 /**
@@ -32,8 +30,7 @@ import javax.validation.Valid
 @RequestMapping(WorkFlowApi.basePath)
 @Api(tags = ["工作流引擎"])
 class WorkFlowController @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val commonOauthServer: CommonOauthServer,
+constructor(private val commonOauthServer: CommonOauthServer,
             private val workFlowDomain: WorkFlowDomain) : BaseController() {
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
@@ -175,25 +172,15 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(WorkFlowExpression.flowDiagram)
     @GetMapping(value = [WorkFlowApi.diagram + "/{processInstanceId}/{imgType}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
-    fun diagram(@ApiParam(value = "流程实例id", required = true)
+    fun diagram(response: HttpServletResponse,
+                @ApiParam(value = "流程实例id", required = true)
                 @PathVariable
                 processInstanceId: String,
-                @ApiParam(value = "图片格式", example = "png;bmp", required = true)
+                @ApiParam(value = "图片格式", example = "png;bmp;jpg;gif", required = true)
                 @PathVariable
-                imgType: String): ResponseEntity<String> =
-            workFlowDomain.generateDiagram(processInstanceId, imgType).let { inputStream ->
-                var out: ByteArrayOutputStream? = null
-                try {
-                    out = ByteArrayOutputStream()
-                    inputStream.transferTo(out)
-                    ResponseEntity.ok("data:image/$imgType;base64," + Base64.toBase64String(out.toByteArray()))
-                } finally {
-                    try {
-                        out?.close()
-                        inputStream.close()
-                    } catch (ex: Exception) {
-                        logAdapter.error(ex.message, ex)
-                    }
-                }
-            }
+                imgType: String) {
+        response.contentType = "image/$imgType"
+        workFlowDomain.generateDiagram(processInstanceId, imgType)
+                .transferTo(response.outputStream)
+    }
 }
