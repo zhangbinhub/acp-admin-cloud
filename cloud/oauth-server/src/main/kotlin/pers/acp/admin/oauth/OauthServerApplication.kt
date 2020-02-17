@@ -1,7 +1,6 @@
 package pers.acp.admin.oauth
 
 import org.springframework.boot.runApplication
-import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan
 import pers.acp.spring.cloud.annotation.AcpCloudOauthServerApplication
 
 /**
@@ -9,7 +8,6 @@ import pers.acp.spring.cloud.annotation.AcpCloudOauthServerApplication
  * @since JDK 11
  */
 @AcpCloudOauthServerApplication
-@RemoteApplicationEventScan
 class OauthServerApplication
 
 fun main(args: Array<String>) {
