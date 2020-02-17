@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.1.x
 > - [Upgrade] dependencies 中增加公共总线事件对象
+> - [Upgrade] 工作流查询参数增加流程定义key
 ##### v4.1.2
 > - [Upgrade] 升级 flowable 至 6.5.0
 > - [Upgrade] Spring Boot Admin 升级至 2.2.2

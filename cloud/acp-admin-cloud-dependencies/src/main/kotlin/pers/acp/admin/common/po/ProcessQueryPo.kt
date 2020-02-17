@@ -8,6 +8,8 @@ import pers.acp.admin.common.base.BaseQueryPo
  * @since JDK 11
  */
 data class ProcessQueryPo(
+        @ApiModelProperty(value = "流程定义键")
+        var processDefinitionKeys: MutableList<String>? = null,
         @ApiModelProperty(value = "流程实例ID")
         var processInstanceIds: MutableList<String>? = null,
         @ApiModelProperty(value = "发起人")
