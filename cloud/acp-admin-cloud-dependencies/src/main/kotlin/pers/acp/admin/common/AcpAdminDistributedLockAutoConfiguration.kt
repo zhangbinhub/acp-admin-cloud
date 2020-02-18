@@ -21,7 +21,7 @@ import pers.acp.spring.cloud.lock.DistributedLock
  * @author zhang by 30/09/2019
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(DistributedLock::class)
 @AutoConfigureAfter(AcpAdminComponentAutoConfiguration::class)
 @Import(AcpCloudLogAutoConfiguration::class)

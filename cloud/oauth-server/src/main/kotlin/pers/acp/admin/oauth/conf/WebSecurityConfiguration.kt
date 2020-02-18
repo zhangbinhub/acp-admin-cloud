@@ -19,7 +19,7 @@ import pers.acp.spring.cloud.constant.CloudConfigurationOrder
  * @author zhangbin by 11/04/2018 15:16
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 @Order(CloudConfigurationOrder.resourceServerConfiguration + 1)
 class WebSecurityConfiguration @Autowired

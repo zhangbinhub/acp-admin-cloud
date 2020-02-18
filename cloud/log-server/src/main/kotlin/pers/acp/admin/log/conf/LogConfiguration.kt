@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct
  * @author zhang by 10/09/2019
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(BindingServiceConfiguration::class)
 @EnableBinding(RouteLogInput::class)
 class LogConfiguration @Autowired

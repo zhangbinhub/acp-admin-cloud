@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
  * @author zhang by 12/06/2019
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class WorkFlowConfiguration : EngineConfigurationConfigurer<SpringProcessEngineConfiguration> {
 
     override fun configure(engineConfiguration: SpringProcessEngineConfiguration) {

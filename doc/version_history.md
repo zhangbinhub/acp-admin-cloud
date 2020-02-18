@@ -1,7 +1,11 @@
 ## 版本更新记录
-##### v4.1.x
+##### v4.1.3
 > - [Upgrade] dependencies 中增加公共总线事件对象
 > - [Upgrade] 工作流查询参数增加流程定义key
+> - [Upgrade] 自动配置类使用@Configuration(proxyBeanMethods=false)
+> - [Upgrade] 升级核心库至 6.4.2
+> - [Upgrade] 修改logback-spring.xml配置
+> - [Fix] 修复偶尔提示 busJsonConverter 无法注册的问题
 ##### v4.1.2
 > - [Upgrade] 升级 flowable 至 6.5.0
 > - [Upgrade] Spring Boot Admin 升级至 2.2.2
