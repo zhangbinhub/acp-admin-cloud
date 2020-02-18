@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
  * @author zhangbin by 14/09/2018 13:14
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class AdminServerSecurityConfiguration @Autowired
 constructor(adminServerProperties: AdminServerProperties) : WebSecurityConfigurerAdapter() {
 

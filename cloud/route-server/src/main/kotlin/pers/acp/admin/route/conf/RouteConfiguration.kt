@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct
  * @author zhang by 17/05/2019
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(BindingServiceConfiguration::class)
 @EnableBinding(UpdateRouteOutput::class)
 class RouteConfiguration @Autowired

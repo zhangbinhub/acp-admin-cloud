@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.bus.BusProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
-import pers.acp.admin.oauth.bus.event.RefreshApplicationEvent
-import pers.acp.admin.oauth.bus.event.RefreshRuntimeEvent
+import pers.acp.admin.common.event.ReloadDataBusEvent
+import pers.acp.admin.constant.BusEventMessage
 
 /**
  * @author zhang by 19/03/2019
@@ -21,14 +21,14 @@ constructor(private val applicationContext: ApplicationContext, private val busP
     fun doNotifyUpdateApp() {
         val source = this
         GlobalScope.launch(Dispatchers.IO) {
-            applicationContext.publishEvent(RefreshApplicationEvent(busProperties.id, null, "refresh client", source))
+            applicationContext.publishEvent(ReloadDataBusEvent(busProperties.id, null, BusEventMessage.refreshApplication, source))
         }
     }
 
     fun doNotifyUpdateRuntime() {
         val source = this
         GlobalScope.launch(Dispatchers.IO) {
-            applicationContext.publishEvent(RefreshRuntimeEvent(busProperties.id, null, "refresh runtime", source))
+            applicationContext.publishEvent(ReloadDataBusEvent(busProperties.id, null, BusEventMessage.refreshRuntime, source))
         }
     }
 

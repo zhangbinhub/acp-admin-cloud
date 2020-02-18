@@ -4,21 +4,26 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!--<logger name="pers.acp" level="DEBUG"/>-->
 
-    <property name="LOG_HOME" value="logs/log-server"/>
     <property name="logPatternFileServer" value="[%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n"/>
-    
+    <springProfile name="dev">
+        <property name="LOG_HOME" value="logs/log-server"/>
+    </springProfile>
+    <springProfile name="test">
+        <property name="LOG_HOME" value="logs/log-server"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property name="LOG_HOME" value="logs/log-server"/>
+    </springProfile>
+
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ALL.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -33,13 +38,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ALL.error.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -60,13 +62,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/AUTH.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -81,13 +80,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/AUTH.error.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -108,13 +104,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ROUTE.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -129,13 +122,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/ROUTE.error.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -156,13 +146,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/WORKFLOW.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -177,13 +164,10 @@
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/WORKFLOW.error.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 64 MB -->
-                <maxFileSize>5 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>5 MB</maxFileSize>
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

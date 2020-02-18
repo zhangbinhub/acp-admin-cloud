@@ -13,7 +13,7 @@ import pers.acp.spring.boot.interfaces.LogAdapter
  * @author zhang by 12/12/2019
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableFeignClients
 @AutoConfigureAfter(BlockingLoadBalancerClientAutoConfiguration::class)
 class AcpAdminFeignClientAutoConfiguration {

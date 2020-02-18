@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.bus.jackson.BusJacksonAutoConfiguration
+import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -15,15 +17,15 @@ import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.conf.ZkClientConfiguration
 import pers.acp.admin.common.serialnumber.GenerateSerialNumber
-import pers.acp.spring.cloud.AcpCloudComponentAutoConfiguration
 
 /**
  * @author zhang by 30/07/2019
  * @since JDK 11
  */
-@Configuration
-@AutoConfigureBefore(AcpCloudComponentAutoConfiguration::class)
+@Configuration(proxyBeanMethods = false)
+@AutoConfigureBefore(BusJacksonAutoConfiguration::class)
 @EnableConfigurationProperties(ZkClientConfiguration::class)
+@RemoteApplicationEventScan(basePackageClasses = [AcpAdminComponentAutoConfiguration::class])
 @Import(RedisAutoConfiguration::class)
 class AcpAdminComponentAutoConfiguration {
 

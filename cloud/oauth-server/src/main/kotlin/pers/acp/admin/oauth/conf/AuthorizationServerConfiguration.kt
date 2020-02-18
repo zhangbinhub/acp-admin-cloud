@@ -16,7 +16,7 @@ import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
  * @author zhangbin by 11/04/2018 14:34
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableAuthorizationServer
 class AuthorizationServerConfiguration @Autowired
 constructor(private val authenticationManager: AuthenticationManager,

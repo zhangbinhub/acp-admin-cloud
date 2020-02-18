@@ -12,7 +12,7 @@ import java.util.Objects
  * @author zhangbin by 21/06/2018 11:24
  * @since JDK 11
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class UserKeyResolverConfiguration {
 
     @Bean("userKeyResolver")

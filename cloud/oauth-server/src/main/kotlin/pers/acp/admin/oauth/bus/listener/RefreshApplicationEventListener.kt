@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
-import pers.acp.admin.oauth.bus.event.RefreshApplicationEvent
+import pers.acp.admin.common.event.ReloadDataBusEvent
+import pers.acp.admin.constant.BusEventMessage
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
 import pers.acp.spring.boot.interfaces.LogAdapter
 
@@ -16,19 +17,19 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 class RefreshApplicationEventListener @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val objectMapper: ObjectMapper,
-            private val securityClientDetailsDomain: SecurityClientDetailsDomain) : ApplicationListener<RefreshApplicationEvent> {
+            private val securityClientDetailsDomain: SecurityClientDetailsDomain) : ApplicationListener<ReloadDataBusEvent> {
 
-    override fun onApplicationEvent(refreshApplicationEvent: RefreshApplicationEvent) {
-        logAdapter.info("收到更新应用信息事件：" + refreshApplicationEvent.message!!)
-        try {
-            logAdapter.debug(objectMapper.writeValueAsString(refreshApplicationEvent))
-            logAdapter.info("开始刷新client数据...")
-            securityClientDetailsDomain.loadClientInfo()
-            logAdapter.info("client数据刷新完成！")
-        } catch (e: Exception) {
-            logAdapter.error(e.message, e)
+    override fun onApplicationEvent(reloadDataBusEvent: ReloadDataBusEvent) {
+        if (reloadDataBusEvent.message == BusEventMessage.refreshApplication) {
+            logAdapter.info("收到更新应用信息事件：" + reloadDataBusEvent.message)
+            try {
+                logAdapter.debug(objectMapper.writeValueAsString(reloadDataBusEvent))
+                logAdapter.info("开始刷新client数据...")
+                securityClientDetailsDomain.loadClientInfo()
+                logAdapter.info("client数据刷新完成！")
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+            }
         }
-
     }
-
 }

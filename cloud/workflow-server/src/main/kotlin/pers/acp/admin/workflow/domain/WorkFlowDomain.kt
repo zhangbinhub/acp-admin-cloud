@@ -229,6 +229,9 @@ constructor(private val logAdapter: LogAdapter,
                     val taskQuery = taskService.createTaskQuery().or()
                             .taskCandidateGroupIn(userInfo.roleSet.map { role -> role.code }.toList())
                             .taskCandidateOrAssigned(userInfo.id).endOr()
+                    if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
+                        taskQuery.processDefinitionKeyIn(processQueryPo.processDefinitionKeys!!)
+                    }
                     if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                         taskQuery.processInstanceIdIn(processQueryPo.processInstanceIds!!)
                     }
@@ -407,6 +410,9 @@ constructor(private val logAdapter: LogAdapter,
                 val firstResult = processQueryPo.queryParam!!.currPage - 1 * processQueryPo.queryParam!!.pageSize
                 val maxResult = firstResult + processQueryPo.queryParam!!.pageSize
                 val processInstanceQuery = runtimeService.createProcessInstanceQuery()
+                if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
+                    processInstanceQuery.processDefinitionKeys(processQueryPo.processDefinitionKeys!!.toSet())
+                }
                 if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                     processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
                 }
@@ -443,6 +449,9 @@ constructor(private val logAdapter: LogAdapter,
                 val firstResult = processQueryPo.queryParam!!.currPage - 1 * processQueryPo.queryParam!!.pageSize
                 val maxResult = firstResult + processQueryPo.queryParam!!.pageSize
                 val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+                if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
+                    processInstanceQuery.processDefinitionKeyIn(processQueryPo.processDefinitionKeys!!)
+                }
                 if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                     processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
                 }
