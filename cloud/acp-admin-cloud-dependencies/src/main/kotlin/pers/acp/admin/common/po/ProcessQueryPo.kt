@@ -15,7 +15,7 @@ data class ProcessQueryPo(
         @ApiModelProperty(value = "发起人")
         var startUserId: String? = null,
         @ApiModelProperty(value = "匹配创建时间（开始）")
-        var startTime: String? = null,
+        var startTime: Long? = null,
         @ApiModelProperty(value = "匹配创建时间（结束）")
-        var endTime: String? = null
+        var endTime: Long? = null
 ) : BaseQueryPo()
