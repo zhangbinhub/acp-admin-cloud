@@ -4,7 +4,10 @@
 > - [Upgrade] 工作流查询参数增加流程定义key
 > - [Upgrade] 自动配置类使用@Configuration(proxyBeanMethods=false)
 > - [Upgrade] 升级核心库至 6.4.2
+> - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR2
+> - [Upgrade] 升级 Gradle 至 6.2
 > - [Upgrade] 修改logback-spring.xml配置
+> - [Upgrade] 显示依赖 spring-boot-starter-validation
 > - [Fix] 修复偶尔提示 busJsonConverter 无法注册的问题
 ##### v4.1.2
 > - [Upgrade] 升级 flowable 至 6.5.0
