@@ -6,7 +6,7 @@
 
 ## 相关组件版本
 - [Spring Boot 2.2.4.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Hoxton.SR1](http://projects.spring.io/spring-cloud)
+- [Spring Cloud Hoxton.SR2](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.2.0.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.4.2](https://github.com/zhangbin1010/acp)
 
@@ -69,7 +69,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 6.1.1
+- gradle 6.2
 - kotlin 1.3.61
 
 ## 二、gradle 配置及使用
@@ -110,7 +110,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.1.1 --distribution-type=all
+    gradlew wrapper --gradle-version=6.2 --distribution-type=all
 ```
 
 ## 三、工程说明
