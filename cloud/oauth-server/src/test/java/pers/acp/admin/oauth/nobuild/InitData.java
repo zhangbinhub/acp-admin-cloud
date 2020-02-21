@@ -34,9 +34,6 @@ class InitData extends BaseTest {
     @Autowired
     private ModuleFuncRepository moduleFuncRepository;
 
-    @Autowired
-    private RuntimeConfigRepository runtimeConfigRepository;
-
     /**
      * 初始化数据，仅可执行一次
      */
@@ -255,7 +252,7 @@ class InitData extends BaseTest {
         demoNormal.setAppId(application.getId());
         demoNormal.setName("普通页面");
         demoNormal.setIconType("el-icon-caret-right");
-        demoNormal.setPath("/demo4?name=123");
+        demoNormal.setPath("/demo3?name=demo3");
         demoNormal.setParentId(demoChildren.getId());
         demoNormal.setSort(0);
         demoNormal.setEnabled(true);
