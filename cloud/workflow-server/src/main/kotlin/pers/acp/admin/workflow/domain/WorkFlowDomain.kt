@@ -235,6 +235,9 @@ constructor(private val logAdapter: LogAdapter,
                     if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                         taskQuery.processInstanceIdIn(processQueryPo.processInstanceIds!!)
                     }
+                    if (!CommonTools.isNullStr(processQueryPo.processBusinessKey)) {
+                        taskQuery.processInstanceBusinessKeyLike(processQueryPo.processBusinessKey)
+                    }
                     if (processQueryPo.startTime != null) {
                         taskQuery.taskCreatedAfter(DateTime(processQueryPo.startTime!!).toDate())
                     }
@@ -416,6 +419,9 @@ constructor(private val logAdapter: LogAdapter,
                 if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                     processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
                 }
+                if (!CommonTools.isNullStr(processQueryPo.processBusinessKey)) {
+                    processInstanceQuery.processInstanceBusinessKeyLike(processQueryPo.processBusinessKey)
+                }
                 if (!CommonTools.isNullStr(processQueryPo.startUserId)) {
                     processInstanceQuery.startedBy(processQueryPo.startUserId)
                 }
@@ -454,6 +460,9 @@ constructor(private val logAdapter: LogAdapter,
                 }
                 if (processQueryPo.processInstanceIds != null && processQueryPo.processInstanceIds!!.isNotEmpty()) {
                     processInstanceQuery.processInstanceIds(processQueryPo.processInstanceIds!!.toSet())
+                }
+                if (!CommonTools.isNullStr(processQueryPo.processBusinessKey)) {
+                    processInstanceQuery.processInstanceBusinessKeyLike(processQueryPo.processBusinessKey)
                 }
                 if (!CommonTools.isNullStr(processQueryPo.startUserId)) {
                     processInstanceQuery.startedBy(processQueryPo.startUserId)
