@@ -134,6 +134,7 @@ constructor(private val logAdapter: LogAdapter,
                 is ProcessInstance -> {
                     val params = processInstance.processVariables
                     ProcessInstanceVo(
+                            processInstanceId = processInstance.id,
                             isFinished = false,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,
@@ -148,6 +149,7 @@ constructor(private val logAdapter: LogAdapter,
                 is HistoricProcessInstance -> {
                     val params = processInstance.processVariables
                     ProcessInstanceVo(
+                            processInstanceId = processInstance.id,
                             isFinished = true,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,

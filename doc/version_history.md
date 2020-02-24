@@ -9,6 +9,7 @@
 > - [Upgrade] 修改logback-spring.xml配置
 > - [Upgrade] 显示依赖 spring-boot-starter-validation
 > - [Upgrade] 工作流查询参数增加业务键
+> - [Upgrade] 工作流实例查询返回信息增加processInstanceId字段
 > - [Fix] 修复偶尔提示 busJsonConverter 无法注册的问题
 ##### v4.1.2
 > - [Upgrade] 升级 flowable 至 6.5.0
