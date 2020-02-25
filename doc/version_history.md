@@ -3,6 +3,7 @@
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
 > - [Upgrade] 日志服务配置类修改
+> - [Upgrade] 工作流服务增加“我处理过的实例”查询接口，并且在任务处理过后，记录处理过的实例信息
 ##### v4.1.3
 > - [Upgrade] dependencies 中增加公共总线事件对象
 > - [Upgrade] 工作流查询参数增加流程定义key

@@ -17,7 +17,7 @@ data class WorkFlowDefinition(
         @GenericGenerator(name = "idGenerator", strategy = "uuid")
         @GeneratedValue(generator = "idGenerator")
         @Column(length = 36, nullable = false)
-        @ApiModelProperty("应用ID")
+        @ApiModelProperty("ID")
         var id: String = "",
 
         @Column(nullable = false)

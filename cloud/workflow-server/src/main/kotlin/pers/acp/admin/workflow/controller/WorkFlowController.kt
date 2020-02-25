@@ -133,6 +133,16 @@ constructor(private val commonOauthServer: CommonOauthServer,
                 ResponseEntity.ok(it)
             }
 
+    @ApiOperation(value = "获取我处理过的流程实例", notes = "获取我处理过的流程实例")
+    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
+    @PreAuthorize(WorkFlowExpression.flowManage)
+    @PostMapping(value = [WorkFlowApi.myProcess], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun queryInstanceForMyProcess(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
+            workFlowDomain.findProcessInstanceForMyProcess(processQueryPo).let {
+                ResponseEntity.ok(it)
+            }
+
     @ApiOperation(value = "获取流程实例", notes = "获取流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PreAuthorize(WorkFlowExpression.flowHistory)
