@@ -22,6 +22,13 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<WorkFlowServer>(logAdapte
         logAdapter.error("调用 workflow-server 异常: " + cause?.message, cause)
         return object : WorkFlowServer {
             @Throws(ServerException::class)
+            override fun startInner(processStartPo: ProcessStartPo): InfoVo {
+                val errMsg = "流程启动失败"
+                logAdapter.info(errMsg)
+                throw ServerException(errMsg)
+            }
+
+            @Throws(ServerException::class)
             override fun start(processStartPo: ProcessStartPo): InfoVo {
                 val errMsg = "流程启动失败"
                 logAdapter.info(errMsg)

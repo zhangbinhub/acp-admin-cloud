@@ -3,6 +3,7 @@ package pers.acp.admin.common.feign
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.WorkFlowApi
 import pers.acp.admin.common.hystrix.WorkFlowServerHystrix
 import pers.acp.admin.common.po.ProcessTerminationPo
@@ -20,6 +21,13 @@ import pers.acp.spring.boot.exceptions.ServerException
  */
 @FeignClient(value = "workflow-server", fallbackFactory = WorkFlowServerHystrix::class)
 interface WorkFlowServer {
+    /**
+     * 启动流程
+     */
+    @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun startInner(@RequestBody processStartPo: ProcessStartPo): InfoVo
+
     /**
      * 启动流程
      */
