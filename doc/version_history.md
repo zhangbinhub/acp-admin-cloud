@@ -1,4 +1,7 @@
 ## 版本更新记录
+##### v4.1.x
+> - [Upgrade] workflow的feign客户端增加内部启动流程接口
+> - [Upgrade] 修改sentinel熔断配置
 ##### v4.1.3
 > - [Upgrade] dependencies 中增加公共总线事件对象
 > - [Upgrade] 工作流查询参数增加流程定义key
