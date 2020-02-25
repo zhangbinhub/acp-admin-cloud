@@ -13,42 +13,42 @@ import org.springframework.stereotype.Component
 class LogServerCustomerConfiguration {
 
     @Value("\${server.address}")
-    val serverIp: String? = null
+    var serverIp: String? = null
 
     @Value("\${server.port}")
-    val serverPort: Int = 0
+    var serverPort: Int = 0
 
     @Value("\${logging.file.name}")
-    val logFile: String = ""
+    var logFile: String = ""
 
     /**
      * 日志路径
      */
     @Value("\${logging.file.path}")
-    val logFilePath: String = ""
+    var logFilePath: String = ""
 
     /**
      * 日志最大保留天数，默认 180 天
      */
     @Value("\${log-server.max-history-day-number}")
-    val maxHistoryDayNumber: Int = 180
+    var maxHistoryDayNumber: Int = 180
 
     /**
      * 是否记录路由日志
      */
     @Value("\${log-server.route-log.enabled}")
-    val routeLogEnabled: Boolean = true
+    var routeLogEnabled: Boolean = true
 
     /**
      * 是否记录操作日志
      */
     @Value("\${log-server.operate-log.enabled}")
-    val operateLogEnabled: Boolean = true
+    var operateLogEnabled: Boolean = true
 
     /**
      * 日志迁移时，单个事务处理的日志记录数量
      */
     @Value("\${log-server.quantity-per-process}")
-    val quantityPerProcess: Int = 100
+    var quantityPerProcess: Int = 100
 
 }
