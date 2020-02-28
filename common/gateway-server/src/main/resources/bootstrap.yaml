@@ -10,11 +10,6 @@ spring:
   thymeleaf:
     cache: false
   cloud:
-    loadbalancer:
-      cache:
-        ttl: 5s
-      ribbon:
-        enabled: false
     nacos:
       server-addr: 127.0.0.1:8848
       discovery:

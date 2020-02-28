@@ -16,6 +16,11 @@ spring:
   kafka:
     bootstrap-servers: ${spring.cloud.stream.kafka.binder.brokers}
   cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
+      ribbon:
+        enabled: false
     stream:
       default-binder: kafka
       kafka:
