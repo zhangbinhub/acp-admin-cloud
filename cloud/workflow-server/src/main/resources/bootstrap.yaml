@@ -28,11 +28,25 @@ spring:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
+        shared-configs:
+          - data-id: atom-server-common-${spring.profiles.active}.yaml
+            group: ${spring.profiles.active}
+            refresh: true
+    sentinel:
+      datasource:
+        nacos-degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            data-id: sentinel-degrade-${spring.profiles.active}
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            group-id: ${spring.profiles.active}
+            data-type: json
+            rule-type: degrade
 logging:
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
-  version: 4.1.2
+  version: 4.1.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -49,33 +63,6 @@ management:
       show-details: always
     flowable:
       enabled: true
-# ===============================
-# = Feign Config
-# ===============================
-feign:
-  httpclient:
-    enabled: false
-    max-connections: 1000
-    time-to-live: 900
-    time-to-live-unit: seconds
-    follow-redirects: true
-  okhttp:
-    enabled: true
-  sentinel:
-    enabled: true
-  client:
-    config:
-      default:
-        connect-timeout: 30000
-        read-timeout: 30000
-        loggerLevel: full
-# ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    resource:
-      token-info-uri: http://oauth2-server/oauth/check_token
 flowable:
   history-level: full
   check-process-definitions: false

@@ -33,4 +33,5 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     // 服务注册发现
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 }

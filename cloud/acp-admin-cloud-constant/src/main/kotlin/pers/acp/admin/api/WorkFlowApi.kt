@@ -20,5 +20,6 @@ object WorkFlowApi {
     const val definitionDiagram = definition + diagram
     const val instance = "/instance"
     const val termination = "$instance/termination"
+    const val myProcess = "$instance/my-process"
     const val task = "/task"
 }
