@@ -1,8 +1,8 @@
 # acp-admin-cloud
-###### v4.1.3 [版本更新日志](doc/version_history.md)
+###### v4.1.4 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.3](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.4](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
 - [Spring Boot 2.2.4.RELEASE](https://projects.spring.io/spring-boot)
@@ -178,7 +178,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_2020-02-25 13_10_38.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_2020-02-28 16_35_47.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka
@@ -274,3 +274,4 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 
 ## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
+## 十、[公共配置信息](doc/atom-server-common-dev.yaml)

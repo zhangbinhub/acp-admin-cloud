@@ -1,9 +1,12 @@
 ## 版本更新记录
-##### v4.1.x
+##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
 > - [Upgrade] 日志服务配置类修改
 > - [Upgrade] 工作流服务增加“我处理过的实例”查询接口，并且在任务处理过后，记录处理过的实例信息
+> - [Upgrade] 配置中心增加公共配置 atom-server-common-${spring.profiles.active}.yaml
+> - [Upgrade] gateway 增加nacos配置中心依赖
+> - [Upgrade] 简化各服务配置，公共配置信息移入配置中心 atom-server-common-${spring.profiles.active}.yaml
 ##### v4.1.3
 > - [Upgrade] dependencies 中增加公共总线事件对象
 > - [Upgrade] 工作流查询参数增加流程定义key

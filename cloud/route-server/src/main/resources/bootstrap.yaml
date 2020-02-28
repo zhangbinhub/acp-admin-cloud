@@ -28,11 +28,15 @@ spring:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
+        shared-configs:
+          - data-id: atom-server-common-${spring.profiles.active}.yaml
+            group: ${spring.profiles.active}
+            refresh: true
 logging:
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
-  version: 4.1.2
+  version: 4.1.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -67,13 +71,6 @@ feign:
         connect-timeout: 30000
         read-timeout: 30000
         loggerLevel: full
-# ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    resource:
-      token-info-uri: http://oauth2-server/oauth/check_token
 acp:
   cloud:
     log-server:

@@ -9,9 +9,9 @@ spring:
     name: log-server
   thymeleaf:
     cache: false
-#  zipkin:
-#    sender:
-#      type: kafka
+  #  zipkin:
+  #    sender:
+  #      type: kafka
   cloud:
     loadbalancer:
       cache:
@@ -28,6 +28,10 @@ spring:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
         group: ${spring.profiles.active}
+        shared-configs:
+          - data-id: atom-server-common-${spring.profiles.active}.yaml
+            group: ${spring.profiles.active}
+            refresh: true
     sentinel:
       datasource:
         nacos-degrade:
@@ -39,7 +43,7 @@ spring:
             data-type: json
             rule-type: degrade
 info:
-  version: 4.1.2
+  version: 4.1.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
@@ -79,16 +83,9 @@ feign:
 # ===============================
 # 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释
 logging:
-#  config: logback-spring.xml
+  #  config: logback-spring.xml
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
-# ===============================
-# = Security Config
-# ===============================
-security:
-  oauth2:
-    resource:
-      token-info-uri: http://oauth2-server/oauth/check_token
 acp:
   cloud:
     log-server:
