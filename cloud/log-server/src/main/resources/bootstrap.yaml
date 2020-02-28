@@ -59,26 +59,6 @@ management:
     health:
       show-details: always
 # ===============================
-# = Feign Config
-# ===============================
-feign:
-  httpclient:
-    enabled: false
-    max-connections: 1000
-    time-to-live: 900
-    time-to-live-unit: seconds
-    follow-redirects: true
-  okhttp:
-    enabled: true
-  sentinel:
-    enabled: true
-  client:
-    config:
-      default:
-        connect-timeout: 30000
-        read-timeout: 30000
-        loggerLevel: full
-# ===============================
 # = Log To File Config
 # ===============================
 # 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释

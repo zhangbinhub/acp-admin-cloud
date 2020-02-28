@@ -63,26 +63,6 @@ management:
       show-details: always
     flowable:
       enabled: true
-# ===============================
-# = Feign Config
-# ===============================
-feign:
-  httpclient:
-    enabled: false
-    max-connections: 1000
-    time-to-live: 900
-    time-to-live-unit: seconds
-    follow-redirects: true
-  okhttp:
-    enabled: true
-  sentinel:
-    enabled: true
-  client:
-    config:
-      default:
-        connect-timeout: 30000
-        read-timeout: 30000
-        loggerLevel: full
 flowable:
   history-level: full
   check-process-definitions: false

@@ -50,6 +50,26 @@ spring:
       repositories:
         bootstrap-mode: deferred
 # ===============================
+# = Feign Config
+# ===============================
+feign:
+  httpclient:
+    enabled: false
+    max-connections: 1000
+    time-to-live: 900
+    time-to-live-unit: seconds
+    follow-redirects: true
+  okhttp:
+    enabled: true
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 10000
+        read-timeout: 30000
+        loggerLevel: full
+# ===============================
 # = Security Config
 # ===============================
 security:
