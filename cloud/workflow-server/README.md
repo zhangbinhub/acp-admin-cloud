@@ -5,7 +5,7 @@
 ###### （一）windows
 无需添加，已自带字体
 ###### （二）linux
-将宋体字体文件[SIMSUN.TTC](fonts/SIMSUN.TTC)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
+将宋体字体文件[simsun.ttc](fonts/simsun.ttc)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
 ```
  cd $JAVA_HOME/lib
  mkdir fonts
