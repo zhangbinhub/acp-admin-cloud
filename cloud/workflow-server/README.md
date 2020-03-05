@@ -44,7 +44,6 @@ docker run -p8080:8080 flowable/all-in-one
 - pass - 处理结果：true-通过，false-不通过
 - comment - 处理意见
 - candidateUser:String ，节点任务候选人ID（一人或多人），多个候选人时使用“,”分隔；任务处理完成后需修改（变更为下一节点人或置空）
-- candidateGroup:String ，节点任务候选组（一个或多个），多个候选组时使用“,”分隔；任务处理完成后需修改（变更为下一节点候选组或置空）
 - assigneeUser:String ，节点任务处理人ID（只能一人）；任务处理完成后需修改（变更为下一节点人或置空）
 
 ##### 六、内置任务动态表单字段
