@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import pers.acp.admin.common.conf.ZkClientConfiguration
 import pers.acp.admin.common.serialnumber.GenerateSerialNumber
+import pers.acp.admin.common.serialnumber.RedisGenerateSerialNumber
 
 /**
  * @author zhang by 30/07/2019
@@ -31,7 +32,8 @@ class AcpAdminComponentAutoConfiguration {
 
     @Bean
     @ConditionalOnClass(RedisOperations::class)
-    fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = GenerateSerialNumber(redisTemplate)
+    @ConditionalOnMissingBean(GenerateSerialNumber::class)
+    fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = RedisGenerateSerialNumber(redisTemplate)
 
     @Bean
     @ConditionalOnClass(CuratorFramework::class)

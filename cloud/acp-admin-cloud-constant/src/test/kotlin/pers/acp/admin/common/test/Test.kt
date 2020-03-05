@@ -21,12 +21,18 @@ fun main() = runBlocking {
         val ss = "[fsdadf2341243]"
         println(ss.replace(Regex("[\\[|\\]]"), ""))
 
-        for (index in 0..5000) {
-            launch(Dispatchers.IO) {
-                delay(10000)
-                println("$index >>>>>>>> finished " + System.currentTimeMillis())
+        var totle = 0
+        val start = System.currentTimeMillis()
+        withContext(Dispatchers.IO) {
+            for (index in 0..500000) {
+                launch(Dispatchers.IO) {
+                    delay(2000)
+                    println("$index >>>>>>>> finished " + System.currentTimeMillis())
+                    totle++
+                }
             }
         }
+        println("totle = $totle, time = ${System.currentTimeMillis()-start} ms")
     } catch (e: Exception) {
         e.printStackTrace()
     }
