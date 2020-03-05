@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.1.x
 > - [Upgrade] 抽象序列号生成接口，方便扩展
+> - [Upgrade] 更新文档
 ##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
