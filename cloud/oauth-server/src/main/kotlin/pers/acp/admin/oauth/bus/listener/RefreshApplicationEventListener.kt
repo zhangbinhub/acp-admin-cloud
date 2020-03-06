@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 import pers.acp.admin.common.event.ReloadDataBusEvent
-import pers.acp.admin.constant.BusEventMessage
+import pers.acp.admin.oauth.constant.BusEventMessage
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
 import pers.acp.spring.boot.interfaces.LogAdapter
 
