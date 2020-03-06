@@ -5,6 +5,6 @@ package pers.acp.admin.oauth.constant
  * @since JDK 11
  */
 object BusEventMessage {
-    const val refreshApplication = "bus-message-refresh-client-event"
-    const val refreshRuntime = "bus-message-refresh-runtime-event"
+    const val refreshApplication = "bus-message-oauth-refresh-client-event"
+    const val refreshRuntime = "bus-message-oauth-refresh-runtime-event"
 }
