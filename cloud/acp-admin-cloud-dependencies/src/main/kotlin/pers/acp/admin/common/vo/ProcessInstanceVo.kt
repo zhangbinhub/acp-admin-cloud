@@ -34,7 +34,7 @@ data class ProcessInstanceVo(
         var params: MutableMap<String, Any> = mutableMapOf(),
 
         @ApiModelProperty(value = "流程是否已结束", position = 9)
-        var isFinished: Boolean = false,
+        var finished: Boolean = false,
 
         @ApiModelProperty(value = "开始时间", position = 10)
         var startTime: Long = 0,
