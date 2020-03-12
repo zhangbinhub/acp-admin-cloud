@@ -141,7 +141,7 @@ constructor(private val logAdapter: LogAdapter,
                     val params = processInstance.processVariables
                     ProcessInstanceVo(
                             processInstanceId = processInstance.id,
-                            isFinished = false,
+                            finished = false,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,
                             flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
@@ -156,7 +156,7 @@ constructor(private val logAdapter: LogAdapter,
                     val params = processInstance.processVariables
                     ProcessInstanceVo(
                             processInstanceId = processInstance.id,
-                            isFinished = true,
+                            finished = true,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,
                             flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
