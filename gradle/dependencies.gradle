@@ -22,13 +22,13 @@ versions += [
         hikaricp         : "3.4.2",
         mysql            : "8.0.19",
 
-        spring_boot      : "2.2.4.RELEASE",
-        spring_cloud     : "Hoxton.SR1",
+        spring_boot      : "2.2.5.RELEASE",
+        spring_cloud     : "Hoxton.SR3",
         alibaba_cloud    : "2.2.0.RELEASE",
         swagger          : "2.9.2",
 
         netty            : "4.1.45.Final",
-        okhttp           : "3.14.6",
+        okhttp           : "3.14.7",
 
         flowable         : "6.5.0"
 ]

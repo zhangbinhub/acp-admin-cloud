@@ -1,8 +1,17 @@
 ## 版本更新记录
-##### v4.1.x
+##### v4.1.5
+> - [Upgrade] 修改流程实例对象属性名
 > - [Upgrade] 抽象序列号生成接口，方便扩展
 > - [Upgrade] 修改bus事件消息
 > - [Upgrade] 更新文档
+> - [Upgrade] 升级核心库至 6.4.3
+> - [Upgrade] 升级 Spring Boot 至 2.2.5.RELEASE
+> - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR3
+> - [Upgrade] 升级 Gradle 至 6.2.2
+> - [Upgrade] 升级 kotlin 至 1.3.70
+> - [Upgrade] 升级依赖项
+>   - okhttp to 3.14.7
+>   - postgresql to 42.2.10
 ##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
