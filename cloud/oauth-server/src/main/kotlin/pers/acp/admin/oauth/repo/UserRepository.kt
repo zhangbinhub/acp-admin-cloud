@@ -20,6 +20,8 @@ interface UserRepository : BaseRepository<User, String> {
 
     fun findByLevelsGreaterThan(currLevels: Int): MutableList<User>
 
+    fun findByLoginNoLikeOrNameLikeOrderByLoginNoAsc(loginNo: String, name: String): MutableList<User>
+
     fun deleteByIdIn(idList: MutableList<String>)
 
 }

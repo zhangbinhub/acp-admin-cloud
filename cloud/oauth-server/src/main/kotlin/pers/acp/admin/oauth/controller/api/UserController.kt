@@ -149,6 +149,16 @@ constructor(private val userDomain: UserDomain) : BaseController() {
 
     @ApiOperation(value = "查询用户信息")
     @PreAuthorize(UserConfigExpression.userQuery)
+    @GetMapping(value = [OauthApi.userList + "/{loginNoOrName}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByLoginNoOrName(user: OAuth2Authentication,
+                                   @ApiParam(value = "登录号或姓名", required = true)
+                                   @NotBlank(message = "登录号或姓名不能为空")
+                                   @PathVariable loginNoOrName: String): ResponseEntity<List<UserVo>> =
+            ResponseEntity.ok(userDomain.getUserListByLoginNoOrName(loginNoOrName))
+
+    @ApiOperation(value = "查询用户信息")
+    @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.currOrgUserList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
