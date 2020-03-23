@@ -43,7 +43,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                              @RequestParam loginNo: String): ResponseEntity<UserVo> =
             ResponseEntity.ok(userDomain.getUserInfoByLoginNo(loginNo))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
@@ -54,7 +54,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)

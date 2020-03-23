@@ -44,7 +44,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                 } ?: throw ServerException("找不到用户信息")
             }
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过角色编码，查询当前机构下的用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
@@ -53,7 +53,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRelativeOrgAndRole(user: OAuth2Authentication,

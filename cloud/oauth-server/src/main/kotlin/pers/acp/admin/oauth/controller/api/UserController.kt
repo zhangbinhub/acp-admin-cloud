@@ -147,17 +147,16 @@ constructor(private val userDomain: UserDomain) : BaseController() {
     fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
             (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过登录号或姓名，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userList + "/{loginNoOrName}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun getUserListByLoginNoOrName(user: OAuth2Authentication,
-                                   @ApiParam(value = "登录号或姓名", required = true)
+    fun getUserListByLoginNoOrName(@ApiParam(value = "登录号或姓名", required = true)
                                    @NotBlank(message = "登录号或姓名不能为空")
                                    @PathVariable loginNoOrName: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByLoginNoOrName(loginNoOrName))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过角色编码，查询当前机构下的用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.currOrgUserList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
@@ -167,7 +166,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.currOrgUserList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
@@ -182,7 +181,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                     orgLevel.split(",").map { item -> item.toInt() },
                     roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
@@ -194,7 +193,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
