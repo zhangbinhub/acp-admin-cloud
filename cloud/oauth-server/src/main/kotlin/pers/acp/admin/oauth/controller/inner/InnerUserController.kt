@@ -16,7 +16,7 @@ import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.vo.UserVo
+import pers.acp.admin.common.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
 import javax.validation.constraints.NotBlank
 

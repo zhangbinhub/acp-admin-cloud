@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.hystrix.CommonOauthServerHystrix
-import pers.acp.admin.common.vo.ApplicationVo
-import pers.acp.admin.common.vo.RuntimeConfigVo
-import pers.acp.admin.common.vo.UserVo
+import pers.acp.admin.common.vo.*
 import java.rmi.ServerException
 
 /**
@@ -41,6 +39,13 @@ interface CommonOauthServer {
     fun tokenInfo(): OAuth2AccessToken?
 
     /**
+     * 获取token详细信息
+     */
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun hasAuthentication(@PathVariable authentication: String): InfoVo
+
+    /**
      * 获取用户详细信息
      */
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -61,6 +66,10 @@ interface CommonOauthServer {
     @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun findUserByLoginNo(@RequestParam loginNo: String): UserVo
+
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currModuleFunc], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findModuleFuncByCurrUser(): List<ModuleFuncVo>
 
     /**
      * 获取用户列表

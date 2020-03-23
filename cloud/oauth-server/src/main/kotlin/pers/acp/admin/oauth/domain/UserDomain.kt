@@ -16,7 +16,7 @@ import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.admin.oauth.vo.UserVo
+import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.core.security.SHA256Utils
 import pers.acp.spring.boot.exceptions.ServerException

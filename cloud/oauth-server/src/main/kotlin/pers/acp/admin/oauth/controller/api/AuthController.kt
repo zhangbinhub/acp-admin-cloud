@@ -74,6 +74,12 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
     fun currMenuList(user: OAuth2Authentication): ResponseEntity<List<Menu>> =
             ResponseEntity.ok(menuDomain.getMenuList(user.oAuth2Request.clientId, user.name))
 
+    @ApiOperation(value = "获取当前用户所有功能权限信息", notes = "根据当前登录的用户信息，查询具备的功能权限")
+    @GetMapping(value = [OauthApi.currModuleFunc], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currModuleFuncList(user: OAuth2Authentication): ResponseEntity<List<ModuleFunc>> =
+            ResponseEntity.ok(moduleFuncDomain.getModuleFuncList(user.oAuth2Request.clientId, user.name))
+
     @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)
     @GetMapping(value = [OauthApi.menuList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])

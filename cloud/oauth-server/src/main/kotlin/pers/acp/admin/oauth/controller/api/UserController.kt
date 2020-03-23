@@ -19,7 +19,7 @@ import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.UserInfoPo
 import pers.acp.admin.oauth.po.UserPo
 import pers.acp.admin.oauth.po.UserQueryPo
-import pers.acp.admin.oauth.vo.UserVo
+import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.vo.ErrorVo
