@@ -6,6 +6,7 @@
 > - [Upgrade] 更新文档
 > - [Upgrade] oauth服务增加用户查询接口，修改接口文档
 > - [Upgrade] oauth服务增加用户权限检查接口
+> - [Upgrade] dependencies中的BaseController增加权限检查方法
 > - [Upgrade] 升级核心库至 6.4.3
 > - [Upgrade] 升级 Spring Boot 至 2.2.5.RELEASE
 > - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR3

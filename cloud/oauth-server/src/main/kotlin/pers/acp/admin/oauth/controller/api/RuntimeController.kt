@@ -22,6 +22,7 @@ import pers.acp.admin.oauth.po.RuntimePo
 import pers.acp.admin.oauth.po.RuntimeQueryPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
@@ -38,7 +39,10 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["运行参数配置"])
 class RuntimeController @Autowired
-constructor(private val openInnerRuntimeController: OpenInnerRuntimeController, private val runtimeConfigDomain: RuntimeConfigDomain, private val refreshEventPublish: RefreshEventPublish) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val openInnerRuntimeController: OpenInnerRuntimeController,
+            private val runtimeConfigDomain: RuntimeConfigDomain,
+            private val refreshEventPublish: RefreshEventPublish) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建参数信息", notes = "参数名称、参数值、描述、状态")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))

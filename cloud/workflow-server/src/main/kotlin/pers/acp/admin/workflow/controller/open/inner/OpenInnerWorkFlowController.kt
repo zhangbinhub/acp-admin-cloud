@@ -14,6 +14,7 @@ import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.api.WorkFlowApi
 import pers.acp.admin.workflow.domain.WorkFlowDomain
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 import javax.validation.Valid
@@ -27,7 +28,8 @@ import javax.validation.Valid
 @RequestMapping(CommonPath.openInnerBasePath)
 @Api(tags = ["工作流引擎（内部开放接口）"])
 class OpenInnerWorkFlowController @Autowired
-constructor(private val workFlowDomain: WorkFlowDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val workFlowDomain: WorkFlowDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))

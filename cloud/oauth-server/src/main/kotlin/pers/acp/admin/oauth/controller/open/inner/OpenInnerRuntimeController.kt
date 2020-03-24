@@ -16,6 +16,7 @@ import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 
 import javax.validation.constraints.NotBlank
@@ -29,7 +30,8 @@ import javax.validation.constraints.NotBlank
 @RequestMapping(CommonPath.openInnerBasePath)
 @Api(tags = ["运行参数配置（内部开放接口）"])
 class OpenInnerRuntimeController @Autowired
-constructor(private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))

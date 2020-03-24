@@ -28,6 +28,7 @@ object OauthApi {
     const val logOut = "/logout"
     const val onlineInfo = "/online-info"
     const val currToken = "/token-info"
+    const val moduleFunc = "/module-func"
     const val authentication = "/authentication"
     const val currUser = "/user-info"
     const val appInfo = "/application"

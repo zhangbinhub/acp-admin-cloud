@@ -19,6 +19,7 @@ import pers.acp.admin.oauth.po.OrganizationPo
 import pers.acp.admin.oauth.vo.OrganizationVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
@@ -36,7 +37,8 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["机构信息"])
 class OrgController @Autowired
-constructor(private val organizationDomain: OrganizationDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val organizationDomain: OrganizationDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取机构列表", notes = "查询所有机构列表")
     @GetMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_VALUE])

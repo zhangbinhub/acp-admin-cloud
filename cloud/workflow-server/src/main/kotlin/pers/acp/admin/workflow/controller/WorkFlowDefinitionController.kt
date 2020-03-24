@@ -20,6 +20,7 @@ import pers.acp.admin.workflow.po.WorkFlowDefinitionPo
 import pers.acp.admin.workflow.po.WorkFlowDefinitionQueryPo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 import javax.servlet.http.HttpServletRequest
@@ -37,7 +38,8 @@ import javax.validation.constraints.NotNull
 @RequestMapping(WorkFlowApi.basePath)
 @Api(tags = ["工作流部署"])
 class WorkFlowDefinitionController @Autowired
-constructor(private val workFlowDefinitionDomain: WorkFlowDefinitionDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val workFlowDefinitionDomain: WorkFlowDefinitionDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建工作流信息")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = WorkFlowDefinition::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))

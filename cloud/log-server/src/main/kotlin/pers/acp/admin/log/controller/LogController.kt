@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull
 class LogController @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val logFileDomain: LogFileDomain,
-            private val logDomain: LogDomain) : BaseController() {
+            private val logDomain: LogDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
     @ApiResponses(ApiResponse(code = 400, message = "没有权限做此操作；", response = ErrorVo::class))

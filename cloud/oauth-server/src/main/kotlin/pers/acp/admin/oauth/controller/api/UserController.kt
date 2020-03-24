@@ -22,6 +22,7 @@ import pers.acp.admin.oauth.po.UserQueryPo
 import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
@@ -39,7 +40,8 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["用户信息"])
 class UserController @Autowired
-constructor(private val userDomain: UserDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val userDomain: UserDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户信息，并查询详细信息，包含用户基本信息、所属角色、所属机构")
     @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))

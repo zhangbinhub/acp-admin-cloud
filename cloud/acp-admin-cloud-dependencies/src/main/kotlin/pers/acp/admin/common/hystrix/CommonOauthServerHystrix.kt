@@ -40,7 +40,7 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
-                override fun hasAuthentication(authentication: String): InfoVo {
+                override fun hasModuleFunc(authentication: String): InfoVo {
                     val errMsg = "找不到对应的authentication信息"
                     logAdapter.error(errMsg)
                     return InfoVo(message = "false")

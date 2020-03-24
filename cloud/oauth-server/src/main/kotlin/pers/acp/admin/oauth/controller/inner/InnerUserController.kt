@@ -18,6 +18,7 @@ import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.common.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import javax.validation.constraints.NotBlank
 
 /**
@@ -29,7 +30,8 @@ import javax.validation.constraints.NotBlank
 @RequestMapping(CommonPath.innerBasePath)
 @Api(tags = ["用户信息（内部接口）"])
 class InnerUserController @Autowired
-constructor(private val userDomain: UserDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val userDomain: UserDomain) : BaseController(logAdapter) {
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户token，返回详细信息")
     @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)

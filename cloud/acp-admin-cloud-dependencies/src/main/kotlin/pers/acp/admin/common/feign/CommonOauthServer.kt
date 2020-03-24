@@ -41,9 +41,9 @@ interface CommonOauthServer {
     /**
      * 获取token详细信息
      */
-    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.moduleFunc + "/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun hasAuthentication(@PathVariable authentication: String): InfoVo
+    fun hasModuleFunc(@PathVariable moduleFuncCode: String): InfoVo
 
     /**
      * 获取用户详细信息

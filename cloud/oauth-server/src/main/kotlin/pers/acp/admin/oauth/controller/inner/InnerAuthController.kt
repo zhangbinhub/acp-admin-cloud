@@ -20,6 +20,7 @@ import pers.acp.admin.oauth.domain.ModuleFuncDomain
 import pers.acp.admin.oauth.entity.ModuleFunc
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 16/01/2019
@@ -30,8 +31,9 @@ import pers.acp.spring.boot.exceptions.ServerException
 @RequestMapping(CommonPath.innerBasePath)
 @Api(tags = ["权限信息（内部接口）"])
 class InnerAuthController @Autowired
-constructor(private val securityTokenService: SecurityTokenService,
-            private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val securityTokenService: SecurityTokenService,
+            private val moduleFuncDomain: ModuleFuncDomain) : BaseController(logAdapter) {
     @ApiOperation(value = "获取当前用户token信息", notes = "根据当前登录的用户token值，返回详细信息")
     @GetMapping(value = [OauthApi.currToken], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun currToken(user: OAuth2Authentication): ResponseEntity<OAuth2AccessToken> =
@@ -44,8 +46,8 @@ constructor(private val securityTokenService: SecurityTokenService,
             ResponseEntity.ok(moduleFuncDomain.getModuleFuncList(user.oAuth2Request.clientId, user.name))
 
     @ApiOperation(value = "判断当前用户是否具有指定的权限")
-    @GetMapping(value = [OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [OauthApi.moduleFunc + "/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun currUserHasAuthentication(user: OAuth2Authentication, @PathVariable authentication: String): ResponseEntity<InfoVo> =
-            ResponseEntity.ok(InfoVo(message = moduleFuncDomain.hasAuthentication(user.oAuth2Request.clientId, user.name, authentication).toString()))
+    fun currUserHasModuleFunc(user: OAuth2Authentication, @PathVariable moduleFuncCode: String): ResponseEntity<InfoVo> =
+            ResponseEntity.ok(InfoVo(message = moduleFuncDomain.hasModuleFunc(user.oAuth2Request.clientId, user.name, moduleFuncCode).toString()))
 }

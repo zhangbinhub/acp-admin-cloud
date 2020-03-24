@@ -1,13 +1,15 @@
 package pers.acp.admin.common.base
 
 import org.joda.time.DateTime
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import pers.acp.core.CalendarTools
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 15/01/2019
  * @since JDK 11
  */
-abstract class BaseController {
+abstract class BaseController(private val logAdapter: LogAdapter) {
 
     /**
      * long 转为日期，仅保留年月日
@@ -19,5 +21,26 @@ abstract class BaseController {
         val dateTime = CalendarTools.getCalendar(time)
         return dateTime.withMillisOfDay(0)
     }
+
+    /**
+     * 校验当前token是否具有指定的所有权限
+     * @param user 用户token授权信息
+     * @param authenticationList 待校验权限列表，权限列表为空则返回false
+     */
+    protected fun hasAuthentication(user: OAuth2Authentication, authenticationList: MutableList<String>): Boolean =
+            authenticationList.let {
+                if (it.isNotEmpty()) {
+                    it.forEach { authentication ->
+                        if (user.authorities.none { item -> item.authority == authentication }) {
+                            logAdapter.error("没有权限【$authentication】")
+                            return@let false
+                        }
+                    }
+                    true
+                } else {
+                    logAdapter.error("权限列表为空")
+                    false
+                }
+            }
 
 }

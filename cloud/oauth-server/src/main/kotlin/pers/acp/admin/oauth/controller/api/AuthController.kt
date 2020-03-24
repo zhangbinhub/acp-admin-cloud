@@ -43,7 +43,9 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["权限信息"])
 class AuthController @Autowired
-constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDomain, private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter,
+            private val menuDomain: MenuDomain,
+            private val moduleFuncDomain: ModuleFuncDomain) : BaseController(logAdapter) {
 
     private val moduleFuncCodeList: MutableList<String> = mutableListOf()
 
@@ -67,6 +69,12 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
         }
 
     }
+
+    @ApiOperation(value = "判断当前用户是否具有指定的权限")
+    @GetMapping(value = [OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currUserHasAuthentication(user: OAuth2Authentication, @PathVariable authentication: String): ResponseEntity<InfoVo> =
+            ResponseEntity.ok(InfoVo(message = hasAuthentication(user, mutableListOf(authentication)).toString()))
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_VALUE])

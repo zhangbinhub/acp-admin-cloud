@@ -49,8 +49,8 @@ constructor(userRepository: UserRepository,
                         .toMutableList()
             }
 
-    fun hasAuthentication(appId: String, loginNo: String, authentication: String): Boolean =
-            getModuleFuncList(appId, loginNo).any { item -> item.code == authentication }
+    fun hasModuleFunc(appId: String, loginNo: String, moduleFuncCode: String): Boolean =
+            getModuleFuncList(appId, loginNo).any { item -> item.code == moduleFuncCode }
 
     private fun sortModuleFuncList(moduleFuncList: MutableList<ModuleFunc>): MutableList<ModuleFunc> =
             moduleFuncList.let { list ->
