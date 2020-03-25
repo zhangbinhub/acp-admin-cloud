@@ -10,7 +10,7 @@
 > - [Upgrade] 升级核心库至 6.4.3
 > - [Upgrade] 升级 Spring Boot 至 2.2.5.RELEASE
 > - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR3
-> - [Upgrade] 升级 Gradle 至 6.2.2
+> - [Upgrade] 升级 Gradle 至 6.3
 > - [Upgrade] 升级 kotlin 至 1.3.71
 > - [Upgrade] 升级依赖项
 >   - okhttp to 3.14.7
