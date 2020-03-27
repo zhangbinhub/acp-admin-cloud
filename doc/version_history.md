@@ -8,13 +8,16 @@
 > - [Upgrade] oauth服务增加用户权限检查接口
 > - [Upgrade] dependencies中的BaseController增加权限检查方法
 > - [Upgrade] 升级核心库至 6.4.3
-> - [Upgrade] 升级 Spring Boot 至 2.2.5.RELEASE
-> - [Upgrade] 升级 Spring Cloud 至 Hoxton.SR3
 > - [Upgrade] 升级 Gradle 至 6.3
-> - [Upgrade] 升级 kotlin 至 1.3.71
 > - [Upgrade] 升级依赖项
->   - okhttp to 3.14.7
->   - postgresql to 42.2.10
+>   - Spring Boot 2.2.6.RELEASE
+>   - Spring Cloud Hoxton.SR3
+>   - okhttp 3.14.7
+>   - Postgresql 42.2.11
+>   - Kotlin Coroutines 1.3.5
+>   - Kotlin 1.3.71
+>   - Netty 4.1.48.Final
+>   - Jackson 2.10.3
 ##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
