@@ -17,7 +17,7 @@ versions += [
         logback          : "1.2.3",
         xstream          : "1.4.11.1",
         jackson_databind : "2.10.3",
-        zip4j            : "2.2.8",
+        zip4j            : "2.5.1",
 
         hikaricp         : "3.4.2",
         mysql            : "8.0.19",
