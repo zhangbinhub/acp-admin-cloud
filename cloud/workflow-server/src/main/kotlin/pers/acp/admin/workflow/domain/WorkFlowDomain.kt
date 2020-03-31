@@ -210,14 +210,31 @@ constructor(private val logAdapter: LogAdapter,
      * 获取任务信息
      *
      * @param taskId 任务ID
-     * @return 任务列表
+     * @return 任务信息
      */
     @Throws(ServerException::class)
-    fun findTaskId(taskId: String): ProcessTaskVo =
+    fun findTaskById(taskId: String): ProcessTaskVo =
             try {
                 taskService.createTaskQuery().taskId(taskId).singleResult()?.let {
                     taskToVo(it)
                 } ?: throw ServerException("找不到信息")
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                throw ServerException(e.message)
+            }
+
+    /**
+     * 获取任务信息
+     * @param processInstanceId 流程实例ID
+     * @param userId 用户ID
+     */
+    @Throws(ServerException::class)
+    fun findTask(processInstanceId: String, userId: String): ProcessTaskVo =
+            try {
+                taskService.createTaskQuery().processInstanceId(processInstanceId)
+                        .taskAssignee(userId).singleResult()?.let {
+                            taskToVo(it)
+                        } ?: throw ServerException("找不到信息")
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
@@ -346,53 +363,51 @@ constructor(private val logAdapter: LogAdapter,
      */
     @Transactional
     @Throws(ServerException::class)
-    fun processTask(processHandlingPo: ProcessHandlingPo) {
+    fun processTask(processHandlingPo: ProcessHandlingPo, userId: String) {
         try {
-            commonOauthServer.userInfo()?.let { userInfo ->
-                val task = taskService.createTaskQuery().taskId(processHandlingPo.taskId).singleResult()
-                if (task == null) {
-                    logAdapter.error("流程任务【${processHandlingPo.taskId}】不存在！")
-                    throw ServerException("流程任务不存在！")
+            val task = taskService.createTaskQuery().taskId(processHandlingPo.taskId).singleResult()
+            if (task == null) {
+                logAdapter.error("流程任务【${processHandlingPo.taskId}】不存在！")
+                throw ServerException("流程任务不存在！")
+            }
+            val params: MutableMap<String, Any> = mutableMapOf()
+            processHandlingPo.params.forEach { (key, value) ->
+                if (!params.containsKey(key)) {
+                    params[key] = value
                 }
-                val params: MutableMap<String, Any> = mutableMapOf()
-                processHandlingPo.params.forEach { (key, value) ->
-                    if (!params.containsKey(key)) {
-                        params[key] = value
-                    }
+            }
+            var comment = processHandlingPo.comment
+            if (processHandlingPo.pass!!) {
+                if (CommonTools.isNullStr(comment)) {
+                    comment = "通过"
                 }
-                var comment = processHandlingPo.comment
-                if (processHandlingPo.pass!!) {
-                    if (CommonTools.isNullStr(comment)) {
-                        comment = "通过"
-                    }
-                } else {
-                    if (CommonTools.isNullStr(comment)) {
-                        comment = "不通过"
-                    }
+            } else {
+                if (CommonTools.isNullStr(comment)) {
+                    comment = "不通过"
                 }
-                params[WorkFlowParamKey.comment] = comment!!
-                params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
-                runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
-                if (task.delegationState == DelegationState.PENDING) {
-                    taskService.resolveTask(task.id, params)
-                } else {
-                    taskService.complete(task.id, params)
+            }
+            params[WorkFlowParamKey.comment] = comment!!
+            params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
+            runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
+            if (task.delegationState == DelegationState.PENDING) {
+                taskService.resolveTask(task.id, params)
+            } else {
+                taskService.complete(task.id, params)
+            }
+            // 添加至我处理过的流程实例
+            myProcessInstanceRepository.findByUserIdAndProcessInstanceId(userId, task.processInstanceId).let {
+                if (!it.isPresent) {
+                    val processInstance = findProcessInstance(task.processInstanceId)
+                    myProcessInstanceRepository.save(MyProcessInstance(
+                            processInstanceId = processInstance.processInstanceId!!,
+                            processDefinitionKey = processInstance.processDefinitionKey!!,
+                            businessKey = processInstance.businessKey!!,
+                            startUserId = processInstance.startUser?.id ?: throw ServerException("找不到用户信息"),
+                            userId = userId,
+                            startTime = processInstance.startTime
+                    ))
                 }
-                // 添加至我处理过的流程实例
-                myProcessInstanceRepository.findByUserIdAndProcessInstanceId(userInfo.id!!, task.processInstanceId).let {
-                    if (!it.isPresent) {
-                        val processInstance = findProcessInstance(task.processInstanceId)
-                        myProcessInstanceRepository.save(MyProcessInstance(
-                                processInstanceId = processInstance.processInstanceId!!,
-                                processDefinitionKey = processInstance.processDefinitionKey!!,
-                                businessKey = processInstance.businessKey!!,
-                                startUserId = processInstance.startUser?.id ?: throw ServerException("找不到用户信息"),
-                                userId = userInfo.id!!,
-                                startTime = processInstance.startTime
-                        ))
-                    }
-                }
-            } ?: throw ServerException("获取当前登录用户信息失败！")
+            }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
             throw ServerException(e.message)

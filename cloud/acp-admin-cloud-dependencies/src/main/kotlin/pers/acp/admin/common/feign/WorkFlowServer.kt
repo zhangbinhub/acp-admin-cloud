@@ -14,6 +14,7 @@ import pers.acp.admin.common.vo.ProcessHistoryActivityVo
 import pers.acp.admin.common.vo.ProcessInstanceVo
 import pers.acp.admin.common.vo.ProcessTaskVo
 import pers.acp.spring.boot.exceptions.ServerException
+import javax.validation.Valid
 
 /**
  * @author zhang by 20/12/2019
@@ -27,6 +28,27 @@ interface WorkFlowServer {
     @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun startInner(@RequestBody processStartPo: ProcessStartPo): InfoVo
+
+    /**
+     * 启动流程
+     */
+    @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun startByUser(@PathVariable userId: String, @RequestBody processStartPo: ProcessStartPo): InfoVo
+
+    /**
+     * 流程处理
+     */
+    @PostMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.process + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun processByUser(@PathVariable userId: String, @RequestBody @Valid processHandlingPo: ProcessHandlingPo): InfoVo
+
+    /**
+     * 获取指定用户的待处理任务
+     */
+    @GetMapping(value = [WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ProcessTaskVo
 
     /**
      * 启动流程

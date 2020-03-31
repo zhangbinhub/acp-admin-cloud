@@ -29,6 +29,27 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<WorkFlowServer>(logAdapte
             }
 
             @Throws(ServerException::class)
+            override fun startByUser(userId: String, processStartPo: ProcessStartPo): InfoVo {
+                val errMsg = "流程启动失败"
+                logAdapter.error(errMsg)
+                throw ServerException(errMsg)
+            }
+
+            @Throws(ServerException::class)
+            override fun processByUser(userId: String, processHandlingPo: ProcessHandlingPo): InfoVo {
+                val errMsg = "流程处理失败"
+                logAdapter.error(errMsg)
+                throw ServerException(errMsg)
+            }
+
+            @Throws(ServerException::class)
+            override fun pendingByUser(processInstanceId: String, userId: String): ProcessTaskVo {
+                val errMsg = "任务获取失败"
+                logAdapter.error(errMsg)
+                throw ServerException(errMsg)
+            }
+
+            @Throws(ServerException::class)
             override fun start(processStartPo: ProcessStartPo): InfoVo {
                 val errMsg = "流程启动失败"
                 logAdapter.error(errMsg)

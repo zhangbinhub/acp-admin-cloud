@@ -7,6 +7,7 @@
 > - [Upgrade] oauth服务增加用户查询接口，修改接口文档
 > - [Upgrade] oauth服务增加用户权限检查接口
 > - [Upgrade] dependencies中的BaseController增加权限检查方法
+> - [Upgrade] workflow-server 增加内部调用接口，流程启动、流程处理、待办任务获取
 > - [Upgrade] 升级核心库至 6.4.3
 > - [Upgrade] 升级 Gradle 至 6.3
 > - [Upgrade] 升级依赖项

@@ -98,9 +98,11 @@ constructor(logAdapter: LogAdapter,
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun process(@RequestBody @Valid processHandlingPo: ProcessHandlingPo): ResponseEntity<InfoVo> =
-            workFlowDomain.processTask(processHandlingPo).let {
-                ResponseEntity.ok(InfoVo(message = "流程处理完成"))
-            }
+            commonOauthServer.userInfo()?.let { userInfo ->
+                workFlowDomain.processTask(processHandlingPo, userInfo.id!!).let {
+                    ResponseEntity.ok(InfoVo(message = "流程处理完成"))
+                }
+            } ?: throw ServerException("获取当前登录用户信息失败！")
 
     @ApiOperation(value = "流程强制结束")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
@@ -175,7 +177,7 @@ constructor(logAdapter: LogAdapter,
     fun queryTaskInfo(@ApiParam(value = "流程任务ID", required = true)
                       @PathVariable
                       taskId: String): ResponseEntity<ProcessTaskVo> =
-            workFlowDomain.findTaskId(taskId).let {
+            workFlowDomain.findTaskById(taskId).let {
                 ResponseEntity.ok(it)
             }
 
