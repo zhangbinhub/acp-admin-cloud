@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiModelProperty
  * @author zhang by 11/01/2019
  * @since JDK 11
  */
-@ApiModel("是/否响应信息")
+@ApiModel("布尔响应信息")
 data class BooleanInfoVo(
-        @ApiModelProperty(value = "响应信息内容")
+        @ApiModelProperty(value = "响应内容")
         var result: Boolean? = null
 )
