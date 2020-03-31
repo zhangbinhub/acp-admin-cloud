@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.api.OauthApi
+import pers.acp.admin.common.vo.BooleanInfoVo
 import pers.acp.admin.oauth.constant.AuthConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.MenuDomain
@@ -73,8 +74,8 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "判断当前用户是否具有指定的权限")
     @GetMapping(value = [OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun currUserHasAuthentication(user: OAuth2Authentication, @PathVariable authentication: String): ResponseEntity<InfoVo> =
-            ResponseEntity.ok(InfoVo(message = hasAuthentication(user, mutableListOf(authentication)).toString()))
+    fun currUserHasAuthentication(user: OAuth2Authentication, @PathVariable authentication: String): ResponseEntity<BooleanInfoVo> =
+            ResponseEntity.ok(BooleanInfoVo(result = hasAuthentication(user, mutableListOf(authentication))))
 
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_VALUE])

@@ -39,11 +39,18 @@ interface CommonOauthServer {
     fun tokenInfo(): OAuth2AccessToken?
 
     /**
-     * 获取token详细信息
+     * 当前用户是否具有指定的功能权限
      */
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.moduleFunc + "/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun hasModuleFunc(@PathVariable moduleFuncCode: String): InfoVo
+    fun hasModuleFunc(@PathVariable moduleFuncCode: String): BooleanInfoVo
+
+    /**
+     * 指定用户是否具有指定的功能权限
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.moduleFunc + "/{userId}/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun hasModuleFunc(@PathVariable userId: String, @PathVariable moduleFuncCode: String): BooleanInfoVo
 
     /**
      * 获取用户详细信息

@@ -40,10 +40,17 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
-                override fun hasModuleFunc(moduleFuncCode: String): InfoVo {
-                    val errMsg = "找不到对应的authentication信息"
+                override fun hasModuleFunc(moduleFuncCode: String): BooleanInfoVo {
+                    val errMsg = "找不到对应的功能权限信息"
                     logAdapter.error(errMsg)
-                    return InfoVo(message = "false")
+                    return BooleanInfoVo(result = false)
+                }
+
+                @Throws(ServerException::class)
+                override fun hasModuleFunc(userId: String, moduleFuncCode: String): BooleanInfoVo {
+                    val errMsg = "找不到对应的功能权限信息"
+                    logAdapter.error(errMsg)
+                    return BooleanInfoVo(result = false)
                 }
 
                 @Throws(ServerException::class)

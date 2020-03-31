@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
+import pers.acp.admin.common.vo.BooleanInfoVo
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.ModuleFuncDomain
 import pers.acp.admin.oauth.entity.ModuleFunc
@@ -48,6 +49,6 @@ constructor(logAdapter: LogAdapter,
     @ApiOperation(value = "判断当前用户是否具有指定的权限")
     @GetMapping(value = [OauthApi.moduleFunc + "/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun currUserHasModuleFunc(user: OAuth2Authentication, @PathVariable moduleFuncCode: String): ResponseEntity<InfoVo> =
-            ResponseEntity.ok(InfoVo(message = moduleFuncDomain.hasModuleFunc(user.oAuth2Request.clientId, user.name, moduleFuncCode).toString()))
+    fun currUserHasModuleFunc(user: OAuth2Authentication, @PathVariable moduleFuncCode: String): ResponseEntity<BooleanInfoVo> =
+            ResponseEntity.ok(BooleanInfoVo(result = moduleFuncDomain.hasModuleFunc(user.oAuth2Request.clientId, user.name, moduleFuncCode)))
 }

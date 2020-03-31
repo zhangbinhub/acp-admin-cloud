@@ -32,6 +32,21 @@ constructor(userRepository: UserRepository,
                 sortModuleFuncList(formatToTreeList(map))
             }
 
+    private fun getModuleFuncList(userId: String): MutableList<ModuleFunc> =
+            userRepository.getOne(userId).let {
+                val moduleFuncIds: MutableSet<String> = mutableSetOf()
+                it.roleSet.flatMap { item -> item.moduleFuncSet }
+                        .filter { item ->
+                            if (moduleFuncIds.contains(item.id)) {
+                                false
+                            } else {
+                                moduleFuncIds.add(item.id)
+                                true
+                            }
+                        }
+                        .toMutableList()
+            }
+
     fun getModuleFuncList(appId: String, loginNo: String): MutableList<ModuleFunc> =
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
                 val moduleFuncIds: MutableSet<String> = mutableSetOf()
@@ -51,6 +66,9 @@ constructor(userRepository: UserRepository,
 
     fun hasModuleFunc(appId: String, loginNo: String, moduleFuncCode: String): Boolean =
             getModuleFuncList(appId, loginNo).any { item -> item.code == moduleFuncCode }
+
+    fun hasModuleFunc(userId: String, moduleFuncCode: String): Boolean =
+            getModuleFuncList(userId).any { item -> item.code == moduleFuncCode }
 
     private fun sortModuleFuncList(moduleFuncList: MutableList<ModuleFunc>): MutableList<ModuleFunc> =
             moduleFuncList.let { list ->
