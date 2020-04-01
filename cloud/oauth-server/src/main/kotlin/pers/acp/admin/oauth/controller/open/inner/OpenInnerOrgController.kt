@@ -22,7 +22,7 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api(tags = ["机构信息（内部接口）"])
+@Api(tags = ["机构信息（内部开放接口）"])
 class OpenInnerOrgController @Autowired
 constructor(logAdapter: LogAdapter,
             private val organizationDomain: OrganizationDomain) : BaseController(logAdapter) {
