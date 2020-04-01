@@ -1,5 +1,6 @@
 package pers.acp.admin.workflow.domain
 
+import org.flowable.bpmn.constants.BpmnXMLConstants
 import org.flowable.bpmn.model.BpmnModel
 import org.flowable.bpmn.model.FlowElement
 import org.flowable.bpmn.model.FlowNode
@@ -53,6 +54,9 @@ constructor(private val logAdapter: LogAdapter,
             } else {
                 commonOauthServer.findUserById(id!!)
             }
+
+    private fun getUserListByIdList(idList: List<String>): MutableList<UserVo> =
+            commonOauthServer.findUserList(idList).toMutableList()
 
     /**
      * 任务实体转换
@@ -148,6 +152,13 @@ constructor(private val logAdapter: LogAdapter,
                             title = params[WorkFlowParamKey.title]?.toString() ?: "",
                             description = params[WorkFlowParamKey.description]?.toString() ?: "",
                             startUser = getUserById(processInstance.startUserId),
+                            activityUser = taskService.createTaskQuery().processInstanceId(processInstance.id).list().filter { task ->
+                                task.assignee != null
+                            }.map { task ->
+                                task.assignee
+                            }.let {
+                                getUserListByIdList(it)
+                            },
                             params = params,
                             startTime = processInstance.startTime!!.time
                     )
@@ -717,7 +728,7 @@ constructor(private val logAdapter: LogAdapter,
              * 2.当前节点是以上两种类型之外的，通过outgoingFlows查找到的时间最早的流转节点视为有效流转
              * (第2点有问题，有过驳回的，会只绘制驳回的流程线，通过走向下一级的流程线没有高亮显示)
              */
-            if ("parallelGateway" == currentActivityInstance.activityType || "inclusiveGateway" == currentActivityInstance.activityType) {
+            if (BpmnXMLConstants.ELEMENT_GATEWAY_PARALLEL == currentActivityInstance.activityType || BpmnXMLConstants.ELEMENT_GATEWAY_INCLUSIVE == currentActivityInstance.activityType) {
                 // 遍历历史活动节点，找到匹配流程目标节点的
                 outgoingFlowList.forEach {
                     // 获取当前节点流程线对应的下级节点

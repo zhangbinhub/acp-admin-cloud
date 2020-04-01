@@ -15,6 +15,8 @@ import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 /**
  * @author zhang by 01/02/2019
@@ -27,6 +29,15 @@ import javax.validation.constraints.NotBlank
 class OpenInnerUserController @Autowired
 constructor(logAdapter: LogAdapter,
             private val userDomain: UserDomain) : BaseController(logAdapter) {
+    @ApiOperation(value = "查询用户信息")
+    @PostMapping(value = [OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getUserListByIdList(@ApiParam(value = "id列表", required = true)
+                            @NotEmpty(message = "id不能为空")
+                            @NotNull(message = "id不能为空")
+                            @RequestBody
+                            idList: MutableList<String>): ResponseEntity<List<UserVo>> =
+            ResponseEntity.ok(userDomain.getUserListByIdList(idList))
+
     @ApiOperation(value = "查询用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.userConfig], params = ["id", "!loginNo"], produces = [MediaType.APPLICATION_JSON_VALUE])

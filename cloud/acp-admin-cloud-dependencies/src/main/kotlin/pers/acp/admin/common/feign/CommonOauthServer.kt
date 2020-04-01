@@ -110,6 +110,13 @@ interface CommonOauthServer {
     /**
      * 获取用户列表
      */
+    @PostMapping(value = [CommonPath.openInnerBasePath + OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findUserList(@RequestBody idList: List<String>): List<UserVo>
+
+    /**
+     * 获取用户列表
+     */
     @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun findUserList(@RequestParam orgCode: String, @RequestParam roleCode: String): List<UserVo>

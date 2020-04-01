@@ -180,26 +180,26 @@ constructor(userRepository: UserRepository,
 
     fun doQuery(userQueryPo: UserQueryPo): Page<UserVo> =
             userRepository.findAll({ root, _, criteriaBuilder ->
-                        val predicateList = ArrayList<Predicate>()
-                        if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
-                            predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userQueryPo.loginNo))
-                        }
-                        if (!CommonTools.isNullStr(userQueryPo.name)) {
-                            predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.name + "%"))
-                        }
-                        if (userQueryPo.enabled != null) {
-                            predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
-                        }
-                        if (!CommonTools.isNullStr(userQueryPo.orgName)) {
-                            val joinOrg = root.join<User, Organization>("organizationSet", JoinType.LEFT)
-                            predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
-                        }
-                        if (!CommonTools.isNullStr(userQueryPo.roleName)) {
-                            val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
-                            predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
-                        }
-                        criteriaBuilder.and(*predicateList.toTypedArray())
-                    }, buildPageRequest(userQueryPo.queryParam!!))
+                val predicateList = ArrayList<Predicate>()
+                if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userQueryPo.loginNo))
+                }
+                if (!CommonTools.isNullStr(userQueryPo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.name + "%"))
+                }
+                if (userQueryPo.enabled != null) {
+                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
+                }
+                if (!CommonTools.isNullStr(userQueryPo.orgName)) {
+                    val joinOrg = root.join<User, Organization>("organizationSet", JoinType.LEFT)
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
+                }
+                if (!CommonTools.isNullStr(userQueryPo.roleName)) {
+                    val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
+                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(userQueryPo.queryParam!!))
                     .map { user ->
                         val userVO = UserVo()
                         BeanUtils.copyProperties(user, userVO)
@@ -222,6 +222,15 @@ constructor(userRepository: UserRepository,
             BeanUtils.copyProperties(it.get(), this)
         }
     }
+
+    /**
+     * 根据ID查询用户信息
+     */
+    @Throws(ServerException::class)
+    fun getUserListByIdList(idList: MutableList<String>): MutableList<UserVo> =
+            userRepository.findAllById(idList).map { item ->
+                UserVo().apply { BeanUtils.copyProperties(item, this) }
+            }.toMutableList()
 
     /**
      * 根据登录号或姓名模糊查询用户

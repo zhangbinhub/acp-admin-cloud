@@ -117,6 +117,13 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
+                override fun findUserList(idList: List<String>): List<UserVo> {
+                    val errMsg = "找不到对应的用户信息"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
                 override fun findUserList(orgCode: String, roleCode: String): List<UserVo> {
                     val errMsg = "找不到对应的用户信息【org=$orgCode,role=$roleCode】"
                     logAdapter.error(errMsg)

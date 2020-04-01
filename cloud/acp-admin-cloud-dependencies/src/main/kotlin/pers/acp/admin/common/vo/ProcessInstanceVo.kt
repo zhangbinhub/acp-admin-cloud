@@ -30,15 +30,18 @@ data class ProcessInstanceVo(
         @ApiModelProperty(value = "发起人", position = 7)
         var startUser: UserVo? = null,
 
-        @ApiModelProperty(value = "自定义参数", position = 8)
+        @ApiModelProperty(value = "当前处理人", position = 8)
+        var activityUser: MutableList<UserVo> = mutableListOf(),
+
+        @ApiModelProperty(value = "自定义参数", position = 9)
         var params: MutableMap<String, Any> = mutableMapOf(),
 
-        @ApiModelProperty(value = "流程是否已结束", position = 9)
+        @ApiModelProperty(value = "流程是否已结束", position = 10)
         var finished: Boolean = false,
 
-        @ApiModelProperty(value = "开始时间", position = 10)
+        @ApiModelProperty(value = "开始时间", position = 11)
         var startTime: Long = 0,
 
-        @ApiModelProperty(value = "结束时间", position = 11)
+        @ApiModelProperty(value = "结束时间", position = 12)
         var endTime: Long? = null
 )
