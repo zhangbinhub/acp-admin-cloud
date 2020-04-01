@@ -63,7 +63,7 @@ interface CommonOauthServer {
     /**
      * 获取所属机构及其所有子机构列表
      */
-    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun currAndAllChildrenOrgList(): List<OrganizationVo>
 
