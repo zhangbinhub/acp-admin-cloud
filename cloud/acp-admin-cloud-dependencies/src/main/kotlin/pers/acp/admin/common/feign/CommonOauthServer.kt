@@ -2,6 +2,7 @@ package pers.acp.admin.common.feign
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.api.CommonPath
@@ -51,6 +52,20 @@ interface CommonOauthServer {
     @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.moduleFunc + "/{userId}/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun hasModuleFunc(@PathVariable userId: String, @PathVariable moduleFuncCode: String): BooleanInfoVo
+
+    /**
+     * 获取所有机构列表
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun orgList(): List<OrganizationVo>
+
+    /**
+     * 获取所属机构及其所有子机构列表
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenOrgList(): List<OrganizationVo>
 
     /**
      * 获取用户详细信息

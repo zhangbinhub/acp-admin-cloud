@@ -54,6 +54,20 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
+                override fun orgList(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
+                override fun currAndAllChildrenOrgList(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
                 override fun userInfo(token: String): UserVo? {
                     val errMsg = "该token找不到对应的用户详细信息【$token】"
                     logAdapter.error(errMsg)

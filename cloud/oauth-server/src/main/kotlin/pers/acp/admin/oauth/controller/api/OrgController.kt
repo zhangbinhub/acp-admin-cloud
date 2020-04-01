@@ -50,6 +50,12 @@ constructor(logAdapter: LogAdapter,
     fun modOrgList(user: OAuth2Authentication): ResponseEntity<List<Organization>> =
             ResponseEntity.ok(organizationDomain.getModOrgList(user.name))
 
+    @ApiOperation(value = "获取所属机构及其所有子机构列表")
+    @GetMapping(value = [OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenOrgList(user: OAuth2Authentication): ResponseEntity<List<Organization>> =
+            ResponseEntity.ok(organizationDomain.getCurrAndAllChildrenOrgList(user.name))
+
     @ApiOperation(value = "新建机构信息", notes = "名称、编码、上级ID、序号、关联用户")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Organization::class), ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(OrgConfigExpression.orgAdd)

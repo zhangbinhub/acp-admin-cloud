@@ -9,6 +9,7 @@ object OauthApi {
     const val basePath = "/oauth"
     const val modifiableUser = "/mod-user-list"
     const val modifiableOrg = "/mod-org-list"
+    const val currAndAllChildrenOrg = "/org-list"
     const val currMenu = "/menu-list"
     const val currModuleFunc = "/module-func-list"
     const val appConfig = "/app"
@@ -32,7 +33,7 @@ object OauthApi {
     const val authentication = "/authentication"
     const val currUser = "/user-info"
     const val appInfo = "/application"
-    const val currOrgUserList = "/curr-org-user-list"
+    const val currOrgUserList = "/org-user-list"
     const val userList = "/user-list"
     const val runtime = "/runtime"
 }
