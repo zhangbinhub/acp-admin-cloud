@@ -33,15 +33,17 @@ constructor(private val logAdapter: LogAdapter,
                     }
                 }
                 it.token?.apply {
-                    if (it.responseStatus == HttpStatus.OK.value()) {
+                    if (it.responseStatus != null) {
                         if (logServerCustomerConfiguration.operateLogEnabled) {
                             GlobalScope.launch(Dispatchers.IO) {
                                 logDomain.doOperateLog(it, message)
                             }
                         }
-                        if (it.applyToken) {
-                            GlobalScope.launch(Dispatchers.IO) {
-                                logDomain.doLoginLog(it, message)
+                        if (it.responseStatus == HttpStatus.OK.value()) {
+                            if (it.applyToken) {
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    logDomain.doLoginLog(it, message)
+                                }
                             }
                         }
                     }

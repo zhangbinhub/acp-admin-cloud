@@ -23,6 +23,7 @@
 >   - Netty 4.1.48.Final
 >   - Jackson 2.10.3
 >   - Zip4j 2.5.1
+> - [Fix] 修复操作日志只记录 HttpStatus 200 的问题
 ##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置
