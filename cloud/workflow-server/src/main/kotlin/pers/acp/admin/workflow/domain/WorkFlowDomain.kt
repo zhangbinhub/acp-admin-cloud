@@ -436,17 +436,15 @@ constructor(private val logAdapter: LogAdapter,
             try {
                 if (isFinished(processInstanceId)) {
                     historyService.createHistoricProcessInstanceQuery()
-                            .processInstanceId(processInstanceId).singleResult()
-                            .let { instance ->
+                            .processInstanceId(processInstanceId).singleResult()?.let { instance ->
                                 instanceToVo(instance)
                             }
                 } else {
                     runtimeService.createProcessInstanceQuery()
-                            .processInstanceId(processInstanceId).singleResult()
-                            .let { instance ->
+                            .processInstanceId(processInstanceId).singleResult()?.let { instance ->
                                 instanceToVo(instance)
                             }
-                }
+                } ?: throw ServerException("流程实例不存在！")
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
