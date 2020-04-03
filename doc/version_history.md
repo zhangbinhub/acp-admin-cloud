@@ -4,14 +4,17 @@
 > - [Upgrade] 抽象序列号生成接口，方便扩展
 > - [Upgrade] 修改bus事件消息
 > - [Upgrade] 更新文档
-> - [Upgrade] oauth-server 增加用户查询接口，修改接口文档
-> - [Upgrade] oauth-server 增加用户权限检查接口
-> - [Upgrade] oauth-server 增加内部调用接口，判断用户是否具有指定的功能权限
-> - [Upgrade] oauth-server 增加内部调用接口，获取机构及其所有子机构列表
-> - [Upgrade] dependencies 中的 BaseController 增加权限检查方法
-> - [Upgrade] workflow-server 增加内部调用接口，流程启动、流程处理、待办任务获取
-> - [Upgrade] workflow-server 流程实例中增加当前处理人
-> - [Upgrade] workflow-server 优化异常信息
+> - [Upgrade] acp-admin-cloud-dependencies
+>   - BaseController 增加权限检查方法
+> - [Upgrade] oauth-server 
+>   - 增加用户查询接口，修改接口文档
+>   - 增加用户权限检查接口
+>   - 增加内部调用接口，判断用户是否具有指定的功能权限
+>   - 增加内部调用接口，获取机构及其所有子机构列表
+> - [Upgrade] workflow-server 
+>   - 增加内部调用接口，流程启动、流程处理、待办任务获取
+>   - 流程实例中增加当前处理人
+>   - 优化异常信息
 > - [Upgrade] 升级核心库至 6.4.3
 > - [Upgrade] 升级 Gradle 至 6.3
 > - [Upgrade] 升级依赖项
