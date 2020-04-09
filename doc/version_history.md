@@ -4,6 +4,7 @@
 > - [Upgrade] 抽象序列号生成接口，方便扩展
 > - [Upgrade] 修改bus事件消息
 > - [Upgrade] 更新文档
+> - [Upgrade] 修改 nacos 命名空间id
 > - [Upgrade] acp-admin-cloud-dependencies
 >   - BaseController 增加权限检查方法
 > - [Upgrade] oauth-server 

@@ -27,7 +27,7 @@ spring:
     nacos:
       server-addr: 127.0.0.1:8848
       discovery:
-        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        namespace: acp-cloud-admin
         cluster-name: ${spring.profiles.active}
 logging:
   pattern:
