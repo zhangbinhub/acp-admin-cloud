@@ -5,6 +5,7 @@
 >   - [Upgrade] 升级 Kotlin 至 1.3.71
 >   - [Upgrade] 修改 nacos 命名空间id
 >   - [Upgrade] feign 关闭 sentinel
+>   - [Upgrade] sentinel 配置移入配置中心全局配置中
 >   - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
 >   - [Upgrade] security.oauth2.resource.token-info-uri 指向 oauth-server 新的内部接口 /open/inner/check-token，同时去除 security.client.client-id 和 security.client.client-secret 配置
 > - acp-admin-cloud-constant
