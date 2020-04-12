@@ -6,6 +6,7 @@
 >   - [Upgrade] 修改 nacos 命名空间id
 >   - [Upgrade] feign 关闭 sentinel
 >   - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
+>   - [Upgrade] security.oauth2.resource.token-info-uri 指向 oauth-server 新的内部接口 /open/inner/check-token，同时去除 security.client.client-id 和 security.client.client-secret 配置
 > - acp-admin-cloud-constant
 >   - [Upgrade] OauthApi 增加 token 验证
 >   - [Upgrade] 修改流程实例对象属性名
@@ -29,7 +30,7 @@
 >   - [Upgrade] 增加用户权限检查接口
 >   - [Upgrade] 增加内部调用接口，判断用户是否具有指定的功能权限
 >   - [Upgrade] 增加内部调用接口，获取机构及其所有子机构列表
->   - [Upgrade] 增加内部调用接口，token 验证，其他服务的 security.oauth2.resource.token-info-uri 均指向该接口
+>   - [Upgrade] 增加内部调用接口，token 验证
 > - workflow-server 
 >   - [Upgrade] 增加内部调用接口，流程启动、流程处理、待办任务获取
 >   - [Upgrade] 流程实例中增加当前处理人
