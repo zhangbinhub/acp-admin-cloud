@@ -42,6 +42,30 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 }
             }
 
+    /**
+     * 获取指定机构集合的所有子机构
+     */
+    private fun getChildrenOrgList(organizationList: MutableList<Organization>): MutableList<Organization> =
+            mutableListOf<Organization>().apply {
+                organizationList.map { org -> org.id }.toMutableList().let {
+                    this.addAll(organizationRepository.findByParentIdIn(it))
+                }
+            }
+
+    /**
+     * Organization集合去重，返回List
+     */
+    private fun getUserListDistinct(organizations: MutableList<Organization>): MutableList<Organization> =
+            mutableListOf<Organization>().apply {
+                val orgIdList = mutableListOf<String>()
+                organizations.forEach { organization ->
+                    if (!orgIdList.contains(organization.id)) {
+                        this.add(organization)
+                        orgIdList.add(organization.id)
+                    }
+                }
+            }
+
     private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
             organizationRepository.save(organization.copy(
                     name = organizationPo.name!!,
@@ -116,6 +140,18 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Throws(ServerException::class)
     fun getModOrgList(loginNo: String): MutableList<Organization> =
             (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).organizationMngSet.toMutableList()
+
+    @Throws(ServerException::class)
+    fun getCurrAndAllChildrenOrgList(loginNo: String): MutableList<Organization> =
+            findCurrUserInfo(loginNo)?.let {
+                val orgList = it.organizationSet.toMutableList()
+                var children = getChildrenOrgList(orgList)
+                while (children.isNotEmpty()) {
+                    orgList.addAll(children)
+                    children = getChildrenOrgList(children)
+                }
+                getUserListDistinct(orgList)
+            } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getOrgInfo(orgId: String): OrganizationVo =

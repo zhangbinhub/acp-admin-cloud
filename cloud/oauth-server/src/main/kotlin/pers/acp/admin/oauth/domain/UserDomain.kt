@@ -16,7 +16,7 @@ import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.admin.oauth.vo.UserVo
+import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
 import pers.acp.core.security.SHA256Utils
 import pers.acp.spring.boot.exceptions.ServerException
@@ -222,6 +222,24 @@ constructor(userRepository: UserRepository,
             BeanUtils.copyProperties(it.get(), this)
         }
     }
+
+    /**
+     * 根据ID查询用户信息
+     */
+    @Throws(ServerException::class)
+    fun getUserListByIdList(idList: MutableList<String>): MutableList<UserVo> =
+            userRepository.findAllById(idList).map { item ->
+                UserVo().apply { BeanUtils.copyProperties(item, this) }
+            }.toMutableList()
+
+    /**
+     * 根据登录号或姓名模糊查询用户
+     */
+    @Throws(ServerException::class)
+    fun getUserListByLoginNoOrName(loginNoOrName: String): MutableList<UserVo> =
+            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("$loginNoOrName%", "$loginNoOrName%").map { item ->
+                UserVo().apply { BeanUtils.copyProperties(item, this) }
+            }.toMutableList()
 
     /**
      * 获取指定部门下所有符合角色编码的用户

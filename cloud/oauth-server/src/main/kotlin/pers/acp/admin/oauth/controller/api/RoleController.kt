@@ -40,7 +40,8 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["角色信息"])
 class RoleController @Autowired
-constructor(private val logAdapter: LogAdapter, private val roleDomain: RoleDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter,
+            private val roleDomain: RoleDomain) : BaseController(logAdapter) {
 
     private val roleCodeList: MutableList<String> = mutableListOf()
 

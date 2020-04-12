@@ -2,14 +2,13 @@ package pers.acp.admin.common.feign
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.hystrix.CommonOauthServerHystrix
-import pers.acp.admin.common.vo.ApplicationVo
-import pers.acp.admin.common.vo.RuntimeConfigVo
-import pers.acp.admin.common.vo.UserVo
+import pers.acp.admin.common.vo.*
 import java.rmi.ServerException
 
 /**
@@ -41,6 +40,34 @@ interface CommonOauthServer {
     fun tokenInfo(): OAuth2AccessToken?
 
     /**
+     * 当前用户是否具有指定的功能权限
+     */
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.moduleFunc + "/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun hasModuleFunc(@PathVariable moduleFuncCode: String): BooleanInfoVo
+
+    /**
+     * 指定用户是否具有指定的功能权限
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.moduleFunc + "/{userId}/{moduleFuncCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun hasModuleFunc(@PathVariable userId: String, @PathVariable moduleFuncCode: String): BooleanInfoVo
+
+    /**
+     * 获取所有机构列表
+     */
+    @GetMapping(value = [CommonPath.openInnerBasePath + OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun orgList(): List<OrganizationVo>
+
+    /**
+     * 获取所属机构及其所有子机构列表
+     */
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenOrgList(): List<OrganizationVo>
+
+    /**
      * 获取用户详细信息
      */
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -62,6 +89,10 @@ interface CommonOauthServer {
     @Throws(ServerException::class)
     fun findUserByLoginNo(@RequestParam loginNo: String): UserVo
 
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currModuleFunc], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findModuleFuncByCurrUser(): List<ModuleFuncVo>
+
     /**
      * 获取用户列表
      */
@@ -75,6 +106,13 @@ interface CommonOauthServer {
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun findUserListByOrgLevel(@RequestParam orgLevel: String, @RequestParam roleCode: String): List<UserVo>
+
+    /**
+     * 获取用户列表
+     */
+    @PostMapping(value = [CommonPath.openInnerBasePath + OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun findUserList(@RequestBody idList: List<String>): List<UserVo>
 
     /**
      * 获取用户列表

@@ -16,6 +16,7 @@ import pers.acp.admin.common.po.*
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 import javax.servlet.http.HttpServletResponse
@@ -30,8 +31,9 @@ import javax.validation.Valid
 @RequestMapping(WorkFlowApi.basePath)
 @Api(tags = ["工作流引擎"])
 class WorkFlowController @Autowired
-constructor(private val commonOauthServer: CommonOauthServer,
-            private val workFlowDomain: WorkFlowDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val commonOauthServer: CommonOauthServer,
+            private val workFlowDomain: WorkFlowDomain) : BaseController(logAdapter) {
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
     @ApiResponses(ApiResponse(code = 201, message = "流程启动成功", response = InfoVo::class), ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @PutMapping(value = [WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -96,9 +98,11 @@ constructor(private val commonOauthServer: CommonOauthServer,
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun process(@RequestBody @Valid processHandlingPo: ProcessHandlingPo): ResponseEntity<InfoVo> =
-            workFlowDomain.processTask(processHandlingPo).let {
-                ResponseEntity.ok(InfoVo(message = "流程处理完成"))
-            }
+            commonOauthServer.userInfo()?.let { userInfo ->
+                workFlowDomain.processTask(processHandlingPo, userInfo.id!!).let {
+                    ResponseEntity.ok(InfoVo(message = "流程处理完成"))
+                }
+            } ?: throw ServerException("获取当前登录用户信息失败！")
 
     @ApiOperation(value = "流程强制结束")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
@@ -173,7 +177,7 @@ constructor(private val commonOauthServer: CommonOauthServer,
     fun queryTaskInfo(@ApiParam(value = "流程任务ID", required = true)
                       @PathVariable
                       taskId: String): ResponseEntity<ProcessTaskVo> =
-            workFlowDomain.findTaskId(taskId).let {
+            workFlowDomain.findTaskById(taskId).let {
                 ResponseEntity.ok(it)
             }
 

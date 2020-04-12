@@ -155,14 +155,14 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun generateDefinitionDiagram(deploymentId: String, imgType: String): InputStream =
             try {
-                repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult().let {
+                repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult()?.let {
                     val model = repositoryService.getBpmnModel(it.id)
                     val engineConfiguration = processEngine.processEngineConfiguration
                     val diagramGenerator = engineConfiguration.processDiagramGenerator
                     diagramGenerator.generateDiagram(model, imgType.toLowerCase(), listOf(), listOf(),
                             engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                             engineConfiguration.classLoader, 1.0, true)
-                }
+                } ?: throw ServerException("获取流程定义失败！")
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)

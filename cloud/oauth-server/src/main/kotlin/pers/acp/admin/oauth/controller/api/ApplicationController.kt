@@ -22,6 +22,7 @@ import pers.acp.admin.oauth.po.ApplicationQueryPo
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
@@ -39,7 +40,9 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["应用信息"])
 class ApplicationController @Autowired
-constructor(private val applicationDomain: ApplicationDomain, private val refreshEventPublish: RefreshEventPublish) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val applicationDomain: ApplicationDomain,
+            private val refreshEventPublish: RefreshEventPublish) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建应用信息", notes = "应用名称、token 有效期、refresh token 有效期")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Application::class), ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))

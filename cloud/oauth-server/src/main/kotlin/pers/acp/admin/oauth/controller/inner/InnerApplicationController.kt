@@ -14,6 +14,7 @@ import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.entity.Application
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 16/01/2019
@@ -24,7 +25,8 @@ import pers.acp.spring.boot.exceptions.ServerException
 @RequestMapping(CommonPath.innerBasePath)
 @Api(tags = ["应用信息（内部接口）"])
 class InnerApplicationController @Autowired
-constructor(private val applicationDomain: ApplicationDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val applicationDomain: ApplicationDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取应用信息", notes = "根据token查询应用详细信息")
     @GetMapping(value = [OauthApi.appInfo], produces = [MediaType.APPLICATION_JSON_VALUE])

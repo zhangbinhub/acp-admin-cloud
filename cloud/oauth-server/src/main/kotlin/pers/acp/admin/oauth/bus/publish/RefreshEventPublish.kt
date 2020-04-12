@@ -8,7 +8,7 @@ import org.springframework.cloud.bus.BusProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 import pers.acp.admin.common.event.ReloadDataBusEvent
-import pers.acp.admin.constant.BusEventMessage
+import pers.acp.admin.oauth.constant.BusEventMessage
 
 /**
  * @author zhang by 19/03/2019

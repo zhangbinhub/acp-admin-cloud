@@ -32,6 +32,44 @@ constructor(userRepository: UserRepository,
                 sortModuleFuncList(formatToTreeList(map))
             }
 
+    private fun getModuleFuncList(userId: String): MutableList<ModuleFunc> =
+            userRepository.getOne(userId).let {
+                val moduleFuncIds: MutableSet<String> = mutableSetOf()
+                it.roleSet.flatMap { item -> item.moduleFuncSet }
+                        .filter { item ->
+                            if (moduleFuncIds.contains(item.id)) {
+                                false
+                            } else {
+                                moduleFuncIds.add(item.id)
+                                true
+                            }
+                        }
+                        .toMutableList()
+            }
+
+    fun getModuleFuncList(appId: String, loginNo: String): MutableList<ModuleFunc> =
+            (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
+                val moduleFuncIds: MutableSet<String> = mutableSetOf()
+                it.roleSet.filter { role -> role.appId == appId }
+                        .flatMap { item -> item.moduleFuncSet }
+                        .filter { item ->
+                            if (moduleFuncIds.contains(item.id)) {
+                                false
+                            } else {
+                                moduleFuncIds.add(item.id)
+                                true
+                            }
+                        }
+                        .filter { menu -> menu.appId == appId }
+                        .toMutableList()
+            }
+
+    fun hasModuleFunc(appId: String, loginNo: String, moduleFuncCode: String): Boolean =
+            getModuleFuncList(appId, loginNo).any { item -> item.code == moduleFuncCode }
+
+    fun hasModuleFunc(userId: String, moduleFuncCode: String): Boolean =
+            getModuleFuncList(userId).any { item -> item.code == moduleFuncCode }
+
     private fun sortModuleFuncList(moduleFuncList: MutableList<ModuleFunc>): MutableList<ModuleFunc> =
             moduleFuncList.let { list ->
                 list.forEach { organization ->
@@ -63,11 +101,17 @@ constructor(userRepository: UserRepository,
             })
 
     @Transactional
+    @Throws(ServerException::class)
     fun doCreate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
-            doSave(ModuleFunc(
-                    appId = moduleFuncPo.appId!!,
-                    covert = true
-            ), moduleFuncPo)
+            moduleFuncRepository.findByCode(moduleFuncPo.code!!).let {
+                if (it.isPresent) {
+                    throw ServerException("编码重复")
+                }
+                doSave(ModuleFunc(
+                        appId = moduleFuncPo.appId!!,
+                        covert = true
+                ), moduleFuncPo)
+            }
 
     @Transactional
     @Throws(ServerException::class)
@@ -82,7 +126,13 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc = doSave(moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
+    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
+            moduleFuncRepository.findByCodeAndIdNot(moduleFuncPo.code!!, moduleFuncPo.id!!).let {
+                if (it.isPresent) {
+                    throw ServerException("编码重复")
+                }
+                doSave(moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
+            }
 
     @Throws(ServerException::class)
     fun getModuleFuncInfo(moduleFuncId: String): ModuleFuncVo =

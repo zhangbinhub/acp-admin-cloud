@@ -1,4 +1,40 @@
 ## 版本更新记录
+##### v4.1.5
+> - [Upgrade] 修改流程实例对象属性名
+> - [Upgrade] 抽象序列号生成接口，方便扩展
+> - [Upgrade] 修改bus事件消息
+> - [Upgrade] 更新文档
+> - [Upgrade] 修改 nacos 命名空间id
+> - [Upgrade] feign 关闭 sentinel
+> - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
+> - [Upgrade] acp-admin-cloud-constant
+>   - OauthApi 增加 token 验证
+> - [Upgrade] acp-admin-cloud-dependencies
+>   - BaseController 增加权限检查方法
+> - [Upgrade] oauth-server 
+>   - 增加用户查询接口，修改接口文档
+>   - 增加用户权限检查接口
+>   - 增加内部调用接口，判断用户是否具有指定的功能权限
+>   - 增加内部调用接口，获取机构及其所有子机构列表
+>   - 增加内部调用接口，token 验证，其他服务的 security.oauth2.resource.token-info-uri 均指向该接口
+> - [Upgrade] workflow-server 
+>   - 增加内部调用接口，流程启动、流程处理、待办任务获取
+>   - 流程实例中增加当前处理人
+>   - 优化异常信息
+> - [Upgrade] 升级核心库至 6.4.3
+> - [Upgrade] 升级 Gradle 至 6.3
+> - [Upgrade] 升级依赖项
+>   - Spring Boot 2.2.6.RELEASE
+>   - Spring Cloud Hoxton.SR3
+>   - Spring Cloud Alibaba 2.2.1.RELEASE
+>   - okhttp 3.14.7
+>   - Postgresql 42.2.11
+>   - Kotlin Coroutines 1.3.5
+>   - Kotlin 1.3.71
+>   - Netty 4.1.48.Final
+>   - Jackson 2.10.3
+>   - Zip4j 2.5.1
+> - [Fix] 修复操作日志只记录 HttpStatus 200 的问题
 ##### v4.1.4
 > - [Upgrade] workflow的feign客户端增加内部启动流程接口
 > - [Upgrade] 修改sentinel熔断配置

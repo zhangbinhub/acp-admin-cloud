@@ -4,9 +4,7 @@ import feign.FeignException
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import pers.acp.admin.common.base.BaseFeignHystrix
 import pers.acp.admin.common.feign.CommonOauthServer
-import pers.acp.admin.common.vo.ApplicationVo
-import pers.acp.admin.common.vo.RuntimeConfigVo
-import pers.acp.admin.common.vo.UserVo
+import pers.acp.admin.common.vo.*
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 
@@ -23,77 +21,119 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 @Throws(ServerException::class)
                 override fun appInfo(token: String): ApplicationVo {
                     val errMsg = "该token找不到对应的应用信息【$token】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return ApplicationVo()
                 }
 
                 @Throws(ServerException::class)
                 override fun tokenInfo(token: String): OAuth2AccessToken? {
                     val errMsg = "该token找不到对应的用户信息【$token】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return null
                 }
 
                 @Throws(ServerException::class)
                 override fun tokenInfo(): OAuth2AccessToken? {
                     val errMsg = "找不到对应的用户信息"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return null
+                }
+
+                @Throws(ServerException::class)
+                override fun hasModuleFunc(moduleFuncCode: String): BooleanInfoVo {
+                    val errMsg = "找不到对应的功能权限信息"
+                    logAdapter.error(errMsg)
+                    return BooleanInfoVo(result = false)
+                }
+
+                @Throws(ServerException::class)
+                override fun hasModuleFunc(userId: String, moduleFuncCode: String): BooleanInfoVo {
+                    val errMsg = "找不到对应的功能权限信息"
+                    logAdapter.error(errMsg)
+                    return BooleanInfoVo(result = false)
+                }
+
+                @Throws(ServerException::class)
+                override fun orgList(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
+                override fun currAndAllChildrenOrgList(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
                 }
 
                 @Throws(ServerException::class)
                 override fun userInfo(token: String): UserVo? {
                     val errMsg = "该token找不到对应的用户详细信息【$token】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return null
                 }
 
                 @Throws(ServerException::class)
                 override fun userInfo(): UserVo? {
                     val errMsg = "找不到对应的用户详细信息"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return null
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserById(id: String): UserVo {
                     val errMsg = "找不到对应的用户信息"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return UserVo(id = id)
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserByLoginNo(loginNo: String): UserVo {
                     val errMsg = "找不到对应的用户信息"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return UserVo(loginNo = loginNo)
+                }
+
+                @Throws(ServerException::class)
+                override fun findModuleFuncByCurrUser(): List<ModuleFuncVo> {
+                    val errMsg = "找不到当前用户信息功能权限信息"
+                    logAdapter.error(errMsg)
+                    return listOf()
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserListInCurrOrg(roleCode: String): List<UserVo> {
                     val errMsg = "找不到当前部门下对应的用户信息【role=$roleCode】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return listOf()
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserListByOrgLevel(orgLevel: String, roleCode: String): List<UserVo> {
                     val errMsg = "找不到对应的用户信息【orgLevel=$orgLevel,role=$roleCode】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
+                override fun findUserList(idList: List<String>): List<UserVo> {
+                    val errMsg = "找不到对应的用户信息"
+                    logAdapter.error(errMsg)
                     return listOf()
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserList(orgCode: String, roleCode: String): List<UserVo> {
                     val errMsg = "找不到对应的用户信息【org=$orgCode,role=$roleCode】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return listOf()
                 }
 
                 @Throws(ServerException::class)
                 override fun findUserList(roleCode: String): List<UserVo> {
                     val errMsg = "找不到对应的用户信息【role=$roleCode】"
-                    logAdapter.info(errMsg)
+                    logAdapter.error(errMsg)
                     return listOf()
                 }
 

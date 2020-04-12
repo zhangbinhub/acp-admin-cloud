@@ -14,31 +14,34 @@ spring:
   #      type: kafka
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       server-addr: 127.0.0.1:8848
       discovery:
-        namespace: 14604291-6d99-44b1-9b59-13d8faf4fdef
+        namespace: acp-cloud-admin
         cluster-name: ${spring.profiles.active}
+        group: ${spring.profiles.active}
       config:
         file-extension: yaml
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
-        group: ${spring.profiles.active}
+        group: ${spring.cloud.nacos.discovery.group}
         shared-configs:
           - data-id: atom-server-common-${spring.profiles.active}.yaml
             group: ${spring.profiles.active}
             refresh: true
-    sentinel:
-      datasource:
-        nacos-degrade:
-          nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
-            data-id: sentinel-degrade-${spring.profiles.active}
-            namespace: ${spring.cloud.nacos.discovery.namespace}
-            group-id: ${spring.profiles.active}
-            data-type: json
-            rule-type: degrade
+#    sentinel:
+#      datasource:
+#        nacos-degrade:
+#          nacos:
+#            server-addr: ${spring.cloud.nacos.server-addr}
+#            data-id: sentinel-degrade-${spring.profiles.active}
+#            namespace: ${spring.cloud.nacos.discovery.namespace}
+#            group-id: ${spring.profiles.active}
+#            data-type: json
+#            rule-type: degrade
 info:
-  version: 4.1.4
+  version: 4.1.5
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

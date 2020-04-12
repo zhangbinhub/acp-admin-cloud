@@ -6,7 +6,7 @@ versions += [
         jupiter          : "5.5.2",
         junit_platform   : "1.5.2",
 
-        kotlin_coroutines: "1.3.3",
+        kotlin_coroutines: "1.3.5",
         joda_time        : "2.10.5",
         commons_codec    : "1.13",
         commons_text     : "1.8",
@@ -16,19 +16,19 @@ versions += [
         slf4j            : "1.7.30",
         logback          : "1.2.3",
         xstream          : "1.4.11.1",
-        jackson_databind : "2.10.2",
-        zip4j            : "2.2.8",
+        jackson_databind : "2.10.3",
+        zip4j            : "2.5.1",
 
         hikaricp         : "3.4.2",
         mysql            : "8.0.19",
 
-        spring_boot      : "2.2.4.RELEASE",
-        spring_cloud     : "Hoxton.SR1",
-        alibaba_cloud    : "2.2.0.RELEASE",
+        spring_boot      : "2.2.6.RELEASE",
+        spring_cloud     : "Hoxton.SR3",
+        alibaba_cloud    : "2.2.1.RELEASE",
         swagger          : "2.9.2",
 
-        netty            : "4.1.45.Final",
-        okhttp           : "3.14.6",
+        netty            : "4.1.48.Final",
+        okhttp           : "3.14.7",
 
         flowable         : "6.5.0"
 ]

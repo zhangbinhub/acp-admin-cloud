@@ -20,6 +20,7 @@ import pers.acp.admin.route.po.RouteQueryPo
 import pers.acp.admin.route.producer.instance.UpdateRouteProducer
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
 
@@ -36,7 +37,9 @@ import javax.validation.constraints.NotNull
 @RequestMapping(RouteApi.basePath)
 @Api(tags = ["网关路由信息"])
 class RouteController @Autowired
-constructor(private val routeDomain: RouteDomain, private val updateRouteProducer: UpdateRouteProducer) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val routeDomain: RouteDomain,
+            private val updateRouteProducer: UpdateRouteProducer) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建路由信息", notes = "路由ID、路由URI、断言、过滤器、序号")
     @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Route::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))

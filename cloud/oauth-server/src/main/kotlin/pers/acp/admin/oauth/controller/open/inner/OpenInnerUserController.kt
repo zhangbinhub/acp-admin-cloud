@@ -10,10 +10,13 @@ import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.domain.UserDomain
-import pers.acp.admin.oauth.vo.UserVo
+import pers.acp.admin.common.vo.UserVo
 import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 /**
  * @author zhang by 01/02/2019
@@ -24,7 +27,17 @@ import javax.validation.constraints.NotBlank
 @RequestMapping(CommonPath.openInnerBasePath)
 @Api(tags = ["用户列表（内部开放接口）"])
 class OpenInnerUserController @Autowired
-constructor(private val userDomain: UserDomain) : BaseController() {
+constructor(logAdapter: LogAdapter,
+            private val userDomain: UserDomain) : BaseController(logAdapter) {
+    @ApiOperation(value = "查询用户信息")
+    @PostMapping(value = [OauthApi.userList], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getUserListByIdList(@ApiParam(value = "id列表", required = true)
+                            @NotEmpty(message = "id不能为空")
+                            @NotNull(message = "id不能为空")
+                            @RequestBody
+                            idList: MutableList<String>): ResponseEntity<List<UserVo>> =
+            ResponseEntity.ok(userDomain.getUserListByIdList(idList))
+
     @ApiOperation(value = "查询用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.userConfig], params = ["id", "!loginNo"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -43,7 +56,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                              @RequestParam loginNo: String): ResponseEntity<UserVo> =
             ResponseEntity.ok(userDomain.getUserInfoByLoginNo(loginNo))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
@@ -54,7 +67,7 @@ constructor(private val userDomain: UserDomain) : BaseController() {
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
-    @ApiOperation(value = "查询用户信息")
+    @ApiOperation(value = "通过角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)

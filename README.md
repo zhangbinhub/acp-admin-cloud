@@ -1,14 +1,14 @@
 # acp-admin-cloud
-###### v4.1.4 [版本更新日志](doc/version_history.md)
+###### v4.1.5 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.4](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.5](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.2.4.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Hoxton.SR2](http://projects.spring.io/spring-cloud)
-- [Spring Cloud Alibaba 2.2.0.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
-- [Acp 6.4.2](https://github.com/zhangbin1010/acp)
+- [Spring Boot 2.2.6.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Hoxton.SR3](http://projects.spring.io/spring-cloud)
+- [Spring Cloud Alibaba 2.2.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Acp 6.4.3](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -69,8 +69,8 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 6.2
-- kotlin 1.3.61
+- gradle 6.3
+- kotlin 1.3.71
 
 ## 二、gradle 配置及使用
 ### （一）配置文件
@@ -110,7 +110,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.2 --distribution-type=all
+    gradlew wrapper --gradle-version=6.3 --distribution-type=all
 ```
 
 ## 三、工程说明
@@ -178,7 +178,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_2020-02-28%2017_10_22.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_20200412172340.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka
@@ -274,4 +274,6 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 
 ## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
+注：目前 Spring Cloud Alibaba 还未支持 Nacos 1.2+ 用作 sentinel 的数据源，因此需要关闭feign的sentinel，并且注释sentinel的nacos数据源配置。但是已有 [pr](https://github.com/alibaba/spring-cloud-alibaba/pull/1354) 解决了这个问题，如果不想等下个版本发布，可以提前拉取源代码
+
 ## 十、[公共配置信息](doc/atom-server-common-dev.yaml)

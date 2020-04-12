@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.api.OauthApi
+import pers.acp.admin.common.vo.BooleanInfoVo
 import pers.acp.admin.oauth.constant.AuthConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.MenuDomain
@@ -43,7 +44,9 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["权限信息"])
 class AuthController @Autowired
-constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDomain, private val moduleFuncDomain: ModuleFuncDomain) : BaseController() {
+constructor(private val logAdapter: LogAdapter,
+            private val menuDomain: MenuDomain,
+            private val moduleFuncDomain: ModuleFuncDomain) : BaseController(logAdapter) {
 
     private val moduleFuncCodeList: MutableList<String> = mutableListOf()
 
@@ -68,11 +71,23 @@ constructor(private val logAdapter: LogAdapter, private val menuDomain: MenuDoma
 
     }
 
+    @ApiOperation(value = "判断当前用户是否具有指定的权限")
+    @GetMapping(value = [OauthApi.authentication + "/{authentication}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currUserHasAuthentication(user: OAuth2Authentication, @PathVariable authentication: String): ResponseEntity<BooleanInfoVo> =
+            ResponseEntity.ok(BooleanInfoVo(result = hasAuthentication(user, mutableListOf(authentication))))
+
     @ApiOperation(value = "获取当前用户所属菜单", notes = "根据当前登录的用户信息，查询有权访问的菜单列表")
     @GetMapping(value = [OauthApi.currMenu], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun currMenuList(user: OAuth2Authentication): ResponseEntity<List<Menu>> =
             ResponseEntity.ok(menuDomain.getMenuList(user.oAuth2Request.clientId, user.name))
+
+    @ApiOperation(value = "获取当前用户所有功能权限信息", notes = "根据当前登录的用户信息，查询具备的功能权限")
+    @GetMapping(value = [OauthApi.currModuleFunc], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currModuleFuncList(user: OAuth2Authentication): ResponseEntity<List<ModuleFunc>> =
+            ResponseEntity.ok(moduleFuncDomain.getModuleFuncList(user.oAuth2Request.clientId, user.name))
 
     @ApiOperation(value = "获取指定应用下的菜单列表", notes = "查询指定应用的菜单列表，供选择配置")
     @PreAuthorize(AuthConfigExpression.authQuery)

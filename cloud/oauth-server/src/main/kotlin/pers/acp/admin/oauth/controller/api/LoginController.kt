@@ -35,7 +35,7 @@ class LoginController @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val applicationDomain: ApplicationDomain,
             private val userDomain: UserDomain,
-            private val securityTokenService: SecurityTokenService) : BaseController() {
+            private val securityTokenService: SecurityTokenService) : BaseController(logAdapter) {
 
     @ApiOperation(value = "注销当前用户")
     @PostMapping(value = [OauthApi.logOut], produces = [MediaType.APPLICATION_JSON_VALUE])
