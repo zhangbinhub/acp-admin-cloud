@@ -81,9 +81,6 @@ security:
   oauth2:
     resource:
       token-info-uri: http://oauth2-server/open/inner/check-token
-    client:
-      client-id: 8a80cb816d2eb97f016d2eba04710000
-      client-secret: 2523342F2BD345EA9658452A289364AA
 acp:
   swagger:
     enabled: true
