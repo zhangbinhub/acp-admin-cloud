@@ -34,6 +34,8 @@ spring:
 #      datasource:
 #        nacos-degrade:
 #          nacos:
+#            username: nacos
+#            password: nacos
 #            server-addr: ${spring.cloud.nacos.server-addr}
 #            data-id: sentinel-degrade-${spring.profiles.active}
 #            namespace: ${spring.cloud.nacos.discovery.namespace}
