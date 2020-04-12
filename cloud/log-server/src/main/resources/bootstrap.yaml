@@ -30,18 +30,6 @@ spring:
           - data-id: atom-server-common-${spring.profiles.active}.yaml
             group: ${spring.profiles.active}
             refresh: true
-#    sentinel:
-#      datasource:
-#        nacos-degrade:
-#          nacos:
-#            username: nacos
-#            password: nacos
-#            server-addr: ${spring.cloud.nacos.server-addr}
-#            data-id: sentinel-degrade-${spring.profiles.active}
-#            namespace: ${spring.cloud.nacos.discovery.namespace}
-#            group-id: ${spring.profiles.active}
-#            data-type: json
-#            rule-type: degrade
 info:
   version: 4.1.5
   app-name: ${spring.application.name}
