@@ -178,7 +178,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_20200412193628.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_20200412201414.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka
