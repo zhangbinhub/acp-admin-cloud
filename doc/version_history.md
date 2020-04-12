@@ -7,6 +7,8 @@
 > - [Upgrade] 修改 nacos 命名空间id
 > - [Upgrade] feign 关闭 sentinel
 > - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
+> - [Upgrade] acp-admin-cloud-constant
+>   - OauthApi 增加 token 验证
 > - [Upgrade] acp-admin-cloud-dependencies
 >   - BaseController 增加权限检查方法
 > - [Upgrade] oauth-server 
