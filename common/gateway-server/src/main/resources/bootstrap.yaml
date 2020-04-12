@@ -11,15 +11,18 @@ spring:
     cache: false
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       server-addr: 127.0.0.1:8848
       discovery:
         namespace: acp-cloud-admin
         cluster-name: ${spring.profiles.active}
+        group: ${spring.profiles.active}
       config:
         file-extension: yaml
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
-        group: ${spring.profiles.active}
+        group: ${spring.cloud.nacos.discovery.group}
         shared-configs:
           - data-id: atom-server-common-${spring.profiles.active}.yaml
             group: ${spring.profiles.active}

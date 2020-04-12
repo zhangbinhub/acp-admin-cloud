@@ -24,7 +24,7 @@ versions += [
 
         spring_boot      : "2.2.6.RELEASE",
         spring_cloud     : "Hoxton.SR3",
-        alibaba_cloud    : "2.2.0.RELEASE",
+        alibaba_cloud    : "2.2.1.RELEASE",
         swagger          : "2.9.2",
 
         netty            : "4.1.48.Final",

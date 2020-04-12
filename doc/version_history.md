@@ -5,6 +5,8 @@
 > - [Upgrade] 修改bus事件消息
 > - [Upgrade] 更新文档
 > - [Upgrade] 修改 nacos 命名空间id
+> - [Upgrade] feign 关闭 sentinel
+> - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
 > - [Upgrade] acp-admin-cloud-dependencies
 >   - BaseController 增加权限检查方法
 > - [Upgrade] oauth-server 
@@ -12,6 +14,7 @@
 >   - 增加用户权限检查接口
 >   - 增加内部调用接口，判断用户是否具有指定的功能权限
 >   - 增加内部调用接口，获取机构及其所有子机构列表
+>   - 增加内部调用接口，token 验证，其他服务的 security.oauth2.resource.token-info-uri 均指向该接口
 > - [Upgrade] workflow-server 
 >   - 增加内部调用接口，流程启动、流程处理、待办任务获取
 >   - 流程实例中增加当前处理人
@@ -21,6 +24,7 @@
 > - [Upgrade] 升级依赖项
 >   - Spring Boot 2.2.6.RELEASE
 >   - Spring Cloud Hoxton.SR3
+>   - Spring Cloud Alibaba 2.2.1.RELEASE
 >   - okhttp 3.14.7
 >   - Postgresql 42.2.11
 >   - Kotlin Coroutines 1.3.5
