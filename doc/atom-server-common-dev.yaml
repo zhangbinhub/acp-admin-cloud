@@ -6,7 +6,7 @@ logging:
     max-size: 5MB
     max-history: 30
   level:
-    com.alibaba.nacos.client.naming: warn
+    com.alibaba.nacos.client: warn
 # ===============================
 # = Spring Config
 # ===============================
