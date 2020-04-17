@@ -12,11 +12,11 @@ import pers.acp.core.CommonTools
 abstract class BaseDomain {
 
     protected fun buildPageRequest(queryParam: QueryParam): PageRequest =
-            if (CommonTools.isNullStr(queryParam.orderName)) {
+            if (CommonTools.isNullStr(queryParam.orderName) || CommonTools.isNullStr(queryParam.orderCommand)) {
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize)
             } else {
                 var direction: Sort.Direction = Sort.Direction.ASC
-                if (queryParam.orderCommand.startsWith("desc", ignoreCase = true)) {
+                if (queryParam.orderCommand!!.startsWith("desc", ignoreCase = true)) {
                     direction = Sort.Direction.DESC
                 }
                 PageRequest.of(queryParam.currPage - 1, queryParam.pageSize, direction, *queryParam.orderName!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
