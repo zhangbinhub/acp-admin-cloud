@@ -18,7 +18,7 @@
 >   - [Upgrade] BaseController 增加权限检查方法
 >   - [Upgrade] 升级依赖项
 >     - Spring Boot 2.2.6.RELEASE
->     - Spring Cloud Hoxton.SR3
+>     - Spring Cloud Hoxton.SR4
 >     - Spring Cloud Alibaba 2.2.1.RELEASE
 >     - okhttp 3.14.7
 >     - Postgresql 42.2.11
