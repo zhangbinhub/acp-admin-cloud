@@ -111,9 +111,8 @@ constructor(private val logAdapter: LogAdapter,
                 historicDetailQuery.taskId(historicActivityInstance.taskId).list()
                         .forEach { historicDetail ->
                             params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
-
                         }
-                taskService.createTaskQuery().taskId(historicActivityInstance.taskId).singleResult()?.let {
+                historyService.createHistoricTaskInstanceQuery().taskId(historicActivityInstance.taskId).singleResult()?.let {
                     ProcessHistoryActivityVo(
                             processInstanceId = historicActivityInstance.processInstanceId,
                             activityId = historicActivityInstance.activityId,
@@ -142,13 +141,19 @@ constructor(private val logAdapter: LogAdapter,
     private fun instanceToVo(processInstance: Any): ProcessInstanceVo =
             when (processInstance) {
                 is ProcessInstance -> {
-                    val params = processInstance.processVariables
+                    val params = mutableMapOf<String, Any>().apply {
+                        runtimeService.createExecutionQuery().processInstanceId(processInstance.id).list().map { execution -> execution.id }.toSet().let { executionIds ->
+                            runtimeService.getVariableInstancesByExecutionIds(executionIds).forEach { variableInstance ->
+                                this[variableInstance.name] = variableInstance.value
+                            }
+                        }
+                    }
                     ProcessInstanceVo(
                             processInstanceId = processInstance.id,
                             finished = false,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,
-                            flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
+                            flowName = processInstance.processDefinitionName,
                             title = params[WorkFlowParamKey.title]?.toString() ?: "",
                             description = params[WorkFlowParamKey.description]?.toString() ?: "",
                             startUser = getUserById(processInstance.startUserId),
@@ -164,13 +169,18 @@ constructor(private val logAdapter: LogAdapter,
                     )
                 }
                 is HistoricProcessInstance -> {
-                    val params = processInstance.processVariables
+                    val params = mutableMapOf<String, Any>().apply {
+                        historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstance.id).list()
+                                .forEach { variableInstance ->
+                                    this[variableInstance.variableName] = variableInstance.value
+                                }
+                    }
                     ProcessInstanceVo(
                             processInstanceId = processInstance.id,
                             finished = true,
                             processDefinitionKey = processInstance.processDefinitionKey,
                             businessKey = processInstance.businessKey,
-                            flowName = params[WorkFlowParamKey.flowName]?.toString() ?: "",
+                            flowName = processInstance.processDefinitionName,
                             title = params[WorkFlowParamKey.title]?.toString() ?: "",
                             description = params[WorkFlowParamKey.description]?.toString() ?: "",
                             startUser = getUserById(processInstance.startUserId),
