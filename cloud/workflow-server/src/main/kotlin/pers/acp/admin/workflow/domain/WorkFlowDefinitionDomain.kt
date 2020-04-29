@@ -139,7 +139,7 @@ constructor(private val logAdapter: LogAdapter,
     fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, id: String) {
         val workFlowDefinition = workFlowDefinitionRepository.getOne(id)
         val targetFile = CommonTools.contentWriteToFile(WorkFlowConstant.upLoadTempPath + "/" + System.currentTimeMillis() + "_" + workFlowDefinition.resourceName,
-                workFlowDefinitionRepository.getOne(id).content) ?: throw ServerException("生成文件失败")
+                workFlowDefinition.content) ?: throw ServerException("生成文件失败")
         val foldPath = targetFile.parentFile.canonicalPath
         fileDownLoadHandle.downLoadFile(request, response, targetFile.canonicalPath, listOf("$foldPath/.*"), true, 120000)
     }
