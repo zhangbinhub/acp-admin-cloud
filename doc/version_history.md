@@ -16,6 +16,7 @@
 >   - [Upgrade] 抽象序列号生成接口，方便扩展
 >   - [Upgrade] 修改bus事件消息
 >   - [Upgrade] BaseController 增加权限检查方法
+>   - [Upgrade] QueryParam 增加分页查询参数校验
 >   - [Upgrade] 升级依赖项
 >     - Spring Boot 2.2.6.RELEASE
 >     - Spring Cloud Hoxton.SR4
