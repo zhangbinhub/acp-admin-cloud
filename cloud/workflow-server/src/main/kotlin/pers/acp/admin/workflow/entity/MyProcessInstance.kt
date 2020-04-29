@@ -37,9 +37,8 @@ data class MyProcessInstance(
         @ApiModelProperty(value = "业务键")
         var businessKey: String = "",
 
-        @Column(nullable = false)
         @ApiModelProperty(value = "发起人")
-        var startUserId: String = "",
+        var startUserId: String? = null,
 
         @Column(nullable = false)
         @ApiModelProperty(value = "处理人")

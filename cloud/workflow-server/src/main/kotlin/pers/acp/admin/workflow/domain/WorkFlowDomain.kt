@@ -423,7 +423,7 @@ constructor(private val logAdapter: LogAdapter,
                             processInstanceId = processInstance.processInstanceId!!,
                             processDefinitionKey = processInstance.processDefinitionKey!!,
                             businessKey = processInstance.businessKey!!,
-                            startUserId = processInstance.startUser?.id ?: throw ServerException("找不到用户信息"),
+                            startUserId = processInstance.startUser?.id,
                             userId = userId,
                             startTime = processInstance.startTime
                     ))
