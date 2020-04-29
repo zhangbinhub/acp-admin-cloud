@@ -269,7 +269,7 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun findTaskList(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessTaskVo> =
             try {
-                val firstResult = processQueryPo.queryParam!!.currPage!! - 1 * processQueryPo.queryParam!!.pageSize!!
+                val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
                 val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
                 commonOauthServer.userInfo()?.let { userInfo ->
                     val taskQuery = taskService.createTaskQuery().or()
@@ -520,7 +520,7 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun findProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
             try {
-                val firstResult = processQueryPo.queryParam!!.currPage!! - 1 * processQueryPo.queryParam!!.pageSize!!
+                val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
                 val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = runtimeService.createProcessInstanceQuery()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
@@ -562,7 +562,7 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun findHistoryProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
             try {
-                val firstResult = processQueryPo.queryParam!!.currPage!! - 1 * processQueryPo.queryParam!!.pageSize!!
+                val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
                 val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
