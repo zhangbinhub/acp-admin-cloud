@@ -63,7 +63,7 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         val targetFileName = String(Base64.decode(fileName), Charset.forName(CommonTools.getDefaultCharset()))
         val filePath = "$foldPath/$targetFileName".replace("/", File.separator).replace("\\", File.separator)
         if (!File(filePath).exists()) {
-            throw ServerException("文件[$fileName]不存在")
+            throw ServerException("文件[$targetFileName]不存在")
         }
         fileDownLoadHandle.downLoadFile(request, response, filePath, listOf("$foldPath/.*"))
     }
