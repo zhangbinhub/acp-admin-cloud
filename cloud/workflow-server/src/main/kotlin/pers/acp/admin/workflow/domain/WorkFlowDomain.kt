@@ -100,37 +100,43 @@ constructor(private val logAdapter: LogAdapter,
      * @return 转换后对象
      */
     private fun actToVo(historicActivityInstance: HistoricActivityInstance, businessKey: String): ProcessHistoryActivityVo =
-            historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id).let { historicDetailQuery ->
-                val params: MutableMap<String, Any> = mutableMapOf()
-                val localParams: MutableMap<String, Any> = mutableMapOf()
-                historicDetailQuery.list()
-                        .filter { historicDetail -> CommonTools.isNullStr(historicDetail.taskId) }
-                        .forEach { historicDetail ->
-                            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
+            historyService.createHistoricDetailQuery().activityInstanceId(historicActivityInstance.id).variableUpdates().orderByTime().asc().list()
+                    .let { historicDetailList ->
+                        val params: MutableMap<String, Any> = mutableMapOf()
+                        val localParams: MutableMap<String, Any> = mutableMapOf()
+                        historicDetailList.forEach { historicDetail ->
+                            val name = (historicDetail as HistoricVariableUpdate).variableName
+                            if (CommonTools.isNullStr(historicDetail.taskId)) {
+                                if (params.containsKey(name) && WorkFlowParamKey.comment == name) {
+                                    params[name] = "${params[name].toString()}\n------\n${historicDetail.value}"
+                                } else {
+                                    params[name] = historicDetail.value
+                                }
+                            } else {
+                                if (historicDetail.taskId == historicActivityInstance.taskId) {
+                                    localParams[name] = historicDetail.value
+                                }
+                            }
                         }
-                historicDetailQuery.taskId(historicActivityInstance.taskId).list()
-                        .forEach { historicDetail ->
-                            params[(historicDetail as HistoricVariableUpdate).variableName] = historicDetail.value
-                        }
-                historyService.createHistoricTaskInstanceQuery().taskId(historicActivityInstance.taskId).singleResult()?.let {
-                    ProcessHistoryActivityVo(
-                            processInstanceId = historicActivityInstance.processInstanceId,
-                            activityId = historicActivityInstance.activityId,
-                            activityName = historicActivityInstance.activityName,
-                            taskId = historicActivityInstance.taskId,
-                            taskDefinitionKey = it.taskDefinitionKey,
-                            executionId = historicActivityInstance.executionId,
-                            businessKey = businessKey,
-                            user = getUserById(historicActivityInstance.assignee),
-                            pass = params[WorkFlowParamKey.pass] as Boolean,
-                            comment = params[WorkFlowParamKey.comment].toString(),
-                            params = params,
-                            localParams = localParams,
-                            startTime = historicActivityInstance.startTime.time,
-                            endTime = historicActivityInstance.endTime?.time
-                    )
-                } ?: throw ServerException("获取任务信息失败！")
-            }
+                        historyService.createHistoricTaskInstanceQuery().taskId(historicActivityInstance.taskId).singleResult()?.let {
+                            ProcessHistoryActivityVo(
+                                    processInstanceId = historicActivityInstance.processInstanceId,
+                                    activityId = historicActivityInstance.activityId,
+                                    activityName = historicActivityInstance.activityName,
+                                    taskId = historicActivityInstance.taskId,
+                                    taskDefinitionKey = it.taskDefinitionKey,
+                                    executionId = historicActivityInstance.executionId,
+                                    businessKey = businessKey,
+                                    user = getUserById(historicActivityInstance.assignee),
+                                    pass = params[WorkFlowParamKey.pass]?.let { pass -> pass as Boolean },
+                                    comment = params[WorkFlowParamKey.comment]?.toString(),
+                                    params = params,
+                                    localParams = localParams,
+                                    startTime = historicActivityInstance.startTime.time,
+                                    endTime = historicActivityInstance.endTime?.time
+                            )
+                        } ?: throw ServerException("获取任务信息失败！")
+                    }
 
     /**
      * 流程实例转换
@@ -397,17 +403,24 @@ constructor(private val logAdapter: LogAdapter,
                     params[key] = value
                 }
             }
-            var comment = processHandlingPo.comment
-            if (processHandlingPo.pass!!) {
-                if (CommonTools.isNullStr(comment)) {
-                    comment = "通过"
+            val comment = if (processHandlingPo.pass!!) {
+                if (CommonTools.isNullStr(processHandlingPo.comment)) {
+                    "通过"
+                } else {
+                    processHandlingPo.comment!!
                 }
             } else {
-                if (CommonTools.isNullStr(comment)) {
-                    comment = "不通过"
+                if (CommonTools.isNullStr(processHandlingPo.comment)) {
+                    "不通过"
+                } else {
+                    processHandlingPo.comment!!
                 }
             }
-            params[WorkFlowParamKey.comment] = comment!!
+            params[WorkFlowParamKey.comment] = if (task.delegationState == DelegationState.PENDING) {
+                (commonOauthServer.findUserById(userId).name ?: "") + ":" + comment
+            } else {
+                comment
+            }
             params[WorkFlowParamKey.pass] = processHandlingPo.pass!!
             runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
             if (task.delegationState == DelegationState.PENDING) {
@@ -604,6 +617,7 @@ constructor(private val logAdapter: LogAdapter,
                         .orderByHistoricActivityInstanceStartTime().asc().list()
                         .filter { historicActivityInstance -> !CommonTools.isNullStr(historicActivityInstance.taskId) }
                         .map { historicActivityInstance -> actToVo(historicActivityInstance, historicProcessInstance.businessKey) }
+                        .filter { processHistoryActivityVo -> !CommonTools.isNullStr(processHistoryActivityVo.comment) }
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
