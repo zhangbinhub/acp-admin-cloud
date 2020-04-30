@@ -270,7 +270,7 @@ constructor(private val logAdapter: LogAdapter,
     fun findTaskList(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessTaskVo> =
             try {
                 val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
-                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
+                val maxResult = processQueryPo.queryParam!!.pageSize!!
                 commonOauthServer.userInfo()?.let { userInfo ->
                     val taskQuery = taskService.createTaskQuery().or()
                             .taskCandidateGroupIn(userInfo.roleSet.map { role -> role.code }.toList())
@@ -492,19 +492,7 @@ constructor(private val logAdapter: LogAdapter,
                                 pageSize = processQueryPo.queryParam!!.pageSize!!.toLong(),
                                 totalElements = it.totalElements,
                                 content = it.content.map { instance ->
-                                    val processInstance = runtimeService.createProcessInstanceQuery()
-                                            .processInstanceId(instance.processInstanceId).singleResult()
-                                    if (processInstance == null) {
-                                        val historyInstance = historyService.createHistoricProcessInstanceQuery()
-                                                .processInstanceId(instance.processInstanceId).singleResult()
-                                        if (historyInstance != null) {
-                                            instanceToVo(instance)
-                                        } else {
-                                            throw ServerException("流程实例对象转换失败，找不到对应的实例信息【${instance.processInstanceId}】")
-                                        }
-                                    } else {
-                                        instanceToVo(instance)
-                                    }
+                                    findProcessInstance(instance.processInstanceId)
                                 }
                         )
                     }
@@ -521,7 +509,7 @@ constructor(private val logAdapter: LogAdapter,
     fun findProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
             try {
                 val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
-                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
+                val maxResult = processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = runtimeService.createProcessInstanceQuery()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
                     processInstanceQuery.processDefinitionKeys(processQueryPo.processDefinitionKeys!!.toSet())
@@ -563,7 +551,7 @@ constructor(private val logAdapter: LogAdapter,
     fun findHistoryProcessInstance(processQueryPo: ProcessQueryPo): CustomerQueryPageVo<ProcessInstanceVo> =
             try {
                 val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
-                val maxResult = firstResult + processQueryPo.queryParam!!.pageSize!!
+                val maxResult = processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
                     processInstanceQuery.processDefinitionKeyIn(processQueryPo.processDefinitionKeys!!)
