@@ -37,7 +37,7 @@ data class ProcessHistoryActivityVo(
         var comment: String? = null,
 
         @ApiModelProperty(value = "审批是否通过", position = 10)
-        var pass: Boolean = false,
+        var pass: Boolean? = null,
 
         @ApiModelProperty(value = "流程自定义参数", position = 11)
         var params: MutableMap<String, Any> = mutableMapOf(),
