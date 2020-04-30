@@ -49,5 +49,5 @@ data class ProcessHistoryActivityVo(
         var startTime: Long = 0,
 
         @ApiModelProperty(value = "结束时间", position = 14)
-        var endTime: Long = 0
+        var endTime: Long? = null
 )

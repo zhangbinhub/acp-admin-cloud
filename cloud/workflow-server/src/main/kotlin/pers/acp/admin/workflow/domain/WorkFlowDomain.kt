@@ -127,7 +127,7 @@ constructor(private val logAdapter: LogAdapter,
                             params = params,
                             localParams = localParams,
                             startTime = historicActivityInstance.startTime.time,
-                            endTime = historicActivityInstance.endTime.time
+                            endTime = historicActivityInstance.endTime?.time
                     )
                 } ?: throw ServerException("获取任务信息失败！")
             }
@@ -600,8 +600,8 @@ constructor(private val logAdapter: LogAdapter,
                     logAdapter.error("流程实例【$processInstanceId】不存在")
                     throw ServerException("流程实例不存在！")
                 }
-                historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).finished()
-                        .orderByHistoricActivityInstanceEndTime().asc().list()
+                historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId)
+                        .orderByHistoricActivityInstanceStartTime().asc().list()
                         .filter { historicActivityInstance -> !CommonTools.isNullStr(historicActivityInstance.taskId) }
                         .map { historicActivityInstance -> actToVo(historicActivityInstance, historicProcessInstance.businessKey) }
             } catch (e: Exception) {
