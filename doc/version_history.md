@@ -2,7 +2,7 @@
 ##### v4.1.5
 > - Global And All Server
 >   - [Upgrade] 升级 Gradle 至 6.3
->   - [Upgrade] 升级 Kotlin 至 1.3.71
+>   - [Upgrade] 升级 Kotlin 至 1.3.72
 >   - [Upgrade] 修改 nacos 命名空间id
 >   - [Upgrade] feign 关闭 sentinel
 >   - [Upgrade] sentinel 配置移入配置中心全局配置中
