@@ -2,7 +2,6 @@ package pers.acp.admin.common.feign
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.api.CommonPath
@@ -61,11 +60,25 @@ interface CommonOauthServer {
     fun orgList(): List<OrganizationVo>
 
     /**
-     * 获取所属机构及其所有子机构列表
+     * 获取所属机构及其所有子机构列表（所属机构）
      */
     @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun currAndAllChildrenOrgList(): List<OrganizationVo>
+    fun currAndAllChildrenForOrg(): List<OrganizationVo>
+
+    /**
+     * 获取所属机构及其所有子机构列表（管理机构）
+     */
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currAndAllChildrenMngOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenForMngOrg(): List<OrganizationVo>
+
+    /**
+     * 获取所属机构及其所有子机构列表（所有机构）
+     */
+    @GetMapping(value = [CommonPath.innerBasePath + OauthApi.currAndAllChildrenAllOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenForAllOrg(): List<OrganizationVo>
 
     /**
      * 获取用户详细信息

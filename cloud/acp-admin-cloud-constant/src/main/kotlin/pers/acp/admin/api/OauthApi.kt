@@ -10,6 +10,8 @@ object OauthApi {
     const val modifiableUser = "/mod-user-list"
     const val modifiableOrg = "/mod-org-list"
     const val currAndAllChildrenOrg = "/org-list"
+    const val currAndAllChildrenMngOrg = "/mng-org-list"
+    const val currAndAllChildrenAllOrg = "/all-org-list"
     const val currMenu = "/menu-list"
     const val currModuleFunc = "/module-func-list"
     const val appConfig = "/app"

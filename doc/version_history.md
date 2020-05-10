@@ -9,7 +9,7 @@
 >   - [Upgrade] 注释 sentinel nacos 数据源配置，待 sentinel 支持 nacos 1.2+ 动态数据源时再开启
 >   - [Upgrade] security.oauth2.resource.token-info-uri 指向 oauth-server 新的内部接口 /open/inner/check-token，同时去除 security.client.client-id 和 security.client.client-secret 配置
 > - acp-admin-cloud-constant
->   - [Upgrade] OauthApi 增加 token 验证
+>   - [Upgrade] OauthApi 增加 token 验证、获取可管理机构、获取所有机构（所属机构 and 管理机构）
 >   - [Upgrade] 修改流程实例对象属性名
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 升级核心库至 6.4.3
@@ -17,6 +17,7 @@
 >   - [Upgrade] 修改bus事件消息
 >   - [Upgrade] BaseController 增加权限检查方法
 >   - [Upgrade] QueryParam 增加分页查询参数校验
+>   - [Upgrade] CommonOauthServer 中增加获取可管理机构、获取所有机构（所属机构 and 管理机构）
 >   - [Upgrade] 升级依赖项
 >     - Spring Boot 2.2.6.RELEASE
 >     - Spring Cloud Hoxton.SR4
@@ -31,7 +32,7 @@
 >   - [Upgrade] 增加用户查询接口，修改接口文档
 >   - [Upgrade] 增加用户权限检查接口
 >   - [Upgrade] 增加内部调用接口，判断用户是否具有指定的功能权限
->   - [Upgrade] 增加内部调用接口，获取机构及其所有子机构列表
+>   - [Upgrade] 增加内部调用接口，获取机构及其所有子机构列表、获取可管理机构、获取所有机构（所属机构 and 管理机构）
 >   - [Upgrade] 增加内部调用接口，token 验证
 > - workflow-server 
 >   - [Upgrade] 增加内部调用接口，流程启动、流程处理、待办任务获取

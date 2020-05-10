@@ -35,9 +35,21 @@ constructor(logAdapter: LogAdapter,
                 }
             }
 
-    @ApiOperation(value = "获取所属机构及其所有子机构列表")
+    @ApiOperation(value = "获取所属机构及其所有子机构列表（所属机构）")
     @GetMapping(value = [OauthApi.currAndAllChildrenOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun currAndAllChildrenOrgList(user: OAuth2Authentication): ResponseEntity<List<OrganizationVo>> =
-            ResponseEntity.ok(listToVo(organizationDomain.getCurrAndAllChildrenOrgList(user.name)))
+    fun currAndAllChildrenForOrg(user: OAuth2Authentication): ResponseEntity<List<OrganizationVo>> =
+            ResponseEntity.ok(listToVo(organizationDomain.getCurrAndAllChildrenForOrg(user.name)))
+
+    @ApiOperation(value = "获取所属机构及其所有子机构列表（管理机构）")
+    @GetMapping(value = [OauthApi.currAndAllChildrenMngOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenForMngOrg(user: OAuth2Authentication): ResponseEntity<List<OrganizationVo>> =
+            ResponseEntity.ok(listToVo(organizationDomain.getCurrAndAllChildrenForMngOrg(user.name)))
+
+    @ApiOperation(value = "获取所属机构及其所有子机构列表（所有机构）")
+    @GetMapping(value = [OauthApi.currAndAllChildrenAllOrg], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun currAndAllChildrenForAllOrg(user: OAuth2Authentication): ResponseEntity<List<OrganizationVo>> =
+            ResponseEntity.ok(listToVo(organizationDomain.getCurrAndAllChildrenForAllOrg(user.name)))
 }

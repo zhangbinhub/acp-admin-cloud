@@ -61,7 +61,21 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 }
 
                 @Throws(ServerException::class)
-                override fun currAndAllChildrenOrgList(): List<OrganizationVo> {
+                override fun currAndAllChildrenForOrg(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
+                override fun currAndAllChildrenForMngOrg(): List<OrganizationVo> {
+                    val errMsg = "获取机构列表失败"
+                    logAdapter.error(errMsg)
+                    return listOf()
+                }
+
+                @Throws(ServerException::class)
+                override fun currAndAllChildrenForAllOrg(): List<OrganizationVo> {
                     val errMsg = "获取机构列表失败"
                     logAdapter.error(errMsg)
                     return listOf()
