@@ -115,9 +115,6 @@ allprojects {
         }
     }
 
-    task release(type: Copy, dependsOn: [build, copyJar]) {
-    }
-
     jar {
         dependsOn(copyJar)
         manifest {
@@ -202,4 +199,18 @@ allprojects {
         }
     }
 
+    task release(dependsOn: [build, copyJar]) {
+        doLast {
+            if (project.hasProperty("active") && project.active != null && project.active != "") {
+                println("$project.name release finished: active=$project.active")
+                File bootStrapFile = new File("$rootDir/release/$project.name/bootstrap.yaml")
+                if (bootStrapFile.exists()) {
+                    def text = bootStrapFile.text.replaceAll(" {4}active: (?!\\\$).*", "    active: $project.active")
+                    bootStrapFile.withPrintWriter { printWriter ->
+                        printWriter.println(text)
+                    }
+                }
+            }
+        }
+    }
 }

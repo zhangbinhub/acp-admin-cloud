@@ -1,4 +1,7 @@
 ## 版本更新记录
+##### v4.1.x
+> - Global And All Server
+>   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
 ##### v4.1.5
 > - Global And All Server
 >   - [Upgrade] 升级 Gradle 至 6.3
