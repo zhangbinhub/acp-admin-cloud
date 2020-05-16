@@ -3,6 +3,7 @@
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
 > - acp-admin-cloud-dependencies
+>   - [Upgrade] 删除 Acp 的 jar 包，改为依赖 pers.acp.cloud:acp-spring-cloud-starter
 >   - [Upgrade] 升级依赖
 >     - Spring Boot 2.2.7.RELEASE
 >     - Spring Boot Admin 2.2.3
