@@ -1,6 +1,6 @@
 group "${group}.cloud"
 versions += [
-        boot_admin: "2.2.2"
+        boot_admin: "2.2.3"
 ]
 buildscript {
     dependencies {
