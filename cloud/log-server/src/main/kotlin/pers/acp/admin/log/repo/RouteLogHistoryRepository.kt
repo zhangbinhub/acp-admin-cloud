@@ -11,7 +11,7 @@ import pers.acp.admin.log.entity.RouteLogHistory
  * @since JDK 11
  */
 interface RouteLogHistoryRepository : BaseRepository<RouteLogHistory, String> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from RouteLogHistory where requestTime<:time")
     fun deleteAllByRequestTimeLessThan(@Param("time") time: Long)
 }
