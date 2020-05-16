@@ -8,6 +8,11 @@
 >     - Spring Boot 2.2.7.RELEASE
 >     - Spring Boot Admin 2.2.3
 >     - Acp 6.4.4
+> - log-server
+>   - [Upgrade] 历史日志记录删除时，使用如下注解
+>   ```
+>   @Modifying(flushAutomatically = true, clearAutomatically = true)
+>   ```
 ##### v4.1.5
 > - Global And All Server
 >   - [Upgrade] 升级 Gradle 至 6.3

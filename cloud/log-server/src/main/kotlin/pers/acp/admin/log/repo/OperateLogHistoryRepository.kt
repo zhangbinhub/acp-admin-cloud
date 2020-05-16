@@ -11,7 +11,7 @@ import pers.acp.admin.log.entity.OperateLogHistory
  * @since JDK 11
  */
 interface OperateLogHistoryRepository : BaseRepository<OperateLogHistory, String> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from OperateLogHistory where requestTime<:time")
     fun deleteAllByRequestTimeLessThan(@Param("time") time: Long)
 }
