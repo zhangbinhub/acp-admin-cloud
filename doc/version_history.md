@@ -1,7 +1,12 @@
 ## 版本更新记录
-##### v4.1.x
+##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
+> - acp-admin-cloud-dependencies
+>   - [Upgrade] 升级依赖
+>     - Spring Boot 2.2.7.RELEASE
+>     - Spring Boot Admin 2.2.3
+>     - Acp 6.4.4
 ##### v4.1.5
 > - Global And All Server
 >   - [Upgrade] 升级 Gradle 至 6.3

@@ -31,7 +31,7 @@ spring:
             group: ${spring.profiles.active}
             refresh: true
 info:
-  version: 4.1.5
+  version: 4.1.6
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
