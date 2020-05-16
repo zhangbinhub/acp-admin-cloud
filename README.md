@@ -100,6 +100,10 @@ gradle全局参数：
 ### （二）自定义任务
 - clearPj 清理所有输出文件
 - release 编译、打包并输出
+  - 如需编译打包对应环境，命令中使用参数 active，例如
+  ```
+  gradlew project:release -Pactive=test
+  ```
 ```groovy
 ext {
     mavenUploadUrl = "http://localhost:8081/nexus/content/repositories/thirdparty"
