@@ -1,7 +1,6 @@
 package pers.acp.admin.oauth.domain
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.constant.RoleCode
@@ -28,14 +27,7 @@ constructor(userRepository: UserRepository,
             private val moduleFuncRepository: ModuleFuncRepository) : OauthBaseDomain(userRepository) {
 
     @Throws(ServerException::class)
-    fun getRoleList(user: OAuth2Authentication): MutableList<Role> {
-        val currUser = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
-        return if (isSuper(currUser)) {
-            roleRepository.findAllByOrderBySortAsc()
-        } else {
-            roleRepository.findByAppIdOrderBySortAsc(user.oAuth2Request.clientId)
-        }
-    }
+    fun getRoleList(): MutableList<Role> = roleRepository.findAllByOrderBySortAsc()
 
     @Throws(ServerException::class)
     fun getRoleListByAppId(loginNo: String, appId: String): List<Role> {

@@ -3,7 +3,9 @@ package pers.acp.admin.oauth.base
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.constant.RoleCode
+import pers.acp.admin.oauth.entity.Organization
 import pers.acp.admin.oauth.entity.User
+import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.UserRepository
 
 /**
@@ -23,7 +25,7 @@ abstract class OauthBaseDomain(protected val userRepository: UserRepository) : B
      */
     protected fun isSuper(user: User): Boolean =
             user.roleSet.map { it.code }.toList().contains(RoleCode.SUPER) ||
-                    user.roleSet.map { it.levels }.toIntArray().min() == 0
+                    (user.roleSet.isNotEmpty() && user.roleSet.map { it.levels }.toIntArray().min() == 0)
 
     /**
      * 获取指定用户所属角色中最高级别
@@ -77,4 +79,40 @@ abstract class OauthBaseDomain(protected val userRepository: UserRepository) : B
         return result
     }
 
+    protected fun getAllOrgList(organizationRepository: OrganizationRepository,
+                                organizationList: MutableList<Organization>): MutableList<Organization> =
+            mutableListOf<Organization>().let {
+                it.addAll(organizationList)
+                var children = getChildrenOrgList(organizationRepository, it)
+                while (children.isNotEmpty()) {
+                    it.addAll(children)
+                    children = getChildrenOrgList(organizationRepository, children)
+                }
+                getOrgListDistinct(it)
+            }
+
+    /**
+     * 获取指定机构集合的所有子机构
+     */
+    private fun getChildrenOrgList(organizationRepository: OrganizationRepository,
+                                   organizationList: MutableList<Organization>): MutableList<Organization> =
+            mutableListOf<Organization>().apply {
+                organizationList.map { org -> org.id }.toMutableList().let {
+                    this.addAll(organizationRepository.findByParentIdIn(it))
+                }
+            }
+
+    /**
+     * Organization集合去重，返回List
+     */
+    private fun getOrgListDistinct(organizations: MutableList<Organization>): MutableList<Organization> =
+            mutableListOf<Organization>().apply {
+                val orgIdList = mutableListOf<String>()
+                organizations.forEach { organization ->
+                    if (!orgIdList.contains(organization.id)) {
+                        this.add(organization)
+                        orgIdList.add(organization.id)
+                    }
+                }
+            }
 }

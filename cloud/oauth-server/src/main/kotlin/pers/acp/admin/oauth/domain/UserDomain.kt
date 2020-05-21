@@ -45,12 +45,16 @@ constructor(userRepository: UserRepository,
             if (currUserInfo.levels >= userPo.levels!!) {
                 throw ServerException("不能编辑级别比自身大的用户信息")
             }
-            currUserInfo.organizationMngSet.forEach {
-                if (!userPo.orgIds.contains(it.id)) {
-                    throw ServerException("没有权限编辑机构【${it.name}】下的用户，请联系系统管理员")
+            getAllOrgList(organizationRepository, currUserInfo.organizationMngSet.toMutableList()).map { it.id }.let {
+                userPo.orgIds.forEach { orgId ->
+                    if (!it.contains(orgId)) {
+                        throw ServerException("没有权限编辑指定机构下的用户，请联系系统管理员")
+                    }
                 }
-                if (!userPo.orgMngIds.contains(it.id)) {
-                    throw ServerException("没有权限编辑机构【${it.name}】下的用户，请联系系统管理员")
+                userPo.orgMngIds.forEach { orgId ->
+                    if (!it.contains(orgId)) {
+                        throw ServerException("没有权限编辑指定机构下的用户，请联系系统管理员")
+                    }
                 }
             }
             val roleMinLevel = getRoleMinLevel(currUserInfo)

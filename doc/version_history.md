@@ -8,6 +8,11 @@
 >     - Spring Boot 2.2.7.RELEASE
 >     - Spring Boot Admin 2.2.3
 >     - Acp 6.4.4
+> - oauth-server
+>   - [Upgrade] 优化超级管理员校验
+>   - [Upgrade] 优化可编辑机构校验
+>   - [Upgrade] 调整应用列表接口数据，返回所有应用列表
+>   - [Upgrade] 调整角色列表接口数据，返回所有角色列表
 > - log-server
 >   - [Upgrade] 历史日志记录删除时，使用如下注解
 >   ```

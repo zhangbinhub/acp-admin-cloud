@@ -25,7 +25,9 @@ import javax.persistence.criteria.Predicate
 class ApplicationDomain @Autowired
 constructor(userRepository: UserRepository, private val applicationRepository: ApplicationRepository) : OauthBaseDomain(userRepository) {
 
-    fun getAppList(user: OAuth2Authentication): MutableList<Application> {
+    fun getAppList(): MutableList<Application> = applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
+
+    fun getOwnAppList(user: OAuth2Authentication): MutableList<Application> {
         val currUserInfo = findCurrUserInfo(user.name) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(currUserInfo)) {
             applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
