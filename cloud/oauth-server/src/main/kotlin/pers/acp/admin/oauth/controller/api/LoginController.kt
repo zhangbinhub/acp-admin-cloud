@@ -55,7 +55,7 @@ constructor(private val logAdapter: LogAdapter,
     fun getOnlineInfo(user: OAuth2Authentication): ResponseEntity<List<OnlineInfoVo>> =
             try {
                 mutableListOf<OnlineInfoVo>().apply {
-                    applicationDomain.getAppList(user).forEach {
+                    applicationDomain.getOwnAppList(user).forEach {
                         this.add(OnlineInfoVo(
                                 appId = it.id,
                                 appName = it.appName,
@@ -81,7 +81,7 @@ constructor(private val logAdapter: LogAdapter,
             try {
                 mutableListOf<OnlineInfoVo>().apply {
                     val userInfo = userDomain.getUserInfo(userId) ?: throw ServerException("找不到该用户信息")
-                    applicationDomain.getAppList(user).forEach { item ->
+                    applicationDomain.getOwnAppList(user).forEach { item ->
                         this.add(OnlineInfoVo(
                                 appId = item.id,
                                 appName = item.appName,

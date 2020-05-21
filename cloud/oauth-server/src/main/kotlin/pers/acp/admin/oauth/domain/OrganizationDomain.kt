@@ -42,41 +42,6 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 }
             }
 
-    private fun getAllOrgList(organizationList: MutableList<Organization>): MutableList<Organization> =
-            mutableListOf<Organization>().let {
-                it.addAll(organizationList)
-                var children = getChildrenOrgList(it)
-                while (children.isNotEmpty()) {
-                    it.addAll(children)
-                    children = getChildrenOrgList(children)
-                }
-                getOrgListDistinct(it)
-            }
-
-    /**
-     * 获取指定机构集合的所有子机构
-     */
-    private fun getChildrenOrgList(organizationList: MutableList<Organization>): MutableList<Organization> =
-            mutableListOf<Organization>().apply {
-                organizationList.map { org -> org.id }.toMutableList().let {
-                    this.addAll(organizationRepository.findByParentIdIn(it))
-                }
-            }
-
-    /**
-     * Organization集合去重，返回List
-     */
-    private fun getOrgListDistinct(organizations: MutableList<Organization>): MutableList<Organization> =
-            mutableListOf<Organization>().apply {
-                val orgIdList = mutableListOf<String>()
-                organizations.forEach { organization ->
-                    if (!orgIdList.contains(organization.id)) {
-                        this.add(organization)
-                        orgIdList.add(organization.id)
-                    }
-                }
-            }
-
     private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
             organizationRepository.save(organization.copy(
                     name = organizationPo.name!!,
@@ -96,7 +61,8 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
      * @return true|false
      */
     private fun isNotPermit(user: User, vararg orgIds: String): Boolean =
-            !isSuper(user) && !user.organizationMngSet.map { it.id }.toMutableList().containsAll(mutableListOf(*orgIds))
+            !isSuper(user) && !getAllOrgList(organizationRepository, user.organizationMngSet.toMutableList())
+                    .map { it.id }.toMutableList().containsAll(mutableListOf(*orgIds))
 
     /**
      * 是否有编辑权限
@@ -155,13 +121,13 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Throws(ServerException::class)
     fun getCurrAndAllChildrenForOrg(loginNo: String): MutableList<Organization> =
             findCurrUserInfo(loginNo)?.let {
-                getAllOrgList(it.organizationSet.toMutableList())
+                getAllOrgList(organizationRepository, it.organizationSet.toMutableList())
             } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getCurrAndAllChildrenForMngOrg(loginNo: String): MutableList<Organization> =
             findCurrUserInfo(loginNo)?.let {
-                getAllOrgList(it.organizationMngSet.toMutableList())
+                getAllOrgList(organizationRepository, it.organizationMngSet.toMutableList())
             } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
@@ -170,7 +136,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 mutableListOf<Organization>().let { list ->
                     list.addAll(user.organizationSet.toMutableList())
                     list.addAll(user.organizationMngSet.toMutableList())
-                    getAllOrgList(list)
+                    getAllOrgList(organizationRepository, list)
                 }
             } ?: throw ServerException("无法获取当前用户信息")
 

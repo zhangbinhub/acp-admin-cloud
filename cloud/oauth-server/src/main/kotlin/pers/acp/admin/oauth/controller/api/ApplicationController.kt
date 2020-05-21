@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -98,7 +97,7 @@ constructor(logAdapter: LogAdapter,
     @ApiOperation(value = "获取应用列表", notes = "查询所有应用列表")
     @PreAuthorize(BaseExpression.sysConfig)
     @GetMapping(value = [OauthApi.appConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun appList(user: OAuth2Authentication): ResponseEntity<List<Application>> = ResponseEntity.ok(applicationDomain.getAppList(user))
+    fun appList(): ResponseEntity<List<Application>> = ResponseEntity.ok(applicationDomain.getAppList())
 
     @ApiOperation(value = "更新应用密钥")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
