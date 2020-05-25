@@ -1,3 +1,5 @@
+info:
+  api-document: http://${server.address}:${server.port}/doc.html
 # ===============================
 # = Log To File Config
 # ===============================
