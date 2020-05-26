@@ -16,6 +16,7 @@ import javax.persistence.*
     Index(columnList = "userId,startTime"),
     Index(columnList = "userId,startUserId")
 ])
+@org.hibernate.annotations.Table(appliesTo = "t_my_process_instance", comment = "我处理过的流程实例")
 @ApiModel("我处理过的流程实例")
 data class MyProcessInstance(
         @Id

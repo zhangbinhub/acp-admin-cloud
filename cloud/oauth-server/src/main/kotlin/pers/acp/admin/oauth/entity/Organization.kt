@@ -19,6 +19,7 @@ import javax.persistence.*
     Index(columnList = "area"),
     Index(columnList = "code"),
     Index(columnList = "parentId")])
+@org.hibernate.annotations.Table(appliesTo = "t_organization", comment = "机构信息")
 @ApiModel("机构信息")
 data class Organization(
         @Id

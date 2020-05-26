@@ -12,6 +12,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_runtimeconfig", indexes = [Index(columnList = "name,enabled")])
+@org.hibernate.annotations.Table(appliesTo = "t_runtimeconfig", comment = "运行配置")
 @ApiModel("运行配置")
 data class RuntimeConfig(
         @Id

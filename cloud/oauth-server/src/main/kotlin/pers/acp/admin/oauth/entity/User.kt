@@ -15,6 +15,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_user")
+@org.hibernate.annotations.Table(appliesTo = "t_user", comment = "用户信息")
 @ApiModel("用户信息")
 data class User(
         @Id

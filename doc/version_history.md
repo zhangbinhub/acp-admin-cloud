@@ -13,7 +13,13 @@
 >   - [Upgrade] 优化可编辑机构校验
 >   - [Upgrade] 调整应用列表接口数据，返回所有应用列表
 >   - [Upgrade] 调整角色列表接口数据，返回所有角色列表
+>   - [Upgrade] entity 增加数据库表注释
+> - route-server
+>   - [Upgrade] entity 增加数据库表注释
+> - workflow-server
+>   - [Upgrade] entity 增加数据库表注释
 > - log-server
+>   - [Upgrade] entity 增加数据库表注释
 >   - [Upgrade] 历史日志记录删除时，使用如下注解
 >   ```
 >   @Modifying(flushAutomatically = true, clearAutomatically = true)

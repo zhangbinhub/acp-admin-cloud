@@ -16,6 +16,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_module_func", indexes = [Index(columnList = "code,appId")])
+@org.hibernate.annotations.Table(appliesTo = "t_module_func", comment = "模块功能信息")
 @ApiModel("模块功能信息")
 data class ModuleFunc(
         @Id
