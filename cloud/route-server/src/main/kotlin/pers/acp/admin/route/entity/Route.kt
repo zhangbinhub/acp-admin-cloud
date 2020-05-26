@@ -12,6 +12,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_gateway_route")
+@org.hibernate.annotations.Table(appliesTo = "t_gateway_route", comment = "网关路由配置")
 @ApiModel("网关路由配置")
 data class Route(
         @Id

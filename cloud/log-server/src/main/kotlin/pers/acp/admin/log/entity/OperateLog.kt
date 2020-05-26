@@ -15,6 +15,7 @@ import javax.persistence.*
 @Table(name = "t_log_operate",
         uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
         indexes = [Index(columnList = "requestTime")])
+@org.hibernate.annotations.Table(appliesTo = "t_log_operate", comment = "操作日志")
 @ApiModel("操作日志")
 data class OperateLog(
         @Id

@@ -22,6 +22,7 @@ import javax.persistence.*
             Index(columnList = "clientId,loginDate"),
             Index(columnList = "userId,clientId,loginDate")
         ])
+@org.hibernate.annotations.Table(appliesTo = "t_log_login", comment = "登录日志")
 @ApiModel("登录日志")
 data class LoginLog(
         @Id

@@ -13,6 +13,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_application")
+@org.hibernate.annotations.Table(appliesTo = "t_application", comment = "应用信息")
 @ApiModel("应用信息")
 data class Application(
         @Id

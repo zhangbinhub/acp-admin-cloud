@@ -16,6 +16,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_menu")
+@org.hibernate.annotations.Table(appliesTo = "t_menu", comment = "菜单信息")
 @ApiModel("菜单信息")
 data class Menu(
         @Id

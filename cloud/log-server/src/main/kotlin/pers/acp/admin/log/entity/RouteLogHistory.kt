@@ -15,6 +15,7 @@ import javax.persistence.*
 @Table(name = "t_log_gateway_route_history",
         uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
         indexes = [Index(columnList = "requestTime")])
+@org.hibernate.annotations.Table(appliesTo = "t_log_gateway_route_history", comment = "网关路由日志历史表")
 @ApiModel("网关路由日志")
 data class RouteLogHistory(
         @Id
