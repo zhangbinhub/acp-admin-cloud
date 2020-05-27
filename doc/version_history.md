@@ -1,4 +1,10 @@
 ## 版本更新记录
+##### v4.1.7
+> - acp-admin-cloud-dependencies
+>   - [Upgrade] 升级依赖
+>     - Acp 6.4.5
+> - oauth-server
+>   - [Upgrade] 使用新的 Sha256 工具类
 ##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
