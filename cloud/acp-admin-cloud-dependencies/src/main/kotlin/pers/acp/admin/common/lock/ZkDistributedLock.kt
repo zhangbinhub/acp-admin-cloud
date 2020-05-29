@@ -26,22 +26,37 @@ class ZkDistributedLock(private val curatorFramework: CuratorFramework,
      * @return true|false 是否成功获取锁
      */
     override fun getLock(lockId: String, clientId: String, timeOut: Long): Boolean {
-        val lock = InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
-        return try {
-            val result = lock.acquire(timeOut, TimeUnit.MILLISECONDS)
-            if (result) {
-                distributedLockMap[lockId + "_" + clientId] = lock
+        val key = lockId + "_" + clientId
+        (distributedLockMap[key]?.let { lock ->
+            if (lock.isOwnedByCurrentThread) {
+                lock
+            } else {
+                InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
             }
-            return result
-        } catch (e: Exception) {
-            logAdapter.error(e.message, e)
-            false
-        }
+        } ?: InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId"))
+                .let { lock ->
+                    return try {
+                        val result = lock.acquire(timeOut, TimeUnit.MILLISECONDS)
+                        if (result) {
+                            distributedLockMap[key] = lock
+                        }
+                        return result
+                    } catch (e: Exception) {
+                        logAdapter.error(e.message, e)
+                        false
+                    }
+                }
     }
 
     override fun releaseLock(lockId: String, clientId: String) {
+        val key = lockId + "_" + clientId
         try {
-            distributedLockMap.remove(lockId + "_" + clientId)?.release()
+            distributedLockMap[key]?.let { lock ->
+                lock.release()
+                if (!lock.isAcquiredInThisProcess) {
+                    distributedLockMap.remove(key)
+                }
+            }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
         }

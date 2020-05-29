@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.1.7
 > - acp-admin-cloud-dependencies
+>   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 > - oauth-server
