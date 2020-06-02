@@ -1,7 +1,8 @@
 server:
   tomcat:
-    max-threads: 1000
     uri-encoding: UTF-8
+    threads:
+      max: 1000
 spring:
   profiles:
     active: dev

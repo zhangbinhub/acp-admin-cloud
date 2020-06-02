@@ -1,9 +1,17 @@
 ## 版本更新记录
 ##### v4.1.7
+> - Global
+>   - [Upgrade] server.tomcat.max-threads 修改为 server.tomcat.threads.max
+>   - [Upgrade] 更新 atom-server-common-dev.yaml
+>   - [Upgrade] 更新 nacos_config_export.zip
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
+>     - Spring Boot 2.3.0.RELEASE
+>     - Spring Cloud Hoxton.SR5
+>     - jupiter 5.6.2
+>     - junit platform 1.6.2
 > - oauth-server
 >   - [Upgrade] 使用新的 Sha256 工具类
 > - workflow-server

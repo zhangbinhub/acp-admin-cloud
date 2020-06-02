@@ -5,8 +5,8 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.6](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.2.7.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Hoxton.SR4](http://projects.spring.io/spring-cloud)
+- [Spring Boot 2.3.0.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Hoxton.SR5](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.2.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.4.5](https://github.com/zhangbin1010/acp)
 
@@ -182,7 +182,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_20200412201414.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka

@@ -64,10 +64,6 @@ spring:
       max-lifetime: 480000
       idle-timeout: 300000
       read-only: false
-  data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
 # ===============================
 # = Feign Config
 # ===============================
