@@ -192,7 +192,7 @@ constructor(private val logAdapter: LogAdapter,
                             startUser = getUserById(processInstance.startUserId),
                             params = params,
                             startTime = processInstance.startTime!!.time,
-                            endTime = processInstance.endTime!!.time
+                            endTime = processInstance.endTime?.time
                     )
                 }
                 else -> {
@@ -566,6 +566,7 @@ constructor(private val logAdapter: LogAdapter,
                 val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
                 val maxResult = processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+                processInstanceQuery.finished()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
                     processInstanceQuery.processDefinitionKeyIn(processQueryPo.processDefinitionKeys!!)
                 }
