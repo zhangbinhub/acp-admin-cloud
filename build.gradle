@@ -35,6 +35,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     apply from: "$rootDir/gradle/dependencies.gradle"
+    apply from: "$rootDir/gradle/environment.gradle"
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
@@ -205,7 +206,9 @@ allprojects {
                 println("$project.name release finished: active=$project.active")
                 File bootStrapFile = new File("$rootDir/release/$project.name/bootstrap.yaml")
                 if (bootStrapFile.exists()) {
-                    def text = bootStrapFile.text.replaceAll(" {4}active: (?!\\\$).*", "    active: $project.active")
+                    def text = bootStrapFile.text
+                            .replaceAll(" {4}active: (?!\\\$).*", "    active: $project.active")
+                            .replaceAll(" {6}server-addr: (?!\\\$).*", "      server-addr: " + nacos_server_addr["$project.active"])
                     bootStrapFile.withPrintWriter { printWriter ->
                         printWriter.println(text)
                     }

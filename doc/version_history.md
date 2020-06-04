@@ -4,6 +4,8 @@
 >   - [Upgrade] server.tomcat.max-threads 修改为 server.tomcat.threads.max
 >   - [Upgrade] 更新 atom-server-common-dev.yaml
 >   - [Upgrade] 更新 nacos_config_export.zip
+>   - [Upgrade] 增加 gradle/environment.gradle 环境变量定义
+>   - [Upgrade] build.gradle 脚本中，增加环境变量替换
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
