@@ -46,7 +46,7 @@ interface WorkFlowServer {
     /**
      * 获取指定用户的待处理任务
      */
-    @GetMapping(value = [WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ProcessTaskVo
 

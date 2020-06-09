@@ -9,6 +9,7 @@
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
+>   - [Upgrade] 修复 WorkFlowServer 客户端，pendingByUser方法返回无权限的异常
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 >     - Spring Boot 2.3.0.RELEASE
