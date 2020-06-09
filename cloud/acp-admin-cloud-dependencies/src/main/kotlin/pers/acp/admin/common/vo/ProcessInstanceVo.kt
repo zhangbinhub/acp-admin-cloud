@@ -43,5 +43,8 @@ data class ProcessInstanceVo(
         var startTime: Long = 0,
 
         @ApiModelProperty(value = "结束时间", position = 12)
-        var endTime: Long? = null
+        var endTime: Long? = null,
+
+        @ApiModelProperty(value = "流程删除原因", position = 13)
+        var deleteReason: String? = null
 )

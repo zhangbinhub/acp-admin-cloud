@@ -192,7 +192,8 @@ constructor(private val logAdapter: LogAdapter,
                             startUser = getUserById(processInstance.startUserId),
                             params = params,
                             startTime = processInstance.startTime!!.time,
-                            endTime = processInstance.endTime?.time
+                            endTime = processInstance.endTime?.time,
+                            deleteReason = processInstance.deleteReason
                     )
                 }
                 else -> {
