@@ -257,7 +257,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param userId 用户ID
      */
     @Throws(ServerException::class)
-    fun findTask(processInstanceId: String, userId: String): List<ProcessTaskVo> =
+    fun findTaskList(processInstanceId: String, userId: String): List<ProcessTaskVo> =
             try {
                 taskService.createTaskQuery().processInstanceId(processInstanceId)
                         .taskAssignee(userId).list().map {

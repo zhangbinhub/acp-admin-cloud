@@ -68,7 +68,7 @@ constructor(logAdapter: LogAdapter,
     @GetMapping(value = [WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ResponseEntity<List<ProcessTaskVo>> =
-            workFlowDomain.findTask(processInstanceId, userId).let {
+            workFlowDomain.findTaskList(processInstanceId, userId).let {
                 ResponseEntity.ok(it)
             }
 }
