@@ -6,6 +6,7 @@
 >   - [Upgrade] 更新 nacos_config_export.zip
 >   - [Upgrade] 增加 gradle/environment.gradle 环境变量定义
 >   - [Upgrade] build.gradle 脚本中，增加环境变量替换
+>   - [Upgrade] 修改启动脚本
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
