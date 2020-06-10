@@ -252,7 +252,7 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     /**
-     * 获取任务信息
+     * 获取待办任务
      * @param processInstanceId 流程实例ID
      * @param userId 用户ID
      */
