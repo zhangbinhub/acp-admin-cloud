@@ -257,12 +257,12 @@ constructor(private val logAdapter: LogAdapter,
      * @param userId 用户ID
      */
     @Throws(ServerException::class)
-    fun findTask(processInstanceId: String, userId: String): ProcessTaskVo =
+    fun findTask(processInstanceId: String, userId: String): List<ProcessTaskVo> =
             try {
                 taskService.createTaskQuery().processInstanceId(processInstanceId)
-                        .taskAssignee(userId).singleResult()?.let {
+                        .taskAssignee(userId).list().map {
                             taskToVo(it)
-                        } ?: throw ServerException("找不到信息")
+                        }
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)

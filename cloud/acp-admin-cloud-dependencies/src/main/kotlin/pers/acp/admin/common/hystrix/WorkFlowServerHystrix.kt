@@ -43,10 +43,10 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<WorkFlowServer>(logAdapte
             }
 
             @Throws(ServerException::class)
-            override fun pendingByUser(processInstanceId: String, userId: String): ProcessTaskVo {
+            override fun pendingByUser(processInstanceId: String, userId: String): List<ProcessTaskVo> {
                 val errMsg = "任务获取失败"
                 logAdapter.error(errMsg)
-                throw ServerException(errMsg)
+                return listOf()
             }
 
             @Throws(ServerException::class)
@@ -99,10 +99,10 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<WorkFlowServer>(logAdapte
             }
 
             @Throws(ServerException::class)
-            override fun getHistoryActivity(processInstanceId: String): MutableList<ProcessHistoryActivityVo> {
+            override fun getHistoryActivity(processInstanceId: String): List<ProcessHistoryActivityVo> {
                 val errMsg = "获取流程处理记录失败"
                 logAdapter.error(errMsg)
-                return mutableListOf()
+                return listOf()
             }
 
             @Throws(ServerException::class)
