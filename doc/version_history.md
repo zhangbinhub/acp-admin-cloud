@@ -20,6 +20,7 @@
 >     - junit platform 1.6.2
 > - oauth-server
 >   - [Upgrade] 使用新的 Sha256 工具类
+>   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
 >   - [Upgrade] 历史流程实例查询时，增加流程删除原因字段返回

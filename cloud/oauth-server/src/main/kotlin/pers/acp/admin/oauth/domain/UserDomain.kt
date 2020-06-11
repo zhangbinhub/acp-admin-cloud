@@ -241,7 +241,7 @@ constructor(userRepository: UserRepository,
      */
     @Throws(ServerException::class)
     fun getUserListByLoginNoOrName(loginNoOrName: String): MutableList<UserVo> =
-            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("$loginNoOrName%", "$loginNoOrName%").map { item ->
+            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%").map { item ->
                 UserVo().apply { BeanUtils.copyProperties(item, this) }
             }.toMutableList()
 
