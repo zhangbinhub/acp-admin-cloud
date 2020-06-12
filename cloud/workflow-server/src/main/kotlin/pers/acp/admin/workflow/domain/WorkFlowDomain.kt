@@ -168,7 +168,11 @@ constructor(private val logAdapter: LogAdapter,
                             }.map { task ->
                                 task.assignee
                             }.let {
-                                getUserListByIdList(it)
+                                if (it.isNotEmpty()) {
+                                    getUserListByIdList(it)
+                                } else {
+                                    mutableListOf()
+                                }
                             },
                             params = params,
                             startTime = processInstance.startTime!!.time

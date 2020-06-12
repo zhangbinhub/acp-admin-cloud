@@ -27,6 +27,7 @@
 >   - [Upgrade] 历史流程实例查询时，增加流程删除原因字段返回
 >   - [Upgrade] 内部接口获取待办任务时，返回List
 >   - [Upgrade] 流程发起人设置为流程变量startUserId
+>   - [Upgrade] 优化当前处理人获取逻辑
 ##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
