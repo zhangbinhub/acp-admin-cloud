@@ -106,11 +106,11 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "流程强制结束")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowAdmin)
+    @PreAuthorize(WorkFlowExpression.flowTermination)
     @PostMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun delete(@RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
+    fun termination(@RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
             workFlowDomain.deleteProcessInstance(processTerminationPo).let {
                 ResponseEntity.ok(InfoVo(message = "强制结束流程实例成功"))
             }

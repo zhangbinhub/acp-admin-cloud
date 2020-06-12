@@ -24,6 +24,7 @@
 >   - [Upgrade] 增加通过登录号查询用户的接口
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
+>   - [Upgrade] 修改流程强制结束接口权限
 >   - [Upgrade] 历史流程实例查询时，增加流程删除原因字段返回
 >   - [Upgrade] 内部接口获取待办任务时，返回List
 >   - [Upgrade] 流程发起人设置为流程变量startUserId

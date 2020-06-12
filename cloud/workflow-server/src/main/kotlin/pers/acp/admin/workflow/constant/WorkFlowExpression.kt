@@ -34,6 +34,11 @@ object WorkFlowExpression {
     const val flowProcess = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowProcess + "')"
 
     /**
+     * 流程终止
+     */
+    const val flowTermination = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "','" + ModuleFuncCode.flowProcess + "')"
+
+    /**
      * 获取流程处理历史
      */
     const val flowHistory = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowHistory + "')"

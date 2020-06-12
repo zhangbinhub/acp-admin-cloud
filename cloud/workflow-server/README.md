@@ -47,6 +47,7 @@ docker run -p8080:8080 flowable/all-in-one
 - assigneeUser:String ，节点任务处理人ID（只能一人）；任务处理完成后需修改（变更为下一节点人或置空）
 
 ##### 六、内置任务动态表单字段
+- isTermination:Boolean ，当前任务节点是否可以进行终止操作（流程强制结束）
 - isTransfer:Boolean ，当前任务是否可以转办（任务处理人变更，处理完毕后进入下一节点）
 - isDelegate:Boolean ，当前任务是否可以委派他人办理（任务处理人变更，处理完毕后返回至当前处理人继续办理）
 - selectUser:Boolean ，是否手动选择分配处理人（或候选人）
