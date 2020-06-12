@@ -7,6 +7,10 @@ package pers.acp.admin.workflow.constant
  */
 object WorkFlowParamKey {
     /**
+     * 流程发起人
+     */
+    const val startUserId = "startUserId"
+    /**
      * 业务键
      */
     const val businessKey = "businessKey"

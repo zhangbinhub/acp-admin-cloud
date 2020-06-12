@@ -224,7 +224,10 @@ constructor(private val logAdapter: LogAdapter,
                 params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
                 params[WorkFlowParamKey.title] = processStartPo.title!!
                 params[WorkFlowParamKey.description] = processStartPo.description!!
-                Authentication.setAuthenticatedUserId(userId)
+                userId?.apply {
+                    params[WorkFlowParamKey.startUserId] = this
+                    Authentication.setAuthenticatedUserId(this)
+                }
                 runtimeService.startProcessInstanceByKey(
                         processStartPo.processDefinitionKey,
                         processStartPo.businessKey,
