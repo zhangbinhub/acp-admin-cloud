@@ -71,8 +71,8 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(BaseExpression.sysConfig)
     @GetMapping(value = [OauthApi.roleList + "/{appId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun getRoleList(@PathVariable appId: String): ResponseEntity<List<Role>> =
-            ResponseEntity.ok(roleDomain.getRoleListByAppId(appId))
+    fun getRoleList(user: OAuth2Authentication, @PathVariable appId: String): ResponseEntity<List<Role>> =
+            ResponseEntity.ok(roleDomain.getRoleListByAppId(user.name, appId))
 
     @ApiOperation(value = "获取角色列表", notes = "查询所有角色列表")
     @PreAuthorize(RoleConfigExpression.roleQuery)
