@@ -14,11 +14,6 @@ object WorkFlowExpression {
     const val flowManage = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowManage + "')"
 
     /**
-     * 流程管理
-     */
-    const val flowAdmin = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "')"
-
-    /**
      * 流程定义
      */
     const val flowDefinition = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"

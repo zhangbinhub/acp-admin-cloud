@@ -214,6 +214,18 @@ class InitData extends BaseTest {
         workFlowDeploy.setOpenType(0);
         workFlowDeploy = menuRepository.save(workFlowDeploy);
 
+        Menu workFlowManager = new Menu();
+        workFlowManager.setAppId(application.getId());
+        workFlowManager.setName("工作流管理");
+        workFlowManager.setIconType("el-icon-s-finance");
+        workFlowManager.setPath("/workflow-manager");
+        workFlowManager.setParentId(sysConfig.getId());
+        workFlowManager.setSort(7);
+        workFlowManager.setEnabled(true);
+        workFlowManager.setCovert(false);
+        workFlowManager.setOpenType(0);
+        workFlowManager = menuRepository.save(workFlowManager);
+
         Menu demo = new Menu();
         demo.setAppId(application.getId());
         demo.setName("demo");
@@ -308,6 +320,7 @@ class InitData extends BaseTest {
             role.getMenuSet().add(orgConfig);
             role.getMenuSet().add(runtimeConfig);
             role.getMenuSet().add(workFlowDeploy);
+            role.getMenuSet().add(workFlowManager);
             role.getMenuSet().add(demo);
             role.getMenuSet().add(demoUpload);
             role.getMenuSet().add(demoChildren);

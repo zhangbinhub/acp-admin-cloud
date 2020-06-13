@@ -30,14 +30,7 @@ constructor(userRepository: UserRepository,
     fun getRoleList(): MutableList<Role> = roleRepository.findAllByOrderBySortAsc()
 
     @Throws(ServerException::class)
-    fun getRoleListByAppId(loginNo: String, appId: String): List<Role> {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        return if (isSuper(user)) {
-            roleRepository.findByAppIdOrderBySortAsc(appId)
-        } else {
-            roleRepository.findByAppIdAndLevelsGreaterThanOrderBySortAsc(appId, getRoleMinLevel(appId, user))
-        }
-    }
+    fun getRoleListByAppId(appId: String): List<Role> = roleRepository.findByAppIdOrderBySortAsc(appId)
 
     private fun doSave(role: Role, rolePo: RolePo): Role =
             roleRepository.save(role.copy(
