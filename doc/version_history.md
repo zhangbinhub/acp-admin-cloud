@@ -18,6 +18,7 @@
 >     - Spring Cloud Hoxton.SR5
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
+>     - kotlin coroutines 1.3.7
 > - oauth-server
 >   - [Upgrade] 使用新的 Sha256 工具类
 >   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配
