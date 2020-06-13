@@ -1,10 +1,12 @@
 package pers.acp.admin.oauth.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.ModuleFunc
+import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.ModuleFuncPo
 import pers.acp.admin.oauth.repo.ModuleFuncRepository
 import pers.acp.admin.oauth.repo.RoleRepository
@@ -91,26 +93,35 @@ constructor(userRepository: UserRepository,
                 sortModuleFuncList(formatToTreeList(map))
             }
 
-    private fun doSave(moduleFunc: ModuleFunc, moduleFuncPo: ModuleFuncPo): ModuleFunc =
-            moduleFuncRepository.save(moduleFunc.copy(
-                    name = moduleFuncPo.name!!,
-                    code = moduleFuncPo.code!!,
-                    roleSet = roleRepository.findAllById(moduleFuncPo.roleIds).toMutableSet()
-            ).apply {
-                parentId = moduleFuncPo.parentId!!
-            })
+    @Throws(ServerException::class)
+    private fun doSave(userInfo: User, moduleFunc: ModuleFunc, moduleFuncPo: ModuleFuncPo): ModuleFunc =
+            roleRepository.findAllById(moduleFuncPo.roleIds).toMutableSet().let { roleSetPo ->
+                if (validateModifyRoleSet(userInfo, moduleFuncPo.appId!!, moduleFunc.roleSet, roleSetPo)) {
+                    moduleFuncRepository.save(moduleFunc.copy(
+                            name = moduleFuncPo.name!!,
+                            code = moduleFuncPo.code!!,
+                            roleSet = roleSetPo
+                    ).apply {
+                        parentId = moduleFuncPo.parentId!!
+                    })
+                } else {
+                    throw ServerException("不合法的操作，不允许修改更高级别的角色列表！")
+                }
+            }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
+    fun doCreate(user: OAuth2Authentication, moduleFuncPo: ModuleFuncPo): ModuleFunc =
             moduleFuncRepository.findByCode(moduleFuncPo.code!!).let {
                 if (it.isPresent) {
                     throw ServerException("编码重复")
                 }
-                doSave(ModuleFunc(
-                        appId = moduleFuncPo.appId!!,
-                        covert = true
-                ), moduleFuncPo)
+                findCurrUserInfo(user.name)?.let { userInfo ->
+                    doSave(userInfo, ModuleFunc(
+                            appId = moduleFuncPo.appId!!,
+                            covert = true
+                    ), moduleFuncPo)
+                } ?: throw ServerException("无法获取当前用户信息")
             }
 
     @Transactional
@@ -126,12 +137,14 @@ constructor(userRepository: UserRepository,
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(moduleFuncPo: ModuleFuncPo): ModuleFunc =
+    fun doUpdate(user: OAuth2Authentication, moduleFuncPo: ModuleFuncPo): ModuleFunc =
             moduleFuncRepository.findByCodeAndIdNot(moduleFuncPo.code!!, moduleFuncPo.id!!).let {
                 if (it.isPresent) {
                     throw ServerException("编码重复")
                 }
-                doSave(moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
+                findCurrUserInfo(user.name)?.let { userInfo ->
+                    doSave(userInfo, moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
+                } ?: throw ServerException("无法获取当前用户信息")
             }
 
     @Throws(ServerException::class)

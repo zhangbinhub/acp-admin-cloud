@@ -42,16 +42,23 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 }
             }
 
-    private fun doSave(organization: Organization, organizationPo: OrganizationPo): Organization =
-            organizationRepository.save(organization.copy(
-                    name = organizationPo.name!!,
-                    code = organizationPo.code!!,
-                    area = organizationPo.area!!,
-                    sort = organizationPo.sort,
-                    userSet = userRepository.findAllById(organizationPo.userIds).toMutableSet()
-            ).apply {
-                parentId = organizationPo.parentId!!
-            })
+    @Throws(ServerException::class)
+    private fun doSave(userInfo: User, organization: Organization, organizationPo: OrganizationPo): Organization =
+            userRepository.findAllById(organizationPo.userIds).toMutableSet().let { userSetPo ->
+                if (validateModifyUserSet(userInfo, organization.userSet, userSetPo)) {
+                    organizationRepository.save(organization.copy(
+                            name = organizationPo.name!!,
+                            code = organizationPo.code!!,
+                            area = organizationPo.area!!,
+                            sort = organizationPo.sort,
+                            userSet = userSetPo
+                    ).apply {
+                        parentId = organizationPo.parentId!!
+                    })
+                } else {
+                    throw ServerException("不合法的操作，不允许修改更高级别的用户列表！")
+                }
+            }
 
     /**
      * 是否有编辑权限
@@ -64,55 +71,47 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
             !isSuper(user) && !getAllOrgList(organizationRepository, user.organizationMngSet.toMutableList())
                     .map { it.id }.toMutableList().containsAll(mutableListOf(*orgIds))
 
-    /**
-     * 是否有编辑权限
-     *
-     * @param loginNo 登录帐号
-     * @param orgIds  机构ID
-     * @return true|false
-     */
-    @Throws(ServerException::class)
-    private fun isNotPermit(loginNo: String, vararg orgIds: String): Boolean =
-            isNotPermit(findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息"), *orgIds)
-
     @Transactional
     @Throws(ServerException::class)
-    fun doCreate(loginNo: String, organizationPo: OrganizationPo): Organization {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
-        if (isNotPermit(user, organizationPo.parentId!!)) {
-            throw ServerException("没有权限做此操作，请联系系统管理员")
-        }
-        return Organization().let {
-            doSave(it, organizationPo).apply {
-                user.organizationMngSet.add(this)
-                userRepository.save(user)
-            }
-        }
-    }
+    fun doCreate(loginNo: String, organizationPo: OrganizationPo): Organization =
+            findCurrUserInfo(loginNo)?.let { userInfo ->
+                if (isNotPermit(userInfo, organizationPo.parentId!!)) {
+                    throw ServerException("没有权限做此操作，请联系系统管理员")
+                }
+                return Organization().let {
+                    doSave(userInfo, it, organizationPo).apply {
+                        userInfo.organizationMngSet.add(this)
+                        userRepository.save(userInfo)
+                    }
+                }
+            } ?: throw ServerException("无法获取当前用户信息")
 
     @Transactional
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
-        if (isNotPermit(loginNo, *idList.toTypedArray())) {
-            throw ServerException("没有权限做此操作，请联系系统管理员")
-        }
-        organizationRepository.findByParentIdIn(idList).apply {
-            if (this.isNotEmpty()) {
-                throw ServerException("存在下级机构，不允许删除")
+        findCurrUserInfo(loginNo)?.let { userInfo ->
+            if (isNotPermit(userInfo, *idList.toTypedArray())) {
+                throw ServerException("没有权限做此操作，请联系系统管理员")
             }
-        }
-        organizationRepository.deleteByIdIn(idList)
+            organizationRepository.findByParentIdIn(idList).apply {
+                if (this.isNotEmpty()) {
+                    throw ServerException("存在下级机构，不允许删除")
+                }
+            }
+            organizationRepository.deleteByIdIn(idList)
+        } ?: throw ServerException("无法获取当前用户信息")
     }
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization {
-        val organization = organizationRepository.getOne(organizationPo.id!!)
-        if (isNotPermit(loginNo, organization.id)) {
-            throw ServerException("没有权限做此操作，请联系系统管理员")
-        }
-        return doSave(organization, organizationPo)
-    }
+    fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization =
+            findCurrUserInfo(loginNo)?.let { userInfo ->
+                val organization = organizationRepository.getOne(organizationPo.id!!)
+                if (isNotPermit(userInfo, organization.id)) {
+                    throw ServerException("没有权限做此操作，请联系系统管理员")
+                }
+                doSave(userInfo, organization, organizationPo)
+            } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getModOrgList(loginNo: String): MutableList<Organization> =

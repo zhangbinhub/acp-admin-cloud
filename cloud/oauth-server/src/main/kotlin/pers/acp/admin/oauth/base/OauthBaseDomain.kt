@@ -4,9 +4,11 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.entity.Organization
+import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.UserRepository
+import pers.acp.spring.boot.exceptions.ServerException
 
 /**
  * @author zhang by 26/12/2018
@@ -45,6 +47,43 @@ abstract class OauthBaseDomain(protected val userRepository: UserRepository) : B
                     }
                     level
                 }
+            }
+
+    @Throws(ServerException::class)
+    protected fun validateModifyRoleSet(userInfo: User, appId: String, oldRoleSet: MutableSet<Role>, newRoleSet: MutableSet<Role>): Boolean =
+            if (!isSuper(userInfo)) {
+                val roleMinLevel = getRoleMinLevel(appId, userInfo)
+                val oldSuperRoles = oldRoleSet.filter { role -> role.levels <= roleMinLevel }.map { it.id }.sorted()
+                val newSuperRoles = newRoleSet.filter { role -> role.levels <= roleMinLevel }.map { it.id }.sorted()
+                if (oldSuperRoles.size != newSuperRoles.size) {
+                    throw ServerException("不合法的操作，不允许修改更高级别的角色列表！")
+                }
+                for (index in oldSuperRoles.indices) {
+                    if (oldSuperRoles[index] != newSuperRoles[index]) {
+                        throw ServerException("不合法的操作，不允许修改更高级别的角色列表！")
+                    }
+                }
+                true
+            } else {
+                true
+            }
+
+    @Throws(ServerException::class)
+    protected fun validateModifyUserSet(userInfo: User, oldUserSet: MutableSet<User>, newUserSet: MutableSet<User>): Boolean =
+            if (!isSuper(userInfo)) {
+                val oldSuperUsers = oldUserSet.filter { user -> user.levels <= userInfo.levels }.map { it.id }.sorted()
+                val newSuperUsers = newUserSet.filter { user -> user.levels <= userInfo.levels }.map { it.id }.sorted()
+                if (oldSuperUsers.size != newSuperUsers.size) {
+                    throw ServerException("不合法的操作，不允许修改更高级别的用户列表！")
+                }
+                for (index in oldSuperUsers.indices) {
+                    if (oldSuperUsers[index] != newSuperUsers[index]) {
+                        throw ServerException("不合法的操作，不允许修改更高级别的用户列表！")
+                    }
+                }
+                true
+            } else {
+                true
             }
 
     /**
