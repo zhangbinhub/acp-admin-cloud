@@ -1,4 +1,35 @@
 ## 版本更新记录
+##### v4.1.7
+> - Global
+>   - [Upgrade] server.tomcat.max-threads 修改为 server.tomcat.threads.max
+>   - [Upgrade] 更新 atom-server-common-dev.yaml
+>   - [Upgrade] 更新 nacos_config_export.zip
+>   - [Upgrade] 增加 gradle/environment.gradle 环境变量定义
+>   - [Upgrade] build.gradle 脚本中，增加环境变量替换
+>   - [Upgrade] 修改启动脚本
+> - acp-admin-cloud-dependencies
+>   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
+>   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
+>   - [Upgrade] 修复 WorkFlowServer 客户端，pendingByUser方法返回无权限的异常
+>   - [Upgrade] 修改 CommonOauthServerHystrix 处理方式
+>   - [Upgrade] 升级依赖
+>     - Acp 6.4.5
+>     - Spring Boot 2.3.1.RELEASE
+>     - Spring Cloud Hoxton.SR5
+>     - jupiter 5.6.2
+>     - junit platform 1.6.2
+> - oauth-server
+>   - [Upgrade] 使用新的 Sha256 工具类
+>   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配
+>   - [Upgrade] 增加通过登录号查询用户的接口
+>   - [Upgrade] 查询角色列表接口，返回全量
+> - workflow-server
+>   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
+>   - [Upgrade] 修改流程强制结束接口权限
+>   - [Upgrade] 历史流程实例查询时，增加流程删除原因字段返回
+>   - [Upgrade] 内部接口获取待办任务时，返回List
+>   - [Upgrade] 流程发起人设置为流程变量startUserId
+>   - [Upgrade] 优化当前处理人获取逻辑
 ##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置

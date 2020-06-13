@@ -36,17 +36,18 @@ docker run -p8080:8080 flowable/all-in-one
 - 2、需动态配置路由策略。
 
 ##### 五、固定必要的流程变量，自定义变量不能与之重复
+- startUserId - 流程发起人
 - businessKey - 业务键
 - flowName - 流程名称
 - title - 流程标题
 - description - 流程描述
-- startUserId - 业务键
 - pass - 处理结果：true-通过，false-不通过
 - comment - 处理意见
 - candidateUser:String ，节点任务候选人ID（一人或多人），多个候选人时使用“,”分隔；任务处理完成后需修改（变更为下一节点人或置空）
 - assigneeUser:String ，节点任务处理人ID（只能一人）；任务处理完成后需修改（变更为下一节点人或置空）
 
 ##### 六、内置任务动态表单字段
+- isTermination:Boolean ，当前任务节点是否可以进行终止操作（流程强制结束）
 - isTransfer:Boolean ，当前任务是否可以转办（任务处理人变更，处理完毕后进入下一节点）
 - isDelegate:Boolean ，当前任务是否可以委派他人办理（任务处理人变更，处理完毕后返回至当前处理人继续办理）
 - selectUser:Boolean ，是否手动选择分配处理人（或候选人）

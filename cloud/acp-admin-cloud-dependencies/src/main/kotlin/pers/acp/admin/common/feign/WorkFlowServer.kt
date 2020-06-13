@@ -46,9 +46,9 @@ interface WorkFlowServer {
     /**
      * 获取指定用户的待处理任务
      */
-    @GetMapping(value = [WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ProcessTaskVo
+    fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): List<ProcessTaskVo>
 
     /**
      * 启动流程
@@ -104,7 +104,7 @@ interface WorkFlowServer {
      */
     @GetMapping(value = [WorkFlowApi.basePath + WorkFlowApi.history + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun getHistoryActivity(@PathVariable processInstanceId: String): MutableList<ProcessHistoryActivityVo>
+    fun getHistoryActivity(@PathVariable processInstanceId: String): List<ProcessHistoryActivityVo>
 
     /**
      * 获取任务信息

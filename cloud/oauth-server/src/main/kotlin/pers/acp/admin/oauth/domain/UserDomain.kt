@@ -18,7 +18,7 @@ import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
-import pers.acp.core.security.SHA256Utils
+import pers.acp.core.security.Sha256Encrypt
 import pers.acp.spring.boot.exceptions.ServerException
 
 import javax.persistence.criteria.JoinType
@@ -115,7 +115,7 @@ constructor(userRepository: UserRepository,
         }
         return doSave(User(
                 loginNo = userPo.loginNo!!,
-                password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!),
+                password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!),
                 roleSet = roleSet
         ), userPo)
     }
@@ -136,7 +136,7 @@ constructor(userRepository: UserRepository,
             }
             if (this.loginNo != userPo.loginNo) {
                 this.loginNo = userPo.loginNo!!
-                this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
+                this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
                 removeToken(userPo.loginNo!!)
             }
             this.roleSet = roleSet
@@ -153,7 +153,7 @@ constructor(userRepository: UserRepository,
                             throw ServerException("不能修改级别比自身大或相等的用户信息")
                         }
                     }
-                    this.password = SHA256Utils.encrypt(SHA256Utils.encrypt(DEFAULT_PASSWORD) + this.loginNo)
+                    this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
                     userRepository.save(this)
                     removeToken(loginNo)
                 }
@@ -241,7 +241,7 @@ constructor(userRepository: UserRepository,
      */
     @Throws(ServerException::class)
     fun getUserListByLoginNoOrName(loginNoOrName: String): MutableList<UserVo> =
-            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("$loginNoOrName%", "$loginNoOrName%").map { item ->
+            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%").map { item ->
                 UserVo().apply { BeanUtils.copyProperties(item, this) }
             }.toMutableList()
 

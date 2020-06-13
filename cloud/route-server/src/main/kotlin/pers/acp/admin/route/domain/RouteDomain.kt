@@ -93,12 +93,12 @@ constructor(private val logAdapter: LogAdapter,
                         routeDefinition.order = route.orderNum
                         routeDefinition.predicates = objectMapper.readValue(route.predicates, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, PredicateDefinition::class.java))
                         routeDefinition.filters = if (!CommonTools.isNullStr(route.filters)) {
-                            objectMapper.readValue<MutableList<FilterDefinition>>(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
+                            objectMapper.readValue(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
                         } else {
                             mutableListOf()
                         }
                         routeDefinition.metadata = if (!CommonTools.isNullStr(route.metadata)) {
-                            objectMapper.readValue<MutableMap<String, Any>>(route.metadata, TypeFactory.defaultInstance().constructMapLikeType(MutableMap::class.java, String::class.java, Any::class.java))
+                            objectMapper.readValue(route.metadata, TypeFactory.defaultInstance().constructMapLikeType(MutableMap::class.java, String::class.java, Any::class.java))
                         } else {
                             mutableMapOf()
                         }

@@ -168,7 +168,11 @@ constructor(private val logAdapter: LogAdapter,
                             }.map { task ->
                                 task.assignee
                             }.let {
-                                getUserListByIdList(it)
+                                if (it.isNotEmpty()) {
+                                    getUserListByIdList(it)
+                                } else {
+                                    mutableListOf()
+                                }
                             },
                             params = params,
                             startTime = processInstance.startTime!!.time
@@ -192,7 +196,8 @@ constructor(private val logAdapter: LogAdapter,
                             startUser = getUserById(processInstance.startUserId),
                             params = params,
                             startTime = processInstance.startTime!!.time,
-                            endTime = processInstance.endTime!!.time
+                            endTime = processInstance.endTime?.time,
+                            deleteReason = processInstance.deleteReason
                     )
                 }
                 else -> {
@@ -223,7 +228,10 @@ constructor(private val logAdapter: LogAdapter,
                 params[WorkFlowParamKey.businessKey] = processStartPo.businessKey!!
                 params[WorkFlowParamKey.title] = processStartPo.title!!
                 params[WorkFlowParamKey.description] = processStartPo.description!!
-                Authentication.setAuthenticatedUserId(userId)
+                userId?.apply {
+                    params[WorkFlowParamKey.startUserId] = this
+                    Authentication.setAuthenticatedUserId(this)
+                }
                 runtimeService.startProcessInstanceByKey(
                         processStartPo.processDefinitionKey,
                         processStartPo.businessKey,
@@ -251,17 +259,17 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     /**
-     * 获取任务信息
+     * 获取待办任务
      * @param processInstanceId 流程实例ID
      * @param userId 用户ID
      */
     @Throws(ServerException::class)
-    fun findTask(processInstanceId: String, userId: String): ProcessTaskVo =
+    fun findTaskList(processInstanceId: String, userId: String): List<ProcessTaskVo> =
             try {
                 taskService.createTaskQuery().processInstanceId(processInstanceId)
-                        .taskAssignee(userId).singleResult()?.let {
+                        .taskAssignee(userId).list().map {
                             taskToVo(it)
-                        } ?: throw ServerException("找不到信息")
+                        }
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
@@ -566,6 +574,7 @@ constructor(private val logAdapter: LogAdapter,
                 val firstResult = (processQueryPo.queryParam!!.currPage!! - 1) * processQueryPo.queryParam!!.pageSize!!
                 val maxResult = processQueryPo.queryParam!!.pageSize!!
                 val processInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+                processInstanceQuery.finished()
                 if (processQueryPo.processDefinitionKeys != null && processQueryPo.processDefinitionKeys!!.isNotEmpty()) {
                     processInstanceQuery.processDefinitionKeyIn(processQueryPo.processDefinitionKeys!!)
                 }

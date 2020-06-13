@@ -1,7 +1,8 @@
 server:
   tomcat:
-    max-threads: 1000
     uri-encoding: UTF-8
+    threads:
+      max: 1000
 spring:
   profiles:
     active: dev
@@ -31,7 +32,7 @@ spring:
             group: ${spring.profiles.active}
             refresh: true
 info:
-  version: 4.1.6
+  version: 4.1.7
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

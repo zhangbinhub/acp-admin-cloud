@@ -45,7 +45,7 @@ status(){
 
 restart(){
   stop
-  for i in $(seq 1 100)
+  for i in $(seq 1 3600)
   do
     is_exist
     if [ $? -eq "0" ]

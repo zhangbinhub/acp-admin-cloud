@@ -67,8 +67,8 @@ constructor(logAdapter: LogAdapter,
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
     @GetMapping(value = [WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ResponseEntity<ProcessTaskVo> =
-            workFlowDomain.findTask(processInstanceId, userId).let {
+    fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ResponseEntity<List<ProcessTaskVo>> =
+            workFlowDomain.findTaskList(processInstanceId, userId).let {
                 ResponseEntity.ok(it)
             }
 }

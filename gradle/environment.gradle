@@ -1,0 +1,8 @@
+ext {
+    nacos_server_addr = [:]
+}
+
+nacos_server_addr += [
+        dev : "127.0.0.1:8848",
+        test: "127.0.0.1:8848"
+]

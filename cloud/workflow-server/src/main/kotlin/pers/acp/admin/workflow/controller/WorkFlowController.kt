@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -13,8 +14,10 @@ import pers.acp.admin.common.vo.*
 import pers.acp.admin.api.WorkFlowApi
 import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.common.po.*
+import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
+import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
@@ -106,13 +109,36 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "流程强制结束")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowAdmin)
-    @PostMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PreAuthorize(WorkFlowExpression.flowTermination)
+    @DeleteMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun delete(@RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
-            workFlowDomain.deleteProcessInstance(processTerminationPo).let {
-                ResponseEntity.ok(InfoVo(message = "强制结束流程实例成功"))
+    fun termination(user: OAuth2Authentication, @RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
+            workFlowDomain.findProcessInstance(processTerminationPo.processInstanceId!!).let { instance ->
+                if (instance.finished) {
+                    false
+                } else {
+                    when {
+                        hasAuthentication(user, mutableListOf(ModuleFuncCode.flowAdmin)) -> {
+                            true
+                        }
+                        else -> {
+                            commonOauthServer.userInfo()?.let { userInfo ->
+                                instance.startUser != null
+                                        && !CommonTools.isNullStr(instance.startUser!!.id)
+                                        && instance.startUser!!.id == userInfo.id
+                            } ?: throw ServerException("获取当前登录人信息失败")
+                        }
+                    }
+                }
+            }.let {
+                if (it) {
+                    workFlowDomain.deleteProcessInstance(processTerminationPo).let {
+                        ResponseEntity.ok(InfoVo(message = "强制结束流程实例成功"))
+                    }
+                } else {
+                    throw ServerException("流程已结束或当前登录人不是流程发起人，无法终止该流程！")
+                }
             }
 
     @ApiOperation(value = "获取流程实例", notes = "获取指定流程实例")

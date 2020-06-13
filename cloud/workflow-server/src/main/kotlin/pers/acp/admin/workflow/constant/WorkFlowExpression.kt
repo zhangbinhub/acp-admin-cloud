@@ -14,11 +14,6 @@ object WorkFlowExpression {
     const val flowManage = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowManage + "')"
 
     /**
-     * 流程管理
-     */
-    const val flowAdmin = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "')"
-
-    /**
      * 流程定义
      */
     const val flowDefinition = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"
@@ -32,6 +27,11 @@ object WorkFlowExpression {
      * 流程处理
      */
     const val flowProcess = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowProcess + "')"
+
+    /**
+     * 流程终止
+     */
+    const val flowTermination = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "','" + ModuleFuncCode.flowProcess + "')"
 
     /**
      * 获取流程处理历史

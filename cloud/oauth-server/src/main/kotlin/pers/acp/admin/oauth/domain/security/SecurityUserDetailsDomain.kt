@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.core.CommonTools
-import pers.acp.core.security.SHA256Utils
+import pers.acp.core.security.Sha256Encrypt
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -46,7 +46,7 @@ constructor(private val logAdapter: LogAdapter, private val userRepository: User
             }
         }
         return User(user.loginNo,
-                SHA256Utils.encrypt(user.password + CommonTools.getDateTimeString(null, "yyyyMMddHH")),
+                Sha256Encrypt.encrypt(user.password + CommonTools.getDateTimeString(null, "yyyyMMddHH")),
                 user.enabled, true, true, true,
                 grantedAuthorities)
     }

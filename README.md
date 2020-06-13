@@ -1,14 +1,14 @@
 # acp-admin-cloud
-###### v4.1.6 [版本更新日志](doc/version_history.md)
+###### v4.1.7 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.6](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.7](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.2.7.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Hoxton.SR4](http://projects.spring.io/spring-cloud)
+- [Spring Boot 2.3.0.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Hoxton.SR5](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.2.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
-- [Acp 6.4.4](https://github.com/zhangbin1010/acp)
+- [Acp 6.4.5](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -76,11 +76,14 @@
 ### （一）配置文件
 ##### 1.gradle/dependencies.gradle
 定义外部依赖版本号
+
+##### 2.gradle/environment.gradle
+编译时定义的环境变量
     
-##### 2.settings.gradle
+##### 3.settings.gradle
 定义项目/模块结构
 
-##### 3.gradle.properties
+##### 4.gradle.properties
 gradle全局参数：
 - gradleVersion：gradle版本号
 - group：对应打包时的groupid
@@ -91,10 +94,10 @@ gradle全局参数：
 - javaVersion：jdk版本号
 - kotlinVersion：kotlin版本号
     
-##### 4.build.gradle
+##### 5.build.gradle
 公共构建脚本
     
-##### 5.模块根路径/build.gradle
+##### 6.模块根路径/build.gradle
 单个模块特有的构建脚本
 
 ### （二）自定义任务
@@ -182,7 +185,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export_20200412201414.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （二）Kafka

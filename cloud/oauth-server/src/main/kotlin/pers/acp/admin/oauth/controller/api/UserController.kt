@@ -141,13 +141,22 @@ constructor(logAdapter: LogAdapter,
     fun query(@RequestBody @Valid userQueryPo: UserQueryPo): ResponseEntity<Page<UserVo>> =
             ResponseEntity.ok(userDomain.doQuery(userQueryPo))
 
-    @ApiOperation(value = "查询用户信息", notes = "根据用户ID查询详细信息")
+    @ApiOperation(value = "查询用户信息（用户ID）", notes = "根据用户ID查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userQuery)
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
             (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
+
+    @ApiOperation(value = "查询用户信息（登录账号）", notes = "根据用户登录账号查询详细信息")
+    @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
+    @GetMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun getUserInfoByLoginNo(@ApiParam(value = "登录账号", required = true)
+                             @NotBlank(message = "登录账号不能为空")
+                             @RequestParam loginNo: String): ResponseEntity<UserVo> =
+            userDomain.getUserInfoByLoginNo(loginNo).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "通过登录号或姓名，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
