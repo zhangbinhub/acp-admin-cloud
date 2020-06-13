@@ -118,8 +118,8 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
-    fun addMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> =
-            menuDomain.doCreate(menuPo).let {
+    fun addMenu(user: OAuth2Authentication, @RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> =
+            menuDomain.doCreate(user, menuPo).let {
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
             }
 
@@ -128,8 +128,8 @@ constructor(private val logAdapter: LogAdapter,
     @PreAuthorize(AuthConfigExpression.authAdd)
     @PutMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
-    fun addModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
-            moduleFuncDomain.doCreate(moduleFuncPo).let {
+    fun addModuleFunc(user: OAuth2Authentication, @RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> =
+            moduleFuncDomain.doCreate(user, moduleFuncPo).let {
                 ResponseEntity.status(HttpStatus.CREATED).body(it)
             }
 
@@ -163,11 +163,11 @@ constructor(private val logAdapter: LogAdapter,
     @PatchMapping(value = [OauthApi.menuConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateMenu(@RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> {
+    fun updateMenu(user: OAuth2Authentication, @RequestBody @Valid menuPo: MenuPo): ResponseEntity<Menu> {
         if (CommonTools.isNullStr(menuPo.id)) {
             throw ServerException("配置ID不能为空")
         }
-        return ResponseEntity.ok(menuDomain.doUpdate(menuPo))
+        return ResponseEntity.ok(menuDomain.doUpdate(user, menuPo))
     }
 
     @ApiOperation(value = "更新模块功能信息", notes = "名称、应用ID、编码、上级、关联角色")
@@ -176,11 +176,11 @@ constructor(private val logAdapter: LogAdapter,
     @PatchMapping(value = [OauthApi.moduleFuncConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun updateModuleFunc(@RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> {
+    fun updateModuleFunc(user: OAuth2Authentication, @RequestBody @Valid moduleFuncPo: ModuleFuncPo): ResponseEntity<ModuleFunc> {
         if (CommonTools.isNullStr(moduleFuncPo.id)) {
             throw ServerException("配置ID不能为空")
         }
-        return ResponseEntity.ok(moduleFuncDomain.doUpdate(moduleFuncPo))
+        return ResponseEntity.ok(moduleFuncDomain.doUpdate(user, moduleFuncPo))
     }
 
     @ApiOperation(value = "获取菜单详细信息")

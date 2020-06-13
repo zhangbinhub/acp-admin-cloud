@@ -1,10 +1,12 @@
 package pers.acp.admin.oauth.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.Menu
+import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.po.MenuPo
 import pers.acp.admin.oauth.repo.MenuRepository
 import pers.acp.admin.oauth.repo.RoleRepository
@@ -85,25 +87,35 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
                 sortMenuList(formatToTreeList(map))
             }
 
-    private fun doSave(menu: Menu, menuPo: MenuPo): Menu =
-            menuRepository.save(menu.copy(
-                    path = menuPo.path,
-                    enabled = menuPo.enabled,
-                    iconType = menuPo.iconType,
-                    name = menuPo.name!!,
-                    openType = menuPo.openType,
-                    sort = menuPo.sort,
-                    roleSet = roleRepository.findAllById(menuPo.roleIds).toMutableSet()
-            ).apply {
-                parentId = menuPo.parentId!!
-            })
+    @Throws(ServerException::class)
+    private fun doSave(userInfo: User, menu: Menu, menuPo: MenuPo): Menu =
+            roleRepository.findAllById(menuPo.roleIds).toMutableSet().let { roleSetPo ->
+                if (validateModifyRoleSet(userInfo, menuPo.appId!!, menu.roleSet, roleSetPo)) {
+                    menuRepository.save(menu.copy(
+                            path = menuPo.path,
+                            enabled = menuPo.enabled,
+                            iconType = menuPo.iconType,
+                            name = menuPo.name!!,
+                            openType = menuPo.openType,
+                            sort = menuPo.sort,
+                            roleSet = roleSetPo
+                    ).apply {
+                        parentId = menuPo.parentId!!
+                    })
+                } else {
+                    throw ServerException("不合法的操作，不允许修改更高级别的角色列表！")
+                }
+            }
 
     @Transactional
-    fun doCreate(menuPo: MenuPo): Menu =
-            doSave(Menu(
-                    appId = menuPo.appId!!,
-                    covert = true
-            ), menuPo)
+    @Throws(ServerException::class)
+    fun doCreate(user: OAuth2Authentication, menuPo: MenuPo): Menu =
+            findCurrUserInfo(user.name)?.let { userInfo ->
+                doSave(userInfo, Menu(
+                        appId = menuPo.appId!!,
+                        covert = true
+                ), menuPo)
+            } ?: throw ServerException("无法获取当前用户信息")
 
     @Transactional
     @Throws(ServerException::class)
@@ -118,7 +130,10 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(menuPo: MenuPo): Menu = doSave(menuRepository.getOne(menuPo.id!!), menuPo)
+    fun doUpdate(user: OAuth2Authentication, menuPo: MenuPo): Menu =
+            findCurrUserInfo(user.name)?.let { userInfo ->
+                doSave(userInfo, menuRepository.getOne(menuPo.id!!), menuPo)
+            } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getMenuInfo(menuId: String): MenuVo =

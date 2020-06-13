@@ -90,7 +90,7 @@ constructor(private val logAdapter: LogAdapter,
         if (CommonTools.isNullStr(rolePo.appId)) {
             throw ServerException("应用ID不能为空")
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(roleDomain.doCreate(rolePo, user.name))
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleDomain.doCreate(user.name, rolePo))
     }
 
     @ApiOperation(value = "删除指定的角色信息")

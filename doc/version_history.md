@@ -23,6 +23,7 @@
 >   - [Upgrade] 使用新的 Sha256 工具类
 >   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配
 >   - [Upgrade] 增加通过登录号查询用户的接口
+>   - [Upgrade] 角色配置、菜单配置、功能权限配置、机构配置，加强校验，提升系统安全性
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
 >   - [Upgrade] 修改流程强制结束接口权限
