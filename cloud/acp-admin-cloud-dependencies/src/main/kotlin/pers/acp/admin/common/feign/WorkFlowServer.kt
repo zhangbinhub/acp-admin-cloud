@@ -88,7 +88,7 @@ interface WorkFlowServer {
     /**
      * 强制终止流程实例
      */
-    @PostMapping(value = [WorkFlowApi.basePath + WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(value = [WorkFlowApi.basePath + WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun termination(@RequestBody processTerminationPo: ProcessTerminationPo): InfoVo
 
