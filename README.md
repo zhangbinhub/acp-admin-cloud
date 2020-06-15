@@ -69,7 +69,7 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 6.3
+- gradle 6.5
 - kotlin 1.3.72
 
 ## 二、gradle 配置及使用
@@ -117,7 +117,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.3 --distribution-type=all
+    gradlew wrapper --gradle-version=6.5 --distribution-type=all
 ```
 
 ## 三、工程说明

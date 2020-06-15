@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.1.7
 > - Global
+>   - [Upgrade] 升级 Gradle 至 6.5
 >   - [Upgrade] server.tomcat.max-threads 修改为 server.tomcat.threads.max
 >   - [Upgrade] 更新 atom-server-common-dev.yaml
 >   - [Upgrade] 更新 nacos_config_export.zip
@@ -32,6 +33,8 @@
 >   - [Upgrade] 内部接口获取待办任务时，返回List
 >   - [Upgrade] 流程发起人设置为流程变量startUserId
 >   - [Upgrade] 优化当前处理人获取逻辑
+> - admin-server
+>   - [Upgrade] 单独使用 Spring Boot 2.3.0.RELEASE，解决兼容问题
 ##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置
