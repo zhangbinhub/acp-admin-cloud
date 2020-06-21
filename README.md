@@ -281,6 +281,6 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 
 ## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
-注：目前 Spring Cloud Alibaba 还未支持 Nacos 1.2+ 用作 sentinel 的数据源，因此需要关闭feign的sentinel，并且注释sentinel的nacos数据源配置。但是已有 [pr](https://github.com/alibaba/spring-cloud-alibaba/pull/1354) 解决了这个问题，如果不想等下个版本发布，可以提前拉取源代码
+注：目前 Spring Cloud Alibaba 还未支持 Nacos 1.2+ 用作 sentinel 的数据源，因此需要注释sentinel的nacos数据源配置。但是已有 [pr](https://github.com/alibaba/spring-cloud-alibaba/pull/1354) 解决了这个问题，如果不想等下个版本发布，可以提前拉取源代码
 
 ## 十、[公共配置信息](doc/atom-server-common-dev.yaml)
