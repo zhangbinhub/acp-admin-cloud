@@ -24,9 +24,13 @@ constructor(private val logAdapter: LogAdapter,
             logAdapter.info("收到更新运行参数数据事件：" + reloadDataBusEvent.message)
             try {
                 logAdapter.debug(objectMapper.writeValueAsString(reloadDataBusEvent))
-                logAdapter.info("开始刷新运行参数数据...")
-                runtimeConfigDomain.loadRuntimeConfig()
-                logAdapter.info("运行参数数据刷新完成！")
+                Thread(Runnable {
+                    logAdapter.info("开始刷新运行参数数据...")
+                    runtimeConfigDomain.loadRuntimeConfig()
+                    logAdapter.info("运行参数数据刷新完成！")
+                }).apply {
+                    this.isDaemon = true
+                }.start()
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
             }

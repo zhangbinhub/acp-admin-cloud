@@ -19,9 +19,13 @@ constructor(private val routeRedisRepository: RouteRedisRepository) {
     fun process(message: String) {
         log.info("收到 kafka 消息：$message")
         if (RouteConstant.UPDATE_GATEWAY_ROUTES == message) {
-            log.info("开始更新路由信息...")
-            routeRedisRepository.loadRouteDefinitions()
-            log.info("更新路由信息完成!")
+            Thread(Runnable {
+                log.info("开始更新路由信息...")
+                routeRedisRepository.loadRouteDefinitions()
+                log.info("更新路由信息完成!")
+            }).apply {
+                this.isDaemon = true
+            }.start()
         }
     }
 
