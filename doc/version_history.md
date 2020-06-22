@@ -8,6 +8,7 @@
 >   - [Upgrade] 增加 gradle/environment.gradle 环境变量定义
 >   - [Upgrade] build.gradle 脚本中，增加环境变量替换
 >   - [Upgrade] 修改启动脚本
+>   - [Upgrade] 优化kafka消息消费，启动单独的线程来处理消息
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
