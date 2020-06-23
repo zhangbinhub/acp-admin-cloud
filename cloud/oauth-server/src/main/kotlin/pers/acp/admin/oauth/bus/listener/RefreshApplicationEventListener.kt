@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component
 import pers.acp.admin.common.event.ReloadDataBusEvent
 import pers.acp.admin.oauth.constant.BusEventMessage
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
+import pers.acp.core.task.BaseAsyncTask
+import pers.acp.core.task.threadpool.ThreadPoolService
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -24,13 +26,18 @@ constructor(private val logAdapter: LogAdapter,
             logAdapter.info("收到更新应用信息事件：" + reloadDataBusEvent.message)
             try {
                 logAdapter.debug(objectMapper.writeValueAsString(reloadDataBusEvent))
-                Thread(Runnable {
-                    logAdapter.info("开始刷新client数据...")
-                    securityClientDetailsDomain.loadClientInfo()
-                    logAdapter.info("client数据刷新完成！")
-                }).apply {
-                    this.isDaemon = true
-                }.start()
+                ThreadPoolService.getInstance(1, 1, Int.MAX_VALUE, BusEventMessage.refreshApplication)
+                        .addTask(object : BaseAsyncTask(BusEventMessage.refreshApplication, false) {
+                            override fun beforeExecuteFun(): Boolean = true
+                            override fun executeFun(): Any? {
+                                logAdapter.info("开始刷新client数据...")
+                                securityClientDetailsDomain.loadClientInfo()
+                                logAdapter.info("client数据刷新完成！")
+                                return true
+                            }
+
+                            override fun afterExecuteFun(result: Any) {}
+                        })
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
             }

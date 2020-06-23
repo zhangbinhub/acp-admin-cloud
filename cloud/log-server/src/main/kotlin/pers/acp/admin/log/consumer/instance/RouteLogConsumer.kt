@@ -10,6 +10,8 @@ import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.domain.LogDomain
 import pers.acp.admin.log.message.RouteLogMessage
+import pers.acp.core.task.BaseAsyncTask
+import pers.acp.core.task.threadpool.ThreadPoolService
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -25,34 +27,42 @@ constructor(private val logAdapter: LogAdapter,
     @StreamListener(RouteConstant.ROUTE_LOG_INPUT)
     fun process(message: String) {
         logAdapter.debug("收到 kafka 消息：$message")
-        try {
-            objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
-                if (logServerCustomerConfiguration.routeLogEnabled) {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        logDomain.doRouteLog(it, message)
-                    }
-                }
-                it.token?.apply {
-                    if (it.responseStatus != null) {
-                        if (logServerCustomerConfiguration.operateLogEnabled) {
-                            GlobalScope.launch(Dispatchers.IO) {
-                                logDomain.doOperateLog(it, message)
-                            }
-                        }
-                        if (it.responseStatus == HttpStatus.OK.value()) {
-                            if (it.applyToken) {
-                                GlobalScope.launch(Dispatchers.IO) {
-                                    logDomain.doLoginLog(it, message)
+        ThreadPoolService.getInstance(1, 1, Int.MAX_VALUE)
+                .addTask(object : BaseAsyncTask("route_log", false) {
+                    override fun beforeExecuteFun(): Boolean = true
+                    override fun executeFun(): Any? {
+                        try {
+                            objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
+                                if (logServerCustomerConfiguration.routeLogEnabled) {
+                                    GlobalScope.launch(Dispatchers.IO) {
+                                        logDomain.doRouteLog(it, message)
+                                    }
+                                }
+                                it.token?.apply {
+                                    if (it.responseStatus != null) {
+                                        if (logServerCustomerConfiguration.operateLogEnabled) {
+                                            GlobalScope.launch(Dispatchers.IO) {
+                                                logDomain.doOperateLog(it, message)
+                                            }
+                                        }
+                                        if (it.responseStatus == HttpStatus.OK.value()) {
+                                            if (it.applyToken) {
+                                                GlobalScope.launch(Dispatchers.IO) {
+                                                    logDomain.doLoginLog(it, message)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                        } catch (e: Exception) {
+                            logAdapter.error("日志消息：$message \n处理失败：${e.message}", e)
                         }
+                        return true
                     }
-                }
-            }
-        } catch (e: Exception) {
-            logAdapter.error("日志消息：$message \n处理失败：${e.message}", e)
-        }
 
+                    override fun afterExecuteFun(result: Any) {}
+                })
     }
 
 }

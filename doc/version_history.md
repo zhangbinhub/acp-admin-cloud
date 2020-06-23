@@ -9,12 +9,14 @@
 >   - [Upgrade] build.gradle 脚本中，增加环境变量替换
 >   - [Upgrade] 修改启动脚本
 >   - [Upgrade] 优化kafka消息消费，启动单独的线程来处理消息
+>   - [Upgrade] 用线程池接收 kafka 消息，快速应答
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] ZkDistributedLock 分布式锁支持同线程可重入
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
 >   - [Upgrade] 修复 WorkFlowServer 客户端，pendingByUser方法返回无权限的异常
 >   - [Upgrade] 修改 CommonOauthServerHystrix 处理方式
 >   - [Upgrade] 修改 WorkFlowServer 客户端
+>   - [Upgrade] 去除 RedisDistributedLock
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 >     - Spring Boot 2.3.1.RELEASE
@@ -27,6 +29,7 @@
 >   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配
 >   - [Upgrade] 增加通过登录号查询用户的接口
 >   - [Upgrade] 角色配置、菜单配置、功能权限配置、机构配置，加强校验，提升系统安全性
+>   - [Upgrade] 用户信息实体中，关联的实体改为 FetchType.LAZY
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
 >   - [Upgrade] 修改流程强制结束接口权限
