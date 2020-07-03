@@ -636,22 +636,6 @@ class InitData extends BaseTest {
         flowProcess.setCovert(false);
         flowProcess = moduleFuncRepository.save(flowProcess);
 
-        ModuleFunc flowHistory = new ModuleFunc();
-        flowHistory.setAppId(application.getId());
-        flowHistory.setParentId(flowManage.getId());
-        flowHistory.setName("获取流程处理历史");
-        flowHistory.setCode(ModuleFuncCode.flowHistory);
-        flowHistory.setCovert(false);
-        flowHistory = moduleFuncRepository.save(flowHistory);
-
-        ModuleFunc flowDiagram = new ModuleFunc();
-        flowDiagram.setAppId(application.getId());
-        flowDiagram.setParentId(flowManage.getId());
-        flowDiagram.setName("获取流程图");
-        flowDiagram.setCode(ModuleFuncCode.flowDiagram);
-        flowDiagram.setCovert(false);
-        flowDiagram = moduleFuncRepository.save(flowDiagram);
-
         for (Role role : roles) {
             role.getModuleFuncSet().add(sysMonitor);
             role.getModuleFuncSet().add(sysConfig);
@@ -691,8 +675,6 @@ class InitData extends BaseTest {
             role.getModuleFuncSet().add(flowDefinition);
             role.getModuleFuncSet().add(flowPending);
             role.getModuleFuncSet().add(flowProcess);
-            role.getModuleFuncSet().add(flowHistory);
-            role.getModuleFuncSet().add(flowDiagram);
         }
     }
 

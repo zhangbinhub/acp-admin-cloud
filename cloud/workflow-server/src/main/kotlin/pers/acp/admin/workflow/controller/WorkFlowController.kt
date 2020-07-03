@@ -143,7 +143,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程实例", notes = "获取指定流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowManage)
     @GetMapping(value = [WorkFlowApi.instance + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryInstance(@ApiParam(value = "流程实例id", required = true)
@@ -155,7 +154,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程实例", notes = "获取流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowManage)
     @PostMapping(value = [WorkFlowApi.instance], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryInstance(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
@@ -165,7 +163,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取我处理过的流程实例", notes = "获取我处理过的流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowManage)
     @PostMapping(value = [WorkFlowApi.myProcess], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryInstanceForMyProcess(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
@@ -175,7 +172,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程实例", notes = "获取流程实例")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowHistory)
     @PostMapping(value = [WorkFlowApi.history], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryHistoryInstance(@RequestBody @Valid processQueryPo: ProcessQueryPo): ResponseEntity<CustomerQueryPageVo<ProcessInstanceVo>> =
@@ -185,7 +181,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程历史记录", notes = "获取指定流程实例的历史处理记录")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowHistory)
     @GetMapping(value = [WorkFlowApi.history + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryHistoryActivity(@ApiParam(value = "流程实例id", required = true)
@@ -197,7 +192,7 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程任务信息", notes = "获取指定流程任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowManage)
+    @PreAuthorize(WorkFlowExpression.flowProcess)
     @GetMapping(value = [WorkFlowApi.task + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun queryTaskInfo(@ApiParam(value = "流程任务ID", required = true)
@@ -209,7 +204,6 @@ constructor(logAdapter: LogAdapter,
 
     @ApiOperation(value = "获取流程图", notes = "获取指定实例id的流程图，返回图片二进制流数据")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
-    @PreAuthorize(WorkFlowExpression.flowDiagram)
     @GetMapping(value = [WorkFlowApi.diagram + "/{processInstanceId}/{imgType}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun diagram(response: HttpServletResponse,
