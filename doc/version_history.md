@@ -20,7 +20,7 @@
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 >     - Spring Boot 2.3.1.RELEASE
->     - Spring Cloud Hoxton.SR5
+>     - Spring Cloud Hoxton.SR6
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
 >     - kotlin coroutines 1.3.7
