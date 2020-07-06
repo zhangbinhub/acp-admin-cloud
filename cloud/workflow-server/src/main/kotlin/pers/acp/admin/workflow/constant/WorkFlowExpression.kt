@@ -9,11 +9,6 @@ import pers.acp.admin.constant.RoleCode
  */
 object WorkFlowExpression {
     /**
-     * 工作流管理
-     */
-    const val flowManage = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowManage + "')"
-
-    /**
      * 流程定义
      */
     const val flowDefinition = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"
@@ -32,14 +27,4 @@ object WorkFlowExpression {
      * 流程终止
      */
     const val flowTermination = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "','" + ModuleFuncCode.flowProcess + "')"
-
-    /**
-     * 获取流程处理历史
-     */
-    const val flowHistory = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowHistory + "')"
-
-    /**
-     * 获取流程图
-     */
-    const val flowDiagram = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDiagram + "')"
 }

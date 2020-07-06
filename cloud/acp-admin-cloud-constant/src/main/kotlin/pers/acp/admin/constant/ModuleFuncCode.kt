@@ -44,6 +44,4 @@ object ModuleFuncCode {
     const val flowDefinition = "flow_definition"
     const val flowPending = "flow_pending"
     const val flowProcess = "flow_process"
-    const val flowHistory = "flow_history"
-    const val flowDiagram = "flow_diagram"
 }

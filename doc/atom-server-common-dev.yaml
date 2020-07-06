@@ -77,7 +77,7 @@ feign:
   okhttp:
     enabled: true
   sentinel:
-    enabled: false
+    enabled: true
   client:
     config:
       default:

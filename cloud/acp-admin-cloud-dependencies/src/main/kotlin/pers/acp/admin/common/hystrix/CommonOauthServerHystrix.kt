@@ -19,7 +19,7 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
             logAdapter.error("token无效")
         } else {
             val errMsg = "调用 oauth2-server 异常: " + cause?.message
-            logAdapter.error(errMsg, cause)
+            logAdapter.error(errMsg)
         }
         return object : CommonOauthServer {
             @Throws(ServerException::class)

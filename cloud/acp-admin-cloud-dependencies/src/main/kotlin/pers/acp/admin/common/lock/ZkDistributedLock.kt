@@ -23,33 +23,37 @@ class ZkDistributedLock(private val curatorFramework: CuratorFramework,
      * @param lockId   锁ID
      * @param clientId 客户端ID
      * @param timeOut  超时时间
+     * @param reentrant 是否可重入
      * @return true|false 是否成功获取锁
      */
-    override fun getLock(lockId: String, clientId: String, timeOut: Long): Boolean {
-        val key = lockId + "_" + clientId
-        (distributedLockMap[key]?.let { lock ->
-            if (lock.isOwnedByCurrentThread) {
-                lock
-            } else {
-                InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
-            }
-        } ?: InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId"))
-                .let { lock ->
-                    return try {
-                        val result = lock.acquire(timeOut, TimeUnit.MILLISECONDS)
-                        if (result) {
-                            distributedLockMap[key] = lock
-                        }
-                        return result
-                    } catch (e: Exception) {
-                        logAdapter.error(e.message, e)
-                        false
-                    }
+    override fun getLock(lockId: String, clientId: String, timeOut: Long, reentrant: Boolean): Boolean {
+        val key = "${lockId}_${clientId}_${Thread.currentThread().hashCode()}"
+        if (reentrant) {
+            distributedLockMap[key]?.let { lock ->
+                if (lock.isOwnedByCurrentThread) {
+                    lock
+                } else {
+                    InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
                 }
+            } ?: InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
+        } else {
+            InterProcessMutex(curatorFramework, "$distributedLockRootPath/$lockId")
+        }.let { lock ->
+            return try {
+                val result = lock.acquire(timeOut, TimeUnit.MILLISECONDS)
+                if (result) {
+                    distributedLockMap[key] = lock
+                }
+                return result
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                false
+            }
+        }
     }
 
     override fun releaseLock(lockId: String, clientId: String) {
-        val key = lockId + "_" + clientId
+        val key = "${lockId}_${clientId}_${Thread.currentThread().hashCode()}"
         try {
             distributedLockMap[key]?.let { lock ->
                 lock.release()

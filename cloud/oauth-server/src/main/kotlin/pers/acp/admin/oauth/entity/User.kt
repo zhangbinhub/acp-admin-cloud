@@ -57,17 +57,17 @@ data class User(
         @ApiModelProperty("序号")
         var sort: Int = 0,
 
-        @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH])
+        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH])
         @JoinTable(name = "t_user_organization_set", joinColumns = [JoinColumn(name = "userId", referencedColumnName = "id")], inverseJoinColumns = [JoinColumn(name = "organizationId", referencedColumnName = "id")])
         @ApiModelProperty("所属机构")
         var organizationSet: MutableSet<Organization> = mutableSetOf(),
 
-        @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH])
+        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH])
         @JoinTable(name = "t_user_organization_mng_set", joinColumns = [JoinColumn(name = "userId", referencedColumnName = "id")], inverseJoinColumns = [JoinColumn(name = "organizationId", referencedColumnName = "id")])
         @ApiModelProperty("可管理的机构")
         var organizationMngSet: MutableSet<Organization> = mutableSetOf(),
 
-        @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH])
+        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH])
         @JoinTable(name = "t_user_role_set", joinColumns = [JoinColumn(name = "userId", referencedColumnName = "id")], inverseJoinColumns = [JoinColumn(name = "roleId", referencedColumnName = "id")])
         @ApiModelProperty("所属角色")
         var roleSet: MutableSet<Role> = mutableSetOf()

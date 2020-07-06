@@ -2,6 +2,7 @@ package pers.acp.admin.common.test
 
 import kotlinx.coroutines.*
 import pers.acp.admin.constant.RoleCode
+import java.util.*
 
 /**
  * @author zhang by 12/08/2019
@@ -23,16 +24,24 @@ fun main() = runBlocking {
 
         var totle = 0
         val start = System.currentTimeMillis()
+        val set = mutableSetOf<String>()
         withContext(Dispatchers.IO) {
-            for (index in 0..500000) {
+            var totlet = 0
+            for (index in 0..50) {
                 launch(Dispatchers.IO) {
                     delay(2000)
-                    println("$index >>>>>>>> finished " + System.currentTimeMillis())
-                    totle++
+                    UUID.randomUUID().toString().toUpperCase().let {
+                        println(Thread.currentThread())
+                        println("$index >>>>>>>> finished $it")
+                        set.add(it)
+                    }
+                    totlet++
                 }
             }
+            totle=totlet
         }
-        println("totle = $totle, time = ${System.currentTimeMillis()-start} ms")
+        println(set.size)
+        println("totle = $totle, time = ${System.currentTimeMillis() - start} ms")
     } catch (e: Exception) {
         e.printStackTrace()
     }
