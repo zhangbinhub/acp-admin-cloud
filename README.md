@@ -128,7 +128,7 @@ ext {
 - cloud 目录下为基于 Spring Cloud 的自定义组件模块
 - dockerfiles 所使用的中间件[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)
 - [数据库表结构](doc/数据结构.docx)
-- swagger url : /swagger-ui.html
+- swagger url : /doc.html
 
 ## 四、启停 SpringBoot 应用
 - [jvm 参考参数](doc/jvm-params.txt)
