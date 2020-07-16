@@ -1,6 +1,8 @@
 package pers.acp.admin.log.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.annotations.*
+import org.bouncycastle.util.encoders.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
@@ -14,6 +16,7 @@ import pers.acp.admin.log.constant.LogApi
 import pers.acp.admin.log.constant.LogConstant
 import pers.acp.admin.log.domain.LogFileDomain
 import pers.acp.admin.log.domain.LogDomain
+import pers.acp.admin.log.po.FileDownLoadPo
 import pers.acp.admin.log.po.LogQueryPo
 import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.admin.permission.BaseExpression
@@ -22,6 +25,8 @@ import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
+import java.io.File
+import java.nio.charset.Charset
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -40,6 +45,7 @@ import javax.validation.constraints.NotNull
 class LogController @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val logFileDomain: LogFileDomain,
+            private val objectMapper: ObjectMapper,
             private val logDomain: LogDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取各应用过去3个月的登录次数统计")
@@ -110,13 +116,17 @@ constructor(private val logAdapter: LogAdapter,
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @GetMapping(value = [LogApi.logFile + "/{fileName}"], produces = [MediaType.ALL_VALUE])
+    @GetMapping(value = [LogApi.logFile], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun downloadFile(request: HttpServletRequest, response: HttpServletResponse,
-                     @ApiParam(value = "文件名称", required = true)
-                     @NotBlank(message = "文件名称不能为空")
-                     @PathVariable
-                     fileName: String) {
+                     @ApiParam(value = "文件内容", required = true)
+                     @NotBlank(message = "文件内容不能为空")
+                     @RequestParam params: String) {
+        val fileContent = objectMapper.readValue(params, FileDownLoadPo::class.java)
+        if (CommonTools.isNullStr(fileContent.fileName)) {
+            throw ServerException("文件名称不能为空")
+        }
+        val fileName = String(Base64.decode(fileContent.fileName), Charset.forName(CommonTools.getDefaultCharset())).replace("/", File.separator).replace("\\", File.separator)
         logFileDomain.doDownLoadFile(request, response, fileName)
     }
 

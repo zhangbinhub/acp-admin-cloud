@@ -1,0 +1,57 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 1000
+spring:
+  profiles:
+    active: dev
+  application:
+    name: deploy-server
+  thymeleaf:
+    cache: false
+  #  zipkin:
+  #    sender:
+  #      type: kafka
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      server-addr: 127.0.0.1:8848
+      discovery:
+        namespace: acp-cloud-admin
+        cluster-name: ${spring.profiles.active}
+        group: ${spring.profiles.active}
+      config:
+        file-extension: yaml
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
+        group: ${spring.cloud.nacos.discovery.group}
+        shared-configs:
+          - data-id: atom-server-common-${spring.profiles.active}.yaml
+            group: ${spring.profiles.active}
+            refresh: true
+logging:
+  pattern:
+    file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+info:
+  version: 4.1.7
+  app-name: ${spring.application.name}
+  tags:
+    environment: ${spring.profiles.active}
+  build:
+    author: zhangbin
+    active: ${spring.profiles.active}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+acp:
+  cloud:
+    oauth:
+      resource-server-permit-all-path:
+        - /deploy/file-download/**

@@ -1,0 +1,217 @@
+package pers.acp.admin.deploy.domain
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
+import pers.acp.admin.common.base.BaseDomain
+import pers.acp.admin.common.feign.CommonOauthServer
+import pers.acp.admin.constant.TokenConstant
+import pers.acp.admin.deploy.conf.DeployServerCustomerConfiguration
+import pers.acp.admin.deploy.entity.DeployTask
+import pers.acp.admin.deploy.po.DeployTaskPo
+import pers.acp.admin.deploy.po.DeployTaskQueryPo
+import pers.acp.admin.deploy.repo.DeployTaskRepository
+import pers.acp.core.CommonTools
+import pers.acp.spring.boot.component.FileDownLoadHandle
+import pers.acp.spring.boot.exceptions.ServerException
+import pers.acp.spring.boot.interfaces.LogAdapter
+import java.io.File
+import java.io.InputStreamReader
+import java.io.LineNumberReader
+import java.util.*
+import javax.persistence.criteria.Predicate
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+@Service
+@Transactional(readOnly = true)
+class DeployTaskDomain @Autowired
+constructor(private val logAdapter: LogAdapter,
+            private val commonOauthServer: CommonOauthServer,
+            private val deployTaskRepository: DeployTaskRepository,
+            private val deployServerCustomerConfiguration: DeployServerCustomerConfiguration,
+            private val fileDownLoadHandle: FileDownLoadHandle) : BaseDomain() {
+    @Throws(ServerException::class)
+    private fun makeFold(): File = File(deployServerCustomerConfiguration.uploadPath).apply {
+        if (!this.exists()) {
+            if (!this.mkdirs()) {
+                logAdapter.error("创建目录失败: " + this.canonicalPath)
+                throw ServerException("创建目录失败！")
+            }
+        }
+    }
+
+    @Throws(ServerException::class)
+    private fun validateFold(fold: File) {
+        if (!fold.exists()) {
+            throw ServerException("路径不存在【${fold.canonicalPath}】")
+        }
+        if (!fold.isDirectory) {
+            throw ServerException("路径 " + fold.canonicalPath + " 不是文件夹")
+        }
+    }
+
+    private fun copyEntity(deployTask: DeployTask, deployTaskPo: DeployTaskPo): DeployTask =
+            deployTask.copy(name = deployTaskPo.name!!,
+                    serverIpRegex = deployTaskPo.serverIpRegex,
+                    remarks = deployTaskPo.remarks
+            ).apply {
+                var targetFileName = deployTaskPo.scriptFile!!.replace("/", File.separator).replace("\\", File.separator)
+                val index = targetFileName.lastIndexOf(File.separator)
+                if (index > -1) {
+                    targetFileName = targetFileName.substring(index + 1)
+                }
+                this.scriptFile = targetFileName.replace(Regex("[\\\\<>/|:\"*?]"), "")
+                commonOauthServer.tokenInfo()?.also { oAuth2AccessToken ->
+                    val nowTime = System.currentTimeMillis()
+                    if (this.createTime == 0L) {
+                        this.createLoginNo = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
+                        this.createUserName = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
+                        this.createTime = nowTime
+                    }
+                } ?: throw ServerException("获取当前登录用户信息失败")
+            }
+
+    @Transactional
+    @Throws(ServerException::class)
+    fun doCreate(deployTaskPo: DeployTaskPo): DeployTask =
+            deployTaskRepository.save(copyEntity(DeployTask(), deployTaskPo))
+
+    @Transactional
+    @Throws(ServerException::class)
+    fun doUpdate(deployTaskPo: DeployTaskPo): DeployTask =
+            deployTaskRepository.save(copyEntity(deployTaskRepository.getOne(deployTaskPo.id!!), deployTaskPo))
+
+    @Transactional
+    @Throws(ServerException::class)
+    fun doDelete(idList: MutableList<String>) =
+            deployTaskRepository.deleteByIdIn(idList)
+
+    @Transactional
+    @Throws(ServerException::class)
+    fun executeTask(id: String) = deployTaskRepository.findByIdOrNull(id)?.let { deployTask ->
+        commonOauthServer.tokenInfo()?.let { oAuth2AccessToken ->
+            val nowTime = System.currentTimeMillis()
+            if (deployTask.execTime == null) {
+                deployTask.execLoginNo = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
+                deployTask.execUserName = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
+                deployTask.execTime = nowTime
+                deployTaskRepository.save(deployTask)
+            } else {
+                throw ServerException("任务${deployTask.name}已被执行过！")
+            }
+        } ?: throw ServerException("获取当前登录用户信息失败")
+    } ?: throw ServerException("找不到对应的部署任务【$id】")
+
+    @Throws(ServerException::class)
+    fun doExecuteTask(id: String) = deployTaskRepository.findByIdOrNull(id)?.let { deployTask ->
+        if (!CommonTools.isNullStr(deployTask.serverIpRegex) && !CommonTools.regexPattern(deployTask.serverIpRegex!!, deployServerCustomerConfiguration.serverIp)) {
+            logAdapter.info("当前实例服务器IP【${deployServerCustomerConfiguration.serverIp}】不匹配【${deployTask.serverIpRegex}】，不执行部署任务！")
+        } else {
+            val fold = makeFold()
+            val scriptFile = File("${fold.canonicalPath}${File.separator}${deployTask.scriptFile}")
+            try {
+                if (!scriptFile.exists()) {
+                    throw ServerException("文件【${scriptFile.canonicalPath}】不存在！")
+                }
+                logAdapter.info("开始执行脚本【${scriptFile.canonicalPath}】")
+                val process = when (CommonTools.getFileExt(deployTask.scriptFile).toLowerCase()) {
+                    "sh" -> {
+                        Runtime.getRuntime().exec("chmod +x ${scriptFile.canonicalPath}").waitFor()
+                        Runtime.getRuntime().exec(arrayOf("/bin/sh", "-c", scriptFile.canonicalPath), null, null)
+                    }
+                    "bat" -> {
+                        Runtime.getRuntime().exec(scriptFile.canonicalPath)
+                    }
+                    else -> {
+                        throw ServerException("脚本【${scriptFile.canonicalPath}】不能执行，仅支持.bat和.sh文件")
+                    }
+                }
+                val reader = InputStreamReader(process.inputStream)
+                val input = LineNumberReader(reader)
+                var line: String?
+                while (input.readLine().also { line = it } != null) {
+                    logAdapter.info("${deployTask.scriptFile} >>>> $line")
+                }
+                process.waitFor()
+                input.close()
+            } catch (e: Exception) {
+                throw ServerException("脚本【${scriptFile.canonicalPath}】${e.message}")
+            }
+        }
+    } ?: throw ServerException("找不到对应的部署任务【$id】")
+
+    fun doQuery(deployTaskQueryPo: DeployTaskQueryPo): Page<DeployTask> =
+            deployTaskRepository.findAll({ root, _, criteriaBuilder ->
+                val predicateList: MutableList<Predicate> = mutableListOf()
+                if (!CommonTools.isNullStr(deployTaskQueryPo.name)) {
+                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + deployTaskQueryPo.name + "%"))
+                }
+                if (deployTaskQueryPo.startTime != null) {
+                    predicateList.add(criteriaBuilder.ge(root.get<Any>("execTime").`as`(Long::class.java), deployTaskQueryPo.startTime))
+                }
+                if (deployTaskQueryPo.endTime != null) {
+                    predicateList.add(criteriaBuilder.le(root.get<Any>("execTime").`as`(Long::class.java), deployTaskQueryPo.endTime))
+                }
+                criteriaBuilder.and(*predicateList.toTypedArray())
+            }, buildPageRequest(deployTaskQueryPo.queryParam!!))
+
+    @Throws(ServerException::class)
+    fun fileList(): List<String> {
+        val fold = makeFold()
+        validateFold(fold)
+        val fileList: MutableList<String> = mutableListOf()
+        fold.listFiles()?.let {
+            for (file in it) {
+                fileList.add(file.name)
+            }
+        }
+        fileList.sortWith(Comparator.reverseOrder())
+        return fileList
+    }
+
+    @Throws(ServerException::class)
+    fun uploadFile(file: MultipartFile): String {
+        val fold = makeFold()
+        var fileName = file.originalFilename!!
+        val existCount = fold.listFiles { item ->
+            item.name == fileName
+        }?.size ?: 0
+        if (existCount > 0) {
+            fileName = "${fileName.substring(0, fileName.lastIndexOf("."))}_${existCount}${fileName.substring(fileName.lastIndexOf("."))}"
+        }
+        val targetFile = File(fold.canonicalPath + File.separator + fileName)
+        file.transferTo(targetFile)
+        return fileName
+    }
+
+    @Throws(ServerException::class)
+    fun deleteFile(fileName: String) {
+        var targetFileName = fileName
+        val index = targetFileName.lastIndexOf(File.separator)
+        if (index > -1) {
+            targetFileName = targetFileName.substring(index + 1)
+        }
+        CommonTools.doDeleteFile(File("${makeFold().canonicalPath}${File.separator}$targetFileName"))
+    }
+
+    @Throws(ServerException::class)
+    fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, fileName: String) {
+        val fold = makeFold()
+        val foldPath = fold.canonicalPath
+        validateFold(fold)
+        var targetFileName = fileName
+        val index = targetFileName.lastIndexOf(File.separator)
+        if (index > -1) {
+            targetFileName = targetFileName.substring(index + 1)
+        }
+        val filePath = "$foldPath/$targetFileName".replace("/", File.separator).replace("\\", File.separator)
+        if (!File(filePath).exists()) {
+            throw ServerException("文件[$targetFileName]不存在")
+        }
+        fileDownLoadHandle.downLoadFile(request, response, filePath, listOf("$foldPath/.*"))
+    }
+}
