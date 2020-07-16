@@ -41,6 +41,12 @@
 >   - [Upgrade] 修改controller接口权限，流程实例相关的查询不受控制
 > - admin-server
 >   - [Upgrade] 单独使用 Spring Boot 2.3.0.RELEASE，解决兼容问题
+> - deploy-server
+>   - [Add] 新增部署服务
+>     - 1、提供部署文件上传、删除、下载、查询功能
+>     - 2、提供部署任务增、删、改、查、立即执行、定时执行功能
+>     - 3、部署任务执行时仅支持执行指定脚本文件
+>     - 4、接口详情请在浏览器中访问 /doc.html 页面
 ##### v4.1.6
 > - Global And All Server
 >   - [Upgrade] 修改 gradle 脚本，release 任务根据参数 -Pactive 打包不同的环境配置

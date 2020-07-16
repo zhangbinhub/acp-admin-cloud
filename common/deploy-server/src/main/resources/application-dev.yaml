@@ -1,0 +1,35 @@
+server:
+  address: 127.0.0.1
+  port: 8711
+management:
+  server:
+    port: 8710
+# ===============================
+# = Log To File Config
+# ===============================
+logging:
+  file:
+    path: logs/deploy-server
+    name: ${logging.file.path}/${spring.application.name}.log
+# ===============================
+# = Spring Config
+# ===============================
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 2GB
+  cloud:
+    nacos:
+      discovery:
+        ip: ${server.address}
+    bus:
+      id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
+  # ===============================
+  # = DATA SOURCE
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/acp-admin?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver

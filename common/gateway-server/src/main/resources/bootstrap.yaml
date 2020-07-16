@@ -35,6 +35,12 @@ spring:
       loadbalancer:
         use404: true
       routes:
+        - id: deploy-server-api
+          uri: lb://deploy-server
+          predicates:
+            - Path=/api/deploy/**
+          filters:
+            - StripPrefix=1
         - id: log-server-api
           uri: lb://log-server
           predicates:

@@ -1,12 +1,10 @@
 package pers.acp.admin.log.domain
 
-import org.bouncycastle.util.encoders.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.constant.LogBackUp
-import pers.acp.core.CommonTools
 import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.component.FileDownLoadHandle
 import pers.acp.spring.boot.exceptions.ServerException
@@ -14,7 +12,6 @@ import pers.acp.spring.boot.exceptions.ServerException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.io.File
-import java.nio.charset.Charset
 import java.util.Comparator
 
 /**
@@ -60,7 +57,11 @@ constructor(private val logServerCustomerConfiguration: LogServerCustomerConfigu
         val fold = File(logServerCustomerConfiguration.logFilePath + LogBackUp.BACK_UP_PATH)
         val foldPath = fold.canonicalPath
         validateFold(fold)
-        val targetFileName = String(Base64.decode(fileName), Charset.forName(CommonTools.getDefaultCharset()))
+        var targetFileName = fileName
+        val index = targetFileName.lastIndexOf(File.separator)
+        if (index > -1) {
+            targetFileName = targetFileName.substring(index + 1)
+        }
         val filePath = "$foldPath/$targetFileName".replace("/", File.separator).replace("\\", File.separator)
         if (!File(filePath).exists()) {
             throw ServerException("文件[$targetFileName]不存在")
