@@ -152,4 +152,16 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 )
             }
 
+    @Throws(ServerException::class)
+    fun getOrgInfoByCode(code: String): MutableList<OrganizationVo> = mutableListOf<OrganizationVo>().apply {
+        organizationRepository.findAllByCodeInOrderBySortAsc(listOf(code)).forEach { item ->
+            this.add(OrganizationVo(
+                    id = item.id,
+                    code = item.code,
+                    name = item.name,
+                    parentId = item.parentId,
+                    sort = item.sort
+            ))
+        }
+    }
 }
