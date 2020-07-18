@@ -179,6 +179,7 @@ allprojects {
         doLast {
             def needCopy = {
                 return ["admin-server",
+                        "deploy-server",
                         "gateway-server",
                         "log-server",
                         "oauth-server",
