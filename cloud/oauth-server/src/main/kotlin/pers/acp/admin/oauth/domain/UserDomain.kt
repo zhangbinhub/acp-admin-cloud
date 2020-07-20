@@ -183,7 +183,7 @@ constructor(userRepository: UserRepository,
     }
 
     fun doQuery(userQueryPo: UserQueryPo): Page<UserVo> =
-            userRepository.findAll({ root, _, criteriaBuilder ->
+            userRepository.findAll({ root, query, criteriaBuilder ->
                 val predicateList = ArrayList<Predicate>()
                 if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
                     predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userQueryPo.loginNo))
@@ -195,12 +195,18 @@ constructor(userRepository: UserRepository,
                     predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
                 }
                 if (!CommonTools.isNullStr(userQueryPo.orgName)) {
-                    val joinOrg = root.join<User, Organization>("organizationSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
+                    val subQuery = query.subquery(User::class.java)
+                    val subRoot = subQuery.from(User::class.java)
+                    val joinOrg = subRoot.join<User, Organization>("organizationSet", JoinType.LEFT)
+                    subQuery.select(subRoot.get("id")).where(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
+                    predicateList.add(root.get<Any>("id").`in`(subQuery))
                 }
                 if (!CommonTools.isNullStr(userQueryPo.roleName)) {
-                    val joinOrg = root.join<User, Role>("roleSet", JoinType.LEFT)
-                    predicateList.add(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
+                    val subQuery = query.subquery(User::class.java)
+                    val subRoot = subQuery.from(User::class.java)
+                    val joinRole = subRoot.join<User, Role>("roleSet", JoinType.LEFT)
+                    subQuery.select(subRoot.get("id")).where(criteriaBuilder.like(joinRole.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
+                    predicateList.add(root.get<Any>("id").`in`(subQuery))
                 }
                 criteriaBuilder.and(*predicateList.toTypedArray())
             }, buildPageRequest(userQueryPo.queryParam!!))
