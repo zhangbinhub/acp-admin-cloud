@@ -250,7 +250,10 @@ http://127.0.0.1:5601
 >   - spring-boot-starter-data-redis
 >   - curator-recipes
 >   - cloud:acp-admin-cloud-constant
-### （五）[log-server](cloud/log-server/README.md)
+### （五）[deploy-server](common/deploy-server/README.md)
+> - 发布服务
+> - 依赖，请查看[build.gradle](common/deploy-server/build.gradle)
+### （六）[log-server](cloud/log-server/README.md)
 > - 统一日志服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
@@ -261,22 +264,22 @@ http://127.0.0.1:5601
 > - 每日将路由日志、操作日志、登录日志迁移至历史库
 > - 根据 oauth 服务中运行参数配置的策略，压缩备份日志文件
 > - 提供备份的日志文件查询、下载接口，只有超级管理员有权限访问
-### （六）[oauth-server](cloud/oauth-server/README.md)
+### （七）[oauth-server](cloud/oauth-server/README.md)
 > - 统一认证服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 > - 提供全套权限体系服务，包含客户端应用管理、用户管理、机构管理、角色管理、权限管理、token管理、运行参数管理等
-### （七）[route-server](cloud/route-server/README.md)
+### （八）[route-server](cloud/route-server/README.md)
 > - 路由服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 > - 提供动态路由策略配置及刷新
-### （八）[workflow-server](cloud/workflow-server/README.md)
+### （九）[workflow-server](cloud/workflow-server/README.md)
 > - 工作流引擎服务
 > - 依赖 
 >   - cloud:acp-admin-cloud-dependencies
 > - 提供工作流相关接口服务
-### （九）其他自定义服务
+### （十）其他自定义服务
 > - 依赖
 >   - cloud:acp-admin-cloud-dependencies
 
