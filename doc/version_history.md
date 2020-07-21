@@ -31,6 +31,9 @@
 >   - [Upgrade] 增加通过登录号查询用户的接口
 >   - [Upgrade] 角色配置、菜单配置、功能权限配置、机构配置，加强校验，提升系统安全性
 >   - [Upgrade] 用户信息实体中，关联的实体改为 FetchType.LAZY
+>   - [Upgrade] 增加通过编码获取机构信息接口
+>   - [Upgrade] UserDomain.getUserInfoById 方法优化
+>   - [Fix] 优化用户查询，去除重复
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
 >   - [Upgrade] 修改流程强制结束接口权限
