@@ -42,6 +42,7 @@
 >   - [Upgrade] 流程发起人设置为流程变量startUserId
 >   - [Upgrade] 优化当前处理人获取逻辑
 >   - [Upgrade] 修改controller接口权限，流程实例相关的查询不受控制
+>   - [Upgrade] 优化流程相关用户查询，anonymousUser视为空
 > - admin-server
 >   - [Upgrade] 单独使用 Spring Boot 2.3.0.RELEASE，解决兼容问题
 > - deploy-server
