@@ -1,6 +1,5 @@
 package pers.acp.admin.deploy.bus.publish
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,8 +17,7 @@ import pers.acp.admin.deploy.constant.DeployConstant
 @Component
 class DeployEventPublish @Autowired
 constructor(private val applicationContext: ApplicationContext,
-            private val busProperties: BusProperties,
-            private val objectMapper: ObjectMapper) {
+            private val busProperties: BusProperties) {
     fun doNotifyExecuteDeploy(deployTaskId: String) {
         val source = this
         GlobalScope.launch(Dispatchers.IO) {
