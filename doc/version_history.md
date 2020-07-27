@@ -19,11 +19,11 @@
 >   - [Upgrade] 去除 RedisDistributedLock
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
->     - Spring Boot 2.3.1.RELEASE
+>     - Spring Boot 2.3.2.RELEASE
 >     - Spring Cloud Hoxton.SR6
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
->     - kotlin coroutines 1.3.7
+>     - kotlin coroutines 1.3.8
 >     - curator 5.0.0
 > - oauth-server
 >   - [Upgrade] 使用新的 Sha256 工具类
@@ -33,6 +33,7 @@
 >   - [Upgrade] 用户信息实体中，关联的实体改为 FetchType.LAZY
 >   - [Upgrade] 增加通过编码获取机构信息接口
 >   - [Upgrade] UserDomain.getUserInfoById 方法优化
+>   - [Upgrade] SecurityTokenService 方法优化，null判断
 >   - [Fix] 优化用户查询，去除重复
 > - workflow-server
 >   - [Upgrade] /workflow/history 接口限定只查询已结束的流程信息，未结束的流程实例通过 /workflow/instance 接口查询
