@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreMemory
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis
+import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -28,7 +29,7 @@ constructor(private val logAdapter: LogAdapter,
     /**
      * 默认持久化到内存
      */
-    private var customerTokenStore:TokenStore = inMemoryTokenStore()
+    private var customerTokenStore: TokenStore = inMemoryTokenStore()
 
     fun getTokenStore(): TokenStore = this.customerTokenStore
 
@@ -65,7 +66,9 @@ constructor(private val logAdapter: LogAdapter,
      * @param authentication 授权信息
      * @return token对象
      */
+    @Throws(ServerException::class)
     fun getToken(authentication: OAuth2Authentication): OAuth2AccessToken = customerTokenStore.getAccessToken(authentication)
+            ?: throw ServerException("access token was not find")
 
     /**
      * 获取token详细信息
@@ -73,7 +76,9 @@ constructor(private val logAdapter: LogAdapter,
      * @param tokenValue token值
      * @return token对象
      */
+    @Throws(ServerException::class)
     fun getToken(tokenValue: String): OAuth2AccessToken = customerTokenStore.readAccessToken(tokenValue)
+            ?: throw ServerException("access token was not find")
 
     /**
      * 根据应用id和登录账号获取token

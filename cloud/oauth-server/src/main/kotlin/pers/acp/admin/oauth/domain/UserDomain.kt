@@ -219,9 +219,10 @@ constructor(userRepository: UserRepository,
     fun getUserInfo(userId: String): User? = userRepository.findById(userId).orElse(null)
 
     @Throws(ServerException::class)
-    fun getUserInfoById(userId: String): UserVo = userRepository.getOne(userId).let {
+    fun getUserInfoById(userId: String): UserVo = userRepository.findById(userId).let {
+        if (it.isEmpty) throw ServerException("找不到用户信息")
         UserVo().apply {
-            BeanUtils.copyProperties(it, this)
+            BeanUtils.copyProperties(it.get(), this)
         }
     }
 

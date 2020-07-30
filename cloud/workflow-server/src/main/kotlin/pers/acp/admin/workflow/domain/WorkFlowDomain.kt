@@ -49,7 +49,7 @@ constructor(private val logAdapter: LogAdapter,
             private val myProcessInstanceRepository: MyProcessInstanceRepository) : BaseDomain() {
 
     private fun getUserById(id: String?): UserVo =
-            if (CommonTools.isNullStr(id)) {
+            if (CommonTools.isNullStr(id) || id == "anonymousUser") {
                 UserVo()
             } else {
                 commonOauthServer.findUserById(id!!)
@@ -425,7 +425,7 @@ constructor(private val logAdapter: LogAdapter,
                 }
             }
             params[WorkFlowParamKey.comment] = if (task.delegationState == DelegationState.PENDING) {
-                (commonOauthServer.findUserById(userId).name ?: "") + ":" + comment
+                (getUserById(userId).name ?: "") + ":" + comment
             } else {
                 comment
             }

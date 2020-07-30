@@ -47,7 +47,7 @@ constructor(private val logAdapter: LogAdapter,
     @ApiOperation(value = "获取角色编码列表")
     @PreAuthorize(RoleConfigExpression.roleConfig)
     @GetMapping(value = [OauthApi.roleCodes], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun findModuleFuncCode(): ResponseEntity<List<String>> = ResponseEntity.ok(roleCodeList)
+    fun findRoleCode(): ResponseEntity<List<String>> = ResponseEntity.ok(roleCodeList)
 
     @PostConstruct
     fun init() {
