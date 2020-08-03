@@ -9,7 +9,7 @@ versions += [
         kotlin_coroutines: "1.3.8",
         curator          : "5.0.0",
         spring_boot      : "2.3.2.RELEASE",
-        spring_cloud     : "Hoxton.SR6",
+        spring_cloud     : "Hoxton.SR7",
         alibaba_cloud    : "2.2.1.RELEASE",
         flowable         : "6.5.0",
         mysql            : "8.0.20"
