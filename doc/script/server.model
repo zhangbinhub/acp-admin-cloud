@@ -34,6 +34,16 @@ stop(){
   fi
 }
 
+stopNow(){
+  is_exist
+  if [ $? -eq "0" ]; then
+    kill -9 $pid
+    sleep 1s
+  else
+    echo "${APP_NAME} is not running"
+  fi
+}
+
 status(){
   is_exist
   if [ $? -eq "0" ]; then
@@ -45,15 +55,20 @@ status(){
 
 restart(){
   stop
-  for i in $(seq 1 3600)
+  for i in $(seq 1 30)
   do
-    is_exist
-    if [ $? -eq "0" ]
-    then
-        sleep 1s
+    if [ $i -eq 30 ]; then
+      stopNow
+      start
+      break
     else
+      is_exist
+      if [ $? -eq "0" ]; then
+        sleep 1s
+      else
         start
         break
+      fi
     fi
   done
 }
@@ -64,6 +79,9 @@ case "$1" in
     ;;
   "stop")
     stop
+    ;;
+  "stopNow")
+    stopNow
     ;;
   "status")
     status
