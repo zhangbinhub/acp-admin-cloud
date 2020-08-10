@@ -20,7 +20,7 @@
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 >     - Spring Boot 2.3.2.RELEASE
->     - Spring Cloud Hoxton.SR6
+>     - Spring Cloud Hoxton.SR7
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
 >     - kotlin coroutines 1.3.8
@@ -45,7 +45,7 @@
 >   - [Upgrade] 修改controller接口权限，流程实例相关的查询不受控制
 >   - [Upgrade] 优化流程相关用户查询，anonymousUser视为空
 > - admin-server
->   - [Upgrade] 单独使用 Spring Boot 2.3.0.RELEASE，解决兼容问题
+>   - [Upgrade] 升级 Spring Boot Admin 2.3.0
 > - deploy-server
 >   - [Add] 新增部署服务
 >     - 1、提供部署文件上传、删除、下载、查询功能
