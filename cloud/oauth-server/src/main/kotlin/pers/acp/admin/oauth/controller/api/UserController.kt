@@ -165,7 +165,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserListByLoginNoOrName(@ApiParam(value = "登录号或姓名", required = true)
                                    @NotBlank(message = "登录号或姓名不能为空")
                                    @PathVariable loginNoOrName: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByLoginNoOrName(loginNoOrName))
+            ResponseEntity.ok(userDomain.getUserListByLoginNoOrName(loginNoOrName, false))
 
     @ApiOperation(value = "通过角色编码，查询当前机构下的用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
