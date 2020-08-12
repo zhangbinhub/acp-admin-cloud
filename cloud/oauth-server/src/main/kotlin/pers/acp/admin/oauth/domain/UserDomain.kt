@@ -247,9 +247,11 @@ constructor(userRepository: UserRepository,
      * 根据登录号或姓名模糊查询用户
      */
     @Throws(ServerException::class)
-    fun getUserListByLoginNoOrName(loginNoOrName: String): MutableList<UserVo> =
+    fun getUserListByLoginNoOrName(loginNoOrName: String, findAll: Boolean): MutableList<UserVo> =
             userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%").map { item ->
                 UserVo().apply { BeanUtils.copyProperties(item, this) }
+            }.filter { item ->
+                findAll || item.enabled
             }.toMutableList()
 
     /**

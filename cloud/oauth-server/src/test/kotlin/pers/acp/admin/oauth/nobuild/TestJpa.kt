@@ -7,7 +7,6 @@ import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.annotation.Rollback
-import pers.acp.admin.common.serialnumber.GenerateSerialNumber
 import pers.acp.admin.oauth.BaseTest
 import pers.acp.admin.oauth.domain.TableTwoDomain
 import pers.acp.admin.oauth.jpa.MemberTwo
@@ -19,9 +18,6 @@ import pers.acp.spring.cloud.lock.DistributedLock
  * @since JDK 11
  */
 internal class TestJpa : BaseTest() {
-    @Autowired
-    private val generateSerialNumber: GenerateSerialNumber? = null
-
     @Autowired
     private val distributedLock: DistributedLock? = null
 
