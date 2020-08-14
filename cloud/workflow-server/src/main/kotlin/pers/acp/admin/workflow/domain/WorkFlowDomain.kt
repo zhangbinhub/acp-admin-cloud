@@ -250,9 +250,14 @@ constructor(private val logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun findTaskById(taskId: String): ProcessTaskVo =
             try {
-                taskService.createTaskQuery().taskId(taskId).singleResult()?.let {
-                    taskToVo(it)
-                } ?: throw ServerException("找不到信息")
+                commonOauthServer.userInfo()?.let { userInfo ->
+                    taskService.createTaskQuery().or()
+                            .taskCandidateGroupIn(userInfo.roleSet.map { role -> role.code }.toList())
+                            .taskCandidateOrAssigned(userInfo.id).endOr()
+                            .taskId(taskId).singleResult()?.let {
+                                taskToVo(it)
+                            } ?: throw ServerException("找不到信息")
+                } ?: throw ServerException("获取当前登录用户信息失败！")
             } catch (e: Exception) {
                 logAdapter.error(e.message, e)
                 throw ServerException(e.message)
