@@ -44,6 +44,7 @@
 >   - [Upgrade] 优化当前处理人获取逻辑
 >   - [Upgrade] 修改controller接口权限，流程实例相关的查询不受控制
 >   - [Upgrade] 优化流程相关用户查询，anonymousUser视为空
+>   - [Upgrade] 只有待办用户才能查询流程节点任务详细信息
 > - admin-server
 >   - [Upgrade] 升级 Spring Boot Admin 2.3.0
 > - deploy-server
