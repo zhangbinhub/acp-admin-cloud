@@ -25,6 +25,8 @@
 >     - junit platform 1.6.2
 >     - kotlin coroutines 1.3.8
 >     - curator 5.0.0
+> - log-server
+>   - [Upgrade] 每个日志文件大小限制修改为100MB
 > - oauth-server
 >   - [Upgrade] 使用新的 Sha256 工具类
 >   - [Upgrade] 根据用户名或登录号模糊查询时，字符串前后都匹配，且过滤禁用的用户
