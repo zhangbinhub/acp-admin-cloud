@@ -5,7 +5,7 @@ info:
 # ===============================
 logging:
   file:
-    max-size: 5MB
+    max-size: 100MB
     max-history: 30
   level:
     com.alibaba.nacos.client: warn
