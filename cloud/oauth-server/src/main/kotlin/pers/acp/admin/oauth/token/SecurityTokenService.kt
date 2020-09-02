@@ -39,7 +39,7 @@ constructor(private val logAdapter: LogAdapter,
 
     init {
         try {
-            Class.forName("org.springframework.data.redis.connection.RedisConnection")?.also {
+            Class.forName("org.springframework.data.redis.connection.RedisConnection").also {
                 // 持久化到 Redis
                 this.customerTokenStore = redisTokenStore()
             }
