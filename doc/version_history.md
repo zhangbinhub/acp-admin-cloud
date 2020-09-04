@@ -15,7 +15,7 @@
 >   - [Upgrade] ExecuteBusEvent 的消息内容属性修改为 message
 >   - [Upgrade] 修复 WorkFlowServer 客户端，pendingByUser方法返回无权限的异常
 >   - [Upgrade] 修改 CommonOauthServerHystrix 处理方式
->   - [Upgrade] 修改 WorkFlowServer 客户端
+>   - [Upgrade] 修改 WorkFlowServer 客户端，增加 terminationInner 方法
 >   - [Upgrade] 去除 RedisDistributedLock
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
@@ -47,6 +47,7 @@
 >   - [Upgrade] 修改controller接口权限，流程实例相关的查询不受控制
 >   - [Upgrade] 优化流程相关用户查询，anonymousUser视为空
 >   - [Upgrade] 只有待办用户才能查询流程节点任务详细信息
+>   - [Upgrade] 增加内部接口，强制结束流程
 > - admin-server
 >   - [Upgrade] 升级 Spring Boot Admin 2.3.0
 > - deploy-server
