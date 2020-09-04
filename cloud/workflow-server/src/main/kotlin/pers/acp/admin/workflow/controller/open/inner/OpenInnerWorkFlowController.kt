@@ -13,6 +13,7 @@ import pers.acp.admin.common.po.ProcessStartPo
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.api.WorkFlowApi
 import pers.acp.admin.common.po.ProcessHandlingPo
+import pers.acp.admin.common.po.ProcessTerminationPo
 import pers.acp.admin.common.vo.ProcessTaskVo
 import pers.acp.admin.workflow.domain.WorkFlowDomain
 import pers.acp.spring.boot.exceptions.ServerException
@@ -30,7 +31,7 @@ import javax.validation.Valid
 @RequestMapping(CommonPath.openInnerBasePath)
 @Api(tags = ["工作流引擎（内部开放接口）"])
 class OpenInnerWorkFlowController @Autowired
-constructor(logAdapter: LogAdapter,
+constructor(private val logAdapter: LogAdapter,
             private val workFlowDomain: WorkFlowDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "启动流程", notes = "启动指定的流程，并关联唯一业务主键")
@@ -70,5 +71,20 @@ constructor(logAdapter: LogAdapter,
     fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): ResponseEntity<List<ProcessTaskVo>> =
             workFlowDomain.findTaskList(processInstanceId, userId).let {
                 ResponseEntity.ok(it)
+            }
+
+    @ApiOperation(value = "流程强制结束")
+    @ApiResponses(ApiResponse(code = 400, message = "系统异常", response = ErrorVo::class))
+    @DeleteMapping(value = [WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @AcpCloudDuplicateSubmission
+    @Throws(ServerException::class)
+    fun termination(@RequestBody @Valid processTerminationPo: ProcessTerminationPo): ResponseEntity<InfoVo> =
+            workFlowDomain.findProcessInstance(processTerminationPo.processInstanceId!!).let { instance ->
+                if (instance.finished) {
+                    logAdapter.warn("流程已结束，无法再次终止该流程！")
+                }
+                workFlowDomain.deleteProcessInstance(processTerminationPo).let {
+                    ResponseEntity.ok(InfoVo(message = "强制结束流程实例成功"))
+                }
             }
 }

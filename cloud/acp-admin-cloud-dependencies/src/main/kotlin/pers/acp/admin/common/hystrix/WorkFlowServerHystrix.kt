@@ -29,6 +29,13 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<WorkFlowServer>(logAdapte
             }
 
             @Throws(ServerException::class)
+            override fun terminationInner(processTerminationPo: ProcessTerminationPo): InfoVo {
+                val errMsg = "强制终止流程实例失败"
+                logAdapter.error(errMsg)
+                throw ServerException(errMsg)
+            }
+
+            @Throws(ServerException::class)
             override fun startByUser(userId: String, processStartPo: ProcessStartPo): InfoVo {
                 val errMsg = "流程启动失败"
                 logAdapter.error(errMsg)

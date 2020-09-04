@@ -30,6 +30,13 @@ interface WorkFlowServer {
     fun startInner(@RequestBody processStartPo: ProcessStartPo): InfoVo
 
     /**
+     * 强制终止流程实例
+     */
+    @DeleteMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun terminationInner(@RequestBody processTerminationPo: ProcessTerminationPo): InfoVo
+
+    /**
      * 启动流程
      */
     @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
