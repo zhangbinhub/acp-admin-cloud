@@ -48,6 +48,7 @@
 >   - [Upgrade] 优化流程相关用户查询，anonymousUser视为空
 >   - [Upgrade] 只有待办用户才能查询流程节点任务详细信息
 >   - [Upgrade] 增加内部接口，强制结束流程
+>   - [Upgrade] 修改流程图生成方法，仅高亮当前节点及流经的所有连线
 > - admin-server
 >   - [Upgrade] 升级 Spring Boot Admin 2.3.0
 > - deploy-server
