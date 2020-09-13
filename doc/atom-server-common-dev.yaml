@@ -32,18 +32,18 @@ spring:
           # 1代表：当Leader副本接收成功后，返回接收成功确认信息；
           # -1代表：当Leader和Follower副本都接收成功后，返回接收成功确认信息；
           required-acks: -1
-#    sentinel:
-#      datasource:
-#        nacos-degrade:
-#          nacos:
-#            username: ${spring.cloud.nacos.username}
-#            password: ${spring.cloud.nacos.password}
-#            server-addr: ${spring.cloud.nacos.server-addr}
-#            data-id: sentinel-degrade-${spring.profiles.active}
-#            namespace: ${spring.cloud.nacos.discovery.namespace}
-#            group-id: ${spring.profiles.active}
-#            data-type: json
-#            rule-type: degrade
+    sentinel:
+      datasource:
+        nacos-degrade:
+          nacos:
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            server-addr: ${spring.cloud.nacos.server-addr}
+            data-id: sentinel-degrade-${spring.profiles.active}
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            group-id: ${spring.profiles.active}
+            data-type: json
+            rule-type: degrade
   # ===============================
   # = JPA / HIBERNATE
   # ===============================
