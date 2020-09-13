@@ -1,7 +1,7 @@
 ## 版本更新记录
 ##### v4.1.7
 > - Global
->   - [Upgrade] 升级 Gradle 至 6.5
+>   - [Upgrade] 升级 Gradle 至 6.6.1
 >   - [Upgrade] server.tomcat.max-threads 修改为 server.tomcat.threads.max
 >   - [Upgrade] 更新 atom-server-common-dev.yaml
 >   - [Upgrade] 更新 nacos_config_export.zip
@@ -19,8 +19,10 @@
 >   - [Upgrade] 去除 RedisDistributedLock
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
->     - Spring Boot 2.3.2.RELEASE
->     - Spring Cloud Hoxton.SR7
+>     - kotlin 1.4.10
+>     - Spring Boot 2.3.3.RELEASE
+>     - Spring Cloud Hoxton.SR8
+>     - Spring Cloud Alibaba 2.2.2.RELEASE
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
 >     - kotlin coroutines 1.3.8

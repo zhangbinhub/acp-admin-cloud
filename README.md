@@ -5,9 +5,9 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v4.1.7](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.3.2.RELEASE](https://projects.spring.io/spring-boot)
-- [Spring Cloud Hoxton.SR7](http://projects.spring.io/spring-cloud)
-- [Spring Cloud Alibaba 2.2.1.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Spring Boot 2.3.3.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Cloud Hoxton.SR8](http://projects.spring.io/spring-cloud)
+- [Spring Cloud Alibaba 2.2.2.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.4.5](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
@@ -69,8 +69,8 @@
 
 ## 一、环境要求
 - jdk 11
-- gradle 6.5
-- kotlin 1.3.72
+- gradle 6.5+
+- kotlin 1.4.10
 
 ## 二、gradle 配置及使用
 ### （一）配置文件
@@ -117,7 +117,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.5 --distribution-type=all
+    gradlew wrapper --gradle-version=6.6.1 --distribution-type=all
 ```
 
 ## 三、工程说明
@@ -284,6 +284,5 @@ http://127.0.0.1:5601
 >   - cloud:acp-admin-cloud-dependencies
 
 ## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
-注：目前 Spring Cloud Alibaba 还未支持 Nacos 1.2+ 用作 sentinel 的数据源，因此需要注释sentinel的nacos数据源配置。但是已有 [pr](https://github.com/alibaba/spring-cloud-alibaba/pull/1354) 解决了这个问题，如果不想等下个版本发布，可以提前拉取源代码
 
 ## 十、[公共配置信息](doc/atom-server-common-dev.yaml)
