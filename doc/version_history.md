@@ -20,7 +20,7 @@
 >   - [Upgrade] 升级依赖
 >     - Acp 6.4.5
 >     - kotlin 1.4.10
->     - Spring Boot 2.3.3.RELEASE
+>     - Spring Boot 2.3.4.RELEASE
 >     - Spring Cloud Hoxton.SR8
 >     - Spring Cloud Alibaba 2.2.3.RELEASE
 >     - jupiter 5.6.2
