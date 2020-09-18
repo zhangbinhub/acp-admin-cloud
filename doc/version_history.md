@@ -22,11 +22,12 @@
 >     - kotlin 1.4.10
 >     - Spring Boot 2.3.3.RELEASE
 >     - Spring Cloud Hoxton.SR8
->     - Spring Cloud Alibaba 2.2.2.RELEASE
+>     - Spring Cloud Alibaba 2.2.3.RELEASE
 >     - jupiter 5.6.2
 >     - junit platform 1.6.2
 >     - kotlin coroutines 1.3.8
 >     - curator 5.0.0
+>     - mysql 8.0.21
 > - log-server
 >   - [Upgrade] 每个日志文件大小限制修改为100MB
 > - oauth-server
