@@ -10,7 +10,7 @@ versions += [
         curator          : "5.0.0",
         spring_boot      : "2.3.3.RELEASE",
         spring_cloud     : "Hoxton.SR8",
-        alibaba_cloud    : "2.2.2.RELEASE",
+        alibaba_cloud    : "2.2.3.RELEASE",
         flowable         : "6.5.0",
-        mysql            : "8.0.20"
+        mysql            : "8.0.21"
 ]

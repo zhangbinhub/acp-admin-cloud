@@ -60,7 +60,7 @@ spring:
     hikari:
       maximum-pool-size: 5
       minimum-idle: 5
-      pool-name: plm
+      pool-name: acp-cloud-admin
       max-lifetime: 480000
       idle-timeout: 300000
       read-only: false
