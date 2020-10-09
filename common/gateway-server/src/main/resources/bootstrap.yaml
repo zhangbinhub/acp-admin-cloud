@@ -64,7 +64,7 @@ spring:
           predicates:
             - Path=/open/oauth/**
           filters:
-            - RewritePath=/open/oauth/(?<segment1>.*),/open/$\{segment}
+            - RewritePath=/open/oauth/(?<segment>.*),/open/$\{segment}
 #            - name: RequestRateLimiter
 #              args:
 #                redis-rate-limiter.replenishRate: 10
