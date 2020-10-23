@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.constant.RoleCode
 import pers.acp.admin.oauth.repo.UserRepository
-import pers.acp.core.CommonTools
-import pers.acp.core.security.Sha256Encrypt
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -45,10 +43,7 @@ constructor(private val logAdapter: LogAdapter, private val userRepository: User
                 grantedAuthorities.add(SimpleGrantedAuthority(module.code)) //模块功能编码
             }
         }
-        return User(user.loginNo,
-                Sha256Encrypt.encrypt(user.password + CommonTools.getDateTimeString(null, "yyyyMMddHH")),
-                user.enabled, true, true, true,
-                grantedAuthorities)
+        return User(user.loginNo, user.password, user.enabled, true, true, true, grantedAuthorities)
     }
 
 }
