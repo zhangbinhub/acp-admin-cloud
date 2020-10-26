@@ -34,13 +34,20 @@ class UserPasswordEncoder : PasswordEncoder {
      * @param encodedPassword 编码后的密码，存储在服务器上的值，SecurityUserDetailsService 指定
      * @return 匹配结果
      */
-    override fun matches(rawPassword: CharSequence, encodedPassword: String): Boolean = CommonTools.getNowDateTime().let { now ->
-        for (o in -offset..offset) {
-            val password = Sha256Encrypt.encrypt(encodedPassword + CommonTools.getDateTimeString(now.plusHours(o), "yyyyMMddHH"))
-            if (rawPassword.toString().equals(password, ignoreCase = true)) {
-                return true
+    override fun matches(rawPassword: CharSequence, encodedPassword: String): Boolean =
+            if (encodedPassword.length <= 32) {
+                // client secret or other
+                rawPassword.toString().equals(encodedPassword, ignoreCase = true)
+            } else {
+                // user password
+                CommonTools.getNowDateTime().let { now ->
+                    for (o in -offset..offset) {
+                        val password = Sha256Encrypt.encrypt(encodedPassword + CommonTools.getDateTimeString(now.plusHours(o), "yyyyMMddHH"))
+                        if (rawPassword.toString().equals(password, ignoreCase = true)) {
+                            return true
+                        }
+                    }
+                    false
+                }
             }
-        }
-        false
-    }
 }
