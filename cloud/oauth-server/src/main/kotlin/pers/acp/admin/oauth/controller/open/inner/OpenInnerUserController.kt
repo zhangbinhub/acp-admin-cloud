@@ -4,6 +4,7 @@ import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import pers.acp.admin.common.base.BaseController
@@ -57,7 +58,7 @@ constructor(logAdapter: LogAdapter,
             ResponseEntity.ok(userDomain.getUserInfoByLoginNo(loginNo))
 
     @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
-    @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["!loginNo", "!orgLevel", "orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
                                     @NotBlank(message = "机构编码不能为空")
@@ -68,10 +69,26 @@ constructor(logAdapter: LogAdapter,
             ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
     @ApiOperation(value = "通过角色编码，查询用户列表")
-    @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [OauthApi.userList], params = ["!loginNo", "!orgLevel", "!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
                           @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
             ResponseEntity.ok(userDomain.getUserListByRole(roleCode.split(",")))
+
+    @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
+    @GetMapping(value = [OauthApi.userList], params = ["loginNo", "orgLevel", "!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Throws(ServerException::class)
+    fun getUserListByRelativeOrgAndRole(@ApiParam(value = "当前用户登录号", required = true)
+                                        @NotBlank(message = "当前用户登录号不能为空")
+                                        @RequestParam loginNo: String,
+                                        @ApiParam(value = "机构层级", required = true)
+                                        @NotBlank(message = "机构层级不能为空")
+                                        @RequestParam orgLevel: String,
+                                        @ApiParam(value = "角色编码", required = true)
+                                        @NotBlank(message = "角色编码不能为空")
+                                        @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
+            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(loginNo,
+                    orgLevel.split(",").map { item -> item.toInt() },
+                    roleCode.split(",")))
 }

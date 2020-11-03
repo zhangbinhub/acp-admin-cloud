@@ -262,6 +262,23 @@ constructor(private val logAdapter: LogAdapter,
             }
 
     /**
+     * 获取任务信息（开放的）
+     *
+     * @param taskId 任务ID
+     * @return 任务信息
+     */
+    @Throws(ServerException::class)
+    fun findTaskByIdOpen(taskId: String): ProcessTaskVo =
+            try {
+                taskService.createTaskQuery().taskId(taskId).singleResult()?.let {
+                    taskToVo(it)
+                } ?: throw ServerException("找不到信息")
+            } catch (e: Exception) {
+                logAdapter.error(e.message, e)
+                throw ServerException(e.message)
+            }
+
+    /**
      * 获取待办任务
      * @param processInstanceId 流程实例ID
      * @param userId 用户ID
