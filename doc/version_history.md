@@ -7,6 +7,7 @@
 >   - [Upgrade] 优化根据机构号查询机构列表接口，使用模糊查询
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
 >   - [Upgrade] 增加内部接口
+>   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 ##### v4.1.7
