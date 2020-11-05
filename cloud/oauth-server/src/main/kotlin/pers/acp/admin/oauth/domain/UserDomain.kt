@@ -335,7 +335,7 @@ constructor(userRepository: UserRepository,
             } ?: throw ServerException("无法获取当前用户信息")
 
     fun getUserListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
-            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeLikeOrderBySortAsc("%$orgCode%"), roleCode)
+            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeLikeOrNameLikeOrderBySortAsc("%$orgCode%", "%$orgCode%"), roleCode)
 
     fun getUserListByRole(roleCode: List<String>): MutableList<UserVo> =
             getUserListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)

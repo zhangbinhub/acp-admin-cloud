@@ -116,13 +116,13 @@ constructor(logAdapter: LogAdapter,
                 orgId: String): ResponseEntity<OrganizationVo> =
             ResponseEntity.ok(organizationDomain.getOrgInfo(orgId))
 
-    @ApiOperation(value = "获取机构详细信息（编码）")
+    @ApiOperation(value = "获取机构列表（编码或名称）")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；ID不能为空；找不到信息；", response = ErrorVo::class))
-    @GetMapping(value = [OauthApi.orgConfig + "-by-code/{code}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [OauthApi.orgConfig + "-by-code-or-name/{codeOrName}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun orgInfoByCode(@ApiParam(value = "机构编码", required = true)
-                      @NotBlank(message = "机构编码不能为空")
-                      @PathVariable
-                      code: String): ResponseEntity<MutableList<OrganizationVo>> =
-            ResponseEntity.ok(organizationDomain.getOrgInfoByCode(code))
+    fun orgInfoByCodeOrName(@ApiParam(value = "机构编码或名称", required = true)
+                            @NotBlank(message = "机构编码或名称不能为空")
+                            @PathVariable
+                            codeOrName: String): ResponseEntity<MutableList<OrganizationVo>> =
+            ResponseEntity.ok(organizationDomain.getOrgInfoByCodeOrName(codeOrName))
 }
