@@ -117,7 +117,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.6.1 --distribution-type=all
+    gradlew wrapper --gradle-version=6.7.1 --distribution-type=all
 ```
 
 ## 三、工程说明
