@@ -3,6 +3,8 @@
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 更新oauth客户端
 >   - [Upgrade] 更新workflow客户端
+>   - [Upgrade] 升级依赖
+>     - kotlin 1.4.20
 > - oauth-server
 >   - [Upgrade] 优化根据机构号查询机构列表接口，使用模糊查询
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
