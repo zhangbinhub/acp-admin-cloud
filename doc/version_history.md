@@ -1,5 +1,7 @@
 ## 版本更新记录
 ##### v4.2.0
+> - Global
+>   - [Upgrade] 升级 Gradle 至 6.7.1
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 更新oauth客户端
 >   - [Upgrade] 更新workflow客户端
