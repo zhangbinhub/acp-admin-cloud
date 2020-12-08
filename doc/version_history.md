@@ -30,6 +30,7 @@
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
 >   - [Upgrade] 增加内部接口
 >   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
+>   - [Upgrade] 更换废弃的API，Arrays.min() → Arrays.minOrNull()
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 ##### v4.1.7
