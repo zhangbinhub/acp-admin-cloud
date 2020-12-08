@@ -31,6 +31,7 @@
 >   - [Upgrade] 增加内部接口
 >   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
 >   - [Upgrade] 更换废弃的API，Arrays.min() → Arrays.minOrNull()
+>   - [Upgrade] 优化单元测试代码
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 ##### v4.1.7

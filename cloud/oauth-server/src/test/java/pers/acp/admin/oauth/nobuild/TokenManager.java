@@ -1,6 +1,5 @@
 package pers.acp.admin.oauth.nobuild;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
