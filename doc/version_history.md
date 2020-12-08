@@ -16,6 +16,7 @@
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 更新oauth客户端
 >   - [Upgrade] 更新workflow客户端
+>   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
 >     - Spring Boot 2.4.0
