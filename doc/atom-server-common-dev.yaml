@@ -5,8 +5,10 @@ info:
 # ===============================
 logging:
   file:
-    max-size: 100MB
-    max-history: 30
+    logback:
+      rollingpolicy:
+        max-file-size: 100MB
+        max-history: 30
   level:
     com.alibaba.nacos.client: warn
 # ===============================

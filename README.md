@@ -5,10 +5,10 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v4.2.0](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.3.4.RELEASE](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.4.0](https://projects.spring.io/spring-boot)
 - [Spring Cloud Hoxton.SR8](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.2.3.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
-- [Acp 6.4.5](https://github.com/zhangbin1010/acp)
+- [Acp 6.5.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable

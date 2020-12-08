@@ -2,16 +2,36 @@
 ##### v4.2.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 6.7.1
+>   - [Upgrade] gradle/dependencies.gradle 中移除 spring_boot、spring_cloud、alibaba_cloud，gradle.properties 中增加 springBootVersion、springCloudVersion、springCloudAlibabaVersion
+>   - [Upgrade] 修改各模块build.gradle写法
+>     - $versions.spring_boot → ${springBootVersion}
+>     - $versions.spring_cloud → ${springCloudVersion}
+>     - $versions.alibaba_cloud → ${springCloudAlibabaVersion}
+>   - [Upgrade] logback 配置属性重命名
+>     - logging.pattern.rolling-file-name → logging.logback.rollingpolicy.file-name-pattern
+>     - logging.file.clean-history-on-start → logging.logback.rollingpolicy.clean-history-on-start
+>     - logging.file.max-size → logging.logback.rollingpolicy.max-file-size
+>     - logging.file.total-size-cap → logging.logback.rollingpolicy.total-size-cap
+>     - logging.file.max-history → logging.logback.rollingpolicy.max-history
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 更新oauth客户端
 >   - [Upgrade] 更新workflow客户端
+>   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 升级依赖
->     - kotlin 1.4.20
+>     - Acp 6.5.0
+>     - Spring Boot 2.4.0
+>     - kotlin coroutines 1.4.1
+>     - jupiter 5.7.0
+>     - junit-platform 1.7.0
+>     - curator 5.1.0
+>     - mysql 8.0.22
 > - oauth-server
 >   - [Upgrade] 优化根据机构号查询机构列表接口，使用模糊查询
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
 >   - [Upgrade] 增加内部接口
 >   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
+>   - [Upgrade] 更换废弃的API，Arrays.min() → Arrays.minOrNull()
+>   - [Upgrade] 优化单元测试代码
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 ##### v4.1.7

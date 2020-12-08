@@ -4,7 +4,7 @@ versions += [
 ]
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$versions.spring_boot")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -12,13 +12,13 @@ apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:$versions.spring_boot") {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") {
             bomProperty("kotlin.version", "${kotlinVersion}")
         }
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$versions.spring_cloud") {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}") {
             bomProperty("curator.version", "$versions.curator")
         }
-        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$versions.alibaba_cloud"
+        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
     }
 }
 bootJar {
