@@ -6,7 +6,7 @@ versions += [
         acp_core         : "6.5.0",
         jupiter          : "5.7.0",
         junit_platform   : "1.7.0",
-        kotlin_coroutines: "1.4.1",
+        kotlin_coroutines: "1.4.2",
         curator          : "5.1.0",
         flowable         : "6.5.0",
         mysql            : "8.0.22"
