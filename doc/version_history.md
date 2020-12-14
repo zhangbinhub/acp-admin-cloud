@@ -19,8 +19,8 @@
 >   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
->     - Spring Boot 2.4.0
->     - kotlin coroutines 1.4.1
+>     - Spring Boot 2.4.1
+>     - kotlin coroutines 1.4.2
 >     - jupiter 5.7.0
 >     - junit-platform 1.7.0
 >     - curator 5.1.0
