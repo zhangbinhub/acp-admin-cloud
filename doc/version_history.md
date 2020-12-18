@@ -19,6 +19,7 @@
 >   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
+>     - kotlin 1.4.21
 >     - Spring Boot 2.4.1
 >     - kotlin coroutines 1.4.2
 >     - jupiter 5.7.0
@@ -32,6 +33,7 @@
 >   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
 >   - [Upgrade] 更换废弃的API，Arrays.min() → Arrays.minOrNull()
 >   - [Upgrade] 优化单元测试代码
+>   - [Fix] 修复内部接口-获取机构列表
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 ##### v4.1.7
