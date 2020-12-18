@@ -9,6 +9,8 @@ import pers.acp.admin.oauth.entity.Organization
  */
 interface OrganizationRepository : BaseRepository<Organization, String> {
 
+    fun findAllByOrderBySortAsc(): MutableList<Organization>
+
     fun findByParentIdIn(idList: MutableList<String>): MutableList<Organization>
 
     fun findAllByCodeLikeOrNameLikeOrderBySortAsc(code: String, name: String): MutableList<Organization>

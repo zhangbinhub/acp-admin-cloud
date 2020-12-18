@@ -24,16 +24,19 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 @RequestMapping(CommonPath.openInnerBasePath)
 @Api(tags = ["机构信息（内部开放接口）"])
 class OpenInnerOrgController @Autowired
-constructor(logAdapter: LogAdapter,
-            private val organizationDomain: OrganizationDomain) : BaseController(logAdapter) {
+constructor(
+    logAdapter: LogAdapter,
+    private val organizationDomain: OrganizationDomain
+) : BaseController(logAdapter) {
     private fun listToVo(organizationList: List<Organization>): List<OrganizationVo> =
-            organizationList.map { organization ->
-                OrganizationVo().apply {
-                    BeanUtils.copyProperties(organization, this)
-                }
+        organizationList.map { organization ->
+            OrganizationVo().apply {
+                BeanUtils.copyProperties(organization, this)
             }
+        }
 
     @ApiOperation(value = "获取机构列表", notes = "查询所有机构列表")
     @GetMapping(value = [OauthApi.orgConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun orgList(): ResponseEntity<List<OrganizationVo>> = ResponseEntity.ok(listToVo(organizationDomain.getOrgList()))
+    fun orgList(): ResponseEntity<List<OrganizationVo>> =
+        ResponseEntity.ok(listToVo(organizationDomain.getAllOrgList()))
 }
