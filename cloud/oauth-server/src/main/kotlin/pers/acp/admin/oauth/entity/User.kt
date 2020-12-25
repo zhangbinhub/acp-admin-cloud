@@ -15,7 +15,6 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "t_user")
-@org.hibernate.annotations.Table(appliesTo = "t_user", comment = "用户信息")
 @ApiModel("用户信息")
 data class User(
         @Id
@@ -70,7 +69,14 @@ data class User(
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH])
         @JoinTable(name = "t_user_role_set", joinColumns = [JoinColumn(name = "userId", referencedColumnName = "id")], inverseJoinColumns = [JoinColumn(name = "roleId", referencedColumnName = "id")])
         @ApiModelProperty("所属角色")
-        var roleSet: MutableSet<Role> = mutableSetOf()
+        var roleSet: MutableSet<Role> = mutableSetOf(),
+
+        @ApiModelProperty("最后修改密码时间")
+        var lastUpdatePasswordTime: Long? = null,
+
+        @Transient
+        @ApiModelProperty("密码是否过期")
+        var passwordExpire: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -85,6 +91,7 @@ data class User(
                 .append(levels, user.levels)
                 .append(enabled, user.enabled)
                 .append(sort, user.sort)
+                .append(lastUpdatePasswordTime, user.lastUpdatePasswordTime)
                 .isEquals
     }
 
@@ -98,6 +105,7 @@ data class User(
                     .append(levels)
                     .append(enabled)
                     .append(sort)
+                    .append(lastUpdatePasswordTime)
                     .toHashCode()
 
     override fun toString(): String =
@@ -109,6 +117,7 @@ data class User(
                     .append(",levels=$levels")
                     .append(",enabled=$enabled")
                     .append(",sort=$sort")
+                    .append(",lastUpdatePasswordTime=$lastUpdatePasswordTime")
                     .append(")")
                     .toString()
 }

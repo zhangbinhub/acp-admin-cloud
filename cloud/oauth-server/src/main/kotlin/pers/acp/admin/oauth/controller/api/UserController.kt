@@ -21,6 +21,8 @@ import pers.acp.admin.oauth.po.UserPo
 import pers.acp.admin.oauth.po.UserQueryPo
 import pers.acp.admin.common.vo.UserVo
 import pers.acp.core.CommonTools
+import pers.acp.admin.oauth.constant.OauthConstant
+import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
@@ -41,14 +43,25 @@ import javax.validation.constraints.NotNull
 @Api(tags = ["用户信息"])
 class UserController @Autowired
 constructor(logAdapter: LogAdapter,
-            private val userDomain: UserDomain) : BaseController(logAdapter) {
+            private val userDomain: UserDomain,
+            private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户信息，并查询详细信息，包含用户基本信息、所属角色、所属机构")
     @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun userInfo(user: OAuth2Authentication): ResponseEntity<User> =
-            (userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
+            (userDomain.findCurrUserInfo(user.name)?.apply {
+                if (this.lastUpdatePasswordTime == null) {
+                    this.passwordExpire = true
+                } else {
+                    runtimeConfigDomain.findByName(OauthConstant.passwordUpdateIntervalTime)?.let { runtimeConfig ->
+                        if (runtimeConfig.enabled && !CommonTools.isNullStr(runtimeConfig.value)) {
+                            this.passwordExpire = (System.currentTimeMillis() - this.lastUpdatePasswordTime!! - runtimeConfig.value!!.toLong()) >= 0
+                        }
+                    }
+                }
+            } ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "更新当前用户信息", notes = "1、根据当前登录的用户信息，更新头像、名称、手机；2、如果原密码和新密码均不为空，校验原密码并修改为新密码")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVo::class))
@@ -69,6 +82,7 @@ constructor(logAdapter: LogAdapter,
             }
             if (userInfo.password.equals(userInfoPo.oldPassword!!, ignoreCase = true)) {
                 userInfo.password = userInfoPo.password!!
+                userInfo.lastUpdatePasswordTime = System.currentTimeMillis()
             } else {
                 throw ServerException("原密码不正确")
             }
