@@ -137,6 +137,7 @@ constructor(userRepository: UserRepository,
             if (this.loginNo != userPo.loginNo) {
                 this.loginNo = userPo.loginNo!!
                 this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
+                this.lastUpdatePasswordTime = null
                 removeToken(userPo.loginNo!!)
             }
             this.roleSet = roleSet
@@ -154,6 +155,7 @@ constructor(userRepository: UserRepository,
                         }
                     }
                     this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
+                    this.lastUpdatePasswordTime = null
                     userRepository.save(this)
                     removeToken(loginNo)
                 }

@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import pers.acp.core.CommonTools
 import pers.acp.admin.oauth.component.UserPasswordEncoder
 import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
+import pers.acp.admin.oauth.token.granter.UserPasswordAuthenticationProvider
 import pers.acp.spring.cloud.constant.CloudConfigurationOrder
 
 /**
@@ -23,11 +24,15 @@ import pers.acp.spring.cloud.constant.CloudConfigurationOrder
 @EnableWebSecurity
 @Order(CloudConfigurationOrder.resourceServerConfiguration + 1)
 class WebSecurityConfiguration @Autowired
-constructor(serverProperties: ServerProperties,
-            private val userPasswordEncoder: UserPasswordEncoder,
-            private val userDetailsService: SecurityUserDetailsDomain) : WebSecurityConfigurerAdapter() {
+constructor(
+    serverProperties: ServerProperties,
+    private val userPasswordAuthenticationProvider: UserPasswordAuthenticationProvider,
+    private val userPasswordEncoder: UserPasswordEncoder,
+    private val userDetailsService: SecurityUserDetailsDomain
+) : WebSecurityConfigurerAdapter() {
 
-    private val contextPath: String = if (CommonTools.isNullStr(serverProperties.servlet.contextPath)) "" else serverProperties.servlet.contextPath
+    private val contextPath: String =
+        if (CommonTools.isNullStr(serverProperties.servlet.contextPath)) "" else serverProperties.servlet.contextPath
 
     @Bean
     @Throws(Exception::class)
@@ -36,6 +41,7 @@ constructor(serverProperties: ServerProperties,
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetailsService).passwordEncoder(userPasswordEncoder)
+        auth.authenticationProvider(userPasswordAuthenticationProvider)
     }
 
     /**
@@ -47,15 +53,15 @@ constructor(serverProperties: ServerProperties,
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.csrf().disable().authorizeRequests().antMatchers(
-                "$contextPath/error",
-                "$contextPath/actuator",
-                "$contextPath/actuator/**",
-                "$contextPath/oauth/authorize",
-                "$contextPath/oauth/token",
-                "$contextPath/oauth/check_token",
-                "$contextPath/oauth/confirm_access",
-                "$contextPath/oauth/error").permitAll()
-                .anyRequest().authenticated()
+            "$contextPath/error",
+            "$contextPath/actuator",
+            "$contextPath/actuator/**",
+            "$contextPath/oauth/authorize",
+            "$contextPath/oauth/token",
+            "$contextPath/oauth/check_token",
+            "$contextPath/oauth/confirm_access",
+            "$contextPath/oauth/error"
+        ).permitAll().anyRequest().authenticated()
     }
 
 }

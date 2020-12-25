@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.repo.ApplicationRepository
 import pers.acp.core.CommonTools
+import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 import javax.annotation.PostConstruct
@@ -41,7 +42,7 @@ constructor(private val logAdapter: LogAdapter, private val applicationRepositor
                     memoryClientDetailsServiceBuilder.withClient(application.id)
                 }
                 builder!!.secret(application.secret)
-                        .authorizedGrantTypes("password", "client_credentials", "refresh_token")
+                        .authorizedGrantTypes("client_credentials", "refresh_token", OauthConstant.granterUserPassword)
                         .accessTokenValiditySeconds(application.accessTokenValiditySeconds)
                         .refreshTokenValiditySeconds(application.refreshTokenValiditySeconds)
                 application.scope?.apply {
