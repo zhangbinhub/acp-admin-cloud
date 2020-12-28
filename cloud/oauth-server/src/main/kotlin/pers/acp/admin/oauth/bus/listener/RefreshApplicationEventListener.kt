@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 import pers.acp.admin.common.event.ReloadDataBusEvent
 import pers.acp.admin.oauth.constant.BusEventMessage
-import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
+import pers.acp.admin.oauth.security.SecurityClientDetailsService
 import pers.acp.core.task.BaseAsyncTask
 import pers.acp.core.task.threadpool.ThreadPoolService
 import pers.acp.spring.boot.interfaces.LogAdapter
@@ -19,7 +19,8 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 class RefreshApplicationEventListener @Autowired
 constructor(private val logAdapter: LogAdapter,
             private val objectMapper: ObjectMapper,
-            private val securityClientDetailsDomain: SecurityClientDetailsDomain) : ApplicationListener<ReloadDataBusEvent> {
+            private val securityClientDetailsService: SecurityClientDetailsService
+) : ApplicationListener<ReloadDataBusEvent> {
 
     override fun onApplicationEvent(reloadDataBusEvent: ReloadDataBusEvent) {
         if (reloadDataBusEvent.message == BusEventMessage.refreshApplication) {
@@ -31,7 +32,7 @@ constructor(private val logAdapter: LogAdapter,
                             override fun beforeExecuteFun(): Boolean = true
                             override fun executeFun(): Any? {
                                 logAdapter.info("开始刷新client数据...")
-                                securityClientDetailsDomain.loadClientInfo()
+                                securityClientDetailsService.loadClientInfo()
                                 logAdapter.info("client数据刷新完成！")
                                 return true
                             }

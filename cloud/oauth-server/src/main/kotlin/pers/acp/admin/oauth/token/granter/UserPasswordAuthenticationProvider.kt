@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.SpringSecurityMessageSource
 import org.springframework.stereotype.Component
-import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
+import pers.acp.admin.oauth.security.SecurityUserDetailsService
 import pers.acp.admin.oauth.token.UserPasswordAuthenticationToken
 import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
 import pers.acp.core.CommonTools
@@ -15,7 +15,7 @@ import pers.acp.core.security.Sha256Encrypt
 
 @Component
 class UserPasswordAuthenticationProvider(
-    private val userDetailsService: SecurityUserDetailsDomain
+    private val userDetailsService: SecurityUserDetailsService
 ) : AuthenticationProvider, MessageSourceAware {
     companion object {
         private const val offset = 1

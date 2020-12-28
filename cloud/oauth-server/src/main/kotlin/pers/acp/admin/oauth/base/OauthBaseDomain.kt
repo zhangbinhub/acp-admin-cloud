@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.base
 
+import org.hibernate.Hibernate
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.constant.RoleCode
@@ -17,7 +18,14 @@ import pers.acp.spring.boot.exceptions.ServerException
 @Transactional(readOnly = true)
 abstract class OauthBaseDomain(protected val userRepository: UserRepository) : BaseDomain() {
 
-    fun getUserInfoByLoginNo(loginNo: String): User? = userRepository.findByLoginNo(loginNo).orElse(null)
+    fun getUserInfoByLoginNo(loginNo: String, initLazy: Boolean = false): User? =
+        userRepository.findByLoginNo(loginNo).orElse(null)?.apply {
+            if (initLazy) {
+                Hibernate.initialize(this.organizationSet)
+                Hibernate.initialize(this.organizationMngSet)
+                Hibernate.initialize(this.roleSet)
+            }
+        }
 
     /**
      * 判断指定用户是否是超级管理员
