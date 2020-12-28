@@ -51,7 +51,7 @@ constructor(logAdapter: LogAdapter,
     @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun userInfo(user: OAuth2Authentication): ResponseEntity<User> =
-            (userDomain.findCurrUserInfo(user.name)?.apply {
+            (userDomain.getUserInfoByLoginNo(user.name)?.apply {
                 if (this.lastUpdatePasswordTime == null) {
                     this.passwordExpire = true
                 } else {
@@ -69,7 +69,7 @@ constructor(logAdapter: LogAdapter,
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPo: UserInfoPo): ResponseEntity<User> {
-        val userInfo = userDomain.findCurrUserInfo(user.name) ?: throw ServerException("找不到用户信息")
+        val userInfo = userDomain.getUserInfoByLoginNo(user.name) ?: throw ServerException("找不到用户信息")
         if (!CommonTools.isNullStr(userInfoPo.mobile)) {
             userDomain.getMobileForOtherUser(userInfoPo.mobile!!, userInfo.id)?.let { throw ServerException("手机号已存在，请重新输入") }
         }
@@ -161,7 +161,7 @@ constructor(logAdapter: LogAdapter,
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
-            (userDomain.getUserInfo(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
+            (userDomain.getUserInfoById(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "查询用户信息（登录账号）", notes = "根据用户登录账号查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
@@ -170,7 +170,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserInfoByLoginNo(@ApiParam(value = "登录账号", required = true)
                              @NotBlank(message = "登录账号不能为空")
                              @RequestParam loginNo: String): ResponseEntity<UserVo> =
-            userDomain.getUserInfoByLoginNo(loginNo).let { ResponseEntity.ok(it) }
+            userDomain.getUserVoByLoginNo(loginNo).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "通过登录号或姓名，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -179,7 +179,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserListByLoginNoOrName(@ApiParam(value = "登录号或姓名", required = true)
                                    @NotBlank(message = "登录号或姓名不能为空")
                                    @PathVariable loginNoOrName: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByLoginNoOrName(loginNoOrName, false))
+            ResponseEntity.ok(userDomain.getUserVoListByLoginNoOrName(loginNoOrName, false))
 
     @ApiOperation(value = "通过角色编码，查询当前机构下的用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -189,7 +189,7 @@ constructor(logAdapter: LogAdapter,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
     @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -202,7 +202,7 @@ constructor(logAdapter: LogAdapter,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
                                         @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name,
+            ResponseEntity.ok(userDomain.getUserVoListByRelativeOrgAndRole(user.name,
                     orgLevel.split(",").map { item -> item.toInt() },
                     roleCode.split(",")))
 
@@ -216,7 +216,7 @@ constructor(logAdapter: LogAdapter,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
     @ApiOperation(value = "通过角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
@@ -225,5 +225,5 @@ constructor(logAdapter: LogAdapter,
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
                           @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRole(roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByRole(roleCode.split(",")))
 }

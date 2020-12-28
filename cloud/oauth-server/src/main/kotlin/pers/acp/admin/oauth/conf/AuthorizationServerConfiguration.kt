@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
 import pers.acp.admin.oauth.domain.security.SecurityClientDetailsDomain
 import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
 import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
 import pers.acp.admin.oauth.token.error.CustomerWebResponseExceptionTranslator
 import pers.acp.admin.oauth.token.granter.UserPasswordTokenGranter
@@ -35,7 +34,6 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 class AuthorizationServerConfiguration @Autowired
 constructor(
     private val authenticationManager: AuthenticationManager,
-    private val securityUserDetailsDomain: SecurityUserDetailsDomain,
     private val securityClientDetailsDomain: SecurityClientDetailsDomain,
     private val securityTokenService: SecurityTokenService,
     private val customerWebResponseExceptionTranslator: CustomerWebResponseExceptionTranslator
@@ -82,7 +80,6 @@ constructor(
                     authenticationManager,
                     securityTokenService,
                     securityClientDetailsDomain,
-                    securityUserDetailsDomain,
                     requestFactory
                 )
             )

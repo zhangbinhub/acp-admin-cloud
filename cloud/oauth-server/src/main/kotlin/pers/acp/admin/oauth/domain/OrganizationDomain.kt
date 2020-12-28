@@ -77,7 +77,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Transactional
     @Throws(ServerException::class)
     fun doCreate(loginNo: String, organizationPo: OrganizationPo): Organization =
-        findCurrUserInfo(loginNo)?.let { userInfo ->
+        getUserInfoByLoginNo(loginNo)?.let { userInfo ->
             if (isNotPermit(userInfo, organizationPo.parentId!!)) {
                 throw ServerException("没有权限做此操作，请联系系统管理员")
             }
@@ -92,7 +92,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Transactional
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
-        findCurrUserInfo(loginNo)?.let { userInfo ->
+        getUserInfoByLoginNo(loginNo)?.let { userInfo ->
             if (isNotPermit(userInfo, *idList.toTypedArray())) {
                 throw ServerException("没有权限做此操作，请联系系统管理员")
             }
@@ -108,7 +108,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization =
-        findCurrUserInfo(loginNo)?.let { userInfo ->
+        getUserInfoByLoginNo(loginNo)?.let { userInfo ->
             val organization = organizationRepository.getOne(organizationPo.id!!)
             if (isNotPermit(userInfo, organization.id)) {
                 throw ServerException("没有权限做此操作，请联系系统管理员")
@@ -118,23 +118,23 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
 
     @Throws(ServerException::class)
     fun getModOrgList(loginNo: String): MutableList<Organization> =
-        (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).organizationMngSet.toMutableList()
+        (getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")).organizationMngSet.toMutableList()
 
     @Throws(ServerException::class)
     fun getCurrAndAllChildrenForOrg(loginNo: String): MutableList<Organization> =
-        findCurrUserInfo(loginNo)?.let {
+        getUserInfoByLoginNo(loginNo)?.let {
             getAllOrgList(organizationRepository, it.organizationSet.toMutableList())
         } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getCurrAndAllChildrenForMngOrg(loginNo: String): MutableList<Organization> =
-        findCurrUserInfo(loginNo)?.let {
+        getUserInfoByLoginNo(loginNo)?.let {
             getAllOrgList(organizationRepository, it.organizationMngSet.toMutableList())
         } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getCurrAndAllChildrenForAllOrg(loginNo: String): MutableList<Organization> =
-        findCurrUserInfo(loginNo)?.let { user ->
+        getUserInfoByLoginNo(loginNo)?.let { user ->
             mutableListOf<Organization>().let { list ->
                 list.addAll(user.organizationSet.toMutableList())
                 list.addAll(user.organizationMngSet.toMutableList())

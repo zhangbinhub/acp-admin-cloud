@@ -4,16 +4,23 @@ import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.SpringSecurityCoreVersion
 
-class UserPasswordAuthenticationToken(
-    private val principal: Any?,
-    private var credentials: Any?,
-    authorities: Collection<GrantedAuthority>?
-) : AbstractAuthenticationToken(authorities) {
+class UserPasswordAuthenticationToken : AbstractAuthenticationToken {
+    private var principal: Any? = null
+    private var credentials: Any? = null
+
     companion object {
         private const val serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID
     }
 
-    init {
+    constructor(principal: Any?, credentials: Any?) : super(null) {
+        this.principal = principal
+        this.credentials = credentials
+        super.setAuthenticated(false)
+    }
+
+    constructor(principal: Any?, credentials: Any?, authorities: Collection<GrantedAuthority>) : super(authorities) {
+        this.principal = principal
+        this.credentials = credentials
         super.setAuthenticated(true)
     }
 

@@ -50,7 +50,7 @@ constructor(userRepository: UserRepository,
             }
 
     fun getModuleFuncList(appId: String, loginNo: String): MutableList<ModuleFunc> =
-            (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
+            (getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
                 val moduleFuncIds: MutableSet<String> = mutableSetOf()
                 it.roleSet.filter { role -> role.appId == appId }
                         .flatMap { item -> item.moduleFuncSet }
@@ -116,7 +116,7 @@ constructor(userRepository: UserRepository,
                 if (it.isPresent) {
                     throw ServerException("编码重复")
                 }
-                findCurrUserInfo(user.name)?.let { userInfo ->
+                getUserInfoByLoginNo(user.name)?.let { userInfo ->
                     doSave(userInfo, ModuleFunc(
                             appId = moduleFuncPo.appId!!,
                             covert = true
@@ -142,7 +142,7 @@ constructor(userRepository: UserRepository,
                 if (it.isPresent) {
                     throw ServerException("编码重复")
                 }
-                findCurrUserInfo(user.name)?.let { userInfo ->
+                getUserInfoByLoginNo(user.name)?.let { userInfo ->
                     doSave(userInfo, moduleFuncRepository.getOne(moduleFuncPo.id!!), moduleFuncPo)
                 } ?: throw ServerException("无法获取当前用户信息")
             }

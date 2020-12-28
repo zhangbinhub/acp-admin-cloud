@@ -80,7 +80,7 @@ constructor(private val logAdapter: LogAdapter,
                       userId: String): ResponseEntity<List<OnlineInfoVo>> =
             try {
                 mutableListOf<OnlineInfoVo>().apply {
-                    val userInfo = userDomain.getUserInfo(userId) ?: throw ServerException("找不到该用户信息")
+                    val userInfo = userDomain.getUserInfoById(userId) ?: throw ServerException("找不到该用户信息")
                     applicationDomain.getOwnAppList(user).forEach { item ->
                         this.add(OnlineInfoVo(
                                 appId = item.id,
@@ -110,7 +110,7 @@ constructor(private val logAdapter: LogAdapter,
                idList: List<String>): ResponseEntity<InfoVo> =
             try {
                 idList.forEach {
-                    val userInfo = userDomain.getUserInfo(it) ?: throw ServerException("找不到该用户信息")
+                    val userInfo = userDomain.getUserInfoById(it) ?: throw ServerException("找不到该用户信息")
                     securityTokenService.removeTokensByAppIdAndLoginNo(appId, userInfo.loginNo)
                     logAdapter.info("用户[" + userInfo.name + "(" + userInfo.loginNo + ")]被管理员强制下线!")
                 }
