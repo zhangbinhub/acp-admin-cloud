@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.domain.security
+package pers.acp.admin.oauth.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder
@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct
  */
 @Service
 @Transactional(readOnly = true)
-class SecurityClientDetailsDomain @Autowired
+class SecurityClientDetailsService @Autowired
 constructor(private val logAdapter: LogAdapter, private val applicationRepository: ApplicationRepository) : ClientDetailsService {
 
     private var clientDetailsService: ClientDetailsService? = null

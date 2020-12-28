@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import pers.acp.core.CommonTools
 import pers.acp.admin.oauth.component.UserPasswordEncoder
-import pers.acp.admin.oauth.domain.security.SecurityUserDetailsDomain
+import pers.acp.admin.oauth.security.SecurityUserDetailsService
 import pers.acp.admin.oauth.token.granter.UserPasswordAuthenticationProvider
 import pers.acp.spring.cloud.constant.CloudConfigurationOrder
 
@@ -28,7 +28,7 @@ constructor(
     serverProperties: ServerProperties,
     private val userPasswordAuthenticationProvider: UserPasswordAuthenticationProvider,
     private val userPasswordEncoder: UserPasswordEncoder,
-    private val userDetailsService: SecurityUserDetailsDomain
+    private val userDetailsService: SecurityUserDetailsService
 ) : WebSecurityConfigurerAdapter() {
 
     private val contextPath: String =

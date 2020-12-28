@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.domain.security
+package pers.acp.admin.oauth.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
@@ -19,7 +19,7 @@ import pers.acp.spring.boot.interfaces.LogAdapter
  */
 @Service
 @Transactional(readOnly = true)
-class SecurityUserDetailsDomain @Autowired
+class SecurityUserDetailsService @Autowired
 constructor(private val logAdapter: LogAdapter, private val userRepository: UserRepository) : UserDetailsService {
 
     /**
