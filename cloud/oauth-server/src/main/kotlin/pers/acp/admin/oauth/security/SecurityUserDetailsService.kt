@@ -7,20 +7,18 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.stereotype.Component
 import pers.acp.admin.constant.RoleCode
-import pers.acp.admin.oauth.repo.UserRepository
+import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhangbin by 11/04/2018 15:19
  * @since JDK 11
  */
-@Service
-@Transactional(readOnly = true)
+@Component
 class SecurityUserDetailsService @Autowired
-constructor(private val logAdapter: LogAdapter, private val userRepository: UserRepository) : UserDetailsService {
+constructor(private val logAdapter: LogAdapter, private val userDomain: UserDomain) : UserDetailsService {
 
     /**
      * 根据 username 获取用户信息
@@ -31,7 +29,7 @@ constructor(private val logAdapter: LogAdapter, private val userRepository: User
      */
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByLoginNo(username).orElse(null)
+        val user = userDomain.getUserInfoByLoginNo(username)
         if (user == null) {
             logAdapter.error("无此用户：$username")
             throw UsernameNotFoundException("无此用户：$username")
@@ -45,5 +43,4 @@ constructor(private val logAdapter: LogAdapter, private val userRepository: User
         }
         return User(user.loginNo, user.password, user.enabled, true, true, true, grantedAuthorities)
     }
-
 }
