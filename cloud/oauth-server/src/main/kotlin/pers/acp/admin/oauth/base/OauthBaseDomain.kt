@@ -17,7 +17,7 @@ import pers.acp.spring.boot.exceptions.ServerException
 @Transactional(readOnly = true)
 abstract class OauthBaseDomain(protected val userRepository: UserRepository) : BaseDomain() {
 
-    fun findCurrUserInfo(loginNo: String): User? = userRepository.findByLoginNo(loginNo).orElse(null)
+    fun getUserInfoByLoginNo(loginNo: String): User? = userRepository.findByLoginNo(loginNo).orElse(null)
 
     /**
      * 判断指定用户是否是超级管理员

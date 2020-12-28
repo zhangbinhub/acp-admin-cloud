@@ -46,7 +46,7 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
 
     @Throws(ServerException::class)
     fun getMenuList(appId: String, loginNo: String): MutableList<Menu> =
-            (findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
+            (getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")).let {
                 val menuIds: MutableSet<String> = mutableSetOf()
                 it.roleSet.filter { role -> role.appId == appId }
                         .flatMap { item -> item.menuSet }
@@ -110,7 +110,7 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
     @Transactional
     @Throws(ServerException::class)
     fun doCreate(user: OAuth2Authentication, menuPo: MenuPo): Menu =
-            findCurrUserInfo(user.name)?.let { userInfo ->
+            getUserInfoByLoginNo(user.name)?.let { userInfo ->
                 doSave(userInfo, Menu(
                         appId = menuPo.appId!!,
                         covert = true
@@ -131,7 +131,7 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(user: OAuth2Authentication, menuPo: MenuPo): Menu =
-            findCurrUserInfo(user.name)?.let { userInfo ->
+            getUserInfoByLoginNo(user.name)?.let { userInfo ->
                 doSave(userInfo, menuRepository.getOne(menuPo.id!!), menuPo)
             } ?: throw ServerException("无法获取当前用户信息")
 

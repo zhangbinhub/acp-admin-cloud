@@ -40,7 +40,7 @@ constructor(userRepository: UserRepository,
 
     @Throws(ServerException::class)
     private fun validatePermit(loginNo: String, userPo: UserPo, roleSet: Set<Role>, isCreate: Boolean) {
-        val currUserInfo = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
+        val currUserInfo = getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         if (!isSuper(currUserInfo)) {
             if (currUserInfo.levels >= userPo.levels!!) {
                 throw ServerException("不能编辑级别比自身大的用户信息")
@@ -90,7 +90,7 @@ constructor(userRepository: UserRepository,
 
     @Throws(ServerException::class)
     fun findModifiableUserList(loginNo: String): MutableList<UserVo> {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
+        val user = getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {
             userRepository.findAll().map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }.toMutableList()
         } else {
@@ -148,7 +148,7 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doUpdatePwd(loginNo: String, userId: String): User =
             userRepository.getOne(userId).apply {
-                (findCurrUserInfo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
+                (getUserInfoByLoginNo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
                     if (!isSuper(it)) {
                         if (it.levels >= this.levels) {
                             throw ServerException("不能修改级别比自身大或相等的用户信息")
@@ -164,7 +164,7 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("找不到当前用户信息")
+        val user = getUserInfoByLoginNo(loginNo) ?: throw ServerException("找不到当前用户信息")
         if (idList.contains(user.id)) {
             throw ServerException("不能删除自己")
         }
@@ -218,10 +218,10 @@ constructor(userRepository: UserRepository,
                         userVO
                     }
 
-    fun getUserInfo(userId: String): User? = userRepository.findById(userId).orElse(null)
+    fun getUserInfoById(userId: String): User? = userRepository.findById(userId).orElse(null)
 
     @Throws(ServerException::class)
-    fun getUserInfoById(userId: String): UserVo = userRepository.findById(userId).let {
+    fun getUserVoById(userId: String): UserVo = userRepository.findById(userId).let {
         if (it.isEmpty) throw ServerException("找不到用户信息")
         UserVo().apply {
             BeanUtils.copyProperties(it.get(), this)
@@ -229,7 +229,7 @@ constructor(userRepository: UserRepository,
     }
 
     @Throws(ServerException::class)
-    fun getUserInfoByLoginNo(loginNo: String): UserVo = userRepository.findByLoginNo(loginNo).let {
+    fun getUserVoByLoginNo(loginNo: String): UserVo = userRepository.findByLoginNo(loginNo).let {
         if (it.isEmpty) throw ServerException("找不到用户信息")
         UserVo().apply {
             BeanUtils.copyProperties(it.get(), this)
@@ -240,7 +240,7 @@ constructor(userRepository: UserRepository,
      * 根据ID查询用户信息
      */
     @Throws(ServerException::class)
-    fun getUserListByIdList(idList: MutableList<String>): MutableList<UserVo> =
+    fun getUserVoListByIdList(idList: MutableList<String>): MutableList<UserVo> =
             userRepository.findAllById(idList).map { item ->
                 UserVo().apply { BeanUtils.copyProperties(item, this) }
             }.toMutableList()
@@ -249,7 +249,7 @@ constructor(userRepository: UserRepository,
      * 根据登录号或姓名模糊查询用户
      */
     @Throws(ServerException::class)
-    fun getUserListByLoginNoOrName(loginNoOrName: String, findAll: Boolean): MutableList<UserVo> =
+    fun getUserVoListByLoginNoOrName(loginNoOrName: String, findAll: Boolean): MutableList<UserVo> =
             userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%")
                     .filter { item ->
                         findAll || item.enabled
@@ -260,7 +260,7 @@ constructor(userRepository: UserRepository,
     /**
      * 获取指定部门下所有符合角色编码的用户
      */
-    private fun getUserListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: List<String>): MutableList<UserVo> =
+    private fun getUserVoListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: List<String>): MutableList<UserVo> =
             mutableListOf<UserVo>().apply {
                 organizations.forEach { org ->
                     this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> roleCode.contains(role.code) } }
@@ -268,13 +268,13 @@ constructor(userRepository: UserRepository,
                             .toMutableList())
                 }
             }.let {
-                getUserListDistinct(it)
+                getUserVoListDistinct(it)
             }
 
     /**
      * User集合去重，返回List
      */
-    private fun getUserListDistinct(users: Collection<UserVo>): MutableList<UserVo> =
+    private fun getUserVoListDistinct(users: Collection<UserVo>): MutableList<UserVo> =
             mutableListOf<UserVo>().apply {
                 val userIdList = mutableListOf<String>()
                 users.forEach { user ->
@@ -286,9 +286,9 @@ constructor(userRepository: UserRepository,
             }
 
     @Throws(ServerException::class)
-    fun getUserListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
-            findCurrUserInfo(loginNo)?.let { currUser ->
-                getUserListInOrgListByRoleCode(currUser.organizationSet, roleCode)
+    fun getUserVoListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
+            getUserInfoByLoginNo(loginNo)?.let { currUser ->
+                getUserVoListInOrgListByRoleCode(currUser.organizationSet, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
 
     /**
@@ -296,8 +296,8 @@ constructor(userRepository: UserRepository,
      * @param orgLevelList >0 下级部门，1下一级，2下二级...；=0：本部门；<0 上级部门，-1上一级，-2上二级...
      */
     @Throws(ServerException::class)
-    fun getUserListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
-            findCurrUserInfo(loginNo)?.let { currUser ->
+    fun getUserVoListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
+            getUserInfoByLoginNo(loginNo)?.let { currUser ->
                 val orgList = mutableListOf<Organization>()
                 orgLevelList.forEach { orgLevel ->
                     when {
@@ -333,14 +333,14 @@ constructor(userRepository: UserRepository,
                         }
                     }
                 }
-                getUserListInOrgListByRoleCode(orgList, roleCode)
+                getUserVoListInOrgListByRoleCode(orgList, roleCode)
             } ?: throw ServerException("无法获取当前用户信息")
 
-    fun getUserListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
-            getUserListInOrgListByRoleCode(organizationRepository.findAllByCodeLikeOrNameLikeOrderBySortAsc("%$orgCode%", "%$orgCode%"), roleCode)
+    fun getUserVoListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
+            getUserVoListInOrgListByRoleCode(organizationRepository.findAllByCodeLikeOrNameLikeOrderBySortAsc("%$orgCode%", "%$orgCode%"), roleCode)
 
-    fun getUserListByRole(roleCode: List<String>): MutableList<UserVo> =
-            getUserListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
+    fun getUserVoListByRole(roleCode: List<String>): MutableList<UserVo> =
+            getUserVoListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
                     .flatMap { role -> role.userSet }
                     .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
                     .toMutableList())

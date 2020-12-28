@@ -35,6 +35,7 @@
 >   - [Upgrade] 优化单元测试代码
 >   - [Upgrade] 增加oauth2自定义异常处理
 >   - [Upgrade] 增加oauth2自定义认证方式
+>   - [Upgrade] 优化用户查询相关方法名称
 >   - [Fix] 修复内部接口-获取机构列表
 > - workflow-server
 >   - [Upgrade] 增加内部接口

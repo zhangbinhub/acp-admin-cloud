@@ -32,7 +32,7 @@ constructor(userRepository: UserRepository,
 
     @Throws(ServerException::class)
     fun getRoleListByAppId(loginNo: String, appId: String): List<Role> {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
+        val user = getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {
             roleRepository.findByAppIdOrderBySortAsc(appId)
         } else {
@@ -61,7 +61,7 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doCreate(loginNo: String, rolePo: RolePo): Role =
-            findCurrUserInfo(loginNo)?.let { userInfo ->
+            getUserInfoByLoginNo(loginNo)?.let { userInfo ->
                 if (!isSuper(userInfo)) {
                     val currLevel = getRoleMinLevel(rolePo.appId!!, userInfo)
                     if (currLevel >= rolePo.levels) {
@@ -77,7 +77,7 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doDelete(loginNo: String, idList: MutableList<String>) {
-        val user = findCurrUserInfo(loginNo) ?: throw ServerException("无法获取当前用户信息")
+        val user = getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         if (!isSuper(user)) {
             val roleMinLevel = getRoleMinLevel(user)
             val roleList = roleRepository.findAllById(idList)
@@ -93,7 +93,7 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, rolePo: RolePo): Role =
-            findCurrUserInfo(loginNo)?.let { userInfo ->
+            getUserInfoByLoginNo(loginNo)?.let { userInfo ->
                 val role = roleRepository.getOne(rolePo.id!!)
                 if (!isSuper(userInfo)) {
                     val currLevel = getRoleMinLevel(role.appId, userInfo)

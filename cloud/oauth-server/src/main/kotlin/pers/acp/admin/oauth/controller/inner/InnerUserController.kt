@@ -41,7 +41,7 @@ constructor(logAdapter: LogAdapter,
                     ResponseEntity.ok(it)
                 }
             } else {
-                userDomain.findCurrUserInfo(user.name)?.let {
+                userDomain.getUserInfoByLoginNo(user.name)?.let {
                     ResponseEntity.ok(it)
                 } ?: throw ServerException("找不到用户信息")
             }
@@ -53,7 +53,7 @@ constructor(logAdapter: LogAdapter,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByCurrOrgAndRole(user.name, roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
     @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -65,7 +65,7 @@ constructor(logAdapter: LogAdapter,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
                                         @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(user.name,
+            ResponseEntity.ok(userDomain.getUserVoListByRelativeOrgAndRole(user.name,
                     orgLevel.split(",").map { item -> item.toInt() },
                     roleCode.split(",")))
 }

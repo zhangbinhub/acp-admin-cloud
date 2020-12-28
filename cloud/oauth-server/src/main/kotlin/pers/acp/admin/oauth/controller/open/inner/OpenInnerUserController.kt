@@ -36,7 +36,7 @@ constructor(logAdapter: LogAdapter,
                             @NotNull(message = "id不能为空")
                             @RequestBody
                             idList: MutableList<String>): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByIdList(idList))
+            ResponseEntity.ok(userDomain.getUserVoListByIdList(idList))
 
     @ApiOperation(value = "查询用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
@@ -45,7 +45,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserInfoById(@ApiParam(value = "ID", required = true)
                         @NotBlank(message = "ID不能为空")
                         @RequestParam id: String): ResponseEntity<UserVo> =
-            ResponseEntity.ok(userDomain.getUserInfoById(id))
+            ResponseEntity.ok(userDomain.getUserVoById(id))
 
     @ApiOperation(value = "查询用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
@@ -54,7 +54,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserInfoByLoginNo(@ApiParam(value = "登录号", required = true)
                              @NotBlank(message = "登录号不能为空")
                              @RequestParam loginNo: String): ResponseEntity<UserVo> =
-            ResponseEntity.ok(userDomain.getUserInfoByLoginNo(loginNo))
+            ResponseEntity.ok(userDomain.getUserVoByLoginNo(loginNo))
 
     @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["!loginNo", "!orgLevel", "orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -65,7 +65,7 @@ constructor(logAdapter: LogAdapter,
                                     @ApiParam(value = "角色编码", required = true)
                                     @NotBlank(message = "角色编码不能为空")
                                     @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
     @ApiOperation(value = "通过角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["!loginNo", "!orgLevel", "!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -73,7 +73,7 @@ constructor(logAdapter: LogAdapter,
     fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
                           @NotBlank(message = "角色编码不能为空")
                           @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRole(roleCode.split(",")))
+            ResponseEntity.ok(userDomain.getUserVoListByRole(roleCode.split(",")))
 
     @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @GetMapping(value = [OauthApi.userList], params = ["loginNo", "orgLevel", "!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -87,7 +87,7 @@ constructor(logAdapter: LogAdapter,
                                         @ApiParam(value = "角色编码", required = true)
                                         @NotBlank(message = "角色编码不能为空")
                                         @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserListByRelativeOrgAndRole(loginNo,
+            ResponseEntity.ok(userDomain.getUserVoListByRelativeOrgAndRole(loginNo,
                     orgLevel.split(",").map { item -> item.toInt() },
                     roleCode.split(",")))
 }
