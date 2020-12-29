@@ -37,6 +37,7 @@
 >   - [Upgrade] 增加oauth2自定义认证方式
 >   - [Upgrade] 优化用户查询相关方法名称
 >   - [Upgrade] 调整oauth2相关client和user服务类
+>   - [Upgrade] pers.acp.admin.oauth.nobuild.InitData中增加初始化运行参数
 >   - [Fix] 修复内部接口-获取机构列表
 > - workflow-server
 >   - [Upgrade] 增加内部接口

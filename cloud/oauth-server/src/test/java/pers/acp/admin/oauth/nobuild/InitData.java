@@ -34,6 +34,9 @@ class InitData extends BaseTest {
     @Autowired
     private ModuleFuncRepository moduleFuncRepository;
 
+    @Autowired
+    private RuntimeConfigRepository runtimeConfigRepository;
+
     /**
      * 初始化数据，仅可执行一次
      */
@@ -682,6 +685,21 @@ class InitData extends BaseTest {
     @Transactional
     @Rollback(false)
     void initRuntimeConfig() {
+        RuntimeConfig runtimeConfig1 = new RuntimeConfig();
+        runtimeConfig1.setCovert(false);
+        runtimeConfig1.setEnabled(true);
+        runtimeConfig1.setName("PASSWORD_COMPLEXITY_POLICY");
+        runtimeConfig1.setValue("0");
+        runtimeConfig1.setConfigDes("密码复杂度策略；0：不限制，1：数字+字母，2：数字+字母+英文特殊符号`~!@#$%^&*()+=|{}':;,\\\"[].<>");
+        runtimeConfigRepository.save(runtimeConfig1);
+
+        RuntimeConfig runtimeConfig2 = new RuntimeConfig();
+        runtimeConfig2.setCovert(false);
+        runtimeConfig2.setEnabled(true);
+        runtimeConfig2.setName("PASSWORD_UPDATE_INTERVAL_TIME");
+        runtimeConfig2.setValue("7776000000");
+        runtimeConfig2.setConfigDes("修改密码间隔时间，单位：毫秒");
+        runtimeConfigRepository.save(runtimeConfig2);
     }
 
 }
