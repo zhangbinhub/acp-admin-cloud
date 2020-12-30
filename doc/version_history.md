@@ -13,14 +13,20 @@
 >     - logging.file.max-size → logging.logback.rollingpolicy.max-file-size
 >     - logging.file.total-size-cap → logging.logback.rollingpolicy.total-size-cap
 >     - logging.file.max-history → logging.logback.rollingpolicy.max-history
+>   - [Upgrade] 暂时关闭sentinel，等待spring cloud alibaba进行适配
+>     ```
+>       feign.sentinel.enabled=false
+>     ```
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 更新oauth客户端
 >   - [Upgrade] 更新workflow客户端
 >   - [Upgrade] 调整swagger代码，升级至springfox3.0
+>   - [Upgrade] 修改bus事件对象参数名
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
 >     - kotlin 1.4.21
 >     - Spring Boot 2.4.1
+>     - Spring Cloud 2020.0.0
 >     - kotlin coroutines 1.4.2
 >     - jupiter 5.7.0
 >     - junit-platform 1.7.0
