@@ -1,11 +1,11 @@
 package pers.acp.admin.gateway.conf
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.gateway.constant.GateWayConstant
-import pers.acp.admin.gateway.consumer.UpdateRouteInput
-import pers.acp.admin.gateway.consumer.instance.UpdateRouteConsumer
+import pers.acp.admin.gateway.consumer.UpdateRouteConsumer
 import pers.acp.admin.gateway.domain.RouteLogDomain
-import pers.acp.admin.gateway.producer.RouteLogOutput
+import pers.acp.admin.gateway.producer.RouteLogBridge
 import pers.acp.admin.gateway.repo.RouteRedisRepository
 import org.reactivestreams.Publisher
 import org.slf4j.LoggerFactory
@@ -14,10 +14,11 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
-import org.springframework.cloud.stream.annotation.EnableBinding
 import org.springframework.cloud.stream.config.BindingProperties
 import org.springframework.cloud.stream.config.BindingServiceConfiguration
 import org.springframework.cloud.stream.config.BindingServiceProperties
+import org.springframework.cloud.stream.function.StreamBridge
+import org.springframework.cloud.stream.function.StreamFunctionProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
@@ -44,13 +45,16 @@ import javax.annotation.PostConstruct
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(BindingServiceConfiguration::class)
-@EnableBinding(UpdateRouteInput::class, RouteLogOutput::class)
 class RouteConfiguration @Autowired
-constructor(private val environment: Environment,
-            private val bindings: BindingServiceProperties,
-            private val routeLogDomain: RouteLogDomain) {
+constructor(
+    private val environment: Environment,
+    private val bindingServiceProperties: BindingServiceProperties,
+    private val streamFunctionProperties: StreamFunctionProperties,
+    private val routeLogDomain: RouteLogDomain
+) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
+    private val updateRouteConsumerBindName = "${RouteConstant.UPDATE_ROUTE_INPUT}-in-0"
 
     @PostConstruct
     fun init() {
@@ -59,23 +63,31 @@ constructor(private val environment: Environment,
     }
 
     private fun initConsumer() {
-        if (this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT] == null) {
-            this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT] = BindingProperties()
+        if (this.bindingServiceProperties.bindings[updateRouteConsumerBindName] == null) {
+            this.bindingServiceProperties.bindings[updateRouteConsumerBindName] = BindingProperties()
         }
-        this.bindings.bindings[RouteConstant.UPDATE_ROUTE_INPUT]?.let {
-            if (it.destination == null || it.destination == RouteConstant.UPDATE_ROUTE_INPUT) {
+        if (this.streamFunctionProperties.definition != null && this.streamFunctionProperties.definition.isNotBlank()) {
+            this.streamFunctionProperties.definition += ";${RouteConstant.UPDATE_ROUTE_INPUT}"
+        } else {
+            this.streamFunctionProperties.definition = RouteConstant.UPDATE_ROUTE_INPUT
+        }
+        this.bindingServiceProperties.bindings[updateRouteConsumerBindName]?.let {
+            if (it.destination == null || it.destination == updateRouteConsumerBindName) {
                 it.destination = RouteConstant.UPDATE_ROUTE_DESCRIPTION
             }
             it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
-            it.group = GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + environment.getProperty("server.address") + "-" + environment.getProperty("server.port")
+            it.group =
+                GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + environment.getProperty("server.address") + "-" + environment.getProperty(
+                    "server.port"
+                )
         }
     }
 
     private fun initProducer() {
-        if (this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT] == null) {
-            this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT] = BindingProperties()
+        if (this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT] == null) {
+            this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT] = BindingProperties()
         }
-        this.bindings.bindings[RouteConstant.ROUTE_LOG_OUTPUT]?.let {
+        this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT]?.let {
             if (it.destination == null || it.destination == RouteConstant.ROUTE_LOG_OUTPUT) {
                 it.destination = RouteConstant.ROUTE_LOG_DESCRIPTION
             }
@@ -83,8 +95,12 @@ constructor(private val environment: Environment,
         }
     }
 
-    @Bean
+    @Bean(RouteConstant.UPDATE_ROUTE_INPUT)
     fun updateRouteConsumer(routeRedisRepository: RouteRedisRepository) = UpdateRouteConsumer(routeRedisRepository)
+
+    @Bean
+    fun routeLogBridge(streamBridge: StreamBridge, objectMapper: ObjectMapper) =
+        RouteLogBridge(streamBridge, objectMapper, RouteConstant.ROUTE_LOG_OUTPUT)
 
     @Bean
     @ConditionalOnProperty(name = ["cross-domain"], havingValue = "true")
@@ -113,43 +129,50 @@ constructor(private val environment: Environment,
     }
 
     @Bean
-    fun logRequestFilter(): GlobalFilter = GlobalFilter { exchange, chain ->
+    fun logRequestFilter(routeLogBridge: RouteLogBridge): GlobalFilter = GlobalFilter { exchange, chain ->
         exchange.request.mutate().headers { httpHeaders ->
             httpHeaders[GateWayConstant.GATEWAY_HEADER_REQUEST_TIME] = listOf(System.currentTimeMillis().toString())
         }.build().let {
             val webExchange = exchange.mutate().request(it).build()
             val routeLogMessage = routeLogDomain.createRouteLogMessage(webExchange)
-            routeLogDomain.beforeRoute(routeLogMessage)
+            routeLogBridge.sendMessage(routeLogMessage)
             chain!!.filter(webExchange)
         }
     }
 
     @Bean
-    fun logResponseFilter(): GlobalFilter = object : GlobalFilter, Ordered {
+    fun logResponseFilter(routeLogBridge: RouteLogBridge): GlobalFilter = object : GlobalFilter, Ordered {
         override fun filter(exchange: ServerWebExchange?, chain: GatewayFilterChain?): Mono<Void> {
             val bufferFactory: DataBufferFactory = exchange!!.response.bufferFactory()
-            val decoratedResponse: ServerHttpResponseDecorator = object : ServerHttpResponseDecorator(exchange.response) {
-                override fun writeWith(body: Publisher<out DataBuffer?>): Mono<Void?> {
-                    val routeLogMessage = routeLogDomain.createRouteLogMessage(exchange)
-                    val responseTime = System.currentTimeMillis()
-                    routeLogMessage.processTime = responseTime - routeLogMessage.requestTime!!
-                    routeLogMessage.responseTime = responseTime
-                    exchange.response.statusCode?.let {
-                        routeLogMessage.responseStatus = it.value()
-                    }
-                    return if (routeLogMessage.applyToken && body is Flux<*> &&
+            val decoratedResponse: ServerHttpResponseDecorator =
+                object : ServerHttpResponseDecorator(exchange.response) {
+                    override fun writeWith(body: Publisher<out DataBuffer?>): Mono<Void?> {
+                        val routeLogMessage = routeLogDomain.createRouteLogMessage(exchange)
+                        val responseTime = System.currentTimeMillis()
+                        routeLogMessage.processTime = responseTime - routeLogMessage.requestTime!!
+                        routeLogMessage.responseTime = responseTime
+                        exchange.response.statusCode?.let {
+                            routeLogMessage.responseStatus = it.value()
+                        }
+                        return if (routeLogMessage.applyToken && body is Flux<*> &&
                             (exchange.response.headers.getFirst(HttpHeaders.CONTENT_TYPE)
-                                    ?: "").contains(MediaType.APPLICATION_JSON_VALUE, true)) {
-                        val fluxBody = body as Flux<out DataBuffer?>
-                        super.writeWith(fluxBody.buffer().map { dataBuffers ->
-                            bufferFactory.wrap(routeLogDomain.afterRoute(routeLogMessage, dataBuffers))
-                        })
-                    } else {
-                        routeLogDomain.afterRoute(routeLogMessage)
-                        super.writeWith(body)
+                                ?: "").contains(MediaType.APPLICATION_JSON_VALUE, true)
+                        ) {
+                            val fluxBody = body as Flux<out DataBuffer?>
+                            super.writeWith(fluxBody.buffer().map { dataBuffers ->
+                                routeLogDomain.afterRoute(routeLogMessage, dataBuffers).let {
+                                    routeLogBridge.sendMessage(routeLogMessage)
+                                    bufferFactory.wrap(it)
+                                }
+                            })
+                        } else {
+                            routeLogDomain.afterRoute(routeLogMessage).let {
+                                routeLogBridge.sendMessage(routeLogMessage)
+                                super.writeWith(body)
+                            }
+                        }
                     }
                 }
-            }
             return chain!!.filter(exchange.mutate().response(decoratedResponse).build())
         }
 
@@ -160,7 +183,8 @@ constructor(private val environment: Environment,
 
     companion object {
 
-        private const val ALLOWED_HEADERS = "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent,Process400,Process401,Process403"
+        private const val ALLOWED_HEADERS =
+            "Content-Type,Content-Length,Authorization,Accept,X-Requested-With,Origin,Referer,User-Agent,Process400,Process401,Process403"
 
         private const val ALLOWED_METHODS = "*"
 
