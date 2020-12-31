@@ -4,11 +4,10 @@ info:
 # = Log To File Config
 # ===============================
 logging:
-  file:
-    logback:
-      rollingpolicy:
-        max-file-size: 100MB
-        max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
   level:
     com.alibaba.nacos.client: warn
 # ===============================
