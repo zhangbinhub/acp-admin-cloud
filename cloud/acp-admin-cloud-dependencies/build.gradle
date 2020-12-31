@@ -22,7 +22,7 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     api "pers.acp.cloud:acp-spring-cloud-starter:$versions.acp_core"
-//    api "org.springframework.cloud:spring-cloud-starter-zipkin"
+//    api "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
     api "org.springframework.boot:spring-boot-starter-data-jpa"
     api "org.springframework.boot:spring-boot-starter-data-redis"
