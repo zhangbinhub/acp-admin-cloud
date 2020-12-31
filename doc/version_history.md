@@ -13,19 +13,26 @@
 >     - logging.file.max-size → logging.logback.rollingpolicy.max-file-size
 >     - logging.file.total-size-cap → logging.logback.rollingpolicy.total-size-cap
 >     - logging.file.max-history → logging.logback.rollingpolicy.max-history
-> - acp-admin-cloud-dependencies
->   - [Upgrade] 更新oauth客户端
->   - [Upgrade] 更新workflow客户端
->   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
 >     - kotlin 1.4.21
 >     - Spring Boot 2.4.1
+>     - Spring Cloud 2020.0.0
 >     - kotlin coroutines 1.4.2
 >     - jupiter 5.7.0
 >     - junit-platform 1.7.0
 >     - curator 5.1.0
 >     - mysql 8.0.22
+> - acp-admin-cloud-constant
+>   - [Upgrade] 修改常量值
+> - acp-admin-cloud-dependencies
+>   - [Upgrade] 更新oauth客户端
+>   - [Upgrade] 更新workflow客户端
+>   - [Upgrade] 调整swagger代码，升级至springfox3.0
+>   - [Upgrade] 修改bus事件对象参数名
+>   - [Upgrade] ```feign.hystrix.FallbackFactory``` 替换为 ```org.springframework.cloud.openfeign.FallbackFactory
+> - log-server
+>   - [Upgrade] 路由日志消息消费，改为函数式风格
 > - oauth-server
 >   - [Upgrade] 优化根据机构号查询机构列表接口，使用模糊查询
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
@@ -38,9 +45,19 @@
 >   - [Upgrade] 优化用户查询相关方法名称
 >   - [Upgrade] 调整oauth2相关client和user服务类
 >   - [Upgrade] pers.acp.admin.oauth.nobuild.InitData中增加初始化运行参数
+>   - [Upgrade] 更新文档
 >   - [Fix] 修复内部接口-获取机构列表
+> - route-server
+>   - [Upgrade] 发送路由更新消息，改为StreamBridge方式
+> - gateway-server
+>   - [Upgrade] 去除 ribbon 依赖
+>   - [Upgrade] 发送路由日志消息，改为StreamBridge方式
+>   - [Upgrade] 路由更新消息消费，改为函数式风格
 > - workflow-server
 >   - [Upgrade] 增加内部接口
+> - admin-server
+>   - [Upgrade] 升级 Spring Boot Admin 2.3.1
+>   - [Upgrade] 去除 ribbon 依赖
 ##### v4.1.7
 > - Global
 >   - [Upgrade] 升级 Gradle 至 6.6.1

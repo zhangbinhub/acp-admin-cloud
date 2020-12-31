@@ -17,7 +17,7 @@ import pers.acp.admin.route.domain.RouteDomain
 import pers.acp.admin.route.po.RoutePo
 import pers.acp.admin.route.entity.Route
 import pers.acp.admin.route.po.RouteQueryPo
-import pers.acp.admin.route.producer.instance.UpdateRouteProducer
+import pers.acp.admin.route.producer.UpdateRouteBridge
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
@@ -37,29 +37,36 @@ import javax.validation.constraints.NotNull
 @RequestMapping(RouteApi.basePath)
 @Api(tags = ["网关路由信息"])
 class RouteController @Autowired
-constructor(logAdapter: LogAdapter,
-            private val routeDomain: RouteDomain,
-            private val updateRouteProducer: UpdateRouteProducer) : BaseController(logAdapter) {
+constructor(
+    logAdapter: LogAdapter,
+    private val routeDomain: RouteDomain,
+    private val updateRouteBridge: UpdateRouteBridge
+) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建路由信息", notes = "路由ID、路由URI、断言、过滤器、序号")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = Route::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 201, message = "创建成功", response = Route::class),
+        ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class)
+    )
     @PreAuthorize(BaseExpression.superOnly)
     @PutMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     fun add(@RequestBody @Valid routePo: RoutePo): ResponseEntity<Route> =
-            routeDomain.doCreate(routePo).let {
-                ResponseEntity.status(HttpStatus.CREATED).body(it)
-            }
+        routeDomain.doCreate(routePo).let {
+            ResponseEntity.status(HttpStatus.CREATED).body(it)
+        }
 
     @ApiOperation(value = "删除路由配置信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(BaseExpression.superOnly)
     @DeleteMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun delete(@ApiParam(value = "id列表", required = true)
-               @NotEmpty(message = "id不能为空")
-               @NotNull(message = "id不能为空")
-               @RequestBody
-               idList: List<String>): ResponseEntity<InfoVo> {
+    fun delete(
+        @ApiParam(value = "id列表", required = true)
+        @NotEmpty(message = "id不能为空")
+        @NotNull(message = "id不能为空")
+        @RequestBody
+        idList: List<String>
+    ): ResponseEntity<InfoVo> {
         routeDomain.doDelete(idList)
         return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
@@ -83,7 +90,7 @@ constructor(logAdapter: LogAdapter,
     @PostMapping(value = [RouteApi.gateWayRouteConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun query(@RequestBody routeQueryPo: RouteQueryPo): ResponseEntity<Page<Route>> =
-            ResponseEntity.ok(routeDomain.doQuery(routeQueryPo))
+        ResponseEntity.ok(routeDomain.doQuery(routeQueryPo))
 
     @ApiOperation(value = "刷新路由配置信息")
     @ApiResponses(ApiResponse(code = 403, message = "没有权限执行该操作；", response = ErrorVo::class))
@@ -93,7 +100,7 @@ constructor(logAdapter: LogAdapter,
     @Throws(ServerException::class)
     fun refresh(): ResponseEntity<InfoVo> {
         routeDomain.doRefresh()
-        updateRouteProducer.doNotifyUpdateRoute()
+        updateRouteBridge.doNotifyUpdateRoute()
         return ResponseEntity.accepted().body(InfoVo(message = "刷新路由缓存成功，稍后网关将刷新路由配置信息"))
     }
 

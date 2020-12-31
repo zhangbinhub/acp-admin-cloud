@@ -2,16 +2,15 @@ package pers.acp.admin.route.conf
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
-import org.springframework.cloud.stream.annotation.EnableBinding
 import org.springframework.cloud.stream.config.BindingProperties
 import org.springframework.cloud.stream.config.BindingServiceConfiguration
 import org.springframework.cloud.stream.config.BindingServiceProperties
+import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.util.MimeTypeUtils
 import pers.acp.admin.constant.RouteConstant
-import pers.acp.admin.route.producer.UpdateRouteOutput
-import pers.acp.admin.route.producer.instance.UpdateRouteProducer
+import pers.acp.admin.route.producer.UpdateRouteBridge
 
 import javax.annotation.PostConstruct
 
@@ -21,20 +20,20 @@ import javax.annotation.PostConstruct
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(BindingServiceConfiguration::class)
-@EnableBinding(UpdateRouteOutput::class)
 class RouteConfiguration @Autowired
-constructor(private val bindings: BindingServiceProperties) {
-
+constructor(
+    private val bindingServiceProperties: BindingServiceProperties
+) {
     @PostConstruct
     fun init() {
         initProducer()
     }
 
     private fun initProducer() {
-        if (this.bindings.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT] == null) {
-            this.bindings.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT] = BindingProperties()
+        if (this.bindingServiceProperties.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT] == null) {
+            this.bindingServiceProperties.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT] = BindingProperties()
         }
-        this.bindings.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT]?.let {
+        this.bindingServiceProperties.bindings[RouteConstant.UPDATE_GATEWAY_OUTPUT]?.let {
             if (it.destination == null || it.destination == RouteConstant.UPDATE_GATEWAY_OUTPUT) {
                 it.destination = RouteConstant.UPDATE_ROUTE_DESCRIPTION
             }
@@ -42,8 +41,7 @@ constructor(private val bindings: BindingServiceProperties) {
         }
     }
 
-
     @Bean
-    fun updateRouteProducer(updateRouteOutput: UpdateRouteOutput) = UpdateRouteProducer(updateRouteOutput)
-
+    fun updateRouteBridge(streamBridge: StreamBridge) =
+        UpdateRouteBridge(streamBridge, RouteConstant.UPDATE_GATEWAY_OUTPUT)
 }

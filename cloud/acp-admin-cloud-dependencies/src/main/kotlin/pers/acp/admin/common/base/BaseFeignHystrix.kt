@@ -1,6 +1,6 @@
 package pers.acp.admin.common.base
 
-import feign.hystrix.FallbackFactory
+import org.springframework.cloud.openfeign.FallbackFactory
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**

@@ -30,10 +30,14 @@ dependencies {
     implementation project(":cloud:acp-admin-cloud-constant")
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
+    implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
     implementation "org.springframework.cloud:spring-cloud-starter-stream-kafka"
+    implementation "org.springframework.cloud:spring-cloud-stream-binder-kafka-streams"
     implementation "org.springframework.cloud:spring-cloud-starter-gateway"
     implementation "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     // 服务注册发现
-    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery") {
+        exclude group: "org.springframework.cloud", module: "spring-cloud-starter-netflix-ribbon"
+    }
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 }

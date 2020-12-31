@@ -3,8 +3,6 @@ package pers.acp.admin.gateway.domain
 import com.fasterxml.jackson.databind.ObjectMapper
 import pers.acp.admin.gateway.constant.GateWayConstant
 import pers.acp.admin.gateway.message.RouteLogMessage
-import pers.acp.admin.gateway.producer.RouteLogOutput
-import pers.acp.admin.gateway.producer.instance.RouteLogProducer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils
@@ -27,13 +25,12 @@ import java.util.LinkedHashSet
 @Service
 @Transactional(readOnly = true)
 class RouteLogDomain @Autowired
-constructor(routeLogOutput: RouteLogOutput,
-            private val environment: Environment,
-            private val objectMapper: ObjectMapper) {
+constructor(
+    private val environment: Environment,
+    private val objectMapper: ObjectMapper
+) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
-
-    private val routeLogProducer = RouteLogProducer(routeLogOutput, objectMapper)
 
     private fun getRealRemoteIp(request: ServerHttpRequest): String {
         var ipAddress: String? = request.headers.getFirst("X-Forwarded-For")
@@ -59,18 +56,6 @@ constructor(routeLogOutput: RouteLogOutput,
         return ipAddress
     }
 
-    private fun doLog(routeLogMessage: RouteLogMessage) {
-        try {
-            routeLogProducer.doNotifyRouteLog(routeLogMessage)
-        } catch (e: Exception) {
-            log.error(e.message, e)
-        }
-    }
-
-    fun beforeRoute(routeLogMessage: RouteLogMessage) {
-        doLog(routeLogMessage)
-    }
-
     fun afterRoute(routeLogMessage: RouteLogMessage, dataBufferList: MutableList<out DataBuffer?>? = null): ByteArray {
         try {
             var content: ByteArray = byteArrayOf()
@@ -93,7 +78,6 @@ constructor(routeLogOutput: RouteLogOutput,
                     log.error(e.message, e)
                 }
             }
-            doLog(routeLogMessage)
             return content
         } catch (e: Exception) {
             log.error(e.message, e)
@@ -108,7 +92,11 @@ constructor(routeLogOutput: RouteLogOutput,
         var token: String? = null
         serverWebExchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)?.apply {
             val authList = this.split(" ")
-            if (authList.size > 1 && (authList[0].equals("Bearer", ignoreCase = true) || authList[0].equals("mac", ignoreCase = true))) {
+            if (authList.size > 1 && (authList[0].equals("Bearer", ignoreCase = true) || authList[0].equals(
+                    "mac",
+                    ignoreCase = true
+                ))
+            ) {
                 token = authList[1]
             }
         }
@@ -120,38 +108,39 @@ constructor(routeLogOutput: RouteLogOutput,
             }
         }
         return RouteLogMessage(
-                logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
-                remoteIp = getRealRemoteIp(serverWebExchange.request),
-                gatewayIp = (environment.getProperty("server.address")
-                        ?: "") + ":" + environment.getProperty("server.port"),
-                method = serverWebExchange.request.methodValue,
-                token = token
+            logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
+            remoteIp = getRealRemoteIp(serverWebExchange.request),
+            gatewayIp = (environment.getProperty("server.address")
+                ?: "") + ":" + environment.getProperty("server.port"),
+            method = serverWebExchange.request.methodValue,
+            token = token
         ).also { routeLogMessage ->
-            serverWebExchange.getAttribute<LinkedHashSet<URI>>(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR)?.forEach {
-                val prefix = "lb://"
-                val uriStr = it.toString()
-                if (routeLogMessage.path == null && !uriStr.startsWith(prefix)) {
-                    var tmpUri = uriStr
-                    if (tmpUri.startsWith("http://")) {
-                        tmpUri = tmpUri.substring(7)
-                    } else if (tmpUri.startsWith("https://")) {
-                        tmpUri = tmpUri.substring(8)
+            serverWebExchange.getAttribute<LinkedHashSet<URI>>(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR)
+                ?.forEach {
+                    val prefix = "lb://"
+                    val uriStr = it.toString()
+                    if (routeLogMessage.path == null && !uriStr.startsWith(prefix)) {
+                        var tmpUri = uriStr
+                        if (tmpUri.startsWith("http://")) {
+                            tmpUri = tmpUri.substring(7)
+                        } else if (tmpUri.startsWith("https://")) {
+                            tmpUri = tmpUri.substring(8)
+                        }
+                        if (tmpUri.contains("/")) {
+                            routeLogMessage.path = tmpUri.substring(tmpUri.indexOf("/"))
+                        } else {
+                            routeLogMessage.path = tmpUri
+                        }
                     }
-                    if (tmpUri.contains("/")) {
-                        routeLogMessage.path = tmpUri.substring(tmpUri.indexOf("/"))
-                    } else {
-                        routeLogMessage.path = tmpUri
+                    if (routeLogMessage.serverId == null && uriStr.startsWith(prefix)) {
+                        val tmpUri = uriStr.substring(prefix.length)
+                        if (tmpUri.contains("/")) {
+                            routeLogMessage.serverId = tmpUri.substring(0, tmpUri.indexOf("/"))
+                        } else {
+                            routeLogMessage.serverId = tmpUri
+                        }
                     }
                 }
-                if (routeLogMessage.serverId == null && uriStr.startsWith(prefix)) {
-                    val tmpUri = uriStr.substring(prefix.length)
-                    if (tmpUri.contains("/")) {
-                        routeLogMessage.serverId = tmpUri.substring(0, tmpUri.indexOf("/"))
-                    } else {
-                        routeLogMessage.serverId = tmpUri
-                    }
-                }
-            }
             serverWebExchange.getAttribute<URI>(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR)?.apply {
                 routeLogMessage.targetIp = this.host
                 routeLogMessage.targetUri = this.toString()
