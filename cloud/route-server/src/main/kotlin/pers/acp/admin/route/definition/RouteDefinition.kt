@@ -23,7 +23,7 @@ class RouteDefinition {
 
     var order = 0
 
-    constructor() {}
+    constructor()
 
     constructor(text: String) {
         val eqIdx = text.indexOf('=')

@@ -23,7 +23,7 @@ class PredicateDefinition {
         this.args = args
     }
 
-    constructor() {}
+    constructor()
 
     constructor(text: String) {
         val eqIdx = text.indexOf('=')
