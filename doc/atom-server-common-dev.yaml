@@ -10,6 +10,7 @@ logging:
       max-history: 30
   level:
     com.alibaba.nacos.client: warn
+    org.springframework.cloud.function: warn
 # ===============================
 # = Spring Config
 # ===============================
