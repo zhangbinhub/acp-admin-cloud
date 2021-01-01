@@ -198,7 +198,8 @@ http://127.0.0.1:5601
 > - 使用方法：
 >   - 添加依赖
 >        ```groovy
->        implementation "org.springframework.cloud:spring-cloud-starter-zipkin"
+>        implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
+>        implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 >        ```
 >   - bootstrap.yaml 增加配置
 >        ```yaml
