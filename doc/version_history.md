@@ -53,6 +53,8 @@
 >   - [Upgrade] 去除 ribbon 依赖
 >   - [Upgrade] 发送路由日志消息，改为StreamBridge方式
 >   - [Upgrade] 路由更新消息消费，改为函数式风格
+> - deploy-server
+>   - [Upgrade] 支持执行sql脚本
 > - workflow-server
 >   - [Upgrade] 增加内部接口
 > - admin-server
