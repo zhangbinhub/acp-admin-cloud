@@ -47,7 +47,7 @@ constructor(logAdapter: LogAdapter,
     @PostMapping(value = [WorkFlowApi.definitionFile], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
-    fun create(@ApiParam(value = "流程配置文件", required = true)
+    fun create(@RequestPart(value = "流程配置文件", required = true)
                @NotNull(message = "流程配置文件不能为空")
                @RequestParam file: MultipartFile,
                @ApiParam(value = "备注", required = false)
