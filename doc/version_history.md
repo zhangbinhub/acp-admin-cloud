@@ -46,7 +46,7 @@
 >   - [Upgrade] 优化用户查询相关方法名称
 >   - [Upgrade] 调整oauth2相关client和user服务类
 >   - [Upgrade] pers.acp.admin.oauth.nobuild.InitData中增加初始化运行参数
->   - [Upgrade] 去除自定义redis token store
+>   - [Upgrade] 去除自定义token store
 >   - [Upgrade] 更新文档
 >   - [Fix] 修复内部接口-获取机构列表
 > - route-server
