@@ -13,6 +13,7 @@
 >     - logging.file.max-size → logging.logback.rollingpolicy.max-file-size
 >     - logging.file.total-size-cap → logging.logback.rollingpolicy.total-size-cap
 >     - logging.file.max-history → logging.logback.rollingpolicy.max-history
+>   - [Upgrade] RedisTemplate 更换为 StringRedisTemplate
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
 >     - kotlin 1.4.21
