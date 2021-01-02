@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory
 import org.springframework.beans.factory.annotation.Autowired
 
 import org.springframework.data.domain.Page
-import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
@@ -33,25 +33,27 @@ import java.net.URI
 @Service
 @Transactional(readOnly = true)
 class RouteDomain @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val routeRepository: RouteRepository,
-            private val redisTemplate: RedisTemplate<Any, Any>,
-            private val objectMapper: ObjectMapper,
-            private val distributedLock: DistributedLock) : BaseDomain() {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val routeRepository: RouteRepository,
+    private val stringRedisTemplate: StringRedisTemplate,
+    private val objectMapper: ObjectMapper,
+    private val distributedLock: DistributedLock
+) : BaseDomain() {
 
     private fun doSave(route: Route, routePo: RoutePo): Route =
-            route.copy(
-                    uri = routePo.uri,
-                    routeId = routePo.routeId,
-                    predicates = routePo.predicates!!,
-                    filters = routePo.filters,
-                    metadata = routePo.metadata,
-                    enabled = routePo.enabled ?: false,
-                    orderNum = routePo.orderNum,
-                    remarks = routePo.remarks
-            ).let {
-                routeRepository.save(it)
-            }
+        route.copy(
+            uri = routePo.uri,
+            routeId = routePo.routeId,
+            predicates = routePo.predicates!!,
+            filters = routePo.filters,
+            metadata = routePo.metadata,
+            enabled = routePo.enabled ?: false,
+            orderNum = routePo.orderNum,
+            remarks = routePo.remarks
+        ).let {
+            routeRepository.save(it)
+        }
 
     @Transactional
     fun doCreate(routePo: RoutePo): Route = doSave(Route(), routePo)
@@ -64,16 +66,21 @@ constructor(private val logAdapter: LogAdapter,
     fun doDelete(idList: List<String>) = routeRepository.deleteByIdInAndEnabled(idList, false)
 
     fun doQuery(routeQueryPo: RouteQueryPo): Page<Route> =
-            routeRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (routeQueryPo.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), routeQueryPo.enabled))
-                }
-                if (!CommonTools.isNullStr(routeQueryPo.routeId)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("routeId").`as`(String::class.java), "%" + routeQueryPo.routeId + "%"))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(routeQueryPo.queryParam!!))
+        routeRepository.findAll({ root, _, criteriaBuilder ->
+            val predicateList: MutableList<Predicate> = mutableListOf()
+            if (routeQueryPo.enabled != null) {
+                predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), routeQueryPo.enabled))
+            }
+            if (!CommonTools.isNullStr(routeQueryPo.routeId)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("routeId").`as`(String::class.java),
+                        "%" + routeQueryPo.routeId + "%"
+                    )
+                )
+            }
+            criteriaBuilder.and(*predicateList.toTypedArray())
+        }, buildPageRequest(routeQueryPo.queryParam!!))
 
     @Transactional
     @Throws(ServerException::class)
@@ -84,25 +91,38 @@ constructor(private val logAdapter: LogAdapter,
             val uuid = CommonTools.getUuid()
             if (distributedLock.getLock(RouteConstant.ROUTES_LOCK_KEY, uuid, RouteConstant.ROUTES_LOCK_TIME_OUT)) {
                 try {
-                    redisTemplate.delete(ROUTES_DEFINITION_KEY)
+                    stringRedisTemplate.delete(ROUTES_DEFINITION_KEY)
                     logAdapter.info("清理 Redis 缓存完成")
                     for (route in routeList) {
                         val routeDefinition = RouteDefinition()
                         routeDefinition.id = route.routeId!!
                         routeDefinition.uri = URI(route.uri!!)
                         routeDefinition.order = route.orderNum
-                        routeDefinition.predicates = objectMapper.readValue(route.predicates, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, PredicateDefinition::class.java))
+                        routeDefinition.predicates = objectMapper.readValue(
+                            route.predicates,
+                            TypeFactory.defaultInstance()
+                                .constructCollectionLikeType(MutableList::class.java, PredicateDefinition::class.java)
+                        )
                         routeDefinition.filters = if (!CommonTools.isNullStr(route.filters)) {
-                            objectMapper.readValue(route.filters, TypeFactory.defaultInstance().constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java))
+                            objectMapper.readValue(
+                                route.filters,
+                                TypeFactory.defaultInstance()
+                                    .constructCollectionLikeType(MutableList::class.java, FilterDefinition::class.java)
+                            )
                         } else {
                             mutableListOf()
                         }
                         routeDefinition.metadata = if (!CommonTools.isNullStr(route.metadata)) {
-                            objectMapper.readValue(route.metadata, TypeFactory.defaultInstance().constructMapLikeType(MutableMap::class.java, String::class.java, Any::class.java))
+                            objectMapper.readValue(
+                                route.metadata,
+                                TypeFactory.defaultInstance()
+                                    .constructMapLikeType(MutableMap::class.java, String::class.java, Any::class.java)
+                            )
                         } else {
                             mutableMapOf()
                         }
-                        redisTemplate.opsForList().rightPush(ROUTES_DEFINITION_KEY, objectMapper.writeValueAsBytes(routeDefinition))
+                        stringRedisTemplate.opsForList()
+                            .rightPush(ROUTES_DEFINITION_KEY, objectMapper.writeValueAsString(routeDefinition))
                     }
                     logAdapter.info("路由信息更新至 Redis，共 " + routeList.size + " 条")
                 } finally {

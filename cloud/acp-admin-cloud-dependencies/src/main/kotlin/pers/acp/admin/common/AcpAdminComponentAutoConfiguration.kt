@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.data.redis.core.RedisOperations
-import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
 import pers.acp.admin.common.conf.ZkClientConfiguration
 import pers.acp.admin.common.serialnumber.GenerateSerialNumber
 import pers.acp.admin.common.serialnumber.RedisGenerateSerialNumber
@@ -33,16 +33,18 @@ class AcpAdminComponentAutoConfiguration {
     @Bean
     @ConditionalOnClass(RedisOperations::class)
     @ConditionalOnMissingBean(GenerateSerialNumber::class)
-    fun redisGenerateSerialNumber(redisTemplate: RedisTemplate<Any, Any>): GenerateSerialNumber = RedisGenerateSerialNumber(redisTemplate)
+    fun redisGenerateSerialNumber(stringRedisTemplate: StringRedisTemplate): GenerateSerialNumber =
+        RedisGenerateSerialNumber(stringRedisTemplate)
 
     @Bean
     @ConditionalOnClass(CuratorFramework::class)
     @ConditionalOnMissingBean(CuratorFramework::class)
     fun acpZkClient(zkClientConfiguration: ZkClientConfiguration): CuratorFramework =
-            CuratorFrameworkFactory.newClient(
-                    zkClientConfiguration.connect,
-                    zkClientConfiguration.sessionTimeOut,
-                    zkClientConfiguration.connectionTimeOut,
-                    RetryForever(5000)).apply { this.start() }
+        CuratorFrameworkFactory.newClient(
+            zkClientConfiguration.connect,
+            zkClientConfiguration.sessionTimeOut,
+            zkClientConfiguration.connectionTimeOut,
+            RetryForever(5000)
+        ).apply { this.start() }
 
 }

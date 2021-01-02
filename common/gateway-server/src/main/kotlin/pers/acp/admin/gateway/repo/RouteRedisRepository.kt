@@ -8,7 +8,7 @@ import org.springframework.cloud.gateway.route.RouteDefinition
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository
 import org.springframework.context.annotation.Scope
 
-import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Component
 import pers.acp.admin.constant.RouteConstant
 import reactor.core.publisher.Flux
@@ -24,7 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 class RouteRedisRepository @Autowired
-constructor(private val redisTemplate: RedisTemplate<Any, Any>, private val objectMapper: ObjectMapper) : RouteDefinitionRepository {
+constructor(private val stringRedisTemplate: StringRedisTemplate, private val objectMapper: ObjectMapper) :
+    RouteDefinitionRepository {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -36,9 +37,9 @@ constructor(private val redisTemplate: RedisTemplate<Any, Any>, private val obje
             routes.clear()
             val values: MutableList<RouteDefinition> = mutableListOf()
             try {
-                redisTemplate.opsForList().range(RouteConstant.ROUTES_DEFINITION_KEY, 0, -1)?.let {
+                stringRedisTemplate.opsForList().range(RouteConstant.ROUTES_DEFINITION_KEY, 0, -1)?.let {
                     for (route in it) {
-                        values.add(objectMapper.readValue(route as ByteArray, RouteDefinition::class.java))
+                        values.add(objectMapper.readValue(route, RouteDefinition::class.java))
                     }
                 }
             } catch (e: Exception) {
