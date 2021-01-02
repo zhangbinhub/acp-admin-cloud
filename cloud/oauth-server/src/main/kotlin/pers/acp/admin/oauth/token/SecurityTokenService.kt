@@ -1,19 +1,18 @@
 package pers.acp.admin.oauth.token
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.connection.RedisConnectionFactory
 
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.token.store.SecurityTokenStoreMemory
-import pers.acp.admin.oauth.token.store.SecurityTokenStoreRedis
 import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 19/12/2018
@@ -22,9 +21,10 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 @Service
 @Transactional(readOnly = true)
 class SecurityTokenService @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val redisTemplate: RedisTemplate<Any, Any>,
-            val securityTokenEnhancer: SecurityTokenEnhancer) : DefaultTokenServices() {
+constructor(
+    private val connectionFactory: RedisConnectionFactory,
+    val securityTokenEnhancer: SecurityTokenEnhancer
+) : DefaultTokenServices() {
 
     /**
      * 默认持久化到内存
@@ -33,7 +33,7 @@ constructor(private val logAdapter: LogAdapter,
 
     fun getTokenStore(): TokenStore = this.customerTokenStore
 
-    private fun redisTokenStore(): TokenStore = SecurityTokenStoreRedis(logAdapter, redisTemplate)
+    private fun redisTokenStore(): TokenStore = RedisTokenStore(connectionFactory)
 
     private fun inMemoryTokenStore(): TokenStore = SecurityTokenStoreMemory()
 
@@ -67,7 +67,8 @@ constructor(private val logAdapter: LogAdapter,
      * @return token对象
      */
     @Throws(ServerException::class)
-    fun getToken(authentication: OAuth2Authentication): OAuth2AccessToken = customerTokenStore.getAccessToken(authentication)
+    fun getToken(authentication: OAuth2Authentication): OAuth2AccessToken =
+        customerTokenStore.getAccessToken(authentication)
             ?: throw ServerException("access token was not find")
 
     /**
@@ -78,7 +79,7 @@ constructor(private val logAdapter: LogAdapter,
      */
     @Throws(ServerException::class)
     fun getToken(tokenValue: String): OAuth2AccessToken = customerTokenStore.readAccessToken(tokenValue)
-            ?: throw ServerException("access token was not find")
+        ?: throw ServerException("access token was not find")
 
     /**
      * 根据应用id和登录账号获取token
@@ -87,7 +88,8 @@ constructor(private val logAdapter: LogAdapter,
      * @param loginNo 登录账号
      * @return token 集合
      */
-    fun getTokensByAppIdAndLoginNo(appId: String, loginNo: String): Collection<OAuth2AccessToken> = customerTokenStore.findTokensByClientIdAndUserName(appId, loginNo)
+    fun getTokensByAppIdAndLoginNo(appId: String, loginNo: String): Collection<OAuth2AccessToken> =
+        customerTokenStore.findTokensByClientIdAndUserName(appId, loginNo)
 
     /**
      * 根据应用id获取token
@@ -123,6 +125,7 @@ constructor(private val logAdapter: LogAdapter,
      * @param loginNo 登录账号
      */
     @Transactional
-    fun removeTokensByAppIdAndLoginNo(appId: String, loginNo: String) = getTokensByAppIdAndLoginNo(appId, loginNo).forEach { this.removeToken(it) }
+    fun removeTokensByAppIdAndLoginNo(appId: String, loginNo: String) =
+        getTokensByAppIdAndLoginNo(appId, loginNo).forEach { this.removeToken(it) }
 
 }
