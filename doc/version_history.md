@@ -4,16 +4,16 @@
 >   - [Upgrade] 升级 Gradle 至 6.7.1
 >   - [Upgrade] gradle/dependencies.gradle 中移除 spring_boot、spring_cloud、alibaba_cloud，gradle.properties 中增加 springBootVersion、springCloudVersion、springCloudAlibabaVersion
 >   - [Upgrade] 修改各模块build.gradle写法
->     - $versions.spring_boot → ${springBootVersion}
->     - $versions.spring_cloud → ${springCloudVersion}
->     - $versions.alibaba_cloud → ${springCloudAlibabaVersion}
+>     - ```$versions.spring_boot``` → ```${springBootVersion}```
+>     - ```$versions.spring_cloud``` → ```${springCloudVersion}```
+>     - ```$versions.alibaba_cloud``` → ```${springCloudAlibabaVersion}```
 >   - [Upgrade] logback 配置属性重命名
->     - logging.pattern.rolling-file-name → logging.logback.rollingpolicy.file-name-pattern
->     - logging.file.clean-history-on-start → logging.logback.rollingpolicy.clean-history-on-start
->     - logging.file.max-size → logging.logback.rollingpolicy.max-file-size
->     - logging.file.total-size-cap → logging.logback.rollingpolicy.total-size-cap
->     - logging.file.max-history → logging.logback.rollingpolicy.max-history
->   - [Upgrade] RedisTemplate 更换为 StringRedisTemplate
+>     - ```logging.pattern.rolling-file-name``` → ```logging.logback.rollingpolicy.file-name-pattern```
+>     - ```logging.file.clean-history-on-start``` → ```logging.logback.rollingpolicy.clean-history-on-start```
+>     - ```logging.file.max-size``` → ```logging.logback.rollingpolicy.max-file-size```
+>     - ```logging.file.total-size-cap``` → ```logging.logback.rollingpolicy.total-size-cap```
+>     - ```logging.file.max-history``` → ```logging.logback.rollingpolicy.max-history```
+>   - [Upgrade] ```RedisTemplate``` 更换为 ```StringRedisTemplate```
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.0
 >     - kotlin 1.4.21
@@ -31,29 +31,29 @@
 >   - [Upgrade] 更新workflow客户端
 >   - [Upgrade] 调整swagger代码，升级至springfox3.0
 >   - [Upgrade] 修改bus事件对象参数名
->   - [Upgrade] ```feign.hystrix.FallbackFactory``` 替换为 ```org.springframework.cloud.openfeign.FallbackFactory
+>   - [Upgrade] ```feign.hystrix.FallbackFactory``` 替换为 ```org.springframework.cloud.openfeign.FallbackFactory```
 > - log-server
 >   - [Upgrade] 路由日志消息消费，改为函数式风格
 > - oauth-server
 >   - [Upgrade] 优化根据机构号查询机构列表接口，使用模糊查询
 >   - [Upgrade] 修改登录密码验证逻辑，时间粒度增加前后容错
 >   - [Upgrade] 增加内部接口
->   - [Upgrade] /org-by-code/{code} 修改为 /org-by-code-or-name/{codeOrName}
->   - [Upgrade] 更换废弃的API，Arrays.min() → Arrays.minOrNull()
+>   - [Upgrade] `````/org-by-code/{code}`````修改为`````/org-by-code-or-name/{codeOrName}`````
+>   - [Upgrade] 更换废弃的API，```Arrays.min()``` → ```Arrays.minOrNull()```
 >   - [Upgrade] 优化单元测试代码
 >   - [Upgrade] 增加oauth2自定义异常处理
 >   - [Upgrade] 增加oauth2自定义认证方式
 >   - [Upgrade] 优化用户查询相关方法名称
 >   - [Upgrade] 调整oauth2相关client和user服务类
->   - [Upgrade] pers.acp.admin.oauth.nobuild.InitData中增加初始化运行参数
+>   - [Upgrade] ```pers.acp.admin.oauth.nobuild.InitData```中增加初始化运行参数
 >   - [Upgrade] 去除自定义token store
 >   - [Upgrade] 更新文档
 >   - [Fix] 修复内部接口-获取机构列表
 > - route-server
->   - [Upgrade] 发送路由更新消息，改为StreamBridge方式
+>   - [Upgrade] 发送路由更新消息，改为```StreamBridge```方式
 > - gateway-server
 >   - [Upgrade] 去除 ribbon 依赖
->   - [Upgrade] 发送路由日志消息，改为StreamBridge方式
+>   - [Upgrade] 发送路由日志消息，改为```StreamBridge```方式
 >   - [Upgrade] 路由更新消息消费，改为函数式风格
 > - deploy-server
 >   - [Upgrade] 支持执行sql脚本
