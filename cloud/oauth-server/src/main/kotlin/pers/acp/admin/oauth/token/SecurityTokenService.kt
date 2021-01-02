@@ -8,10 +8,10 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.oauth.token.store.SecurityTokenStoreMemory
 import pers.acp.spring.boot.exceptions.ServerException
 
 /**
@@ -35,7 +35,7 @@ constructor(
 
     private fun redisTokenStore(): TokenStore = RedisTokenStore(connectionFactory)
 
-    private fun inMemoryTokenStore(): TokenStore = SecurityTokenStoreMemory()
+    private fun inMemoryTokenStore(): TokenStore = InMemoryTokenStore()
 
     init {
         try {
