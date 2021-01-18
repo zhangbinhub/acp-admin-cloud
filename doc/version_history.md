@@ -1,4 +1,11 @@
 ## 版本更新记录
+##### v4.2.1
+> - Global
+>   - [Upgrade] 升级 Gradle 至 6.8
+>   - [Upgrade] 升级依赖
+>     - Acp 6.5.1
+>     - Spring Boot 2.4.2
+>     - Spring Cloud Alibaba 2.2.4.RELEASE
 ##### v4.2.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 6.7.1

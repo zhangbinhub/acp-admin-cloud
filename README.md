@@ -1,13 +1,13 @@
 # acp-admin-cloud
-###### v4.2.0 [版本更新日志](doc/version_history.md)
+###### v4.2.1 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.2.0](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.2.1](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.4.1](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.4.2](https://projects.spring.io/spring-boot)
 - [Spring Cloud 2020.0.0](http://projects.spring.io/spring-cloud)
-- [Spring Cloud Alibaba 2.2.3.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Spring Cloud Alibaba 2.2.4.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.5.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
@@ -117,7 +117,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.7.1 --distribution-type=all
+    gradlew wrapper --gradle-version=6.8 --distribution-type=all
 ```
 
 ## 三、工程说明
