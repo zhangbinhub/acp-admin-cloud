@@ -3,7 +3,7 @@ ext {
 }
 
 versions += [
-        acp_core         : "6.5.0",
+        acp_core         : "6.5.1",
         jupiter          : "5.7.0",
         junit_platform   : "1.7.0",
         kotlin_coroutines: "1.4.2",
