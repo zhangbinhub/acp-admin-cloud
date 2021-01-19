@@ -6,6 +6,8 @@
 >     - Acp 6.5.1
 >     - Spring Boot 2.4.2
 >     - Spring Cloud Alibaba 2.2.4.RELEASE
+> - oauth-server
+>   - [Fix] 修复用户查询时，机构、角色为空的问题
 ##### v4.2.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 6.7.1

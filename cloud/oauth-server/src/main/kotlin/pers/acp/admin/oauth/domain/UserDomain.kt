@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import pers.acp.admin.common.vo.OrganizationVo
+import pers.acp.admin.common.vo.RoleVo
 import pers.acp.admin.oauth.base.OauthBaseDomain
 import pers.acp.admin.oauth.entity.Organization
 import pers.acp.admin.oauth.entity.Role
@@ -32,11 +34,27 @@ import java.util.*
 @Service
 @Transactional(readOnly = true)
 class UserDomain @Autowired
-constructor(userRepository: UserRepository,
-            private val applicationRepository: ApplicationRepository,
-            private val organizationRepository: OrganizationRepository,
-            private val roleRepository: RoleRepository,
-            private val securityTokenService: SecurityTokenService) : OauthBaseDomain(userRepository) {
+constructor(
+    userRepository: UserRepository,
+    private val applicationRepository: ApplicationRepository,
+    private val organizationRepository: OrganizationRepository,
+    private val roleRepository: RoleRepository,
+    private val securityTokenService: SecurityTokenService
+) : OauthBaseDomain(userRepository) {
+
+    @Throws(ServerException::class)
+    private fun formatUserVo(user: User) = UserVo().apply {
+        BeanUtils.copyProperties(user, this)
+        this.organizationSet = user.organizationSet.map { org ->
+            OrganizationVo().apply { BeanUtils.copyProperties(org, this) }
+        }.toMutableSet()
+        this.organizationMngSet = user.organizationMngSet.map { org ->
+            OrganizationVo().apply { BeanUtils.copyProperties(org, this) }
+        }.toMutableSet()
+        this.roleSet = user.roleSet.map { role ->
+            RoleVo().apply { BeanUtils.copyProperties(role, this) }
+        }.toMutableSet()
+    }
 
     @Throws(ServerException::class)
     private fun validatePermit(loginNo: String, userPo: UserPo, roleSet: Set<Role>, isCreate: Boolean) {
@@ -73,29 +91,34 @@ constructor(userRepository: UserRepository,
     }
 
     private fun doSave(user: User, userPo: UserPo): User =
-            doSaveUser(user.copy(
-                    mobile = userPo.mobile!!,
-                    name = userPo.name!!,
-                    enabled = userPo.enabled!!,
-                    levels = userPo.levels!!,
-                    sort = userPo.sort,
-                    organizationSet = organizationRepository.findAllById(userPo.orgIds).toMutableSet(),
-                    organizationMngSet = organizationRepository.findAllById(userPo.orgMngIds).toMutableSet()
-            ))
+        doSaveUser(
+            user.copy(
+                mobile = userPo.mobile!!,
+                name = userPo.name!!,
+                enabled = userPo.enabled!!,
+                levels = userPo.levels!!,
+                sort = userPo.sort,
+                organizationSet = organizationRepository.findAllById(userPo.orgIds).toMutableSet(),
+                organizationMngSet = organizationRepository.findAllById(userPo.orgMngIds).toMutableSet()
+            )
+        )
 
     @Transactional
     fun doSaveUser(user: User): User = userRepository.save(user)
 
-    fun getMobileForOtherUser(mobile: String, userId: String): User? = userRepository.findByMobileAndIdNot(mobile, userId).orElse(null)
+    fun getMobileForOtherUser(mobile: String, userId: String): User? =
+        userRepository.findByMobileAndIdNot(mobile, userId).orElse(null)
 
     @Throws(ServerException::class)
     fun findModifiableUserList(loginNo: String): MutableList<UserVo> {
         val user = getUserInfoByLoginNo(loginNo) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(user)) {
-            userRepository.findAll().map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }.toMutableList()
+            userRepository.findAll().map { item -> formatUserVo(item) }
+                .toMutableList()
         } else {
             user.let {
-                userRepository.findByLevelsGreaterThan(it.levels).map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }.toMutableList()
+                userRepository.findByLevelsGreaterThan(it.levels)
+                    .map { item -> formatUserVo(item) }.toMutableList()
             }
         }
     }
@@ -113,11 +136,13 @@ constructor(userRepository: UserRepository,
         if (checkUser != null) {
             throw ServerException("手机号码已存在，请重新输入")
         }
-        return doSave(User(
+        return doSave(
+            User(
                 loginNo = userPo.loginNo!!,
                 password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!),
                 roleSet = roleSet
-        ), userPo)
+            ), userPo
+        )
     }
 
     @Transactional
@@ -147,19 +172,19 @@ constructor(userRepository: UserRepository,
     @Transactional
     @Throws(ServerException::class)
     fun doUpdatePwd(loginNo: String, userId: String): User =
-            userRepository.getOne(userId).apply {
-                (getUserInfoByLoginNo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
-                    if (!isSuper(it)) {
-                        if (it.levels >= this.levels) {
-                            throw ServerException("不能修改级别比自身大或相等的用户信息")
-                        }
+        userRepository.getOne(userId).apply {
+            (getUserInfoByLoginNo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
+                if (!isSuper(it)) {
+                    if (it.levels >= this.levels) {
+                        throw ServerException("不能修改级别比自身大或相等的用户信息")
                     }
-                    this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
-                    this.lastUpdatePasswordTime = null
-                    userRepository.save(this)
-                    removeToken(loginNo)
                 }
+                this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
+                this.lastUpdatePasswordTime = null
+                userRepository.save(this)
+                removeToken(loginNo)
             }
+        }
 
     @Transactional
     @Throws(ServerException::class)
@@ -181,59 +206,72 @@ constructor(userRepository: UserRepository,
     }
 
     private fun removeToken(loginNo: String) {
-        applicationRepository.findAllByOrderByIdentifyAscAppNameAsc().forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
+        applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
+            .forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
     }
 
     fun doQuery(userQueryPo: UserQueryPo): Page<UserVo> =
-            userRepository.findAll({ root, query, criteriaBuilder ->
-                val predicateList = ArrayList<Predicate>()
-                if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("loginNo").`as`(String::class.java), userQueryPo.loginNo))
-                }
-                if (!CommonTools.isNullStr(userQueryPo.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.name + "%"))
-                }
-                if (userQueryPo.enabled != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
-                }
-                if (!CommonTools.isNullStr(userQueryPo.orgName)) {
-                    val subQuery = query.subquery(User::class.java)
-                    val subRoot = subQuery.from(User::class.java)
-                    val joinOrg = subRoot.join<User, Organization>("organizationSet", JoinType.LEFT)
-                    subQuery.select(subRoot.get("id")).where(criteriaBuilder.like(joinOrg.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.orgName + "%"))
-                    predicateList.add(root.get<Any>("id").`in`(subQuery))
-                }
-                if (!CommonTools.isNullStr(userQueryPo.roleName)) {
-                    val subQuery = query.subquery(User::class.java)
-                    val subRoot = subQuery.from(User::class.java)
-                    val joinRole = subRoot.join<User, Role>("roleSet", JoinType.LEFT)
-                    subQuery.select(subRoot.get("id")).where(criteriaBuilder.like(joinRole.get<Any>("name").`as`(String::class.java), "%" + userQueryPo.roleName + "%"))
-                    predicateList.add(root.get<Any>("id").`in`(subQuery))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(userQueryPo.queryParam!!))
-                    .map { user ->
-                        val userVO = UserVo()
-                        BeanUtils.copyProperties(user, userVO)
-                        userVO
-                    }
+        userRepository.findAll({ root, query, criteriaBuilder ->
+            val predicateList = ArrayList<Predicate>()
+            if (!CommonTools.isNullStr(userQueryPo.loginNo)) {
+                predicateList.add(
+                    criteriaBuilder.equal(
+                        root.get<Any>("loginNo").`as`(String::class.java),
+                        userQueryPo.loginNo
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(userQueryPo.name)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("name").`as`(String::class.java),
+                        "%" + userQueryPo.name + "%"
+                    )
+                )
+            }
+            if (userQueryPo.enabled != null) {
+                predicateList.add(criteriaBuilder.equal(root.get<Any>("enabled"), userQueryPo.enabled))
+            }
+            if (!CommonTools.isNullStr(userQueryPo.orgName)) {
+                val subQuery = query.subquery(User::class.java)
+                val subRoot = subQuery.from(User::class.java)
+                val joinOrg = subRoot.join<User, Organization>("organizationSet", JoinType.LEFT)
+                subQuery.select(subRoot.get("id")).where(
+                    criteriaBuilder.like(
+                        joinOrg.get<Any>("name").`as`(String::class.java),
+                        "%" + userQueryPo.orgName + "%"
+                    )
+                )
+                predicateList.add(root.get<Any>("id").`in`(subQuery))
+            }
+            if (!CommonTools.isNullStr(userQueryPo.roleName)) {
+                val subQuery = query.subquery(User::class.java)
+                val subRoot = subQuery.from(User::class.java)
+                val joinRole = subRoot.join<User, Role>("roleSet", JoinType.LEFT)
+                subQuery.select(subRoot.get("id")).where(
+                    criteriaBuilder.like(
+                        joinRole.get<Any>("name").`as`(String::class.java),
+                        "%" + userQueryPo.roleName + "%"
+                    )
+                )
+                predicateList.add(root.get<Any>("id").`in`(subQuery))
+            }
+            criteriaBuilder.and(*predicateList.toTypedArray())
+        }, buildPageRequest(userQueryPo.queryParam!!))
+            .map { user -> formatUserVo(user) }
 
     fun getUserInfoById(userId: String): User? = userRepository.findById(userId).orElse(null)
 
     @Throws(ServerException::class)
     fun getUserVoById(userId: String): UserVo = userRepository.findById(userId).let {
         if (it.isEmpty) throw ServerException("找不到用户信息")
-        UserVo().apply {
-            BeanUtils.copyProperties(it.get(), this)
-        }
+        formatUserVo(it.get())
     }
 
     @Throws(ServerException::class)
     fun getUserVoByLoginNo(loginNo: String): UserVo = userRepository.findByLoginNo(loginNo).let {
         if (it.isEmpty) throw ServerException("找不到用户信息")
-        UserVo().apply {
-            BeanUtils.copyProperties(it.get(), this)
-        }
+        formatUserVo(it.get())
     }
 
     /**
@@ -241,109 +279,115 @@ constructor(userRepository: UserRepository,
      */
     @Throws(ServerException::class)
     fun getUserVoListByIdList(idList: MutableList<String>): MutableList<UserVo> =
-            userRepository.findAllById(idList).map { item ->
-                UserVo().apply { BeanUtils.copyProperties(item, this) }
-            }.toMutableList()
+        userRepository.findAllById(idList).map { item -> formatUserVo(item) }.toMutableList()
 
     /**
      * 根据登录号或姓名模糊查询用户
      */
     @Throws(ServerException::class)
     fun getUserVoListByLoginNoOrName(loginNoOrName: String, findAll: Boolean): MutableList<UserVo> =
-            userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%")
-                    .filter { item ->
-                        findAll || item.enabled
-                    }.map { item ->
-                        UserVo().apply { BeanUtils.copyProperties(item, this) }
-                    }.toMutableList()
+        userRepository.findByLoginNoLikeOrNameLikeOrderByLoginNoAsc("%$loginNoOrName%", "%$loginNoOrName%")
+            .filter { item -> findAll || item.enabled }.map { item -> formatUserVo(item) }.toMutableList()
 
     /**
      * 获取指定部门下所有符合角色编码的用户
      */
-    private fun getUserVoListInOrgListByRoleCode(organizations: Collection<Organization>, roleCode: List<String>): MutableList<UserVo> =
-            mutableListOf<UserVo>().apply {
-                organizations.forEach { org ->
-                    this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> roleCode.contains(role.code) } }
-                            .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
-                            .toMutableList())
-                }
-            }.let {
-                getUserVoListDistinct(it)
+    private fun getUserVoListInOrgListByRoleCode(
+        organizations: Collection<Organization>,
+        roleCode: List<String>
+    ): MutableList<UserVo> =
+        mutableListOf<UserVo>().apply {
+            organizations.forEach { org ->
+                this.addAll(org.userSet.filter { user -> user.roleSet.any { role -> roleCode.contains(role.code) } }
+                    .map { item -> formatUserVo(item) }
+                    .toMutableList())
             }
+        }.let {
+            getUserVoListDistinct(it)
+        }
 
     /**
      * User集合去重，返回List
      */
     private fun getUserVoListDistinct(users: Collection<UserVo>): MutableList<UserVo> =
-            mutableListOf<UserVo>().apply {
-                val userIdList = mutableListOf<String>()
-                users.forEach { user ->
-                    if (!userIdList.contains(user.id)) {
-                        this.add(user)
-                        userIdList.add(user.id!!)
-                    }
+        mutableListOf<UserVo>().apply {
+            val userIdList = mutableListOf<String>()
+            users.forEach { user ->
+                if (!userIdList.contains(user.id)) {
+                    this.add(user)
+                    userIdList.add(user.id!!)
                 }
             }
+        }
 
     @Throws(ServerException::class)
     fun getUserVoListByCurrOrgAndRole(loginNo: String, roleCode: List<String>): MutableList<UserVo> =
-            getUserInfoByLoginNo(loginNo)?.let { currUser ->
-                getUserVoListInOrgListByRoleCode(currUser.organizationSet, roleCode)
-            } ?: throw ServerException("无法获取当前用户信息")
+        getUserInfoByLoginNo(loginNo)?.let { currUser ->
+            getUserVoListInOrgListByRoleCode(currUser.organizationSet, roleCode)
+        } ?: throw ServerException("无法获取当前用户信息")
 
     /**
      * 获取上级部门指定角色的用户
      * @param orgLevelList >0 下级部门，1下一级，2下二级...；=0：本部门；<0 上级部门，-1上一级，-2上二级...
      */
     @Throws(ServerException::class)
-    fun getUserVoListByRelativeOrgAndRole(loginNo: String, orgLevelList: List<Int>, roleCode: List<String>): MutableList<UserVo> =
-            getUserInfoByLoginNo(loginNo)?.let { currUser ->
-                val orgList = mutableListOf<Organization>()
-                orgLevelList.forEach { orgLevel ->
-                    when {
-                        orgLevel > 0 -> { // 获取下级
-                            val tmpOrg = currUser.organizationSet
-                            for (index in 1..orgLevel) {
-                                val children = getRelativeOrgList(index, tmpOrg)
-                                if (children.isNotEmpty()) {
-                                    tmpOrg.clear()
-                                    tmpOrg.addAll(children)
-                                } else {
-                                    tmpOrg.clear()
-                                    break
-                                }
-                            }
-                            orgList.addAll(tmpOrg)
-                        }
-                        orgLevel < 0 -> { // 获取上级
-                            val tmpOrg = currUser.organizationSet
-                            for (index in orgLevel until 0) {
-                                val parent = getRelativeOrgList(index, tmpOrg)
-                                if (parent.isNotEmpty()) {
-                                    tmpOrg.clear()
-                                    tmpOrg.addAll(parent)
-                                } else {
-                                    tmpOrg.clear()
-                                    break
-                                }
+    fun getUserVoListByRelativeOrgAndRole(
+        loginNo: String,
+        orgLevelList: List<Int>,
+        roleCode: List<String>
+    ): MutableList<UserVo> =
+        getUserInfoByLoginNo(loginNo)?.let { currUser ->
+            val orgList = mutableListOf<Organization>()
+            orgLevelList.forEach { orgLevel ->
+                when {
+                    orgLevel > 0 -> { // 获取下级
+                        val tmpOrg = currUser.organizationSet
+                        for (index in 1..orgLevel) {
+                            val children = getRelativeOrgList(index, tmpOrg)
+                            if (children.isNotEmpty()) {
+                                tmpOrg.clear()
+                                tmpOrg.addAll(children)
+                            } else {
+                                tmpOrg.clear()
+                                break
                             }
                         }
-                        else -> { // 本部门
-                            orgList.addAll(currUser.organizationSet)
+                        orgList.addAll(tmpOrg)
+                    }
+                    orgLevel < 0 -> { // 获取上级
+                        val tmpOrg = currUser.organizationSet
+                        for (index in orgLevel until 0) {
+                            val parent = getRelativeOrgList(index, tmpOrg)
+                            if (parent.isNotEmpty()) {
+                                tmpOrg.clear()
+                                tmpOrg.addAll(parent)
+                            } else {
+                                tmpOrg.clear()
+                                break
+                            }
                         }
                     }
+                    else -> { // 本部门
+                        orgList.addAll(currUser.organizationSet)
+                    }
                 }
-                getUserVoListInOrgListByRoleCode(orgList, roleCode)
-            } ?: throw ServerException("无法获取当前用户信息")
+            }
+            getUserVoListInOrgListByRoleCode(orgList, roleCode)
+        } ?: throw ServerException("无法获取当前用户信息")
 
     fun getUserVoListByOrgCodeAndRole(orgCode: List<String>, roleCode: List<String>): MutableList<UserVo> =
-            getUserVoListInOrgListByRoleCode(organizationRepository.findAllByCodeLikeOrNameLikeOrderBySortAsc("%$orgCode%", "%$orgCode%"), roleCode)
+        getUserVoListInOrgListByRoleCode(
+            organizationRepository.findAllByCodeLikeOrNameLikeOrderBySortAsc(
+                "%$orgCode%",
+                "%$orgCode%"
+            ), roleCode
+        )
 
     fun getUserVoListByRole(roleCode: List<String>): MutableList<UserVo> =
-            getUserVoListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
-                    .flatMap { role -> role.userSet }
-                    .map { item -> UserVo().apply { BeanUtils.copyProperties(item, this) } }
-                    .toMutableList())
+        getUserVoListDistinct(roleRepository.findAllByCodeInOrderBySortAsc(roleCode)
+            .flatMap { role -> role.userSet }
+            .map { item -> formatUserVo(item) }
+            .toMutableList())
 
     /**
      * 获取相对部门集合
