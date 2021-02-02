@@ -1,11 +1,12 @@
 ## 版本更新记录
 ##### v4.2.1
 > - Global
->   - [Upgrade] 升级 Gradle 至 6.8
+>   - [Upgrade] 升级 Gradle 至 6.8.1
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.1
 >     - Spring Boot 2.4.2
->     - Spring Cloud Alibaba 2.2.4.RELEASE
+>     - Spring Cloud 2020.0.1
+>     - Spring Cloud Alibaba 2.2.5.RELEASE
 > - oauth-server
 >   - [Fix] 修复用户查询时，机构、角色为空的问题
 ##### v4.2.0
