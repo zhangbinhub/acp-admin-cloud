@@ -33,7 +33,10 @@ class UserPasswordAuthenticationProvider(
                 }
                 authentication.credentials?.toString()?.let { password ->
                     if (!matches(password, user.password)) {
+                        userDetailsService.storePasswordErrorTime(username)
                         throw CustomerOAuth2Exception("用户名或密码不正确！")
+                    } else {
+                        userDetailsService.clearPasswordErrorTime(username)
                     }
                     UserPasswordAuthenticationToken(username, null, user.authorities).apply {
                         this.isAuthenticated = user.authorities.isNotEmpty()

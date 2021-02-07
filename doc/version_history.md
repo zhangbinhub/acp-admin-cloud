@@ -1,7 +1,7 @@
 ## 版本更新记录
 ##### v4.2.1
 > - Global
->   - [Upgrade] 升级 Gradle 至 6.8.1
+>   - [Upgrade] 升级 Gradle 至 6.8.2
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.1
 >     - kotlin 1.4.30
@@ -9,6 +9,7 @@
 >     - Spring Cloud 2020.0.1
 >     - Spring Cloud Alibaba 2.2.5.RELEASE
 > - oauth-server
+>   - [Upgrade] 登陆时，记录密码错误次数，超过指定次数则账号禁用
 >   - [Fix] 修复用户查询时，机构、角色为空的问题
 ##### v4.2.0
 > - Global

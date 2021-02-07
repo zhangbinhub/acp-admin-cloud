@@ -1,8 +1,12 @@
 package pers.acp.admin.oauth.domain
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.vo.OrganizationVo
@@ -19,6 +23,7 @@ import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.common.vo.UserVo
+import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.core.CommonTools
 import pers.acp.core.security.Sha256Encrypt
 import pers.acp.spring.boot.exceptions.ServerException
@@ -36,6 +41,7 @@ import java.util.*
 class UserDomain @Autowired
 constructor(
     userRepository: UserRepository,
+    private val stringRedisTemplate: StringRedisTemplate,
     private val applicationRepository: ApplicationRepository,
     private val organizationRepository: OrganizationRepository,
     private val roleRepository: RoleRepository,
@@ -411,6 +417,39 @@ constructor(
         }
         else -> {
             orgList
+        }
+    }
+
+    /**
+     * 记录用户密码错误次数
+     */
+    fun storePasswordErrorTime(username: String): Long =
+        "${OauthConstant.passwordErrorTimeKeyPrefix}$username".let { keyString ->
+            (stringRedisTemplate.execute { connection ->
+                connection.execute("incr", keyString.toByteArray())
+            } as Long).also {
+                if (it == 1L) {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        stringRedisTemplate.execute { connection ->
+                            connection.execute(
+                                "pexpire",
+                                keyString.toByteArray(),
+                                86400000.toString().toByteArray()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+    /**
+     * 清除用户密码错误次数
+     */
+    fun clearPasswordErrorTime(username: String) {
+        "${OauthConstant.passwordErrorTimeKeyPrefix}$username".let { keyString ->
+            stringRedisTemplate.execute { connection ->
+                connection.execute("del", keyString.toByteArray())
+            }
         }
     }
 

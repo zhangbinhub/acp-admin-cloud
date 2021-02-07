@@ -9,8 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 import pers.acp.admin.constant.RoleCode
+import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.admin.oauth.domain.ModuleFuncDomain
+import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.admin.oauth.domain.UserDomain
+import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
+import pers.acp.core.CommonTools
 import pers.acp.spring.boot.interfaces.LogAdapter
 
 /**
@@ -22,7 +26,8 @@ class SecurityUserDetailsService @Autowired
 constructor(
     private val logAdapter: LogAdapter,
     private val userDomain: UserDomain,
-    private val moduleFuncDomain: ModuleFuncDomain
+    private val moduleFuncDomain: ModuleFuncDomain,
+    private val runtimeConfigDomain: RuntimeConfigDomain
 ) : UserDetailsService {
 
     /**
@@ -48,4 +53,29 @@ constructor(
             }
             User(user.loginNo, user.password, user.enabled, true, true, true, grantedAuthorities)
         }
+
+    /**
+     * 记录用户密码错误次数
+     */
+    @Throws(CustomerOAuth2Exception::class)
+    fun storePasswordErrorTime(username: String) = userDomain.storePasswordErrorTime(username).let {
+        runtimeConfigDomain.findByName(OauthConstant.passwordErrorTime)?.let { runtimeConfig ->
+            if (runtimeConfig.enabled && !CommonTools.isNullStr(runtimeConfig.value)) {
+                runtimeConfig.value!!.toInt().let { maxPasswordErrorTime ->
+                    if (maxPasswordErrorTime in 1..it) {
+                        userDomain.getUserInfoByLoginNo(username)?.apply {
+                            this.enabled = false
+                            userDomain.doSaveUser(this)
+                        }
+                        throw CustomerOAuth2Exception("错误次数已达${maxPasswordErrorTime}次，请联系系统管理员！")
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 清除用户密码错误次数
+     */
+    fun clearPasswordErrorTime(username: String) = userDomain.clearPasswordErrorTime(username)
 }

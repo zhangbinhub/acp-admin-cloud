@@ -700,6 +700,14 @@ class InitData extends BaseTest {
         runtimeConfig2.setValue("7776000000");
         runtimeConfig2.setConfigDes("修改密码间隔时间，单位：毫秒");
         runtimeConfigRepository.save(runtimeConfig2);
+
+        RuntimeConfig runtimeConfig3 = new RuntimeConfig();
+        runtimeConfig3.setCovert(false);
+        runtimeConfig3.setEnabled(true);
+        runtimeConfig3.setName("PASSWORD_ERROR_TIME");
+        runtimeConfig3.setValue("5");
+        runtimeConfig3.setConfigDes("密码连续错误限制次数");
+        runtimeConfigRepository.save(runtimeConfig3);
     }
 
 }
