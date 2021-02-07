@@ -6,8 +6,8 @@
 
 ## 相关组件版本
 - [Spring Boot 2.4.2](https://projects.spring.io/spring-boot)
-- [Spring Cloud 2020.0.0](http://projects.spring.io/spring-cloud)
-- [Spring Cloud Alibaba 2.2.4.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
+- [Spring Cloud 2020.0.1](http://projects.spring.io/spring-cloud)
+- [Spring Cloud Alibaba 2.2.5.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
 - [Acp 6.5.1](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
@@ -117,7 +117,7 @@ ext {
 
 ### （三）升级命令
 ```
-    gradlew wrapper --gradle-version=6.8 --distribution-type=all
+    gradlew wrapper --gradle-version=6.8.1 --distribution-type=all
 ```
 
 ## 三、工程说明
