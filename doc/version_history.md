@@ -4,6 +4,7 @@
 >   - [Upgrade] 升级 Gradle 至 6.8.1
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.1
+>     - kotlin 1.4.30
 >     - Spring Boot 2.4.2
 >     - Spring Cloud 2020.0.1
 >     - Spring Cloud Alibaba 2.2.5.RELEASE
