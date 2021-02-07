@@ -1,7 +1,7 @@
 ## 版本更新记录
 ##### v4.2.1
 > - Global
->   - [Upgrade] 升级 Gradle 至 6.8.1
+>   - [Upgrade] 升级 Gradle 至 6.8.2
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.1
 >     - kotlin 1.4.30
