@@ -9,6 +9,7 @@
 >     - Spring Cloud 2020.0.1
 >     - Spring Cloud Alibaba 2.2.5.RELEASE
 > - oauth-server
+>   - [Upgrade] 登陆时，记录密码错误次数，超过指定次数则账号禁用
 >   - [Fix] 修复用户查询时，机构、角色为空的问题
 ##### v4.2.0
 > - Global
