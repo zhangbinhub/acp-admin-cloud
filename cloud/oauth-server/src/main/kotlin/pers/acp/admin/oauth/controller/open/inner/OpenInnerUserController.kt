@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api(tags = ["用户列表（内部开放接口）"])
+@Api(tags = ["用户信息（内部开放接口）"])
 class OpenInnerUserController @Autowired
 constructor(logAdapter: LogAdapter,
             private val userDomain: UserDomain) : BaseController(logAdapter) {
