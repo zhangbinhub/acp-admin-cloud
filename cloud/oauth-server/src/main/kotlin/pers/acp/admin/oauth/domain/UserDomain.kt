@@ -347,7 +347,7 @@ constructor(
             orgLevelList.forEach { orgLevel ->
                 when {
                     orgLevel > 0 -> { // 获取下级
-                        val tmpOrg = currUser.organizationSet
+                        val tmpOrg = currUser.organizationSet.toMutableList()
                         for (index in 1..orgLevel) {
                             val children = getRelativeOrgList(index, tmpOrg)
                             if (children.isNotEmpty()) {
@@ -361,7 +361,7 @@ constructor(
                         orgList.addAll(tmpOrg)
                     }
                     orgLevel < 0 -> { // 获取上级
-                        val tmpOrg = currUser.organizationSet
+                        val tmpOrg = currUser.organizationSet.toMutableList()
                         for (index in orgLevel until 0) {
                             val parent = getRelativeOrgList(index, tmpOrg)
                             if (parent.isNotEmpty()) {
@@ -372,6 +372,7 @@ constructor(
                                 break
                             }
                         }
+                        orgList.addAll(tmpOrg)
                     }
                     else -> { // 本部门
                         orgList.addAll(currUser.organizationSet)
