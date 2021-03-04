@@ -1,19 +1,11 @@
 group "${group}.cloud"
-buildscript {
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") {
-            bomProperty("kotlin.version", "${kotlinVersion}")
-        }
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}") {
-            bomProperty("curator.version", "$versions.curator")
-        }
-        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+        mavenBom("pers.acp.dependency:acp-dependency:${CoreVersion}")
+    }
+    dependencies {
+        dependency "$group:acp-admin-cloud-dependencies:${version}"
     }
 }
 dependencies {
@@ -21,7 +13,7 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    api "pers.acp.cloud:acp-spring-cloud-starter:$versions.acp_core"
+    api "pers.acp.cloud:acp-spring-cloud-starter"
 //    api "org.springframework.cloud:spring-cloud-starter-sleuth"
 //    api "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
