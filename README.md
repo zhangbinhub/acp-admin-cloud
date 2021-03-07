@@ -8,7 +8,7 @@
 - [Spring Boot 2.4.3](https://projects.spring.io/spring-boot)
 - [Spring Cloud 2020.0.1](http://projects.spring.io/spring-cloud)
 - [Spring Cloud Alibaba 2.2.5.RELEASE](https://github.com/alibaba/spring-cloud-alibaba)
-- [Acp 6.5.1](https://github.com/zhangbin1010/acp)
+- [Acp 6.5.2](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
