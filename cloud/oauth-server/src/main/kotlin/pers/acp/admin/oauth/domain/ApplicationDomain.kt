@@ -27,6 +27,7 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
 
     fun getAppList(): MutableList<Application> = applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
 
+    @Throws(ServerException::class)
     fun getOwnAppList(user: OAuth2Authentication): MutableList<Application> {
         val currUserInfo = getUserInfoByLoginNo(user.name) ?: throw ServerException("无法获取当前用户信息")
         return if (isSuper(currUserInfo)) {
