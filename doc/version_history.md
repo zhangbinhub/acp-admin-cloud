@@ -1,4 +1,10 @@
 ## 版本更新记录
+##### v4.2.3
+> - Global
+>   - [Upgrade] 修改 docker-compose-base.yaml 文件，注释暂时无用的容器组件，节省本地资源
+>   - [Upgrade] 升级依赖
+>     - Acp 6.5.3
+>     - Spring Boot 2.4.4
 ##### v4.2.2
 > - Global
 >   - [Upgrade] 升级 Gradle 至 6.8.3
