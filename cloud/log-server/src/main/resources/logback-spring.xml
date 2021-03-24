@@ -48,14 +48,14 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="ALL-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>127.0.0.1:9601</destination>
-        <!-- encoder必须配置,有多种可选 -->
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
-            <customFields>{"appname":"log_server_all"}</customFields>
-        </encoder>
-    </appender>
+<!--    <appender name="ALL-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        <destination>127.0.0.1:9601</destination>-->
+<!--        &lt;!&ndash; encoder必须配置,有多种可选 &ndash;&gt;-->
+<!--        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            &lt;!&ndash; "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  &ndash;&gt;-->
+<!--            <customFields>{"appname":"log_server_all"}</customFields>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <appender name="AUTH" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -90,14 +90,14 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="AUTH-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>127.0.0.1:9601</destination>
-        <!-- encoder必须配置,有多种可选 -->
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
-            <customFields>{"appname":"log_server_auth"}</customFields>
-        </encoder>
-    </appender>
+<!--    <appender name="AUTH-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        <destination>127.0.0.1:9601</destination>-->
+<!--        &lt;!&ndash; encoder必须配置,有多种可选 &ndash;&gt;-->
+<!--        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            &lt;!&ndash; "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  &ndash;&gt;-->
+<!--            <customFields>{"appname":"log_server_auth"}</customFields>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <appender name="ROUTE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -132,14 +132,14 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="ROUTE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>127.0.0.1:9601</destination>
-        <!-- encoder必须配置,有多种可选 -->
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
-            <customFields>{"appname":"log_server_route"}</customFields>
-        </encoder>
-    </appender>
+<!--    <appender name="ROUTE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        <destination>127.0.0.1:9601</destination>-->
+<!--        &lt;!&ndash; encoder必须配置,有多种可选 &ndash;&gt;-->
+<!--        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            &lt;!&ndash; "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  &ndash;&gt;-->
+<!--            <customFields>{"appname":"log_server_route"}</customFields>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <appender name="WORKFLOW" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -174,34 +174,34 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="WORKFLOW-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>127.0.0.1:9601</destination>
-        <!-- encoder必须配置,有多种可选 -->
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  -->
-            <customFields>{"appname":"log_server_workflow"}</customFields>
-        </encoder>
-    </appender>
+<!--    <appender name="WORKFLOW-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        <destination>127.0.0.1:9601</destination>-->
+<!--        &lt;!&ndash; encoder必须配置,有多种可选 &ndash;&gt;-->
+<!--        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            &lt;!&ndash; "appname":"log-server-ALL" 的作用是指定创建索引的名字时用，并且在生成的文档中会多了这个字段，必须小写  &ndash;&gt;-->
+<!--            <customFields>{"appname":"log_server_workflow"}</customFields>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <logger name="ALL" level="INFO" additivity="false">
         <appender-ref ref="ALL"/>
         <appender-ref ref="ALL-ERROR"/>
-        <appender-ref ref="ALL-LOGSTASH"/>
+<!--        <appender-ref ref="ALL-LOGSTASH"/>-->
     </logger>
     <logger name="AUTH" level="INFO" additivity="false">
         <appender-ref ref="AUTH"/>
         <appender-ref ref="AUTH-ERROR"/>
-        <appender-ref ref="AUTH-LOGSTASH"/>
+<!--        <appender-ref ref="AUTH-LOGSTASH"/>-->
     </logger>
     <logger name="ROUTE" level="INFO" additivity="false">
         <appender-ref ref="ROUTE"/>
         <appender-ref ref="ROUTE-ERROR"/>
-        <appender-ref ref="ROUTE-LOGSTASH"/>
+<!--        <appender-ref ref="ROUTE-LOGSTASH"/>-->
     </logger>
     <logger name="WORKFLOW" level="INFO" additivity="false">
         <appender-ref ref="WORKFLOW"/>
         <appender-ref ref="WORKFLOW-ERROR"/>
-        <appender-ref ref="WORKFLOW-LOGSTASH"/>
+<!--        <appender-ref ref="WORKFLOW-LOGSTASH"/>-->
     </logger>
     <jmxConfigurator/>
 </configuration>

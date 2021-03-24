@@ -1,9 +1,5 @@
 server:
-  address: 127.0.0.1
   port: 9099
-management:
-  server:
-    port: 9098
 # ===============================
 # = Log To File Config
 # ===============================
@@ -28,7 +24,6 @@ spring:
   cloud:
     nacos:
       discovery:
-        ip: ${server.address}
         metadata:
           user.name: ${spring.security.user.name}
           user.password: ${spring.security.user.password}

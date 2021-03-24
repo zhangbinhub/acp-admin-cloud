@@ -1,9 +1,6 @@
 server:
   address: 127.0.0.1
-  port: 8711
-management:
-  server:
-    port: 8710
+  port: 0
 # ===============================
 # = Log To File Config
 # ===============================
@@ -23,8 +20,6 @@ spring:
     nacos:
       discovery:
         ip: ${server.address}
-    bus:
-      id: ${spring.application.name}:${server.address}:${server.port}:v${info.version}:${spring.profiles.active}
   # ===============================
   # = DATA SOURCE
   # ===============================

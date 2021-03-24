@@ -1,4 +1,27 @@
 ## 版本更新记录
+##### v4.2.4
+> - Global
+>   - [Upgrade] 修改 atom-server-common-dev.yaml 中 info.api-document
+>   - [Upgrade] 升级依赖
+>     - Acp 6.5.4
+> - deploy-server
+>   - [Upgrade] 使用动态端口
+> - admin-server
+>   - [Upgrade] 取消静态ip配置 server.address
+> - gateway-server
+>   - [Upgrade] 取消静态ip配置 server.address
+> - log-server
+>   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 使用动态端口
+> - oauth-server
+>   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 使用动态端口
+> - route-server
+>   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 使用动态端口
+> - workflow-server
+>   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 使用动态端口
 ##### v4.2.3
 > - Global
 >   - [Upgrade] 修改 docker-compose-base.yaml 文件，注释暂时无用的容器组件，节省本地资源

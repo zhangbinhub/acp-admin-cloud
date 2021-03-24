@@ -1,9 +1,5 @@
 server:
-  address: 127.0.0.1
   port: 8771
-management:
-  server:
-    port: 8770
 # ===============================
 # = Log To File Config
 # ===============================
@@ -18,11 +14,3 @@ logging:
   level:
     com.alibaba.nacos.client: warn
     org.springframework.cloud.function: warn
-# ===============================
-# = Spring Config
-# ===============================
-spring:
-  cloud:
-    nacos:
-      discovery:
-        ip: ${server.address}

@@ -75,7 +75,7 @@ logging:
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
-  version: 4.2.3
+  version: 4.2.4
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
