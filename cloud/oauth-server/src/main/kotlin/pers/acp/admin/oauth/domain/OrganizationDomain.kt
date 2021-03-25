@@ -150,6 +150,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                 code = item.code,
                 name = item.name,
                 parentId = item.parentId,
+                area = item.area,
                 sort = item.sort,
                 userIds = item.userSet.map { it.id }.toMutableList()
             )
@@ -166,6 +167,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
                             code = item.code,
                             name = item.name,
                             parentId = item.parentId,
+                            area = item.area,
                             sort = item.sort
                         )
                     )
