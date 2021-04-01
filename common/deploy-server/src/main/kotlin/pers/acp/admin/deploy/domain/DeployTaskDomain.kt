@@ -20,6 +20,7 @@ import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import org.springframework.core.io.FileSystemResource
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
+import pers.acp.spring.cloud.component.CloudTools
 import java.io.File
 import java.io.InputStreamReader
 import java.io.LineNumberReader
@@ -34,6 +35,7 @@ import javax.sql.DataSource
 class DeployTaskDomain @Autowired
 constructor(
     private val logAdapter: LogAdapter,
+    private val cloudTools: CloudTools,
     private val dataSource: DataSource,
     private val commonOauthServer: CommonOauthServer,
     private val deployTaskRepository: DeployTaskRepository,
@@ -122,10 +124,10 @@ constructor(
     fun doExecuteTask(id: String) = deployTaskRepository.findByIdOrNull(id)?.let { deployTask ->
         if (!CommonTools.isNullStr(deployTask.serverIpRegex) && !CommonTools.regexPattern(
                 deployTask.serverIpRegex!!,
-                deployServerCustomerConfiguration.serverIp
+                cloudTools.getServerIp()
             )
         ) {
-            logAdapter.info("当前实例服务器IP【${deployServerCustomerConfiguration.serverIp}】不匹配【${deployTask.serverIpRegex}】，不执行部署任务！")
+            logAdapter.info("当前实例服务器IP【${cloudTools.getServerIp()}】不匹配【${deployTask.serverIpRegex}】，不执行部署任务！")
         } else {
             val fold = makeFold()
             val scriptFile = File("${fold.canonicalPath}${File.separator}${deployTask.scriptFile}")

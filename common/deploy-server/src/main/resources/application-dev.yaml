@@ -1,5 +1,4 @@
 server:
-  address: 127.0.0.1
   port: 0
 # ===============================
 # = Log To File Config
@@ -16,10 +15,6 @@ spring:
     multipart:
       max-file-size: 1GB
       max-request-size: 2GB
-  cloud:
-    nacos:
-      discovery:
-        ip: ${server.address}
   # ===============================
   # = DATA SOURCE
   # ===============================

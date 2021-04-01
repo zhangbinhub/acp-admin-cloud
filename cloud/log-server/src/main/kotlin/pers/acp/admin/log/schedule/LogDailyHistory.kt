@@ -12,6 +12,7 @@ import pers.acp.admin.log.domain.LogHistoryDomain
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.base.BaseSpringBootScheduledAsyncTask
 import pers.acp.spring.boot.interfaces.LogAdapter
+import pers.acp.spring.cloud.component.CloudTools
 import pers.acp.spring.cloud.lock.DistributedLock
 
 /**
@@ -20,19 +21,24 @@ import pers.acp.spring.cloud.lock.DistributedLock
  */
 @Component("LogDailyHistory")
 class LogDailyHistory @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val logServerCustomerConfiguration: LogServerCustomerConfiguration,
-            private val distributedLock: DistributedLock,
-            private val logHistoryDomain: LogHistoryDomain) : BaseSpringBootScheduledAsyncTask() {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val cloudTools: CloudTools,
+    private val logServerCustomerConfiguration: LogServerCustomerConfiguration,
+    private val distributedLock: DistributedLock,
+    private val logHistoryDomain: LogHistoryDomain
+) : BaseSpringBootScheduledAsyncTask() {
 
     init {
         taskName = "日志记录迁移历史库任务"
     }
 
     override fun beforeExecuteFun(): Boolean =
-            distributedLock.getLock(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
-                    logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort,
-                    LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_TIME_OUT)
+        distributedLock.getLock(
+            LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
+            cloudTools.getServerIp() + ":" + cloudTools.getServerPort(),
+            LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_TIME_OUT
+        )
 
     override fun executeFun(): Any? {
         /**
@@ -45,7 +51,10 @@ constructor(private val logAdapter: LogAdapter,
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doRouteLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doRouteLogHistory(
+                            beginTime,
+                            logServerCustomerConfiguration.quantityPerProcess
+                        )
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 路由日志共迁移${totalNumber}条 ===================")
@@ -58,7 +67,10 @@ constructor(private val logAdapter: LogAdapter,
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doOperateLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doOperateLogHistory(
+                            beginTime,
+                            logServerCustomerConfiguration.quantityPerProcess
+                        )
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 操作日志共迁移${totalNumber}条 ===================")
@@ -71,7 +83,10 @@ constructor(private val logAdapter: LogAdapter,
                     var entityNumber = 1
                     var totalNumber = 0
                     while (entityNumber > 0) {
-                        entityNumber = logHistoryDomain.doLoginLogHistory(beginTime, logServerCustomerConfiguration.quantityPerProcess)
+                        entityNumber = logHistoryDomain.doLoginLogHistory(
+                            beginTime,
+                            logServerCustomerConfiguration.quantityPerProcess
+                        )
                         totalNumber += entityNumber
                     }
                     logAdapter.info(">>>>>>>>>>>>>>>>>>>>>> 登录日志共迁移${totalNumber}条 ===================")
@@ -87,14 +102,16 @@ constructor(private val logAdapter: LogAdapter,
     override fun afterExecuteFun(result: Any) {
         if (logServerCustomerConfiguration.maxHistoryDayNumber > 0)
             doDeleteHistory()
-        distributedLock.releaseLock(LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY,
-                logServerCustomerConfiguration.serverIp + ":" + logServerCustomerConfiguration.serverPort)
+        distributedLock.releaseLock(
+            LogBackUp.LOG_BACKUP_DISTRIBUTED_LOCK_KEY, cloudTools.getServerIp() + ":" + cloudTools.getServerPort(),
+        )
     }
 
     private fun doDeleteHistory() {
         logAdapter.info("开始清理路由、操作、登录日志，最大保留天数：" + logServerCustomerConfiguration.maxHistoryDayNumber)
         runBlocking {
-            val time = CommonTools.getNowDateTime().withTimeAtStartOfDay().minusDays(logServerCustomerConfiguration.maxHistoryDayNumber).millis
+            val time = CommonTools.getNowDateTime().withTimeAtStartOfDay()
+                .minusDays(logServerCustomerConfiguration.maxHistoryDayNumber).millis
             launch(Dispatchers.IO) {
                 logHistoryDomain.doDeleteRouteLogHistory(time)
             }

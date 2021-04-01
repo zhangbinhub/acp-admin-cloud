@@ -5,6 +5,7 @@ import pers.acp.admin.gateway.constant.GateWayConstant
 import pers.acp.admin.gateway.message.RouteLogMessage
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cloud.commons.util.InetUtils
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils
 import org.springframework.core.env.Environment
 import org.springframework.core.io.buffer.DataBuffer
@@ -13,8 +14,10 @@ import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ServerWebExchange
+import java.net.InetAddress
 
 import java.net.URI
+import java.net.UnknownHostException
 import java.nio.charset.Charset
 import java.util.LinkedHashSet
 
@@ -27,7 +30,8 @@ import java.util.LinkedHashSet
 class RouteLogDomain @Autowired
 constructor(
     private val environment: Environment,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val inetUtils: InetUtils
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -110,8 +114,12 @@ constructor(
         return RouteLogMessage(
             logId = serverWebExchange.logPrefix.replace(Regex("[\\[|\\]]"), "").trim(),
             remoteIp = getRealRemoteIp(serverWebExchange.request),
-            gatewayIp = (environment.getProperty("server.address")
-                ?: "") + ":" + environment.getProperty("server.port"),
+            gatewayIp = try {
+                inetUtils.findFirstNonLoopbackHostInfo().ipAddress ?: InetAddress.getLocalHost().hostAddress
+            } catch (e: UnknownHostException) {
+                log.error(e.message, e)
+                ""
+            } + ":" + environment.getProperty("server.port"),
             method = serverWebExchange.request.methodValue,
             token = token
         ).also { routeLogMessage ->

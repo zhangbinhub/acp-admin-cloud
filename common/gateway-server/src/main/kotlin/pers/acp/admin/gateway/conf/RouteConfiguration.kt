@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.cloud.commons.util.InetUtils
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
 import org.springframework.cloud.stream.config.BindingProperties
@@ -37,6 +38,8 @@ import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.net.InetAddress
+import java.net.UnknownHostException
 import javax.annotation.PostConstruct
 
 /**
@@ -48,6 +51,7 @@ import javax.annotation.PostConstruct
 class RouteConfiguration @Autowired
 constructor(
     private val environment: Environment,
+    private val inetUtils: InetUtils,
     private val bindingServiceProperties: BindingServiceProperties,
     private val streamFunctionProperties: StreamFunctionProperties,
     private val routeLogDomain: RouteLogDomain
@@ -76,10 +80,12 @@ constructor(
                 it.destination = RouteConstant.UPDATE_ROUTE_DESCRIPTION
             }
             it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
-            it.group =
-                GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + environment.getProperty("server.address") + "-" + environment.getProperty(
-                    "server.port"
-                )
+            it.group = GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + try {
+                inetUtils.findFirstNonLoopbackHostInfo().ipAddress ?: InetAddress.getLocalHost().hostAddress
+            } catch (e: UnknownHostException) {
+                log.error(e.message, e)
+                "null"
+            } + "-" + environment.getProperty("server.port")
         }
     }
 
