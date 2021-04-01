@@ -10,6 +10,7 @@ import pers.acp.core.task.timer.Calculation
 import pers.acp.spring.boot.base.BaseSpringBootScheduledAsyncTask
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
+import pers.acp.spring.cloud.component.CloudTools
 
 import java.io.File
 
@@ -19,7 +20,11 @@ import java.io.File
  */
 @Component("LogFileBackUpTask")
 class LogFileBackUpTask @Autowired
-constructor(private val logAdapter: LogAdapter, private val logServerCustomerConfiguration: LogServerCustomerConfiguration) : BaseSpringBootScheduledAsyncTask() {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val cloudTools: CloudTools,
+    private val logServerCustomerConfiguration: LogServerCustomerConfiguration
+) : BaseSpringBootScheduledAsyncTask() {
 
     init {
         taskName = "日志文件备份任务"
@@ -42,13 +47,19 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
                 val logFileDate = CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT)
                 val logFold = File(logServerCustomerConfiguration.logFilePath)
                 val logFoldPath = logFold.canonicalPath
-                var zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator + LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION
+                var zipFilePath = logFoldPath + LogBackUp.BACK_UP_PATH + File.separator +
+                        LogBackUp.ZIP_FILE_PREFIX + logFileDate + "_" + cloudTools.getServerIp() + "_" + cloudTools.getServerPort() + LogBackUp.EXTENSION
                 val zipFile = File(zipFilePath)
                 if (!zipFile.exists()) {
                     if (!logFold.exists() || !logFold.isDirectory) {
                         throw ServerException("路径 $logFoldPath 不存在或不是文件夹")
                     }
-                    val files = logFold.listFiles { pathname -> pathname.name.contains(logFileDate) && !pathname.name.endsWith(".tmp", true) }
+                    val files = logFold.listFiles { pathname ->
+                        pathname.name.contains(logFileDate) && !pathname.name.endsWith(
+                            ".tmp",
+                            true
+                        )
+                    }
                     if (files != null && files.isNotEmpty()) {
                         logAdapter.info(logFoldPath + " 路径下 " + logFileDate + " 的日志文件（或文件夹）共 " + files.size + " 个")
                         val fileNames: MutableList<String> = mutableListOf()
@@ -95,7 +106,12 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
         var day = CommonTools.getNowDateTime()
         for (i in 0..logServerCustomerConfiguration.maxHistoryDayNumber) {
             filterLogFileNames.add(CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT))
-            filterLogZipFileNames.add(LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(day, Calculation.DATE_FORMAT) + "_" + logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION)
+            filterLogZipFileNames.add(
+                LogBackUp.ZIP_FILE_PREFIX + CommonTools.getDateTimeString(
+                    day,
+                    Calculation.DATE_FORMAT
+                ) + "_" + cloudTools.getServerIp() + "_" + cloudTools.getServerPort() + LogBackUp.EXTENSION
+            )
             day = CalendarTools.getPrevDay(day)
         }
         // 清理历史日志文件
@@ -111,7 +127,11 @@ constructor(private val logAdapter: LogAdapter, private val logServerCustomerCon
         if (fold.exists()) {
             if (zipFile) {
                 fold.listFiles { file ->
-                    if (file.name.contains(logServerCustomerConfiguration.serverIp + "_" + logServerCustomerConfiguration.serverPort + LogBackUp.EXTENSION, true)) {
+                    if (file.name.contains(
+                            cloudTools.getServerIp() + "_" + cloudTools.getServerPort() + LogBackUp.EXTENSION,
+                            true
+                        )
+                    ) {
                         !filterNames.contains(file.name)
                     } else {
                         false

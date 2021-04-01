@@ -5,17 +5,23 @@
 >   - [Upgrade] 升级依赖
 >     - Acp 6.5.4
 > - deploy-server
+>   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 使用动态端口
+>   - [Upgrade] 修改服务ip和端口获取逻辑
 > - admin-server
 >   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 更新文档
 > - gateway-server
 >   - [Upgrade] 取消静态ip配置 server.address
+>   - [Upgrade] 修改服务ip和端口获取逻辑
 > - log-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 使用动态端口
+>   - [Upgrade] 修改服务ip和端口获取逻辑
 > - oauth-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 使用动态端口
+>   - [Upgrade] 修复机构信息查询时，vo对象缺失area值的问题
 > - route-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 使用动态端口
