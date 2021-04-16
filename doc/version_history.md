@@ -3,7 +3,9 @@
 > - Global
 >   - [Upgrade] 修改 atom-server-common-dev.yaml 中 info.api-document
 >   - [Upgrade] 升级依赖
+>     - Spring Boot 2.4.5
 >     - Acp 6.5.4
+>     - kotlin 1.4.32
 > - deploy-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 使用动态端口
