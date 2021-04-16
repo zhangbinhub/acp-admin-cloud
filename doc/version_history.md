@@ -13,6 +13,7 @@
 > - admin-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 更新文档
+>   - [Upgrade] 升级 Spring Boot Admin 2.4.1
 > - gateway-server
 >   - [Upgrade] 取消静态ip配置 server.address
 >   - [Upgrade] 修改服务ip和端口获取逻辑
