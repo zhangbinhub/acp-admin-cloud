@@ -19,7 +19,7 @@ buildscript {
     repositories {
         mavenLocal()
         maven {
-            url = new URI(mavenCentralUrl)
+            url = new URI("${mavenCentralUrl}")
             allowInsecureProtocol = true
         }
         mavenCentral()
@@ -47,7 +47,7 @@ allprojects {
         repositories {
             mavenLocal()
             maven {
-                url = new URI(mavenCentralUrl)
+                url = new URI("${mavenCentralUrl}")
                 allowInsecureProtocol = true
             }
             mavenCentral()
@@ -57,7 +57,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven {
-            url = new URI(mavenCentralUrl)
+            url = new URI("${mavenCentralUrl}")
             allowInsecureProtocol = true
         }
         mavenCentral()
