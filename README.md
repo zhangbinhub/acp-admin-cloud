@@ -5,7 +5,7 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v4.2.4](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.4.4](https://projects.spring.io/spring-boot)
+- [Spring Boot 2.4.5](https://projects.spring.io/spring-boot)
 - [Acp 6.5.4](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
