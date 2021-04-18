@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v4.2.4
 > - Global
+>   - [Upgrade] 升级 Gradle 至 7.0
 >   - [Upgrade] 修改 atom-server-common-dev.yaml 中 info.api-document
 >   - [Upgrade] 升级依赖
 >     - Spring Boot 2.4.5
