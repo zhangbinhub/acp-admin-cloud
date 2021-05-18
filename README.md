@@ -1,8 +1,8 @@
 # acp-admin-cloud
-###### v4.2.4 [版本更新日志](doc/version_history.md)
+###### v5.0.0 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
 - 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v4.2.4](https://github.com/zhangbin1010/acp-admin)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v5.0.0](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
 - [Spring Boot 2.4.5](https://projects.spring.io/spring-boot)
@@ -285,3 +285,34 @@ http://127.0.0.1:5601
 ## 九、[Sentinel 动态数据源配置](doc/sentinel.md)
 
 ## 十、[公共配置信息](doc/atom-server-common-dev.yaml)
+
+## 十一、环境变量及启动参数
+|    变量名    |     描述     | 默认值 |  说明  |
+| ----------- | ----------- | ----- | ----- |
+|acp_profile_active|激活的配置环境|dev|服务器部署时建议java启动命令加入参数 -Dacp_profile_active 或 --acp_profile_active；容器部署时指定环境变量即可
+|acp_server_port|服务启动端口|0（随机端口）|服务器部署时建议java启动命令加入参数 -Dacp_server_port 或 --acp_server_port；容器部署时指定环境变量即可。服务不需要外部直接访问时，建议保持默认值。注：admin-server默认值：9099，gateway-server默认值：8771
+|acp_log_path|日志路径|logs/${spring.application.name}|服务器部署时建议java启动命令加入参数 -Dacp_log_path 或 --acp_log_path；容器部署时指定环境变量即可
+|acp_nacos_addr|nacos地址|127.0.0.1:8848|nacos服务地址，ip:port
+|acp_nacos_username|nacos用户名|nacos|nacos用户名，默认nacos，可自行在nacos管理端添加用户
+|acp_nacos_password|nacos密码|nacos|nacos用户密码，默认nacos，可自行在nacos管理端添加用户
+|acp_nacos_namespace|nacos命名空间|acp-cloud-admin|nacos命名空间，默认nacos，可自行在nacos管理端配置
+
+## 十二、JVM启动参数
+```shell
+-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8
+```
+
+## 十三、打包OCI镜像
+```groovy
+bootBuildImage {
+    docker {
+        host = "tcp://localhost:2375"
+        tlsVerify = false
+    }
+    imageName = "${group}/${project.name}:${version}"
+    environment = [
+            "BP_JVM_VERSION"              : "11.*",
+            "BPE_APPEND_JAVA_TOOL_OPTIONS": " -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dfile.encoding=utf-8"
+    ]
+}
+```

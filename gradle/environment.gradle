@@ -1,8 +1,12 @@
 ext {
-    nacos_server_addr = [:]
+    jvmExtParam = [:]
 }
 
-nacos_server_addr += [
-        dev : "127.0.0.1:8848",
-        test: "127.0.0.1:8848"
+jvmExtParam += [
+        dev: [
+                acp_nacos_addr     : '127.0.0.1:8848',
+                acp_nacos_username : 'nacos',
+                acp_nacos_password : 'nacos',
+                acp_nacos_namespace: 'acp-cloud-admin',
+        ]
 ]

@@ -5,7 +5,7 @@ server:
       max: 1000
 spring:
   profiles:
-    active: dev
+    active: ${acp_profile_active:dev}
   application:
     name: oauth2-server
   thymeleaf:
@@ -15,11 +15,11 @@ spring:
   #      type: kafka
   cloud:
     nacos:
-      username: nacos
-      password: nacos
-      server-addr: 127.0.0.1:8848
+      username: ${acp_nacos_username:nacos}
+      password: ${acp_nacos_password:nacos}
+      server-addr: ${acp_nacos_addr:127.0.0.1:8848}
       discovery:
-        namespace: acp-cloud-admin
+        namespace: ${acp_nacos_namespace:acp-cloud-admin}
         cluster-name: ${spring.profiles.active}
         group: ${spring.profiles.active}
       config:
@@ -35,7 +35,7 @@ logging:
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:
-  version: 4.2.4
+  version: 5.0.0
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}

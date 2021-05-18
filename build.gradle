@@ -161,20 +161,37 @@ allprojects {
     }
 
     def generateShell = { String appJarName ->
-        File templateFile = new File("$rootDir/doc/script/server.model")
+        File templateFile
+        if (project.name == "admin-server") {
+            templateFile = new File("$rootDir/doc/script/admin-server.model")
+        } else {
+            templateFile = new File("$rootDir/doc/script/server.model")
+        }
         List<String> lines = templateFile.readLines("UTF-8")
-        StringBuffer buffer = new StringBuffer()
+        StringBuilder buffer = new StringBuilder()
         for (String line : lines) {
             buffer.append(line).append("\n")
         }
         String shellContent = buffer.toString()
         shellContent = shellContent.replaceAll("@appJarName@", appJarName)
+        StringBuilder jvmExtParamBuilder = new StringBuilder()
+        jvmExtParamBuilder.append("'")
+        if (project.hasProperty("active") && project.active != null && project.active != "") {
+            println("$project.name release finished: active=$project.active")
+            jvmExtParamBuilder.append("-Dacp_profile_active=$project.active" as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_addr=" + jvmExtParam.get(project.active)['acp_nacos_addr'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_username=" + jvmExtParam.get(project.active)['acp_nacos_username'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_password=" + jvmExtParam.get(project.active)['acp_nacos_password'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_namespace=" + jvmExtParam.get(project.active)['acp_nacos_namespace'] as String)
+        }
+        jvmExtParamBuilder.append("'")
+        shellContent = shellContent.replaceAll("@jvmExtParam@", jvmExtParamBuilder.toString())
         File outFile = new File("$rootDir/release/$project.name/server.sh")
         Writer writer = new FileWriter(outFile)
         writer.write(new String(shellContent.getBytes("UTF-8")))
         writer.flush()
         writer.close()
-    }
+    } as Object
 
     build {
         doLast {
@@ -186,7 +203,7 @@ allprojects {
                         "oauth-server",
                         "workflow-server",
                         "route-server"].toArray().contains("$project.name")
-            }
+            } as Object
             if (needCopy()) {
                 def fileName = "$project.name" + "-" + "$project.version" + ".jar"
                 copy {
@@ -202,20 +219,5 @@ allprojects {
         }
     }
 
-    task release(dependsOn: [build, copyJar]) {
-        doLast {
-            if (project.hasProperty("active") && project.active != null && project.active != "") {
-                println("$project.name release finished: active=$project.active")
-                File bootStrapFile = new File("$rootDir/release/$project.name/bootstrap.yaml")
-                if (bootStrapFile.exists()) {
-                    def text = bootStrapFile.text
-                            .replaceAll(" {4}active: (?!\\\$).*", "    active: $project.active")
-                            .replaceAll(" {6}server-addr: (?!\\\$).*", "      server-addr: " + nacos_server_addr["$project.active"])
-                    bootStrapFile.withPrintWriter { printWriter ->
-                        printWriter.println(text)
-                    }
-                }
-            }
-        }
-    }
+    task release(dependsOn: [build, copyJar])
 }

@@ -8,8 +8,8 @@
     spring:
       security:
         user:
-          name: admin
-          password: 888888
+          name: ${acp_admin_username:admin}
+          password: ${acp_admin_password:888888}
       cloud:
         nacos:
           discovery:
@@ -17,3 +17,8 @@
               user.name: ${spring.security.user.name}
               user.password: ${spring.security.user.password}
     ```
+#### 二、附加环境变量及启动参数
+|    变量名    |     描述     | 默认值 |  说明  |
+| ----------- | ----------- | ----- | ----- |
+|acp_admin_username|用户名|admin|服务器部署时建议java启动命令加入参数 -Dacp_admin_username 或 --acp_admin_username；容器部署时指定环境变量即可
+|acp_admin_password|密码|888888|服务器部署时建议java启动命令加入参数 -Dacp_admin_password 或 --acp_admin_password；容器部署时指定环境变量即可

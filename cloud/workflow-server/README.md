@@ -60,3 +60,9 @@ docker run -p8080:8080 flowable/all-in-one
 ##### 七、流程示例
 - 流程图：
 ![流程图](../../doc/images/diagram.png)
+  
+##### 八、附加环境变量及启动参数
+|    变量名    |     描述     | 默认值 |  说明  |
+| ----------- | ----------- | ----- | ----- |
+|acp_admin_username|用户名|admin|服务器部署时建议java启动命令加入参数 -Dacp_admin_username 或 --acp_admin_username；容器部署时指定环境变量即可
+|acp_admin_password|密码|888888|服务器部署时建议java启动命令加入参数 -Dacp_admin_password 或 --acp_admin_password；容器部署时指定环境变量即可
