@@ -5,7 +5,7 @@
 ###### （一）windows
 无需添加，已自带字体
 ###### （二）linux
-将宋体字体文件[simsun.ttc](fonts/simsun.ttc)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
+将宋体字体文件[simsun.ttc](src/main/resources/libs/fonts/simsun.ttc)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
 ```
  cd $JAVA_HOME/lib
  mkdir fonts
@@ -64,5 +64,4 @@ docker run -p8080:8080 flowable/all-in-one
 ##### 八、附加环境变量及启动参数
 |    变量名    |     描述     | 默认值 |  说明  |
 | ----------- | ----------- | ----- | ----- |
-|acp_admin_username|用户名|admin|服务器部署时建议java启动命令加入参数 -Dacp_admin_username 或 --acp_admin_username；容器部署时指定环境变量即可
-|acp_admin_password|密码|888888|服务器部署时建议java启动命令加入参数 -Dacp_admin_password 或 --acp_admin_password；容器部署时指定环境变量即可
+|LD_LIBRARY_PATH|JVM的library路径| - |配置为服务的部署路径，虚拟机部署时需设置```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:[部署路径]/libs```
