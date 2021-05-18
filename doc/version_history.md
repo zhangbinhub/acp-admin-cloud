@@ -1,4 +1,16 @@
 ## 版本更新记录
+##### v5.0.0
+> - Global
+>   - [Upgrade] 更新全局build.gradle脚本
+>   - [Upgrade] 调整server.sh启动脚本
+>   - [Upgrade] 更新所有服务配置文件，加入以下环境变量，支持docker或k8s部署
+>     - acp_profile_active
+>     - acp_server_port
+>     - acp_log_path
+>     - acp_nacos_addr
+>     - acp_nacos_username
+>     - acp_nacos_password
+>     - acp_nacos_namespace
 ##### v4.2.4
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.0

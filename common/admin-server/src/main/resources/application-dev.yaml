@@ -1,11 +1,11 @@
 server:
-  port: 9099
+  port: ${acp_server_port:9099}
 # ===============================
 # = Log To File Config
 # ===============================
 logging:
   file:
-    path: logs/admin-server
+    path: ${acp_log_path:logs/${spring.application.name}}
     name: ${logging.file.path}/${spring.application.name}.log
   logback:
     rollingpolicy:
@@ -19,8 +19,8 @@ logging:
 spring:
   security:
     user:
-      name: admin
-      password: 888888
+      name: ${acp_admin_username:admin}
+      password: ${acp_admin_password:888888}
   cloud:
     nacos:
       discovery:
