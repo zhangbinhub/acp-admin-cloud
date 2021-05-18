@@ -11,6 +11,8 @@
 >     - acp_nacos_username
 >     - acp_nacos_password
 >     - acp_nacos_namespace
+> - workflow-server
+>   - [Upgrade] 字体文件放入resources中
 ##### v4.2.4
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.0
