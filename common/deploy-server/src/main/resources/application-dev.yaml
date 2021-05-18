@@ -7,6 +7,12 @@ logging:
   file:
     path: ${acp_log_path:logs/${spring.application.name}}
     name: ${logging.file.path}/${spring.application.name}.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+  level:
+    com.alibaba.nacos.client: warn
 # ===============================
 # = Spring Config
 # ===============================
