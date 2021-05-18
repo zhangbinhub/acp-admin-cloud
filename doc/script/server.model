@@ -5,6 +5,8 @@ JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512
 JVM_EXT_PARAM=@jvmExtParam@
 cd $WORK_PATH
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORK_PATH/libs
+
 usage() {
   echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
   exit 1
