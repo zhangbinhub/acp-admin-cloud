@@ -296,6 +296,7 @@ http://127.0.0.1:5601
 |acp_nacos_username|nacos用户名|nacos|nacos用户名，默认nacos，可自行在nacos管理端添加用户
 |acp_nacos_password|nacos密码|nacos|nacos用户密码，默认nacos，可自行在nacos管理端添加用户
 |acp_nacos_namespace|nacos命名空间|acp-cloud-admin|nacos命名空间，默认nacos，可自行在nacos管理端配置
+|acp_jvm_param|JVM启动参数|-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8|该环境变量在容器部署时使用
 
 ## 十二、JVM启动参数
 ```shell
