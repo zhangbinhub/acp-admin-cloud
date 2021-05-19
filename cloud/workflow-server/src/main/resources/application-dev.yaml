@@ -18,8 +18,8 @@ spring:
   # ===============================
   # = DATA SOURCE
   # ===============================
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
-    username: root
-    password: test
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/acp-admin-flowable?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+#    username: root
+#    password: test
+#    driver-class-name: com.mysql.cj.jdbc.Driver

@@ -7,12 +7,6 @@ logging:
   file:
     path: ${acp_log_path:logs/${spring.application.name}}
     name: ${logging.file.path}/${spring.application.name}.log
-  logback:
-    rollingpolicy:
-      max-file-size: 100MB
-      max-history: 30
-  level:
-    com.alibaba.nacos.client: warn
 # ===============================
 # = Spring Config
 # ===============================
@@ -24,8 +18,8 @@ spring:
   # ===============================
   # = DATA SOURCE
   # ===============================
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/acp-admin?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
-    username: root
-    password: test
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/acp-admin?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC&useSSL=false
+#    username: root
+#    password: test
+#    driver-class-name: com.mysql.cj.jdbc.Driver
