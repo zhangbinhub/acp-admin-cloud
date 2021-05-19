@@ -1,7 +1,14 @@
 #!/bin/bash
 WORK_PATH=$(cd "$(dirname "$0")";pwd)
 APP_NAME=$WORK_PATH/@appJarName@
-JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8 -Dacp_admin_username=admin -Dacp_admin_password=888888'
+
+JVM_PARAM=
+if [ -z "$acp_jvm_param" ]; then
+  JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx3g -Djava.library.path=./libs -Dfile.encoding=utf-8'
+else
+  JVM_PARAM="$acp_jvm_param"
+fi
+
 JVM_EXT_PARAM=@jvmExtParam@
 cd $WORK_PATH
 
