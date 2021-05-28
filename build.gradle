@@ -178,11 +178,14 @@ allprojects {
         jvmExtParamBuilder.append("'")
         if (project.hasProperty("active") && project.active != null && project.active != "") {
             println("$project.name release finished: active=$project.active")
-            jvmExtParamBuilder.append("-Dacp_profile_active=$project.active" as String)
-            jvmExtParamBuilder.append(" -Dacp_nacos_addr=" + jvmExtParam.get(project.active)['acp_nacos_addr'] as String)
-            jvmExtParamBuilder.append(" -Dacp_nacos_username=" + jvmExtParam.get(project.active)['acp_nacos_username'] as String)
-            jvmExtParamBuilder.append(" -Dacp_nacos_password=" + jvmExtParam.get(project.active)['acp_nacos_password'] as String)
-            jvmExtParamBuilder.append(" -Dacp_nacos_namespace=" + jvmExtParam.get(project.active)['acp_nacos_namespace'] as String)
+            def envParam = jvmExtParam.get(project.active)
+            if (envParam != null) {
+                jvmExtParamBuilder.append("-Dacp_profile_active=$project.active" as String)
+                jvmExtParamBuilder.append(" -Dacp_nacos_addr=" + envParam['acp_nacos_addr'] as String)
+                jvmExtParamBuilder.append(" -Dacp_nacos_username=" + envParam['acp_nacos_username'] as String)
+                jvmExtParamBuilder.append(" -Dacp_nacos_password=" + envParam['acp_nacos_password'] as String)
+                jvmExtParamBuilder.append(" -Dacp_nacos_namespace=" + envParam['acp_nacos_namespace'] as String)
+            }
         }
         jvmExtParamBuilder.append("'")
         shellContent = shellContent.replaceAll("@jvmExtParam@", jvmExtParamBuilder.toString())

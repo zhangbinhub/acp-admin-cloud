@@ -65,3 +65,35 @@ docker run -p8080:8080 flowable/all-in-one
 |    变量名    |     描述     | 默认值 |  说明  |
 | ----------- | ----------- | ----- | ----- |
 |LD_LIBRARY_PATH|JVM的library路径| - |配置为服务的部署路径，虚拟机部署时需设置```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:[部署路径]/libs```
+
+##### 九、容器中部署时，镜像需安装如下组件
+> - bzip2-libs-1.0.6-13.el7.i686.rpm
+> - libblkid-devel-2.23.2-65.el7_9.1.x86_64.rpm
+> - nspr-4.25.0-2.el7_9.x86_64.rpm
+> - dejavu-fonts-common-2.33-6.el7.noarch.rpm
+> - libmount-2.23.2-65.el7_9.1.x86_64.rpm
+> - nss-softokn-freebl-3.53.1-6.el7_9.i686.rpm
+> - dejavu-sans-fonts-2.33-6.el7.noarch.rpm
+> - glibc-2.17-324.el7_9.i686.rpm
+> - libpng-1.5.13-8.el7.i686.rpm
+> - nss-softokn-freebl-3.53.1-6.el7_9.x86_64.rpm
+> - expat-2.1.0-12.el7.i686.rpm
+> - glibc-2.17-324.el7_9.x86_64.rpm
+> - libpng-1.5.13-8.el7.x86_64.rpm
+> - nss-util-3.53.1-1.el7_9.x86_64.rpm
+> - expat-2.1.0-12.el7.x86_64.rpm
+> - glibc-common-2.17-324.el7_9.x86_64.rpm
+> - libsmartcols-2.23.2-65.el7_9.1.x86_64.rpm
+> - util-linux-2.23.2-65.el7_9.1.x86_64.rpm
+> - glibc-devel-2.17-324.el7_9.x86_64.rpm
+> - libuuid-2.23.2-65.el7_9.1.i686.rpm
+> - glibc-headers-2.17-324.el7_9.x86_64.rpm
+> - libuuid-2.23.2-65.el7_9.1.x86_64.rpm
+> - fontpackages-filesystem-1.44-8.el7.noarch.rpm
+> - libblkid-2.23.2-65.el7_9.1.x86_64.rpm
+> - libuuid-devel-2.23.2-65.el7_9.1.x86_64.rpm
+> - **freetype-2.8-14.el7_9.1.i686.rpm**
+> - **freetype-2.8-14.el7_9.1.x86_64.rpm**
+> - **zlib-1.2.7-19.el7_9.i686.rpm**
+> - **fontconfig-2.13.0-4.3.el7.x86_64.rpm**
+> - **fontconfig-2.13.0-4.3.el7.i686.rpm**
