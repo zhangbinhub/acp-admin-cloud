@@ -1,8 +1,6 @@
 package pers.acp.admin.deploy.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.annotations.*
-import org.bouncycastle.util.encoders.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -11,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.deploy.bus.publish.DeployEventPublish
@@ -20,17 +17,12 @@ import pers.acp.admin.deploy.domain.DeployTaskDomain
 import pers.acp.admin.deploy.entity.DeployTask
 import pers.acp.admin.deploy.po.DeployTaskPo
 import pers.acp.admin.deploy.po.DeployTaskQueryPo
-import pers.acp.admin.deploy.po.FileDownLoadPo
 import pers.acp.admin.permission.BaseExpression
 import pers.acp.core.CommonTools
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.boot.vo.ErrorVo
 import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
-import java.io.File
-import java.nio.charset.Charset
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import javax.validation.constraints.*
 
@@ -41,7 +33,6 @@ import javax.validation.constraints.*
 class DeployTaskController @Autowired
 constructor(
     logAdapter: LogAdapter,
-    private val objectMapper: ObjectMapper,
     private val deployTaskDomain: DeployTaskDomain,
     private val deployEventPublish: DeployEventPublish
 ) : BaseController(logAdapter) {
@@ -105,70 +96,6 @@ constructor(
             }
             ResponseEntity.ok(deployTaskDomain.doQuery(deployTaskQueryPo))
         }
-
-    @ApiOperation(value = "查询服务器文件")
-    @PreAuthorize(BaseExpression.superOnly)
-    @GetMapping(value = [DeployApi.file], produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Throws(ServerException::class)
-    fun queryFile(): ResponseEntity<List<String>> = ResponseEntity.ok(deployTaskDomain.fileList())
-
-    @ApiOperation(value = "上传文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @PreAuthorize(BaseExpression.superOnly)
-    @PostMapping(value = [DeployApi.file], produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Throws(ServerException::class)
-    fun uploadFile(
-        @RequestPart(value = "文件", required = true)
-        @RequestParam file: MultipartFile
-    ): ResponseEntity<InfoVo> {
-        if (file.isEmpty) {
-            throw ServerException("请选择需要上传的文件")
-        }
-        deployTaskDomain.uploadFile(file).let {
-            return ResponseEntity.ok(InfoVo(message = it))
-        }
-    }
-
-    @ApiOperation(value = "删除文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @PreAuthorize(BaseExpression.superOnly)
-    @DeleteMapping(value = [DeployApi.file], produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Throws(ServerException::class)
-    fun deleteFile(
-        @ApiParam(value = "文件名称", required = true)
-        @NotBlank(message = "文件名称不能为空")
-        @RequestParam fileName: String
-    ): ResponseEntity<InfoVo> {
-        val name = String(Base64.decode(fileName), Charset.forName(CommonTools.getDefaultCharset())).replace(
-            "/",
-            File.separator
-        ).replace("\\", File.separator)
-        return deployTaskDomain.deleteFile(name).let {
-            ResponseEntity.ok(InfoVo(message = "文件删除成功"))
-        }
-    }
-
-    @ApiOperation(value = "下载文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
-    @GetMapping(value = [DeployApi.fileDownLoad], produces = [MediaType.ALL_VALUE])
-    @Throws(ServerException::class)
-    fun downloadFile(
-        request: HttpServletRequest, response: HttpServletResponse,
-        @ApiParam(value = "文件内容", required = true)
-        @NotBlank(message = "文件内容不能为空")
-        @RequestParam params: String
-    ) {
-        val fileContent = objectMapper.readValue(params, FileDownLoadPo::class.java)
-        if (CommonTools.isNullStr(fileContent.fileName)) {
-            throw ServerException("文件名称不能为空")
-        }
-        val fileName =
-            String(Base64.decode(fileContent.fileName), Charset.forName(CommonTools.getDefaultCharset())).replace(
-                "/",
-                File.separator
-            ).replace("\\", File.separator)
-        deployTaskDomain.doDownLoadFile(request, response, fileName)
-    }
 
     @ApiOperation(value = "执行部署任务")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))

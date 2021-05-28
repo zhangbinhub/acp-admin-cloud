@@ -13,4 +13,7 @@ import org.springframework.stereotype.Component
 class DeployServerCustomerConfiguration {
     @Value("\${deploy-server.upload-path}")
     var uploadPath: String = ""
+
+    @Value("\${deploy-server.script-path}")
+    var scriptPath: String = ""
 }

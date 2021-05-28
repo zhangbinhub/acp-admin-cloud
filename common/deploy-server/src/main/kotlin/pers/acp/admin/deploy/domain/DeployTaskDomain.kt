@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.multipart.MultipartFile
 import pers.acp.admin.common.base.BaseDomain
 import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.constant.TokenConstant
@@ -15,19 +14,15 @@ import pers.acp.admin.deploy.po.DeployTaskPo
 import pers.acp.admin.deploy.po.DeployTaskQueryPo
 import pers.acp.admin.deploy.repo.DeployTaskRepository
 import pers.acp.core.CommonTools
-import pers.acp.spring.boot.component.FileDownLoadHandle
 import pers.acp.spring.boot.exceptions.ServerException
 import pers.acp.spring.boot.interfaces.LogAdapter
+import pers.acp.spring.cloud.component.CloudTools
 import org.springframework.core.io.FileSystemResource
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
-import pers.acp.spring.cloud.component.CloudTools
 import java.io.File
 import java.io.InputStreamReader
 import java.io.LineNumberReader
-import java.util.*
 import javax.persistence.criteria.Predicate
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import javax.sql.DataSource
 
 @Service
@@ -39,26 +34,15 @@ constructor(
     private val dataSource: DataSource,
     private val commonOauthServer: CommonOauthServer,
     private val deployTaskRepository: DeployTaskRepository,
-    private val deployServerCustomerConfiguration: DeployServerCustomerConfiguration,
-    private val fileDownLoadHandle: FileDownLoadHandle
+    private val deployServerCustomerConfiguration: DeployServerCustomerConfiguration
 ) : BaseDomain() {
     @Throws(ServerException::class)
-    private fun makeFold(): File = File(deployServerCustomerConfiguration.uploadPath).apply {
+    private fun makeFold(): File = File(deployServerCustomerConfiguration.scriptPath).apply {
         if (!this.exists()) {
             if (!this.mkdirs()) {
                 logAdapter.error("创建目录失败: " + this.canonicalPath)
                 throw ServerException("创建目录失败！")
             }
-        }
-    }
-
-    @Throws(ServerException::class)
-    private fun validateFold(fold: File) {
-        if (!fold.exists()) {
-            throw ServerException("路径不存在【${fold.canonicalPath}】")
-        }
-        if (!fold.isDirectory) {
-            throw ServerException("路径 " + fold.canonicalPath + " 不是文件夹")
         }
     }
 
@@ -206,65 +190,4 @@ constructor(
             }
             criteriaBuilder.and(*predicateList.toTypedArray())
         }, buildPageRequest(deployTaskQueryPo.queryParam!!))
-
-    @Throws(ServerException::class)
-    fun fileList(): List<String> {
-        val fold = makeFold()
-        validateFold(fold)
-        val fileList: MutableList<String> = mutableListOf()
-        fold.listFiles()?.let {
-            for (file in it) {
-                fileList.add(file.name)
-            }
-        }
-        fileList.sortWith(Comparator.reverseOrder())
-        return fileList
-    }
-
-    @Throws(ServerException::class)
-    fun uploadFile(file: MultipartFile): String {
-        val fold = makeFold()
-        var fileName = file.originalFilename!!
-        val existCount = fold.listFiles { item ->
-            item.name == fileName
-        }?.size ?: 0
-        if (existCount > 0) {
-            fileName = "${
-                fileName.substring(
-                    0,
-                    fileName.lastIndexOf(".")
-                )
-            }_${existCount}${fileName.substring(fileName.lastIndexOf("."))}"
-        }
-        val targetFile = File(fold.canonicalPath + File.separator + fileName)
-        file.transferTo(targetFile)
-        return fileName
-    }
-
-    @Throws(ServerException::class)
-    fun deleteFile(fileName: String) {
-        var targetFileName = fileName
-        val index = targetFileName.lastIndexOf(File.separator)
-        if (index > -1) {
-            targetFileName = targetFileName.substring(index + 1)
-        }
-        CommonTools.doDeleteFile(File("${makeFold().canonicalPath}${File.separator}$targetFileName"))
-    }
-
-    @Throws(ServerException::class)
-    fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, fileName: String) {
-        val fold = makeFold()
-        val foldPath = fold.canonicalPath
-        validateFold(fold)
-        var targetFileName = fileName
-        val index = targetFileName.lastIndexOf(File.separator)
-        if (index > -1) {
-            targetFileName = targetFileName.substring(index + 1)
-        }
-        val filePath = "$foldPath/$targetFileName".replace("/", File.separator).replace("\\", File.separator)
-        if (!File(filePath).exists()) {
-            throw ServerException("文件[$targetFileName]不存在")
-        }
-        fileDownLoadHandle.downLoadFile(request, response, filePath, listOf("$foldPath/.*"))
-    }
 }
