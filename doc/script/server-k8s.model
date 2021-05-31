@@ -1,0 +1,16 @@
+#!/bin/bash
+WORK_PATH=$(cd "$(dirname "$0")";pwd)
+APP_NAME=$WORK_PATH/@appJarName@
+
+JVM_PARAM=
+if [ -z "$acp_jvm_param" ]; then
+  JVM_PARAM='-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC @jvmMemoryParam@ -Djava.library.path=./libs -Dfile.encoding=utf-8'
+else
+  JVM_PARAM="$acp_jvm_param"
+fi
+
+JVM_EXT_PARAM=@jvmExtParam@
+cd $WORK_PATH
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORK_PATH/libs
+$JAVA_HOME/bin/java $JVM_PARAM $JVM_EXT_PARAM -jar $APP_NAME
