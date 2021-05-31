@@ -161,12 +161,9 @@ allprojects {
     }
 
     def generateShell = { String appJarName ->
-        File templateFile
-        if (project.name == "admin-server") {
-            templateFile = new File("$rootDir/doc/script/admin-server.model")
-        } else {
-            templateFile = new File("$rootDir/doc/script/server.model")
-        }
+        def memoryParam = jvmMemoryParam.get('default') as String
+        // generate linux shell
+        File templateFile = new File("$rootDir/doc/script/server.model")
         List<String> lines = templateFile.readLines("UTF-8")
         StringBuilder buffer = new StringBuilder()
         for (String line : lines) {
@@ -174,6 +171,7 @@ allprojects {
         }
         String shellContent = buffer.toString()
         shellContent = shellContent.replaceAll("@appJarName@", appJarName)
+        shellContent = shellContent.replaceAll("@jvmMemoryParam@", memoryParam)
         StringBuilder jvmExtParamBuilder = new StringBuilder()
         jvmExtParamBuilder.append("'")
         if (project.hasProperty("active") && project.active != null && project.active != "") {
@@ -194,6 +192,37 @@ allprojects {
         writer.write(new String(shellContent.getBytes("UTF-8")))
         writer.flush()
         writer.close()
+
+        // generate k8s shell
+        File templateFileK8s = new File("$rootDir/doc/script/server.model")
+        List<String> linesK8s = templateFileK8s.readLines("UTF-8")
+        StringBuilder bufferK8s = new StringBuilder()
+        for (String line : linesK8s) {
+            bufferK8s.append(line).append("\n")
+        }
+        String shellContentK8s = bufferK8s.toString()
+        shellContentK8s = shellContentK8s.replaceAll("@appJarName@", appJarName)
+        shellContentK8s = shellContentK8s.replaceAll("@jvmMemoryParam@", memoryParam)
+        StringBuilder jvmExtParamBuilderK8s = new StringBuilder()
+        jvmExtParamBuilderK8s.append("'")
+        if (project.hasProperty("active") && project.active != null && project.active != "") {
+            println("$project.name release finished: active=$project.active")
+            def envParam = jvmExtParam.get(project.active)
+            if (envParam != null) {
+                jvmExtParamBuilderK8s.append("-Dacp_profile_active=$project.active" as String)
+                jvmExtParamBuilderK8s.append(" -Dacp_nacos_addr=" + envParam['acp_nacos_addr'] as String)
+                jvmExtParamBuilderK8s.append(" -Dacp_nacos_username=" + envParam['acp_nacos_username'] as String)
+                jvmExtParamBuilderK8s.append(" -Dacp_nacos_password=" + envParam['acp_nacos_password'] as String)
+                jvmExtParamBuilderK8s.append(" -Dacp_nacos_namespace=" + envParam['acp_nacos_namespace'] as String)
+            }
+        }
+        jvmExtParamBuilderK8s.append("'")
+        shellContentK8s = shellContentK8s.replaceAll("@jvmExtParam@", jvmExtParamBuilderK8s.toString())
+        File outFileK8s = new File("$rootDir/release/$project.name/server.sh")
+        Writer writerK8s = new FileWriter(outFileK8s)
+        writerK8s.write(new String(shellContentK8s.getBytes("UTF-8")))
+        writerK8s.flush()
+        writerK8s.close()
     } as Object
 
     build {
