@@ -54,11 +54,17 @@ constructor(
     @Throws(ServerException::class)
     fun queryFile(
         @ApiParam(value = "路径", required = false)
-        @RequestParam(required = false) path: String?
+        @RequestParam(required = false) path: String?,
+        @ApiParam(value = "名称", required = false)
+        @RequestParam(required = false) name: String?
     ): ResponseEntity<List<FileVo>> = (path?.let {
-        String(Base64.decode(path), Charset.forName(CommonTools.getDefaultCharset()))
+        String(Base64.decode(it), Charset.forName(CommonTools.getDefaultCharset()))
     } ?: "").let { basePath ->
-        ResponseEntity.ok(deployFileDomain.fileList(basePath))
+        (name?.let {
+            String(Base64.decode(it), Charset.forName(CommonTools.getDefaultCharset()))
+        } ?: "").let { filterName ->
+            ResponseEntity.ok(deployFileDomain.fileList(basePath, filterName))
+        }
     }
 
     @ApiOperation(value = "上传文件")

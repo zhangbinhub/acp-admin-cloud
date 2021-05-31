@@ -71,9 +71,15 @@ constructor(
         }
 
     @Throws(ServerException::class)
-    fun fileList(path: String): List<FileVo> = makeFold(path).let { fold ->
+    fun fileList(path: String, name: String): List<FileVo> = makeFold(path).let { fold ->
         mutableListOf<FileVo>().apply {
-            fold.listFiles()?.let {
+            if (CommonTools.isNullStr(name)) {
+                fold.listFiles()
+            } else {
+                fold.listFiles { file ->
+                    file.name.contains(name)
+                }
+            }?.let {
                 for (file in it) {
                     this.add(
                         FileVo(
