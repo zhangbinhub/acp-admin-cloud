@@ -3,13 +3,14 @@ ext {
     jvmExtParam = [:]
 }
 jvmMemoryParam += [
-        'default':'-Xms256m -Xmx512m'
+        'default': '-Xms256m -Xmx512m'
 ]
 jvmExtParam += [
         dev: [
                 acp_nacos_addr     : '127.0.0.1:8848',
                 acp_nacos_username : 'nacos',
                 acp_nacos_password : 'nacos',
-                acp_nacos_namespace: 'acp-cloud-admin'
+                acp_nacos_namespace: 'acp-cloud-admin',
+                acp_log_path       : 'logs'
         ]
 ]

@@ -1,4 +1,5 @@
 server:
+  port: ${acp_server_port:0}
   tomcat:
     uri-encoding: UTF-8
     threads:
@@ -32,6 +33,9 @@ spring:
             group: ${spring.profiles.active}
             refresh: true
 logging:
+  file:
+    path: ${acp_log_path:logs}/${spring.application.name}
+    name: ${logging.file.path}/${spring.application.name}.log
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
 info:

@@ -12,6 +12,7 @@
 >     - acp_nacos_password
 >     - acp_nacos_namespace
 >   - [Upgrade] 所有服务数据库配置移入nacos
+>   - [Upgrade] 简化所有服务配置文件，仅保留bootstrap.yaml
 > - deploy-server
 >   - [Upgrade] 完善文件管理
 > - log-server
