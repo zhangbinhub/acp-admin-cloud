@@ -50,7 +50,7 @@ management:
 # ===============================
 # = Log To File Config
 # ===============================
-# 本地IDE中启动时需注释 logging.config 配置，部署至服务器时需放开注释
+# 本地IDE中启动时需注释 logging.config 配置，部署至服务器时，如果使用包外配置需放开注释
 logging:
   #  config: logback-spring.xml
   pattern:
