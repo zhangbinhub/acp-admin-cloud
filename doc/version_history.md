@@ -14,6 +14,8 @@
 >   - [Upgrade] 所有服务数据库配置移入nacos
 > - deploy-server
 >   - [Upgrade] 完善文件管理
+> - log-server
+>   - [Upgrade] 修改 logback-spring.xml 配置
 ##### v4.2.4
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.0
