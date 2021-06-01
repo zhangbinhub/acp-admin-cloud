@@ -183,6 +183,7 @@ allprojects {
                 jvmExtParamBuilder.append(" -Dacp_nacos_username=" + envParam['acp_nacos_username'] as String)
                 jvmExtParamBuilder.append(" -Dacp_nacos_password=" + envParam['acp_nacos_password'] as String)
                 jvmExtParamBuilder.append(" -Dacp_nacos_namespace=" + envParam['acp_nacos_namespace'] as String)
+                jvmExtParamBuilder.append(" -Dacp_log_path=" + envParam['acp_log_path'] as String)
             }
         }
         jvmExtParamBuilder.append("'")
@@ -203,21 +204,6 @@ allprojects {
         String shellContentK8s = bufferK8s.toString()
         shellContentK8s = shellContentK8s.replaceAll("@appJarName@", appJarName)
         shellContentK8s = shellContentK8s.replaceAll("@jvmMemoryParam@", memoryParam)
-        StringBuilder jvmExtParamBuilderK8s = new StringBuilder()
-        jvmExtParamBuilderK8s.append("'")
-        if (project.hasProperty("active") && project.active != null && project.active != "") {
-            println("$project.name release finished: active=$project.active")
-            def envParam = jvmExtParam.get(project.active)
-            if (envParam != null) {
-                jvmExtParamBuilderK8s.append("-Dacp_profile_active=$project.active" as String)
-                jvmExtParamBuilderK8s.append(" -Dacp_nacos_addr=" + envParam['acp_nacos_addr'] as String)
-                jvmExtParamBuilderK8s.append(" -Dacp_nacos_username=" + envParam['acp_nacos_username'] as String)
-                jvmExtParamBuilderK8s.append(" -Dacp_nacos_password=" + envParam['acp_nacos_password'] as String)
-                jvmExtParamBuilderK8s.append(" -Dacp_nacos_namespace=" + envParam['acp_nacos_namespace'] as String)
-            }
-        }
-        jvmExtParamBuilderK8s.append("'")
-        shellContentK8s = shellContentK8s.replaceAll("@jvmExtParam@", jvmExtParamBuilderK8s.toString())
         File outFileK8s = new File("$rootDir/release/$project.name/server.sh")
         Writer writerK8s = new FileWriter(outFileK8s)
         writerK8s.write(new String(shellContentK8s.getBytes("UTF-8")))

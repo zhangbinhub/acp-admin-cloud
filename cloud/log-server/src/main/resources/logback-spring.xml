@@ -5,7 +5,7 @@
     <!--<logger name="pers.acp" level="DEBUG"/>-->
 
     <property name="logPatternFileServer" value="[%date{yyyy-MM-dd HH:mm:ss.SSS}] %msg%n"/>
-    <property name="LOG_HOME" value="${logging.file.path}"/>
+    <springProperty scope="context" name="LOG_HOME" source="logging.file.path"/>
 
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
