@@ -19,6 +19,8 @@
 >     - Spring Boot 2.5.0
 >     - Acp 6.6.0
 >     - kotlin 1.5.10
+> - acp-admin-cloud-dependencies
+>   - [Upgrade] 优化权限验证日志
 > - deploy-server
 >   - [Upgrade] 完善文件管理
 > - gateway-server

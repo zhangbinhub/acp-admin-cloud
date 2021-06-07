@@ -32,13 +32,13 @@ abstract class BaseController(private val logAdapter: LogAdapter) {
                 if (it.isNotEmpty()) {
                     it.forEach { authentication ->
                         if (user.authorities.none { item -> item.authority == authentication }) {
-                            logAdapter.error("没有权限【$authentication】")
+                            logAdapter.warn("当前用户【${user.name}】没有权限【$authentication】")
                             return@let false
                         }
                     }
                     true
                 } else {
-                    logAdapter.error("权限列表为空")
+                    logAdapter.warn("当前用户【${user.name}】权限列表为空")
                     false
                 }
             }
