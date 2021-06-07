@@ -1,8 +1,5 @@
 package pers.acp.admin.deploy.bus.publish
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.bus.BusProperties
 import org.springframework.context.ApplicationContext
@@ -16,13 +13,16 @@ import pers.acp.admin.deploy.constant.DeployConstant
  */
 @Component
 class DeployEventPublish @Autowired
-constructor(private val applicationContext: ApplicationContext,
-            private val busProperties: BusProperties) {
+constructor(
+    private val applicationContext: ApplicationContext,
+    private val busProperties: BusProperties
+) {
     fun doNotifyExecuteDeploy(deployTaskId: String) {
-        val source = this
-        GlobalScope.launch(Dispatchers.IO) {
-            applicationContext.publishEvent(ExecuteBusEvent(busProperties.id, null, DeployConstant.busMessageExecuteDeploy,
-                    listOf(deployTaskId), source))
-        }
+        applicationContext.publishEvent(
+            ExecuteBusEvent(
+                busProperties.id, null, DeployConstant.busMessageExecuteDeploy,
+                listOf(deployTaskId), this
+            )
+        )
     }
 }

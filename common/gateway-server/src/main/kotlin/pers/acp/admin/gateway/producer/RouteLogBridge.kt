@@ -18,11 +18,9 @@ class RouteLogBridge(
     private val bindName: String
 ) {
     fun sendMessage(routeLogMessage: RouteLogMessage) {
-        GlobalScope.launch(Dispatchers.IO) {
-            streamBridge.send(
-                bindName,
-                MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogMessage)).build()
-            )
-        }
+        streamBridge.send(
+            bindName,
+            MessageBuilder.withPayload(objectMapper.writeValueAsString(routeLogMessage)).build()
+        )
     }
 }

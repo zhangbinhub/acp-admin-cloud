@@ -132,12 +132,12 @@ constructor(userRepository: UserRepository, private val roleRepository: RoleRepo
     @Throws(ServerException::class)
     fun doUpdate(user: OAuth2Authentication, menuPo: MenuPo): Menu =
             getUserInfoByLoginNo(user.name)?.let { userInfo ->
-                doSave(userInfo, menuRepository.getOne(menuPo.id!!), menuPo)
+                doSave(userInfo, menuRepository.getById(menuPo.id!!), menuPo)
             } ?: throw ServerException("无法获取当前用户信息")
 
     @Throws(ServerException::class)
     fun getMenuInfo(menuId: String): MenuVo =
-            menuRepository.getOne(menuId).let { item ->
+            menuRepository.getById(menuId).let { item ->
                 MenuVo(
                         id = item.id,
                         appId = item.appId,

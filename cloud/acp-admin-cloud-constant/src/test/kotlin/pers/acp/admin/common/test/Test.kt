@@ -30,7 +30,7 @@ fun main() = runBlocking {
             for (index in 0..50) {
                 launch(Dispatchers.IO) {
                     delay(2000)
-                    UUID.randomUUID().toString().toUpperCase().let {
+                    UUID.randomUUID().toString().uppercase().let {
                         println(Thread.currentThread())
                         println("$index >>>>>>>> finished $it")
                         set.add(it)

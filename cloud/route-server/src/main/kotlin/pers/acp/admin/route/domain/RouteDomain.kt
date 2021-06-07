@@ -60,7 +60,7 @@ constructor(
 
     @Transactional
     @Throws(ServerException::class)
-    fun doUpdate(routePo: RoutePo): Route = doSave(routeRepository.getOne(routePo.id!!), routePo)
+    fun doUpdate(routePo: RoutePo): Route = doSave(routeRepository.getById(routePo.id!!), routePo)
 
     @Transactional
     fun doDelete(idList: List<String>) = routeRepository.deleteByIdInAndEnabled(idList, false)

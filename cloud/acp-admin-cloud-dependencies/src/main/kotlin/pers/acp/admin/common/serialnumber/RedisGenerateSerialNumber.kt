@@ -1,8 +1,5 @@
 package pers.acp.admin.common.serialnumber
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.data.redis.core.StringRedisTemplate
 
 /**
@@ -21,14 +18,12 @@ class RedisGenerateSerialNumber(private val stringRedisTemplate: StringRedisTemp
             connection.execute("incr", keyString.toByteArray())
         } as Long).also {
             if (it == 1L) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    stringRedisTemplate.execute { connection ->
-                        connection.execute(
-                            "pexpire",
-                            keyString.toByteArray(),
-                            expirationTime.toString().toByteArray()
-                        )
-                    }
+                stringRedisTemplate.execute { connection ->
+                    connection.execute(
+                        "pexpire",
+                        keyString.toByteArray(),
+                        expirationTime.toString().toByteArray()
+                    )
                 }
             }
         }

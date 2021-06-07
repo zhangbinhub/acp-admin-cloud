@@ -23,40 +23,51 @@ import pers.acp.core.CommonTools
 @Service
 @Transactional(readOnly = true)
 class LogHistoryDomain @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val routeLogRepository: RouteLogRepository,
-            private val operateLogRepository: OperateLogRepository,
-            private val loginLogRepository: LoginLogRepository,
-            private val routeLogHistoryRepository: RouteLogHistoryRepository,
-            private val operateLogHistoryRepository: OperateLogHistoryRepository,
-            private val loginLogHistoryRepository: LoginLogHistoryRepository) {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val routeLogRepository: RouteLogRepository,
+    private val operateLogRepository: OperateLogRepository,
+    private val loginLogRepository: LoginLogRepository,
+    private val routeLogHistoryRepository: RouteLogHistoryRepository,
+    private val operateLogHistoryRepository: OperateLogHistoryRepository,
+    private val loginLogHistoryRepository: LoginLogHistoryRepository
+) {
 
     private fun <T> selectLogSpecification(timeBegin: Long): Specification<T> {
         return Specification { root, _, criteriaBuilder ->
-            criteriaBuilder.and(*mutableListOf(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), timeBegin)).toTypedArray())
+            criteriaBuilder.and(
+                *mutableListOf(
+                    criteriaBuilder.le(
+                        root.get<Any>("requestTime").`as`(Long::class.java),
+                        timeBegin
+                    )
+                ).toTypedArray()
+            )
         }
     }
 
-    private fun selectLogPageable(quantityPerProcess: Int): Pageable = PageRequest.of(0, quantityPerProcess, Sort.Direction.ASC, "requestTime")
+    private fun selectLogPageable(quantityPerProcess: Int): Pageable =
+        PageRequest.of(0, quantityPerProcess, Sort.Direction.ASC, "requestTime")
 
     @Transactional
     fun doRouteLogHistory(timeBegin: Long, quantityPerProcess: Int): Int {
         logAdapter.info("开始执行：路由日志迁移至历史库")
-        return routeLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
-            logAdapter.info("本次处理${it.content.size}条路由日志")
-            it.forEach { item ->
-                RouteLogHistory().apply {
-                    BeanUtils.copyProperties(item, this)
-                }.apply {
-                    routeLogHistoryRepository.save(this)
+        return routeLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess))
+            .let {
+                logAdapter.info("本次处理${it.content.size}条路由日志")
+                it.forEach { item ->
+                    RouteLogHistory().apply {
+                        BeanUtils.copyProperties(item, this)
+                    }.apply {
+                        routeLogHistoryRepository.save(this)
+                    }
                 }
+                routeLogRepository.deleteAllInBatch(it.content)
+                if (it.isEmpty) {
+                    logAdapter.info("路由日志迁移完成")
+                }
+                it.content.size
             }
-            routeLogRepository.deleteInBatch(it.content)
-            if (it.isEmpty) {
-                logAdapter.info("路由日志迁移完成")
-            }
-            it.content.size
-        }
     }
 
     @Transactional
@@ -69,21 +80,22 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     fun doOperateLogHistory(timeBegin: Long, quantityPerProcess: Int): Int {
         logAdapter.info("开始执行：操作日志迁移至历史库")
-        return operateLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
-            logAdapter.info("本次处理${it.content.size}条操作日志")
-            it.forEach { item ->
-                OperateLogHistory().apply {
-                    BeanUtils.copyProperties(item, this)
-                }.apply {
-                    operateLogHistoryRepository.save(this)
+        return operateLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess))
+            .let {
+                logAdapter.info("本次处理${it.content.size}条操作日志")
+                it.forEach { item ->
+                    OperateLogHistory().apply {
+                        BeanUtils.copyProperties(item, this)
+                    }.apply {
+                        operateLogHistoryRepository.save(this)
+                    }
                 }
+                operateLogRepository.deleteAllInBatch(it.content)
+                if (it.isEmpty) {
+                    logAdapter.info("操作日志迁移完成")
+                }
+                it.content.size
             }
-            operateLogRepository.deleteInBatch(it.content)
-            if (it.isEmpty) {
-                logAdapter.info("操作日志迁移完成")
-            }
-            it.content.size
-        }
     }
 
     @Transactional
@@ -96,27 +108,29 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     fun doLoginLogHistory(timeBegin: Long, quantityPerProcess: Int): Int {
         logAdapter.info("开始执行：登录日志迁移至历史库")
-        return loginLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess)).let {
-            logAdapter.info("本次处理${it.content.size}条登录日志")
-            it.forEach { item ->
-                LoginLogHistory().apply {
-                    BeanUtils.copyProperties(item, this)
-                }.apply {
-                    loginLogHistoryRepository.save(this)
+        return loginLogRepository.findAll(selectLogSpecification(timeBegin), selectLogPageable(quantityPerProcess))
+            .let {
+                logAdapter.info("本次处理${it.content.size}条登录日志")
+                it.forEach { item ->
+                    LoginLogHistory().apply {
+                        BeanUtils.copyProperties(item, this)
+                    }.apply {
+                        loginLogHistoryRepository.save(this)
+                    }
                 }
+                loginLogRepository.deleteAllInBatch(it.content)
+                if (it.isEmpty) {
+                    logAdapter.info("登录日志迁移完成")
+                }
+                it.content.size
             }
-            loginLogRepository.deleteInBatch(it.content)
-            if (it.isEmpty) {
-                logAdapter.info("登录日志迁移完成")
-            }
-            it.content.size
-        }
     }
 
     @Transactional
     fun doDeleteLoginLogHistory(time: Long) {
         logAdapter.info("开始清理历史登录日志...")
-        CommonTools.getNowDateTime().withTimeAtStartOfDay().minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
+        CommonTools.getNowDateTime().withTimeAtStartOfDay()
+            .minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
             if (it < time) {
                 loginLogHistoryRepository.deleteAllByRequestTimeLessThan(it)
             } else {

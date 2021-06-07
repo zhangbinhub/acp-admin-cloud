@@ -109,7 +109,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, organizationPo: OrganizationPo): Organization =
         getUserInfoByLoginNo(loginNo)?.let { userInfo ->
-            val organization = organizationRepository.getOne(organizationPo.id!!)
+            val organization = organizationRepository.getById(organizationPo.id!!)
             if (isNotPermit(userInfo, organization.id)) {
                 throw ServerException("没有权限做此操作，请联系系统管理员")
             }
@@ -144,7 +144,7 @@ constructor(userRepository: UserRepository, private val organizationRepository: 
 
     @Throws(ServerException::class)
     fun getOrgInfo(orgId: String): OrganizationVo =
-        organizationRepository.getOne(orgId).let { item ->
+        organizationRepository.getById(orgId).let { item ->
             OrganizationVo(
                 id = item.id,
                 code = item.code,

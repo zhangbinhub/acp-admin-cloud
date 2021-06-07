@@ -78,7 +78,7 @@ constructor(
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(deployTaskPo: DeployTaskPo): DeployTask =
-        deployTaskRepository.save(copyEntity(deployTaskRepository.getOne(deployTaskPo.id!!), deployTaskPo))
+        deployTaskRepository.save(copyEntity(deployTaskRepository.getById(deployTaskPo.id!!), deployTaskPo))
 
     @Transactional
     @Throws(ServerException::class)
@@ -120,7 +120,7 @@ constructor(
                     throw ServerException("文件【${scriptFile.canonicalPath}】不存在！")
                 }
                 logAdapter.info("开始执行脚本【${scriptFile.canonicalPath}】")
-                when (CommonTools.getFileExt(scriptFile.name).toLowerCase()) {
+                when (CommonTools.getFileExt(scriptFile.name).lowercase()) {
                     "sh" -> {
                         Runtime.getRuntime().exec("chmod +x ${scriptFile.canonicalPath}").waitFor()
                         Runtime.getRuntime().exec(arrayOf("/bin/sh", "-c", scriptFile.canonicalPath), null, null)

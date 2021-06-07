@@ -1,8 +1,5 @@
 package pers.acp.admin.oauth.domain
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -156,7 +153,7 @@ constructor(
     fun doUpdate(loginNo: String, userPo: UserPo): User {
         val roleSet = roleRepository.findAllById(userPo.roleIds).toMutableSet()
         validatePermit(loginNo, userPo, roleSet, false)
-        return doSave(userRepository.getOne(userPo.id!!).apply {
+        return doSave(userRepository.getById(userPo.id!!).apply {
             var checkUser = userRepository.findByLoginNoAndIdNot(userPo.loginNo!!, this.id).orElse(null)
             if (checkUser != null) {
                 throw ServerException("登录账号已存在，请重新输入")
@@ -178,7 +175,7 @@ constructor(
     @Transactional
     @Throws(ServerException::class)
     fun doUpdatePwd(loginNo: String, userId: String): User =
-        userRepository.getOne(userId).apply {
+        userRepository.getById(userId).apply {
             (getUserInfoByLoginNo(loginNo) ?: throw ServerException("找不到当前用户信息")).let {
                 if (!isSuper(it)) {
                     if (it.levels >= this.levels) {
@@ -430,14 +427,12 @@ constructor(
                 connection.execute("incr", keyString.toByteArray())
             } as Long).also {
                 if (it == 1L) {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        stringRedisTemplate.execute { connection ->
-                            connection.execute(
-                                "pexpire",
-                                keyString.toByteArray(),
-                                86400000.toString().toByteArray()
-                            )
-                        }
+                    stringRedisTemplate.execute { connection ->
+                        connection.execute(
+                            "pexpire",
+                            keyString.toByteArray(),
+                            86400000.toString().toByteArray()
+                        )
                     }
                 }
             }
