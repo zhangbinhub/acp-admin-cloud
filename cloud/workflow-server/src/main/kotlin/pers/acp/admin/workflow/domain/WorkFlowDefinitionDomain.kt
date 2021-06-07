@@ -71,7 +71,7 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     @Throws(ServerException::class)
     fun doDeploy(id: String): WorkFlowDefinition =
-            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getOne(id).apply {
+            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(id).apply {
                 val deployment = repositoryService.createDeployment()
                         .name(name)
                         .key(processKey)
@@ -112,7 +112,7 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(workFlowDefinitionPo: WorkFlowDefinitionPo): WorkFlowDefinition =
-            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getOne(workFlowDefinitionPo.id!!).apply {
+            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(workFlowDefinitionPo.id!!).apply {
                 remarks = workFlowDefinitionPo.remarks
                 modifyTime = System.currentTimeMillis()
             })
@@ -137,7 +137,7 @@ constructor(private val logAdapter: LogAdapter,
 
     @Throws(ServerException::class)
     fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, id: String) {
-        val workFlowDefinition = workFlowDefinitionRepository.getOne(id)
+        val workFlowDefinition = workFlowDefinitionRepository.getById(id)
         val targetFile = CommonTools.contentWriteToFile(WorkFlowConstant.upLoadTempPath + "/" + System.currentTimeMillis() + "_" + workFlowDefinition.resourceName,
                 workFlowDefinition.content) ?: throw ServerException("生成文件失败")
         val foldPath = targetFile.parentFile.canonicalPath
@@ -159,7 +159,7 @@ constructor(private val logAdapter: LogAdapter,
                     val model = repositoryService.getBpmnModel(it.id)
                     val engineConfiguration = processEngine.processEngineConfiguration
                     val diagramGenerator = engineConfiguration.processDiagramGenerator
-                    diagramGenerator.generateDiagram(model, imgType.toLowerCase(), listOf(), listOf(),
+                    diagramGenerator.generateDiagram(model, imgType.lowercase(), listOf(), listOf(),
                             engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                             engineConfiguration.classLoader, 1.0, true)
                 } ?: throw ServerException("获取流程定义失败！")

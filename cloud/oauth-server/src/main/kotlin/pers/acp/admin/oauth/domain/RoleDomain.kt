@@ -94,7 +94,7 @@ constructor(userRepository: UserRepository,
     @Throws(ServerException::class)
     fun doUpdate(loginNo: String, rolePo: RolePo): Role =
             getUserInfoByLoginNo(loginNo)?.let { userInfo ->
-                val role = roleRepository.getOne(rolePo.id!!)
+                val role = roleRepository.getById(rolePo.id!!)
                 if (!isSuper(userInfo)) {
                     val currLevel = getRoleMinLevel(role.appId, userInfo)
                     if (currLevel > 0 && currLevel >= rolePo.levels) {
@@ -119,7 +119,7 @@ constructor(userRepository: UserRepository,
 
     @Throws(ServerException::class)
     fun getRoleInfo(roleId: String): RoleVo =
-            roleRepository.getOne(roleId).let { item ->
+            roleRepository.getById(roleId).let { item ->
                 RoleVo(
                         id = item.id,
                         appId = item.appId,

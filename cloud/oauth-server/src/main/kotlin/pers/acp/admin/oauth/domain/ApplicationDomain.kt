@@ -60,7 +60,7 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(applicationPo: ApplicationPo): Application =
-            applicationRepository.getOne(applicationPo.id!!).copy(
+            applicationRepository.getById(applicationPo.id!!).copy(
                     appName = applicationPo.appName!!,
                     scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
                     identify = applicationPo.identify?.trim() ?: "",
@@ -73,7 +73,7 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
     @Transactional
     @Throws(ServerException::class)
     fun doUpdateSecret(appId: String): Application =
-            applicationRepository.getOne(appId).copy(
+            applicationRepository.getById(appId).copy(
                     secret = CommonTools.getUuid32()
             ).let {
                 applicationRepository.save(it)

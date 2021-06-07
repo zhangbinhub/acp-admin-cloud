@@ -1,6 +1,7 @@
 ## 版本更新记录
 ##### v5.0.0
 > - Global
+>   - [Upgrade] 替换 kotlin 1.5 中废弃的代码
 >   - [Upgrade] 更新全局build.gradle脚本
 >   - [Upgrade] 调整server.sh启动脚本
 >   - [Upgrade] 更新所有服务配置文件，加入以下环境变量，支持docker或k8s部署
@@ -13,10 +14,23 @@
 >     - acp_nacos_namespace
 >   - [Upgrade] 所有服务数据库配置移入nacos
 >   - [Upgrade] 简化所有服务配置文件，仅保留bootstrap.yaml
+>   - [Upgrade] 所有服务均开启http2协议
+>   - [Upgrade] 升级依赖
+>     - Spring Boot 2.5.0
+>     - Acp 6.6.0
+>     - kotlin 1.5.10
 > - deploy-server
 >   - [Upgrade] 完善文件管理
+> - gateway-server
+>   - [Add] 新增RouteEnvironmentPostProcessor
+>   - [Upgrade] 修改函数式消息驱动配置，移入RouteEnvironmentPostProcessor
 > - log-server
+>   - [Add] 新增RouteLogEnvironmentPostProcessor
+>   - [Upgrade] 路由日志consumer配置移入RouteLogEnvironmentPostProcessor
 >   - [Upgrade] 修改 logback-spring.xml 配置
+> - route-server
+>   - [Add] 新增RouteUpdateEnvironmentPostProcessor
+>   - [Upgrade] 路由更新producer配置移入RouteUpdateEnvironmentPostProcessor
 ##### v4.2.4
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.0

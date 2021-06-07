@@ -11,19 +11,15 @@ import org.reactivestreams.Publisher
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.cloud.commons.util.InetUtils
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
-import org.springframework.cloud.stream.config.BindingProperties
 import org.springframework.cloud.stream.config.BindingServiceConfiguration
-import org.springframework.cloud.stream.config.BindingServiceProperties
 import org.springframework.cloud.stream.function.StreamBridge
-import org.springframework.cloud.stream.function.StreamFunctionProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
-import org.springframework.core.env.Environment
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferFactory
 import org.springframework.http.HttpHeaders
@@ -31,16 +27,12 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator
-import org.springframework.util.MimeTypeUtils
 import org.springframework.web.cors.reactive.CorsUtils
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.net.InetAddress
-import java.net.UnknownHostException
-import javax.annotation.PostConstruct
 
 /**
  * @author zhang by 17/12/2018 00:41
@@ -48,60 +40,11 @@ import javax.annotation.PostConstruct
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(BindingServiceConfiguration::class)
-class RouteConfiguration @Autowired
-constructor(
-    private val environment: Environment,
-    private val inetUtils: InetUtils,
-    private val bindingServiceProperties: BindingServiceProperties,
-    private val streamFunctionProperties: StreamFunctionProperties,
-    private val routeLogDomain: RouteLogDomain
-) {
-
+class RouteConfiguration @Autowired constructor(private val routeLogDomain: RouteLogDomain) {
     private val log = LoggerFactory.getLogger(this.javaClass)
-    private val updateRouteConsumerBindName = "${RouteConstant.UPDATE_ROUTE_INPUT}-in-0"
 
-    @PostConstruct
-    fun init() {
-        initConsumer()
-        initProducer()
-    }
-
-    private fun initConsumer() {
-        if (this.bindingServiceProperties.bindings[updateRouteConsumerBindName] == null) {
-            this.bindingServiceProperties.bindings[updateRouteConsumerBindName] = BindingProperties()
-        }
-        if (this.streamFunctionProperties.definition != null && this.streamFunctionProperties.definition.isNotBlank()) {
-            this.streamFunctionProperties.definition += ";${RouteConstant.UPDATE_ROUTE_INPUT}"
-        } else {
-            this.streamFunctionProperties.definition = RouteConstant.UPDATE_ROUTE_INPUT
-        }
-        this.bindingServiceProperties.bindings[updateRouteConsumerBindName]?.let {
-            if (it.destination == null || it.destination == updateRouteConsumerBindName) {
-                it.destination = RouteConstant.UPDATE_ROUTE_DESCRIPTION
-            }
-            it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
-            it.group = GateWayConstant.UPDATE_ROUTE_GROUP_PREFIX + try {
-                inetUtils.findFirstNonLoopbackHostInfo().ipAddress ?: InetAddress.getLocalHost().hostAddress
-            } catch (e: UnknownHostException) {
-                log.error(e.message, e)
-                "null"
-            } + "-" + environment.getProperty("server.port")
-        }
-    }
-
-    private fun initProducer() {
-        if (this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT] == null) {
-            this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT] = BindingProperties()
-        }
-        this.bindingServiceProperties.bindings[RouteConstant.ROUTE_LOG_OUTPUT]?.let {
-            if (it.destination == null || it.destination == RouteConstant.ROUTE_LOG_OUTPUT) {
-                it.destination = RouteConstant.ROUTE_LOG_DESCRIPTION
-            }
-            it.contentType = MimeTypeUtils.APPLICATION_JSON_VALUE
-        }
-    }
-
-    @Bean(RouteConstant.UPDATE_ROUTE_INPUT)
+    @Bean(RouteConstant.UPDATE_ROUTE_CONSUMER)
+    @ConditionalOnMissingBean(name = [RouteConstant.UPDATE_ROUTE_CONSUMER])
     fun updateRouteConsumer(routeRedisRepository: RouteRedisRepository) = UpdateRouteConsumer(routeRedisRepository)
 
     @Bean

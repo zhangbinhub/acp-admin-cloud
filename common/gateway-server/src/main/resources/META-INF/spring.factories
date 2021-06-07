@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  pers.acp.admin.gateway.conf.RouteEnvironmentPostProcessor

@@ -70,7 +70,7 @@ constructor(userRepository: UserRepository, private val runtimeConfigRepository:
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(runtimePo: RuntimePo): RuntimeConfig =
-            runtimeConfigRepository.save(runtimeConfigRepository.getOne(runtimePo.id!!).apply {
+            runtimeConfigRepository.save(runtimeConfigRepository.getById(runtimePo.id!!).apply {
                 value = runtimePo.value
                 enabled = runtimePo.enabled ?: true
                 configDes = runtimePo.configDes

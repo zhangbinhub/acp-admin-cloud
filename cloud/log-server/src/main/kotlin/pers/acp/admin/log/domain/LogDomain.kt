@@ -2,6 +2,7 @@ package pers.acp.admin.log.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
@@ -33,15 +34,17 @@ import javax.persistence.criteria.Predicate
 @Service
 @Transactional(readOnly = true)
 class LogDomain @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val objectMapper: ObjectMapper,
-            private val routeLogRepository: RouteLogRepository,
-            private val routeLogHistoryRepository: RouteLogHistoryRepository,
-            private val operateLogRepository: OperateLogRepository,
-            private val operateLogHistoryRepository: OperateLogHistoryRepository,
-            private val loginLogRepository: LoginLogRepository,
-            private val loginLogHistoryRepository: LoginLogHistoryRepository,
-            private val commonOauthServer: CommonOauthServer) : BaseDomain() {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val objectMapper: ObjectMapper,
+    private val routeLogRepository: RouteLogRepository,
+    private val routeLogHistoryRepository: RouteLogHistoryRepository,
+    private val operateLogRepository: OperateLogRepository,
+    private val operateLogHistoryRepository: OperateLogHistoryRepository,
+    private val loginLogRepository: LoginLogRepository,
+    private val loginLogHistoryRepository: LoginLogHistoryRepository,
+    private val commonOauthServer: CommonOauthServer
+) : BaseDomain() {
 
     /**
      * 路由消息转为对应的实体对象
@@ -51,22 +54,25 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     private fun getTokenInfo(token: String): Map<String, String> =
-            commonOauthServer.tokenInfo(token)?.let { oAuth2AccessToken ->
-                if (oAuth2AccessToken.additionalInformation.containsKey(TokenConstant.USER_INFO_ID)) {
-                    mutableMapOf<String, String>().apply {
-                        this[TokenConstant.USER_INFO_ID] = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]!!.toString()
-                        this[TokenConstant.USER_INFO_LOGIN_NO] = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
-                        this[TokenConstant.USER_INFO_NAME] = oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
-                    }
-                } else {
-                    mapOf<String, String>()
+        commonOauthServer.tokenInfo(token)?.let { oAuth2AccessToken ->
+            if (oAuth2AccessToken.additionalInformation.containsKey(TokenConstant.USER_INFO_ID)) {
+                mutableMapOf<String, String>().apply {
+                    this[TokenConstant.USER_INFO_ID] =
+                        oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_ID]!!.toString()
+                    this[TokenConstant.USER_INFO_LOGIN_NO] =
+                        oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_LOGIN_NO]!!.toString()
+                    this[TokenConstant.USER_INFO_NAME] =
+                        oAuth2AccessToken.additionalInformation[TokenConstant.USER_INFO_NAME]!!.toString()
                 }
-            } ?: mapOf()
+            } else {
+                mapOf()
+            }
+        } ?: mapOf()
 
     private fun getAppInfo(token: String): ApplicationVo = commonOauthServer.appInfo(token)
 
     @Transactional
-    suspend fun doRouteLog(routeLogMessage: RouteLogMessage, message: String) {
+    fun doRouteLog(routeLogMessage: RouteLogMessage, message: String) {
         val routeLog = messageToEntity(message, RouteLog::class.java)
         if (routeLogMessage.token != null) {
             try {
@@ -92,7 +98,9 @@ constructor(private val logAdapter: LogAdapter,
             var optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
             var count = 1
             while (optionalRouteLog.isEmpty) {
-                delay(LogConstant.ROUTE_LOG_QUERY_INTERVAL_TIME)
+                runBlocking {
+                    delay(LogConstant.ROUTE_LOG_QUERY_INTERVAL_TIME)
+                }
                 optionalRouteLog = routeLogRepository.findByLogIdAndRequestTime(routeLog.logId, routeLog.requestTime)
                 if (++count >= LogConstant.ROUTE_LOG_QUERY_MAX_NUMBER) {
                     break
@@ -117,7 +125,7 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     @Transactional
-    suspend fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
+    fun doOperateLog(routeLogMessage: RouteLogMessage, message: String) {
         try {
             val operateLog = messageToEntity(message, OperateLog::class.java)
             getAppInfo(routeLogMessage.token!!).let { app ->
@@ -155,7 +163,10 @@ constructor(private val logAdapter: LogAdapter,
                             loginLog.userId = it.getValue(TokenConstant.USER_INFO_ID)
                             loginLog.loginNo = it.getValue(TokenConstant.USER_INFO_LOGIN_NO)
                             loginLog.userName = it.getValue(TokenConstant.USER_INFO_NAME)
-                            loginLog.loginDate = CommonTools.getDateTimeString(Calculation.getCalendar(loginLog.requestTime), Calculation.DATE_FORMAT)
+                            loginLog.loginDate = CommonTools.getDateTimeString(
+                                Calculation.getCalendar(loginLog.requestTime),
+                                Calculation.DATE_FORMAT
+                            )
                             loginLogRepository.save(loginLog)
                         }
                     }
@@ -168,77 +179,125 @@ constructor(private val logAdapter: LogAdapter,
     }
 
     fun loginStatistics(beginTime: Long): List<LoginLogVo> =
-            loginLogHistoryRepository.loginStatistics(beginTime).let {
-                it.addAll(loginLogRepository.loginStatistics())
-                it.map { item ->
-                    LoginLogVo(item[0].toString(), item[1].toString(), item[2].toString(), item[3].toString().toLong())
-                }
+        loginLogHistoryRepository.loginStatistics(beginTime).let {
+            it.addAll(loginLogRepository.loginStatistics())
+            it.map { item ->
+                LoginLogVo(item[0].toString(), item[1].toString(), item[2].toString(), item[3].toString().toLong())
             }
+        }
 
-    fun doPageQuery(baseRepository: BaseRepository<out BaseLogEntity, String>, logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
-            baseRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(logQueryPo.remoteIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("remoteIp").`as`(String::class.java), "%" + logQueryPo.remoteIp + "%"))
-                }
-                if (!CommonTools.isNullStr(logQueryPo.gatewayIp)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("gatewayIp").`as`(String::class.java), "%" + logQueryPo.gatewayIp + "%"))
-                }
-                if (!CommonTools.isNullStr(logQueryPo.path)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("path").`as`(String::class.java), "%" + logQueryPo.path + "%"))
-                }
-                if (!CommonTools.isNullStr(logQueryPo.serverId)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("serverId").`as`(String::class.java), "%" + logQueryPo.serverId + "%"))
-                }
-                if (!CommonTools.isNullStr(logQueryPo.clientName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("clientName").`as`(String::class.java), "%" + logQueryPo.clientName + "%"))
-                }
-                if (!CommonTools.isNullStr(logQueryPo.userName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("userName").`as`(String::class.java), "%" + logQueryPo.userName + "%"))
-                }
-                if (logQueryPo.startTime != null) {
-                    predicateList.add(criteriaBuilder.ge(root.get<Any>("requestTime").`as`(Long::class.java), logQueryPo.startTime))
-                }
-                if (logQueryPo.endTime != null) {
-                    predicateList.add(criteriaBuilder.le(root.get<Any>("requestTime").`as`(Long::class.java), logQueryPo.endTime))
-                }
-                if (logQueryPo.responseStatus != null) {
-                    predicateList.add(criteriaBuilder.equal(root.get<Any>("responseStatus").`as`(Long::class.java), logQueryPo.responseStatus))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(logQueryPo.queryParam!!))
+    fun doPageQuery(
+        baseRepository: BaseRepository<out BaseLogEntity, String>,
+        logQueryPo: LogQueryPo
+    ): Page<out BaseLogEntity> =
+        baseRepository.findAll({ root, _, criteriaBuilder ->
+            val predicateList: MutableList<Predicate> = mutableListOf()
+            if (!CommonTools.isNullStr(logQueryPo.remoteIp)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("remoteIp").`as`(String::class.java),
+                        "%" + logQueryPo.remoteIp + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(logQueryPo.gatewayIp)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("gatewayIp").`as`(String::class.java),
+                        "%" + logQueryPo.gatewayIp + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(logQueryPo.path)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("path").`as`(String::class.java),
+                        "%" + logQueryPo.path + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(logQueryPo.serverId)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("serverId").`as`(String::class.java),
+                        "%" + logQueryPo.serverId + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(logQueryPo.clientName)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("clientName").`as`(String::class.java),
+                        "%" + logQueryPo.clientName + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(logQueryPo.userName)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("userName").`as`(String::class.java),
+                        "%" + logQueryPo.userName + "%"
+                    )
+                )
+            }
+            if (logQueryPo.startTime != null) {
+                predicateList.add(
+                    criteriaBuilder.ge(
+                        root.get<Any>("requestTime").`as`(Long::class.java),
+                        logQueryPo.startTime
+                    )
+                )
+            }
+            if (logQueryPo.endTime != null) {
+                predicateList.add(
+                    criteriaBuilder.le(
+                        root.get<Any>("requestTime").`as`(Long::class.java),
+                        logQueryPo.endTime
+                    )
+                )
+            }
+            if (logQueryPo.responseStatus != null) {
+                predicateList.add(
+                    criteriaBuilder.equal(
+                        root.get<Any>("responseStatus").`as`(Long::class.java),
+                        logQueryPo.responseStatus
+                    )
+                )
+            }
+            criteriaBuilder.and(*predicateList.toTypedArray())
+        }, buildPageRequest(logQueryPo.queryParam!!))
 
     fun doQueryRouteLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
-            logQueryPo.let {
-                if (it.history) {
-                    routeLogHistoryRepository
-                } else {
-                    routeLogRepository
-                }
-            }.let {
-                doPageQuery(it, logQueryPo)
+        logQueryPo.let {
+            if (it.history) {
+                routeLogHistoryRepository
+            } else {
+                routeLogRepository
             }
+        }.let {
+            doPageQuery(it, logQueryPo)
+        }
 
     fun doQueryOperateLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
-            logQueryPo.let {
-                if (it.history) {
-                    operateLogHistoryRepository
-                } else {
-                    operateLogRepository
-                }
-            }.let {
-                doPageQuery(it, logQueryPo)
+        logQueryPo.let {
+            if (it.history) {
+                operateLogHistoryRepository
+            } else {
+                operateLogRepository
             }
+        }.let {
+            doPageQuery(it, logQueryPo)
+        }
 
     fun doQueryLoginLog(logQueryPo: LogQueryPo): Page<out BaseLogEntity> =
-            logQueryPo.let {
-                if (it.history) {
-                    loginLogHistoryRepository
-                } else {
-                    loginLogRepository
-                }
-            }.let {
-                doPageQuery(it, logQueryPo)
+        logQueryPo.let {
+            if (it.history) {
+                loginLogHistoryRepository
+            } else {
+                loginLogRepository
             }
+        }.let {
+            doPageQuery(it, logQueryPo)
+        }
 
 }

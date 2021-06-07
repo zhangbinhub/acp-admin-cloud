@@ -25,7 +25,7 @@ constructor(
 ) : BaseDomain() {
     @Throws(ServerException::class)
     private fun setupPermission(file: File) {
-        System.getProperty("os.name", "").toLowerCase().apply {
+        System.getProperty("os.name", "").lowercase().apply {
             if (!this.startsWith("win")) {
                 Runtime.getRuntime().exec("chmod -R 775 ${file.canonicalPath}").waitFor()
             }

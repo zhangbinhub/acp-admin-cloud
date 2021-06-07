@@ -2,8 +2,8 @@ package pers.acp.admin.log.consumer
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.domain.LogDomain
@@ -31,22 +31,24 @@ class RouteLogConsumer(
                 override fun executeFun(): Any {
                     try {
                         objectMapper.readValue(message, RouteLogMessage::class.java)?.also {
-                            if (logServerCustomerConfiguration.routeLogEnabled) {
-                                GlobalScope.launch(Dispatchers.IO) {
-                                    logDomain.doRouteLog(it, message)
-                                }
-                            }
-                            it.token?.apply {
-                                if (it.responseStatus != null) {
-                                    if (logServerCustomerConfiguration.operateLogEnabled) {
-                                        GlobalScope.launch(Dispatchers.IO) {
-                                            logDomain.doOperateLog(it, message)
-                                        }
+                            runBlocking {
+                                if (logServerCustomerConfiguration.routeLogEnabled) {
+                                    launch(Dispatchers.IO) {
+                                        logDomain.doRouteLog(it, message)
                                     }
-                                    if (it.responseStatus == HttpStatus.OK.value()) {
-                                        if (it.applyToken) {
-                                            GlobalScope.launch(Dispatchers.IO) {
-                                                logDomain.doLoginLog(it, message)
+                                }
+                                it.token?.apply {
+                                    if (it.responseStatus != null) {
+                                        if (logServerCustomerConfiguration.operateLogEnabled) {
+                                            launch(Dispatchers.IO) {
+                                                logDomain.doOperateLog(it, message)
+                                            }
+                                        }
+                                        if (it.responseStatus == HttpStatus.OK.value()) {
+                                            if (it.applyToken) {
+                                                launch(Dispatchers.IO) {
+                                                    logDomain.doLoginLog(it, message)
+                                                }
                                             }
                                         }
                                     }

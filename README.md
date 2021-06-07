@@ -5,8 +5,8 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v5.0.0](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.4.5](https://projects.spring.io/spring-boot)
-- [Acp 6.5.4](https://github.com/zhangbin1010/acp)
+- [Spring Boot 2.5.0](https://projects.spring.io/spring-boot)
+- [Acp 6.6.0](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
@@ -68,7 +68,7 @@
 ## 一、环境要求
 - jdk 11
 - gradle 6.5+
-- kotlin 1.4+
+- kotlin 1.5+
 
 ## 二、gradle 配置及使用
 ### （一）配置文件

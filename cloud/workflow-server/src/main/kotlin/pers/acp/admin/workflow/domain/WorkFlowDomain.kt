@@ -711,7 +711,7 @@ constructor(private val logAdapter: LogAdapter,
                 val model = repositoryService.getBpmnModel(processDefinitionId)
                 val engineConfiguration = processEngine.processEngineConfiguration
                 val diagramGenerator = engineConfiguration.processDiagramGenerator
-                diagramGenerator.generateDiagram(model, imgType.toLowerCase(), activityIdList, flowIdList,
+                diagramGenerator.generateDiagram(model, imgType.lowercase(), activityIdList, flowIdList,
                         engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
                         engineConfiguration.classLoader, 1.0, true)
             } catch (e: Exception) {
