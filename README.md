@@ -144,7 +144,7 @@ ext {
 | ./server.sh restart   | 重启应用                |
 
 ## 五、基础中间件环境搭建
-基础中间件包括：redis、zookeeper、kafka-manager、elasticsearch、kibana、logstash、zoonavigator-api、zoonavigator-web、prometheus、grafana、setup_grafana_datasource
+基础中间件包括：redis、zookeeper、kafka、zipkin-server、zipkin-dependencies、kafka-manager、elasticsearch、kibana、logstash、zoonavigator-api、zoonavigator-web、prometheus、grafana、setup_grafana_datasource
 > - 启动服务
 > 
 > 命令模式进入dockerfile目录，执行启动命令
@@ -185,11 +185,6 @@ http://127.0.0.1:5601
 > - 控制台 http://ip:port/nacos
 > - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
-
-### （二）Kafka
-> - 由于最新版kafka需要绑定访问IP，部署于docker中时总是出现外部无法访问的情况（暂时没有解决方案），因此需要单独安装部署
-> - 详情请参考[官网](http://kafka.apache.org/)
-> - 使用[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)中部署的zookeeper
 
 ### （三）Zipkin
 > - 配合 Spring Cloud Sleuth 进行服务链路追踪分析、统计，Zipkin Server 需要自行安装部署，详情请参考[官网](https://zipkin.io/)

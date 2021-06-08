@@ -15,6 +15,7 @@
 >   - [Upgrade] 所有服务数据库配置移入nacos
 >   - [Upgrade] 简化所有服务配置文件，仅保留bootstrap.yaml
 >   - [Upgrade] 所有服务均开启http2协议
+>   - [Upgrade] 完善docker-compose容器列表，启用zipkin链路监控和elk日志收集
 >   - [Upgrade] 升级依赖
 >     - Spring Boot 2.5.0
 >     - Acp 6.6.0

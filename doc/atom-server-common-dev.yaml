@@ -19,6 +19,9 @@ spring:
     url: redis://127.0.0.1:6379
   kafka:
     bootstrap-servers: ${spring.cloud.stream.kafka.binder.brokers}
+  zipkin:
+    sender:
+      type: kafka
   cloud:
     loadbalancer:
       cache:
