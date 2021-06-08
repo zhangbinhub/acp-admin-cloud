@@ -1,8 +1,7 @@
 version: "3.1"
 services:
-
   redis:
-    image: redis
+    image: redis:6.0.14
     container_name: redis
     restart: always
     ports:
@@ -12,7 +11,7 @@ services:
   #    command: redis-server --requirepass ${pwd} --notify-keyspace-events Eglx
 
   zookeeper:
-    image: zookeeper
+    image: zookeeper:3.7.0
     hostname: zookeeper
     container_name: zookeeper
     restart: always
@@ -24,8 +23,34 @@ services:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181
 
+  kafka0:
+    image: wurstmeister/kafka:2.13-2.7.0
+    hostname: kafka0
+    container_name: kafka0
+    restart: always
+    ports:
+      - "9092:9092"
+    networks:
+      - elk
+    environment:
+      # add the entry "127.0.0.1    kafka0" to your /etc/hosts file
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://172.23.240.1:9092"
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 0
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      #      KAFKA_HEAP_OPTS: "-Xmx1G -Xms1G"
+      EXTRA_ARGS: "-name kafkaServer -loggc"
+      #      JMX_PORT: 9999
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
   kafka-manager:
     image: sheepkiller/kafka-manager
+    container_name: kafka-manager
     restart: always
     networks:
       - elk
@@ -38,59 +63,87 @@ services:
     depends_on:
       - zookeeper
 
-  ########################################################################################################################
-  ## 以下是可选监控组建，暂时注释，本地资源不够了，具备条件调试时打开
-#  elasticsearch:
-#    image: elasticsearch:7.2.0
-#    container_name: elasticsearch
-#    hostname: elasticsearch
-#    restart: always
-#    networks:
-#      - elk
-#    ports:
-#      - 9200:9200
-#      - 9300:9300
-#    environment:
-#      - TZ='Asia/Shanghai'
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    volumes:
-#      - ./es1/elasticsearch/data:/usr/share/elasticsearch/data
-#      - ./es1/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-#
-#  kibana:
-#    image: kibana:7.2.0
-#    container_name: kibana
-#    restart: always
-#    networks:
-#      - elk
-#    ports:
-#      - "5601:5601"
-#    environment:
-#      ELASTICSEARCH_URL: http://elasticsearch:9200
-#    depends_on:
-#      - elasticsearch
-#
-#  logstash:
-#    image: logstash:7.2.0
-#    container_name: logstash
-#    restart: always
-#    networks:
-#      - elk
-#    ports:
-#      - "9601:9601"
-#    volumes:
-#      - ./logstash/config-dir:/config-dir
-#    command: logstash -f /config-dir
-#    environment:
-#      XPACK_MONITORING_ENABLED: "true"
-#      XPACK_MONITORING_ELASTICSEARCH_URL: http://elasticsearch:9200
-#    depends_on:
-#      - elasticsearch
-#
+  zipkin-server:
+    image: openzipkin/zipkin:2.23.2
+    container_name: zipkin-server
+    restart: always
+    networks:
+      - elk
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka0:9092
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=elasticsearch:9200
+    ports:
+      - "9411:9411"
+    depends_on:
+      - elasticsearch
+      - kafka0
+
+  zipkin-dependencies:
+    image: openzipkin/zipkin-dependencies:2.6.3
+    container_name: zipkin-dependencies
+    restart: always
+    networks:
+      - elk
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: elasticsearch:7.12.0
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: always
+    networks:
+      - elk
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - TZ='Asia/Shanghai'
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es1/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./es1/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+  kibana:
+    image: kibana:7.12.0
+    container_name: kibana
+    restart: always
+    networks:
+      - elk
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: logstash:7.12.0
+    container_name: logstash
+    restart: always
+    networks:
+      - elk
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ./logstash/config-dir:/config-dir
+    command: logstash -f /config-dir
+    environment:
+      XPACK_MONITORING_ENABLED: "true"
+      XPACK_MONITORING_ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+      - kafka0
+
 #  zoonavigator-api:
 #    image: docker.io/elkozmon/zoonavigator-api
 #    environment:
