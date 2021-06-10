@@ -73,10 +73,10 @@ constructor(
     @PostMapping(value = [DeployApi.file], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun uploadFile(
-        @RequestPart(value = "路径", required = false)
+        @ApiParam(value = "路径", required = false)
         @RequestParam(required = false) path: String?,
-        @RequestPart(value = "文件", required = true)
-        @RequestParam file: MultipartFile
+        @ApiParam(value = "文件", required = true)
+        @RequestPart file: MultipartFile
     ): ResponseEntity<FileVo> {
         if (file.isEmpty) {
             throw ServerException("请选择需要上传的文件")
