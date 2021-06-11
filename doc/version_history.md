@@ -17,7 +17,7 @@
 >   - [Upgrade] 所有服务均开启http2协议
 >   - [Upgrade] 完善docker-compose容器列表，启用zipkin链路监控和elk日志收集
 >   - [Upgrade] 升级依赖
->     - Spring Boot 2.5.0
+>     - Spring Boot 2.5.1
 >     - Acp 6.6.0
 >     - kotlin 1.5.10
 > - acp-admin-cloud-dependencies
