@@ -20,6 +20,8 @@
 >     - Spring Boot 2.5.1
 >     - Acp 6.6.0
 >     - kotlin 1.5.10
+>     - jupiter 5.7.2
+>     - junit-platform 1.7.2
 > - acp-admin-cloud-dependencies
 >   - [Upgrade] 优化权限验证日志
 > - deploy-server
