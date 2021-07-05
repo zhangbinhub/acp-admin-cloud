@@ -1,4 +1,9 @@
 ## 版本更新记录
+##### v5.1.0
+> - Global
+>   - [Upgrade] 升级 Gradle 至 7.1.1
+>   - [Upgrade] 升级依赖
+>     - Acp 6.7.0
 ##### v5.0.0
 > - Global
 >   - [Upgrade] 替换 kotlin 1.5 中废弃的代码
