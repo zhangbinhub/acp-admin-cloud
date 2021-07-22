@@ -185,7 +185,7 @@ constructor(
                 this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
                 this.lastUpdatePasswordTime = null
                 userRepository.save(this)
-                removeToken(loginNo)
+                removeToken(this.loginNo)
             }
         }
 
