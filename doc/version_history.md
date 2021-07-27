@@ -1,4 +1,7 @@
 ## 版本更新记录
+##### v5.1.x
+> - oauth-server
+>   - [Fix] 重置密码后，删除指定用户的token
 ##### v5.1.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.1.1
