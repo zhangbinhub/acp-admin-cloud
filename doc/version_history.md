@@ -1,12 +1,15 @@
 ## 版本更新记录
-##### v5.1.x
-> - oauth-server
->   - [Fix] 重置密码后，删除指定用户的token
 ##### v5.1.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.1.1
 >   - [Upgrade] 升级依赖
 >     - Acp 6.7.0
+>     - kotlin 1.5.21
+>     - Spring Boot 2.5.3
+>     - Spring Boot Admin 2.4.3
+>     - kotlin coroutines 1.5.1
+> - oauth-server
+>   - [Fix] 重置密码后，删除指定用户的token
 ##### v5.0.0
 > - Global
 >   - [Upgrade] 替换 kotlin 1.5 中废弃的代码
