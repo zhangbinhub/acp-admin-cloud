@@ -10,6 +10,8 @@
 >     - kotlin coroutines 1.5.1
 > - oauth-server
 >   - [Fix] 重置密码后，删除指定用户的token
+> - deploy-server
+>   - [Upgrade] 部署任务增加参数支持：提供参数文件
 ##### v5.0.0
 > - Global
 >   - [Upgrade] 替换 kotlin 1.5 中废弃的代码

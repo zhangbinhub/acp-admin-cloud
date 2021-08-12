@@ -16,4 +16,10 @@ class DeployServerCustomerConfiguration {
 
     @Value("\${deploy-server.script-path}")
     var scriptPath: String = ""
+
+    @Value("\${deploy-server.param-character-prefix}")
+    var paramCharacterPrefix: String = ""
+
+    @Value("\${deploy-server.param-separator}")
+    var paramSeparator: String = ","
 }

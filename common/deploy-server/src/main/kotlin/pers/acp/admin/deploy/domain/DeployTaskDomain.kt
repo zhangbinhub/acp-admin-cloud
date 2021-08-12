@@ -19,9 +19,9 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 import pers.acp.spring.cloud.component.CloudTools
 import org.springframework.core.io.FileSystemResource
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
-import java.io.File
-import java.io.InputStreamReader
-import java.io.LineNumberReader
+import java.io.*
+import java.nio.charset.Charset
+import java.util.*
 import javax.persistence.criteria.Predicate
 import javax.sql.DataSource
 
@@ -46,18 +46,56 @@ constructor(
         }
     }
 
+    private fun formatFileName(srcFileName: String): String =
+        srcFileName.replace("/", File.separator).replace("\\", File.separator).let { targetFileName ->
+            val index = targetFileName.lastIndexOf(File.separator)
+            if (index > -1) {
+                targetFileName.substring(index + 1)
+            } else {
+                targetFileName
+            }
+        }.replace(Regex("[\\\\<>/|:\"*?]"), "")
+
+    @Throws(ServerException::class)
+    private fun getParamList(fold: File, paramFileName: String?): List<List<String>> =
+        if (!CommonTools.isNullStr(paramFileName)) {
+            val paramFile = File("${fold.canonicalPath}${File.separator}${paramFileName}")
+            if (!paramFile.exists()) {
+                throw ServerException("文件【${paramFile.canonicalPath}】不存在！")
+            }
+            var sc: Scanner? = null
+            try {
+                sc = Scanner(FileInputStream(paramFile), Charset.forName(CommonTools.getDefaultCharset()))
+                mutableListOf<List<String>>().apply {
+                    while (sc.hasNextLine()) {
+                        this.add(sc.nextLine().split(deployServerCustomerConfiguration.paramSeparator))
+                    }
+                }
+            } catch (e: Exception) {
+                throw ServerException("参数文件【${paramFile.canonicalPath}】解析失败:${e.message}")
+            } finally {
+                try {
+                    sc?.close()
+                } catch (e: IOException) {
+                    throw ServerException("参数文件【${paramFile.canonicalPath}】解析失败:${e.message}")
+                }
+            }
+        } else {
+            listOf()
+        }
+
     private fun copyEntity(deployTask: DeployTask, deployTaskPo: DeployTaskPo): DeployTask =
         deployTask.copy(
             name = deployTaskPo.name!!,
             serverIpRegex = deployTaskPo.serverIpRegex,
             remarks = deployTaskPo.remarks
         ).apply {
-            var targetFileName = deployTaskPo.scriptFile!!.replace("/", File.separator).replace("\\", File.separator)
-            val index = targetFileName.lastIndexOf(File.separator)
-            if (index > -1) {
-                targetFileName = targetFileName.substring(index + 1)
+            this.scriptFile = formatFileName(deployTaskPo.scriptFile!!)
+            if (!CommonTools.isNullStr(deployTaskPo.paramFile)) {
+                this.paramFile = formatFileName(deployTaskPo.paramFile!!)
+            } else {
+                this.paramFile = deployTaskPo.paramFile
             }
-            this.scriptFile = targetFileName.replace(Regex("[\\\\<>/|:\"*?]"), "")
             commonOauthServer.tokenInfo()?.also { oAuth2AccessToken ->
                 val nowTime = System.currentTimeMillis()
                 if (this.createTime == 0L) {
@@ -120,26 +158,17 @@ constructor(
                     throw ServerException("文件【${scriptFile.canonicalPath}】不存在！")
                 }
                 logAdapter.info("开始执行脚本【${scriptFile.canonicalPath}】")
-                when (CommonTools.getFileExt(scriptFile.name).lowercase()) {
-                    "sh" -> {
-                        Runtime.getRuntime().exec("chmod +x ${scriptFile.canonicalPath}").waitFor()
-                        Runtime.getRuntime().exec(arrayOf("/bin/sh", "-c", scriptFile.canonicalPath), null, null)
-                            .apply {
-                                executeScriptFile(this, scriptFile)
-                            }
+                val paramList = getParamList(fold, deployTask.paramFile)
+                if (paramList.isNotEmpty()) {
+                    paramList.forEachIndexed { index, list ->
+                        val targetScriptFile = buildTargetScriptFile(index, list, scriptFile)
+                        logAdapter.info("开始第${index + 1}/${paramList.size}次执行脚本【${scriptFile.canonicalPath}】")
+                        logAdapter.info("参数：${list.joinToString(separator = ",")}")
+                        logAdapter.info("目标脚本：${targetScriptFile.canonicalPath}")
+                        executeScriptFile(targetScriptFile)
                     }
-                    "bat" -> {
-                        Runtime.getRuntime().exec(scriptFile.canonicalPath)
-                    }
-                    "sql" -> {
-                        ResourceDatabasePopulator().apply {
-                            this.addScript(FileSystemResource(scriptFile))
-                            this.execute(dataSource)
-                        }
-                    }
-                    else -> {
-                        throw ServerException("脚本【${scriptFile.canonicalPath}】不能执行，仅支持bat/sh/sql文件")
-                    }
+                } else {
+                    executeScriptFile(scriptFile)
                 }
             } catch (e: Exception) {
                 throw ServerException("脚本【${scriptFile.canonicalPath}】${e.message}")
@@ -148,17 +177,73 @@ constructor(
     } ?: throw ServerException("找不到对应的部署任务【$id】")
 
     /**
+     * 根据参数创建新的脚本文件
+     * @param paramIndex 参数索引
+     * @param paramList 参数值列表
+     * @param scriptFile 原脚本文件
+     * @return 可执行的目标脚本文件
+     */
+    @Throws(ServerException::class)
+    private fun buildTargetScriptFile(paramIndex: Int, paramList: List<String>, scriptFile: File): File =
+        scriptFile.name.let { scriptFileName ->
+            val fileName = scriptFileName.substring(0, scriptFileName.lastIndexOf("."))
+            val extName = scriptFileName.substring(scriptFileName.lastIndexOf(".") + 1)
+            "$fileName$paramIndex.$extName"
+        }.let { fileName ->
+            File("${scriptFile.parentFile.canonicalPath}${File.separator}run${File.separator}$fileName").apply {
+                if (!this.parentFile.exists()) {
+                    if (!this.parentFile.mkdirs()) {
+                        logAdapter.error("创建目录失败: " + this.canonicalPath)
+                        throw ServerException("创建目录失败！")
+                    }
+                }
+            }
+        }.apply {
+            CommonTools.getFileContentForText(scriptFile.canonicalPath)?.also { scriptContent ->
+                var targetScriptContent = scriptContent
+                paramList.forEachIndexed { index, param ->
+                    targetScriptContent = targetScriptContent.replace(
+                        "${deployServerCustomerConfiguration.paramCharacterPrefix}$index",
+                        param
+                    )
+                }
+                CommonTools.contentWriteToFile(this, targetScriptContent)
+            } ?: throw ServerException("脚本文件【${scriptFile.canonicalPath}】内容为空！")
+        }
+
+    /**
      * 执行脚本文件
      */
-    private fun executeScriptFile(process: Process, scriptFile: File) {
-        val reader = InputStreamReader(process.inputStream)
-        val input = LineNumberReader(reader)
-        var line: String?
-        while (input.readLine().also { line = it } != null) {
-            logAdapter.info("${scriptFile.name} >>>> $line")
+    @Throws(ServerException::class)
+    private fun executeScriptFile(scriptFile: File) {
+        when (CommonTools.getFileExt(scriptFile.name).lowercase()) {
+            "sh" -> {
+                Runtime.getRuntime().exec("chmod +x ${scriptFile.canonicalPath}").waitFor()
+                Runtime.getRuntime().exec(arrayOf("/bin/sh", "-c", scriptFile.canonicalPath), null, null)
+                    .apply {
+                        val reader = InputStreamReader(this.inputStream)
+                        val input = LineNumberReader(reader)
+                        var line: String?
+                        while (input.readLine().also { line = it } != null) {
+                            logAdapter.info("${scriptFile.name} >>>> $line")
+                        }
+                        this.waitFor()
+                        input.close()
+                    }
+            }
+            "bat" -> {
+                Runtime.getRuntime().exec(scriptFile.canonicalPath)
+            }
+            "sql" -> {
+                ResourceDatabasePopulator().apply {
+                    this.addScript(FileSystemResource(scriptFile))
+                    this.execute(dataSource)
+                }
+            }
+            else -> {
+                throw ServerException("脚本【${scriptFile.canonicalPath}】不能执行，仅支持.bat/.sh/.sql文件")
+            }
         }
-        process.waitFor()
-        input.close()
     }
 
     fun doQuery(deployTaskQueryPo: DeployTaskQueryPo): Page<DeployTask> =
