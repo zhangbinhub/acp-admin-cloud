@@ -1,7 +1,7 @@
 ## 版本更新记录
 ##### v5.1.0
 > - Global
->   - [Upgrade] 升级 Gradle 至 7.1.1
+>   - [Upgrade] 升级 Gradle 至 7.2
 >   - [Upgrade] 升级依赖
 >     - Acp 6.7.0
 >     - kotlin 1.5.21
