@@ -68,6 +68,7 @@ spring:
       pool-name: acp-cloud-admin
       max-lifetime: 480000
       idle-timeout: 300000
+      connection-timeout: 10000
       read-only: false
 # ===============================
 # = Feign Config
