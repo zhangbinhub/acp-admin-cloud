@@ -1,5 +1,7 @@
 ## 版本更新记录
 ##### v5.1.1
+> - Global
+>   - [Upgrade] hikari连接池配置中增加connection-timeout
 ##### v5.1.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.2
