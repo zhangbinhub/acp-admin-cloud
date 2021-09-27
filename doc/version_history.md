@@ -2,6 +2,11 @@
 ##### v5.1.1
 > - Global
 >   - [Upgrade] hikari连接池配置中增加connection-timeout
+>   - [Upgrade] 升级依赖
+>     - Acp 6.7.1
+>     - kotlin 1.5.31
+>     - Spring Boot 2.5.5
+>     - kotlin coroutines 1.5.2
 ##### v5.1.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.2
