@@ -5,8 +5,8 @@
 - 该项目是前后端分离架构中的“后端部分”。前端工程[v5.1.1](https://github.com/zhangbin1010/acp-admin)
 
 ## 相关组件版本
-- [Spring Boot 2.5.4](https://projects.spring.io/spring-boot)
-- [Acp 6.7.0](https://github.com/zhangbin1010/acp)
+- [Spring Boot 2.5.5](https://projects.spring.io/spring-boot)
+- [Acp 6.7.1](https://github.com/zhangbin1010/acp)
 
 ## 技术栈
 - flowable
