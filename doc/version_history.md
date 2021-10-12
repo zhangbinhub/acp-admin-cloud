@@ -1,12 +1,14 @@
 ## 版本更新记录
 ##### v5.1.1
-> - Global
->   - [Upgrade] hikari连接池配置中增加connection-timeout
->   - [Upgrade] 升级依赖
->     - Acp 6.7.1
->     - kotlin 1.5.31
->     - Spring Boot 2.5.5
->     - kotlin coroutines 1.5.2
+- Global
+  - [Upgrade] hikari连接池配置中增加connection-timeout
+  - [Upgrade] 升级依赖
+    - Acp 6.7.1
+    - kotlin 1.5.31
+    - Spring Boot 2.5.5
+    - kotlin coroutines 1.5.2
+- oauth-server
+  - [Upgrade] 增加用户密码加解密工具类
 ##### v5.1.0
 > - Global
 >   - [Upgrade] 升级 Gradle 至 7.2
