@@ -20,9 +20,9 @@ import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.common.vo.UserVo
+import pers.acp.admin.oauth.component.UserPasswordEncrypt
 import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.core.CommonTools
-import pers.acp.core.security.Sha256Encrypt
 import pers.acp.spring.boot.exceptions.ServerException
 
 import javax.persistence.criteria.JoinType
@@ -38,6 +38,7 @@ import java.util.*
 class UserDomain @Autowired
 constructor(
     userRepository: UserRepository,
+    private val userPasswordEncrypt: UserPasswordEncrypt,
     private val stringRedisTemplate: StringRedisTemplate,
     private val applicationRepository: ApplicationRepository,
     private val organizationRepository: OrganizationRepository,
@@ -142,7 +143,7 @@ constructor(
         return doSave(
             User(
                 loginNo = userPo.loginNo!!,
-                password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!),
+                password = userPasswordEncrypt.encrypt(userPo.loginNo!!, DEFAULT_PASSWORD),
                 roleSet = roleSet
             ), userPo
         )
@@ -164,7 +165,7 @@ constructor(
             }
             if (this.loginNo != userPo.loginNo) {
                 this.loginNo = userPo.loginNo!!
-                this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + userPo.loginNo!!)
+                this.password = userPasswordEncrypt.encrypt(userPo.loginNo!!, DEFAULT_PASSWORD)
                 this.lastUpdatePasswordTime = null
                 removeToken(userPo.loginNo!!)
             }
@@ -182,7 +183,7 @@ constructor(
                         throw ServerException("不能修改级别比自身大或相等的用户信息")
                     }
                 }
-                this.password = Sha256Encrypt.encrypt(Sha256Encrypt.encrypt(DEFAULT_PASSWORD) + this.loginNo)
+                this.password = userPasswordEncrypt.encrypt(this.loginNo, DEFAULT_PASSWORD)
                 this.lastUpdatePasswordTime = null
                 userRepository.save(this)
                 removeToken(this.loginNo)
