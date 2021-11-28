@@ -1,5 +1,6 @@
 package pers.acp.admin.common.hystrix
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import pers.acp.admin.common.base.BaseFeignHystrix
@@ -12,13 +13,16 @@ import pers.acp.spring.boot.interfaces.LogAdapter
  * @since JDK 11
  */
 class CommonOauthServerHystrix
-constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAdapter) {
+constructor(logAdapter: LogAdapter, objectMapper: ObjectMapper) :
+    BaseFeignHystrix<CommonOauthServer>(logAdapter, objectMapper) {
     override fun create(cause: Throwable?): CommonOauthServer {
-        if (cause is FeignException.Unauthorized || cause is FeignException.Forbidden) {
+        val message = if (cause is FeignException.Unauthorized || cause is FeignException.Forbidden) {
             logAdapter.error("token无效")
+            "token无效"
         } else {
             val errMsg = "调用 oauth2-server 异常: " + cause?.message
             logAdapter.error(errMsg)
+            getErrorMessage(cause)
         }
         return object : CommonOauthServer {
             override fun appInfo(token: String): ApplicationVo {
@@ -85,6 +89,12 @@ constructor(logAdapter: LogAdapter) : BaseFeignHystrix<CommonOauthServer>(logAda
                 val errMsg = "找不到对应的用户详细信息"
                 logAdapter.error(errMsg)
                 return null
+            }
+
+            override fun disableUser(loginNo: String): InnerInfoVo {
+                val errMsg = "禁用用户【$loginNo】失败：$message"
+                logAdapter.error(errMsg)
+                return InnerInfoVo(success = false, message = errMsg)
             }
 
             override fun findUserById(id: String): UserVo {

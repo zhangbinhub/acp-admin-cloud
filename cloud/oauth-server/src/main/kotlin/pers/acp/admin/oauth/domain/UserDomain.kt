@@ -209,6 +209,14 @@ constructor(
         userList.forEach { item -> removeToken(item.loginNo) }
     }
 
+    @Transactional
+    @Throws(ServerException::class)
+    fun disableUser(loginNo: String) = getUserInfoByLoginNo(loginNo, true)?.apply {
+        this.enabled = false
+    }?.apply {
+        doSaveUser(this)
+    } ?: throw ServerException("找不到用户信息【$loginNo】")
+
     private fun removeToken(loginNo: String) {
         applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
             .forEach { application -> securityTokenService.removeTokensByAppIdAndLoginNo(application.id, loginNo) }
