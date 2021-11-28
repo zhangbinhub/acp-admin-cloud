@@ -35,6 +35,7 @@ object OauthApi {
     const val moduleFunc = "/module-func"
     const val authentication = "/authentication"
     const val currUser = "/user-info"
+    const val disableUser = "/user-disable"
     const val appInfo = "/application"
     const val currOrgUserList = "/org-user-list"
     const val userList = "/user-list"

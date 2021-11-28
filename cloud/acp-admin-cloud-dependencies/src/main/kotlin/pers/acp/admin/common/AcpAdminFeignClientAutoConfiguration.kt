@@ -1,5 +1,6 @@
 package pers.acp.admin.common
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration
 import org.springframework.cloud.openfeign.EnableFeignClients
@@ -18,10 +19,10 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 @AutoConfigureAfter(BlockingLoadBalancerClientAutoConfiguration::class)
 class AcpAdminFeignClientAutoConfiguration {
     @Bean
-    fun commonOauthServerHystrix(logAdapter: LogAdapter): CommonOauthServerHystrix =
-            CommonOauthServerHystrix(logAdapter)
+    fun commonOauthServerHystrix(logAdapter: LogAdapter, objectMapper: ObjectMapper): CommonOauthServerHystrix =
+        CommonOauthServerHystrix(logAdapter, objectMapper)
 
     @Bean
-    fun workFlowServerHystrix(logAdapter: LogAdapter): WorkFlowServerHystrix =
-            WorkFlowServerHystrix(logAdapter)
+    fun workFlowServerHystrix(logAdapter: LogAdapter, objectMapper: ObjectMapper): WorkFlowServerHystrix =
+        WorkFlowServerHystrix(logAdapter, objectMapper)
 }

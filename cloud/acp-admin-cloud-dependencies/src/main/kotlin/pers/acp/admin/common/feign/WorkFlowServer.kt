@@ -9,7 +9,7 @@ import pers.acp.admin.common.hystrix.WorkFlowServerHystrix
 import pers.acp.admin.common.po.ProcessTerminationPo
 import pers.acp.admin.common.po.ProcessHandlingPo
 import pers.acp.admin.common.po.ProcessStartPo
-import pers.acp.admin.common.vo.InfoVo
+import pers.acp.admin.common.vo.InnerInfoVo
 import pers.acp.admin.common.vo.ProcessHistoryActivityVo
 import pers.acp.admin.common.vo.ProcessInstanceVo
 import pers.acp.admin.common.vo.ProcessTaskVo
@@ -23,90 +23,129 @@ interface WorkFlowServer {
     /**
      * 启动流程
      */
-    @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun startInner(@RequestBody processStartPo: ProcessStartPo): InfoVo
+    @PutMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.start],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun startInner(@RequestBody processStartPo: ProcessStartPo): InnerInfoVo
 
     /**
      * 强制终止流程实例
      */
-    @DeleteMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun terminationInner(@RequestBody processTerminationPo: ProcessTerminationPo): InfoVo
+    @DeleteMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.termination],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun terminationInner(@RequestBody processTerminationPo: ProcessTerminationPo): InnerInfoVo
 
     /**
      * 启动流程
      */
-    @PutMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.start + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun startByUser(@PathVariable userId: String, @RequestBody processStartPo: ProcessStartPo): InfoVo
+    @PutMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.start + "/{userId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun startByUser(@PathVariable userId: String, @RequestBody processStartPo: ProcessStartPo): InnerInfoVo
 
     /**
      * 流程处理
      */
-    @PostMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.process + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun processByUser(@PathVariable userId: String, @RequestBody processHandlingPo: ProcessHandlingPo): InfoVo
+    @PostMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.process + "/{userId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun processByUser(@PathVariable userId: String, @RequestBody processHandlingPo: ProcessHandlingPo): InnerInfoVo
 
     /**
      * 获取指定用户的待处理任务
      */
-    @GetMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.pending + "/{processInstanceId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.pending + "/{processInstanceId}/{userId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun pendingByUser(@PathVariable processInstanceId: String, @PathVariable userId: String): List<ProcessTaskVo>
 
     /**
      * 获取流程实例信息
      */
-    @GetMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.instance + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.instance + "/{processInstanceId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun getInstance(@PathVariable processInstanceId: String): ProcessInstanceVo?
 
     /**
      * 获取任务信息
      */
-    @GetMapping(value = [CommonPath.openInnerBasePath + WorkFlowApi.task + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [CommonPath.openInnerBasePath + WorkFlowApi.task + "/{taskId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun getTaskInfoOpen(@PathVariable taskId: String): ProcessTaskVo?
 
     /**
      * 启动流程
      */
     @PutMapping(value = [WorkFlowApi.basePath + WorkFlowApi.start], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun start(@RequestBody processStartPo: ProcessStartPo): InfoVo
+    fun start(@RequestBody processStartPo: ProcessStartPo): InnerInfoVo
 
     /**
      * 领取任务
      */
-    @PatchMapping(value = [WorkFlowApi.basePath + WorkFlowApi.claim + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun claim(@PathVariable taskId: String): InfoVo
+    @PatchMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.claim + "/{taskId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun claim(@PathVariable taskId: String): InnerInfoVo
 
     /**
      * 转办任务
      */
-    @PatchMapping(value = [WorkFlowApi.basePath + WorkFlowApi.transfer + "/{taskId}/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun transfer(@PathVariable taskId: String, @PathVariable userId: String): InfoVo
+    @PatchMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.transfer + "/{taskId}/{userId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun transfer(@PathVariable taskId: String, @PathVariable userId: String): InnerInfoVo
 
     /**
      * 委托任务
      */
-    @PatchMapping(value = [WorkFlowApi.basePath + WorkFlowApi.delegate + "/{taskId}/{acceptUserId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun delegate(@PathVariable taskId: String, @PathVariable acceptUserId: String): InfoVo
+    @PatchMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.delegate + "/{taskId}/{acceptUserId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun delegate(@PathVariable taskId: String, @PathVariable acceptUserId: String): InnerInfoVo
 
     /**
      * 流程处理
      */
     @PostMapping(value = [WorkFlowApi.basePath + WorkFlowApi.process], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun process(@RequestBody processHandlingPo: ProcessHandlingPo): InfoVo
+    fun process(@RequestBody processHandlingPo: ProcessHandlingPo): InnerInfoVo
 
     /**
      * 强制终止流程实例
      */
-    @DeleteMapping(value = [WorkFlowApi.basePath + WorkFlowApi.termination], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun termination(@RequestBody processTerminationPo: ProcessTerminationPo): InfoVo
+    @DeleteMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.termination],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun termination(@RequestBody processTerminationPo: ProcessTerminationPo): InnerInfoVo
 
     /**
      * 获取流程处理记录
      */
-    @GetMapping(value = [WorkFlowApi.basePath + WorkFlowApi.history + "/{processInstanceId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.history + "/{processInstanceId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun getHistoryActivity(@PathVariable processInstanceId: String): List<ProcessHistoryActivityVo>
 
     /**
      * 获取任务信息
      */
-    @GetMapping(value = [WorkFlowApi.basePath + WorkFlowApi.task + "/{taskId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [WorkFlowApi.basePath + WorkFlowApi.task + "/{taskId}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun getTaskInfo(@PathVariable taskId: String): ProcessTaskVo?
 }

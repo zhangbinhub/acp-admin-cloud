@@ -88,7 +88,7 @@ logging:
     com.alibaba.nacos.client: warn
     org.springframework.cloud.function: warn
 info:
-  version: 5.1.1
+  version: 5.1.2
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
