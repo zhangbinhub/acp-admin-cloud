@@ -3,8 +3,8 @@ ext {
 }
 
 versions += [
-        jupiter          : "5.7.2",
-        junit_platform   : "1.7.2",
+        jupiter          : "5.8.1",
+        junit_platform   : "1.8.1",
         kotlin_coroutines: "1.5.2",
         flowable         : "6.6.0",
         mysql            : "8.0.26"

@@ -2,6 +2,10 @@
 ##### v5.1.2
 - Global
   - [Upgrade] 升级依赖
+    - Acp 6.7.2
+    - kotlin 1.6.0
+    - Spring Boot 2.6.1
+    - Spring Boot Admin 2.5.4
 - acp-admin-cloud-dependencies
   - [Upgrade] 优化Feign客户端写法
 - oauth-server
