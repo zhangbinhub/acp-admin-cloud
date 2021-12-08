@@ -10,6 +10,8 @@
   - [Upgrade] 优化Feign客户端写法
 - oauth-server
   - [Upgrade] 增加禁用用户内部接口
+- workflow-server
+  - [Add] 增加待办生成和完成通知写法
 ##### v5.1.1
 - Global
   - [Upgrade] hikari连接池配置中增加connection-timeout

@@ -66,7 +66,21 @@ docker run -p8080:8080 flowable/all-in-one
 | ----------- | ----------- | ----- | ----- |
 |LD_LIBRARY_PATH|JVM的library路径| - |配置为服务的部署路径，虚拟机部署时需设置```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:[部署路径]/libs```
 
-##### 九、容器中部署时，镜像需安装如下组件
+##### 九、自定义待办通知开发
+- 待办生成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，实现接口```pers.acp.admin.workflow.base.PendingCreatedNotify```中的方法
+  ```
+  @Throws(ServerException::class)
+  fun doNotify(taskId: String, userId: String)
+  ```
+  参考[TestPendingCreatedNotify](src/main/kotlin/pers/acp/admin/workflow/notify/TestPendingCreatedNotify.kt)
+- 待办完成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，实现接口```pers.acp.admin.workflow.base.PendingFinishedNotify```中的方法
+  ```
+  @Throws(ServerException::class)
+  fun doNotify(taskId: String, userId: String)
+  ```
+  参考[TestPendingFinishedNotify](src/main/kotlin/pers/acp/admin/workflow/notify/TestPendingFinishedNotify.kt)
+
+##### 十、容器中部署时，镜像需安装如下组件
 > - bzip2-libs-1.0.6-13.el7.i686.rpm
 > - libblkid-devel-2.23.2-65.el7_9.1.x86_64.rpm
 > - nspr-4.25.0-2.el7_9.x86_64.rpm
