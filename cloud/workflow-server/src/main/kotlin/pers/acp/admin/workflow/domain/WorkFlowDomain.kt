@@ -47,7 +47,7 @@ constructor(
     private val repositoryService: RepositoryService,
     private val historyService: HistoryService,
     @param:Qualifier("processEngine") private val processEngine: ProcessEngine,
-    private val myProcessInstanceRepository: MyProcessInstanceRepository,
+    private val myProcessInstanceRepository: MyProcessInstanceRepository
 ) : BaseWorkFlowDomain() {
 
     private fun getUserById(id: String?): UserVo =
@@ -371,11 +371,11 @@ constructor(
                     logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
-                taskCreateListener.findTaskPendingUserIdList(taskId).forEach { userId ->
-                    taskCreateListener.notifyPendingFinished(taskId, userId)
+                taskCreateListener.findTaskPendingUserIdList(taskId).let { userIdList ->
+                    taskService.claim(taskId, userInfo.id)
+                    taskCreateListener.notifyPendingFinished(taskId, userIdList)
+                    taskCreateListener.notifyPendingCreated(taskId, listOf(userInfo.id!!))
                 }
-                taskService.claim(taskId, userInfo.id)
-                taskCreateListener.notifyPendingCreated(taskId, userInfo.id!!)
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -399,9 +399,9 @@ constructor(
                     throw ServerException("流程任务不存在！")
                 }
                 taskService.setOwner(taskId, userInfo.id)
-                taskCreateListener.notifyPendingFinished(taskId, userInfo.id!!)
                 taskService.setAssignee(taskId, acceptUserId)
-                taskCreateListener.notifyPendingCreated(taskId, acceptUserId)
+                taskCreateListener.notifyPendingFinished(taskId, listOf(userInfo.id!!))
+                taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -425,9 +425,9 @@ constructor(
                     throw ServerException("流程任务不存在！")
                 }
                 taskService.setOwner(taskId, userInfo.id)
-                taskCreateListener.notifyPendingFinished(taskId, userInfo.id!!)
                 taskService.delegateTask(taskId, acceptUserId)
-                taskCreateListener.notifyPendingCreated(taskId, acceptUserId)
+                taskCreateListener.notifyPendingFinished(taskId, listOf(userInfo.id!!))
+                taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -477,11 +477,11 @@ constructor(
             runtimeService.setVariablesLocal(task.executionId, processHandlingPo.taskParams)
             if (task.delegationState == DelegationState.PENDING) {
                 taskService.resolveTask(task.id, params)
-                taskCreateListener.notifyPendingFinished(task.id, userId)
-                taskCreateListener.notifyPendingCreated(task.id, task.owner)
+                taskCreateListener.notifyPendingFinished(task.id, listOf(userId))
+                taskCreateListener.notifyPendingCreated(task.id, listOf(task.owner))
             } else {
                 taskService.complete(task.id, params)
-                taskCreateListener.notifyPendingFinished(task.id, userId)
+                taskCreateListener.notifyPendingFinished(task.id, listOf(userId))
             }
             // 添加至我处理过的流程实例
             myProcessInstanceRepository.findByUserIdAndProcessInstanceId(userId, task.processInstanceId).let {
@@ -508,12 +508,20 @@ constructor(
     @Transactional
     @Throws(ServerException::class)
     fun deleteProcessInstance(processTerminationPo: ProcessTerminationPo) {
-        taskService.createTaskQuery().processInstanceId(processTerminationPo.processInstanceId).list().forEach { task ->
-            taskCreateListener.findTaskPendingUserIdList(task.id).forEach { userId ->
-                taskCreateListener.notifyPendingFinished(task.id, userId)
+        taskService.createTaskQuery().processInstanceId(processTerminationPo.processInstanceId).list()
+            .associateBy({
+                it.id
+            }, {
+                taskCreateListener.findTaskPendingUserIdList(it.id)
+            }).let { taskUserIdList ->
+                runtimeService.deleteProcessInstance(
+                    processTerminationPo.processInstanceId,
+                    processTerminationPo.reason
+                )
+                taskUserIdList.forEach { (taskId, userIdList) ->
+                    taskCreateListener.notifyPendingFinished(taskId, userIdList)
+                }
             }
-        }
-        runtimeService.deleteProcessInstance(processTerminationPo.processInstanceId, processTerminationPo.reason)
     }
 
     @Throws(ServerException::class)

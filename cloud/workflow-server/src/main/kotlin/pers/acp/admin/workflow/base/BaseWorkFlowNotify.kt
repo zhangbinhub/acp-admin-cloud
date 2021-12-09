@@ -5,5 +5,8 @@ import kotlin.jvm.Throws
 
 interface BaseWorkFlowNotify {
     @Throws(ServerException::class)
-    fun doNotify(taskId: String, userId: String)
+    fun doProcessNotify(processInstanceId: String, userIdList: List<String>)
+
+    @Throws(ServerException::class)
+    fun doTaskNotify(taskId: String, userIdList: List<String>)
 }

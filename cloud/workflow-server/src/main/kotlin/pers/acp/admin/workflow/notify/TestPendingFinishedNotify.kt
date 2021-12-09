@@ -7,9 +7,9 @@ import pers.acp.spring.boot.interfaces.LogAdapter
 import kotlin.jvm.Throws
 
 @Component
-class TestPendingFinishedNotify(private val logAdapter: LogAdapter) : PendingFinishedNotify {
+class TestPendingFinishedNotify(private val logAdapter: LogAdapter) : PendingFinishedNotify() {
     @Throws(ServerException::class)
-    override fun doNotify(taskId: String, userId: String) {
-        logAdapter.debug("待办完成通知：taskId【$taskId】，userId【$userId】")
+    override fun doTaskNotify(taskId: String, userIdList: List<String>) {
+        logAdapter.info("待办完成通知：taskId【$taskId】，userId：$userIdList")
     }
 }
