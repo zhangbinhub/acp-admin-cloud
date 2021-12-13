@@ -195,7 +195,7 @@ allprojects {
         writer.close()
 
         // generate k8s shell
-        File templateFileK8s = new File("$rootDir/doc/script/server.model")
+        File templateFileK8s = new File("$rootDir/doc/script/server-k8s.model")
         List<String> linesK8s = templateFileK8s.readLines("UTF-8")
         StringBuilder bufferK8s = new StringBuilder()
         for (String line : linesK8s) {
@@ -204,7 +204,7 @@ allprojects {
         String shellContentK8s = bufferK8s.toString()
         shellContentK8s = shellContentK8s.replaceAll("@appJarName@", appJarName)
         shellContentK8s = shellContentK8s.replaceAll("@jvmMemoryParam@", memoryParam)
-        File outFileK8s = new File("$rootDir/release/$project.name/server.sh")
+        File outFileK8s = new File("$rootDir/release/$project.name/server-k8s.sh")
         Writer writerK8s = new FileWriter(outFileK8s)
         writerK8s.write(new String(shellContentK8s.getBytes("UTF-8")))
         writerK8s.flush()
