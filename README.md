@@ -121,7 +121,6 @@ ext {
 ## 三、工程说明
 - 工程全局默认使用 UTF-8 字符集
 - gradle 目录下为相关配置文件
-- libs 下面为 [acp](https://github.com/zhangbin1010/acp) 核心模块包
 - common 目录下为基于 Spring Cloud 的基础组件模块，含 Spring Boot Admin 和 GateWay
 - cloud 目录下为基于 Spring Cloud 的自定义组件模块
 - dockerfiles 所使用的中间件[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)
