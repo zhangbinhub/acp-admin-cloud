@@ -31,7 +31,7 @@ class UserPasswordEncrypt {
      * @param encryptedPassword 加密后的密码存储密文
      * @return true|false
      */
-    fun matches(rawPassword: String, encryptedPassword: String): Boolean =
+    fun matches(rawPassword: String, encryptedPassword: String): Boolean {
         CommonTools.getNowDateTime().let { now ->
             for (o in -offset..offset) {
                 val password = encryptForLogin(
@@ -42,8 +42,9 @@ class UserPasswordEncrypt {
                     return true
                 }
             }
-            false
+            return false
         }
+    }
 
     /**
      * 密码加密（用于登录）

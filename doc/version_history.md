@@ -10,6 +10,7 @@
   - [Upgrade] 优化Feign客户端写法
 - oauth-server
   - [Upgrade] 增加禁用用户内部接口
+  - [Upgrade] 去除无用的WebSecurity配置
 - workflow-server
   - [Add] 增加待办生成和完成通知写法
 ##### v5.1.1

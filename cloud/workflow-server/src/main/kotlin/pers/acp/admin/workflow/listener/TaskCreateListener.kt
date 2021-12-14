@@ -3,7 +3,9 @@ package pers.acp.admin.workflow.listener
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType
 import org.flowable.common.engine.api.delegate.event.FlowableEvent
 import org.flowable.common.engine.impl.event.FlowableEntityEventImpl
+import org.flowable.engine.HistoryService
 import org.flowable.engine.TaskService
+import org.flowable.identitylink.api.IdentityLinkInfo
 import org.flowable.identitylink.api.IdentityLinkType
 import org.flowable.spring.SpringProcessEngineConfiguration
 import org.flowable.task.service.impl.persistence.entity.TaskEntity
@@ -29,7 +31,8 @@ constructor(
     private val pendingCreatedNotifyList: List<PendingCreatedNotify>,
     private val pendingFinishedNotifyList: List<PendingFinishedNotify>,
     private val commonOauthServer: CommonOauthServer,
-    private val taskService: TaskService
+    private val taskService: TaskService,
+    private val historyService: HistoryService
 ) : BaseEventListener() {
     @PostConstruct
     fun register() {
@@ -41,9 +44,7 @@ constructor(
             if (event is FlowableEntityEventImpl) {
                 event.entity.let { entity ->
                     if (entity is TaskEntity) {
-                        findTaskPendingUserIdList(entity.id).forEach { userId ->
-                            notifyPendingCreated(entity.id, userId)
-                        }
+                        notifyPendingCreated(entity.id)
                     }
                 }
             }
@@ -52,44 +53,80 @@ constructor(
         }
     }
 
-    @Throws(ServerException::class)
-    fun findTaskPendingUserIdList(taskId: String): List<String> =
-        taskService.getIdentityLinksForTask(taskId).let { identityLinkList ->
+    /**
+     * 获取待办人员ID
+     */
+    private fun getPendingUserIdFromIdentifyLink(identityLinkList: List<IdentityLinkInfo>): List<String> =
+        identityLinkList.filter { identityLink ->
+            identityLink.type == IdentityLinkType.ASSIGNEE && !CommonTools.isNullStr(identityLink.userId)
+        }.map { identityLink -> identityLink.userId }.ifEmpty {
             identityLinkList.filter { identityLink ->
-                identityLink.type == IdentityLinkType.ASSIGNEE && !CommonTools.isNullStr(identityLink.userId)
-            }.map { identityLink -> identityLink.userId }.ifEmpty {
-                identityLinkList.filter { identityLink ->
-                    identityLink.type == IdentityLinkType.CANDIDATE
-                }.flatMap { identityLink ->
-                    mutableListOf<String>().apply {
-                        if (!CommonTools.isNullStr(identityLink.userId)) {
-                            this.add(identityLink.userId)
-                        }
-                        if (!CommonTools.isNullStr(identityLink.groupId)) {
-                            this.addAll(commonOauthServer.findUserList(identityLink.groupId).map { userVo ->
-                                if (!CommonTools.isNullStr(userVo.id)) {
-                                    userVo.id!!
-                                } else {
-                                    ""
-                                }
-                            })
-                        }
+                identityLink.type == IdentityLinkType.CANDIDATE
+            }.flatMap { identityLink ->
+                mutableListOf<String>().apply {
+                    if (!CommonTools.isNullStr(identityLink.userId)) {
+                        this.add(identityLink.userId)
+                    }
+                    if (!CommonTools.isNullStr(identityLink.groupId)) {
+                        this.addAll(commonOauthServer.findUserList(identityLink.groupId).map { userVo ->
+                            if (!CommonTools.isNullStr(userVo.id)) {
+                                userVo.id!!
+                            } else {
+                                ""
+                            }
+                        })
                     }
                 }
             }
         }.toSet().filter { userId -> !CommonTools.isNullStr(userId) }.toList()
 
+    /**
+     * 获取运行时任务下所有待办人员
+     * @param taskId 任务ID
+     * @return 用户ID
+     */
     @Throws(ServerException::class)
-    fun notifyPendingCreated(taskId: String, userId: String) {
+    fun findTaskPendingUserIdList(taskId: String): List<String> =
+        getPendingUserIdFromIdentifyLink(taskService.getIdentityLinksForTask(taskId))
+
+    /**
+     * 获取历史任务下所有待办人员
+     * @param taskId 任务ID
+     * @return 用户ID
+     */
+    @Throws(ServerException::class)
+    fun findHistoryTaskPendingUserIdList(taskId: String): List<String> =
+        getPendingUserIdFromIdentifyLink(historyService.getHistoricIdentityLinksForTask(taskId))
+
+    /**
+     * 生成待办通知
+     * @param taskId 任务ID
+     * @param userIdList 用户ID，默认null；当用户ID为null时，自动取运行时任务所有待办人员
+     */
+    @Throws(ServerException::class)
+    fun notifyPendingCreated(taskId: String, userIdList: List<String>? = null) {
         if (workFlowCustomerConfiguration.notifyPendingCreated) {
-            pendingCreatedNotifyList.forEach { it.doNotify(taskId, userId) }
+            (userIdList ?: findTaskPendingUserIdList(taskId)).apply {
+                if (this.isNotEmpty()) {
+                    pendingCreatedNotifyList.forEach { it.doTaskNotify(taskId, this) }
+                }
+            }
         }
     }
 
+    /**
+     * 完成待办通知
+     * @param taskId 任务ID
+     * @param userIdList 用户ID，默认null；当用户ID为null时，自动取任务所有待办人员
+     */
     @Throws(ServerException::class)
-    fun notifyPendingFinished(taskId: String, userId: String) {
+    fun notifyPendingFinished(taskId: String, userIdList: List<String>? = null) {
         if (workFlowCustomerConfiguration.notifyPendingFinished) {
-            pendingFinishedNotifyList.forEach { it.doNotify(taskId, userId) }
+            (userIdList ?: findHistoryTaskPendingUserIdList(taskId)).apply {
+                if (this.isNotEmpty()) {
+                    pendingFinishedNotifyList.forEach { it.doTaskNotify(taskId, this) }
+                }
+            }
         }
     }
 }

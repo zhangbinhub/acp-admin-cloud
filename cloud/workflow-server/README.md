@@ -67,16 +67,16 @@ docker run -p8080:8080 flowable/all-in-one
 |LD_LIBRARY_PATH|JVM的library路径| - |配置为服务的部署路径，虚拟机部署时需设置```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:[部署路径]/libs```
 
 ##### 九、自定义待办通知开发
-- 待办生成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，实现接口```pers.acp.admin.workflow.base.PendingCreatedNotify```中的方法
+- 待办生成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，继承```pers.acp.admin.workflow.base.PendingCreatedNotify```，实现方法
   ```
   @Throws(ServerException::class)
-  fun doNotify(taskId: String, userId: String)
+  fun doTaskNotify(taskId: String, userIdList: List<String>)
   ```
   参考[TestPendingCreatedNotify](src/main/kotlin/pers/acp/admin/workflow/notify/TestPendingCreatedNotify.kt)
-- 待办完成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，实现接口```pers.acp.admin.workflow.base.PendingFinishedNotify```中的方法
+- 待办完成通知：新建通知处理类，包名pers.acp.admin.workflow.notify，继承```pers.acp.admin.workflow.base.PendingFinishedNotify```，实现方法
   ```
   @Throws(ServerException::class)
-  fun doNotify(taskId: String, userId: String)
+  fun doTaskNotify(taskId: String, userIdList: List<String>)
   ```
   参考[TestPendingFinishedNotify](src/main/kotlin/pers/acp/admin/workflow/notify/TestPendingFinishedNotify.kt)
 
