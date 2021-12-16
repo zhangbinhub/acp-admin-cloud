@@ -9,7 +9,7 @@ import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.UserRepository
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 /**
  * @author zhang by 26/12/2018

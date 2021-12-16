@@ -3,7 +3,7 @@ package pers.acp.admin.oauth.entity
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.annotations.GenericGenerator
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 
 import javax.persistence.*
 

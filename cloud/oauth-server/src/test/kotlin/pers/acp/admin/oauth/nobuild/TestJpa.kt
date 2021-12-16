@@ -11,7 +11,7 @@ import pers.acp.admin.oauth.BaseTest
 import pers.acp.admin.oauth.domain.TableTwoDomain
 import pers.acp.admin.oauth.jpa.MemberTwo
 import pers.acp.admin.oauth.jpa.TableTwo
-import pers.acp.spring.cloud.lock.DistributedLock
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 03/08/2019

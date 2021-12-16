@@ -3,7 +3,7 @@ package pers.acp.admin.oauth.token.error
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import pers.acp.spring.boot.enums.ResponseCode
+import io.github.zhangbinhub.acp.boot.enums.ResponseCode
 import java.io.IOException
 
 class CustomerOAuth2ExceptionSerializer : StdSerializer<CustomerOAuth2Exception>(CustomerOAuth2Exception::class.java) {

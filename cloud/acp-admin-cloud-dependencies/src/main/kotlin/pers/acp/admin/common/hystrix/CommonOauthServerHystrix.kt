@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken
 import pers.acp.admin.common.base.BaseFeignHystrix
 import pers.acp.admin.common.feign.CommonOauthServer
 import pers.acp.admin.common.vo.*
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 14/11/2019

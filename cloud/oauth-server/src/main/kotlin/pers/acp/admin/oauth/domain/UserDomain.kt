@@ -22,8 +22,8 @@ import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.common.vo.UserVo
 import pers.acp.admin.oauth.component.UserPasswordEncrypt
 import pers.acp.admin.oauth.constant.OauthConstant
-import pers.acp.core.CommonTools
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate

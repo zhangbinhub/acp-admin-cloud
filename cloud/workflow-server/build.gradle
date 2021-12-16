@@ -1,14 +1,13 @@
-group "${group}.cloud"
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
     imports {
-        mavenBom("pers.acp.dependency:acp-dependency:${CoreVersion}")
+        mavenBom("io.github.zhangbinhub.acp.dependency:acp-dependency:$versions.acp")
     }
 }
 bootJar {
     manifest {
-        attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
+        attributes('Version': "${project.version}", 'Provider': "Gradle ${projectProperties.getProperty('gradleVersion')}", 'JDK': "${projectProperties.getProperty('javaVersion')}", 'Kotlin': "${projectProperties.getProperty('kotlinVersion')}", 'Project': 'Acp Admin Cloud')
     }
 }
 dependencies {

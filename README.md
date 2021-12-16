@@ -1,12 +1,12 @@
 # acp-admin-cloud
 ###### v5.1.2 [版本更新日志](doc/version_history.md)
 - 使用Application Construction Platform 应用构建平台作为脚手架
-- 基于 Spring Cloud
-- 该项目是前后端分离架构中的“后端部分”。前端工程[v5.1.2](https://github.com/zhangbin1010/acp-admin)
+- 基于 Spring Cloud 的微服务版本，基于 Spring Boot 的单机版请查看[这里](https://github.com/zhangbinhub/acp-admin-standalone)
+- 该项目是前后端分离架构中的“后端部分”。前端工程[v5.1.2](https://github.com/zhangbinhub/acp-admin)
 
 ## 相关组件版本
 - [Spring Boot 2.6.1](https://projects.spring.io/spring-boot)
-- [Acp 6.7.2](https://github.com/zhangbin1010/acp)
+- [Acp 2021.0.0](https://github.com/zhangbinhub/acp)
 
 ## 技术栈
 - flowable
@@ -51,8 +51,8 @@
 > - **【依赖中间件 kafka】** 各深度定制开发的服务通过 **kafka** 发送日志消息，**log server** 从 **Kafka** 中消费消息并进行日志的统一记录
 > - **【依赖中间件 kafka、logstash、elasticsearch】 log server** 不仅将日志信息记录在本地，还发送给 **elasticsearch** 进行汇总
 > - **【依赖中间件 redis】** 包路径中包含 **Redis** 时，**oauth server** 将 **token** 信息持久化到 **Redis** 进行统一认证管理，否则仅持久化到内存
-> - **【依赖中间件 zookeeper】** 分布式锁，实现 **pers.acp.spring.cloud.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **curator-recipes** 时，默认配置一个基于 **zookeeper** 的分布式锁实现
-> - 需要进行防重请求的 controller 方法上增加注解 **pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission**，默认30秒过期
+> - **【依赖中间件 zookeeper】** 分布式锁，实现 **io.github.zhangbinhub.acp.cloud.lock.DistributedLock** 接口，并注册为**Spring Bean**，包路径中包含 **curator-recipes** 时，默认配置一个基于 **zookeeper** 的分布式锁实现
+> - 需要进行防重请求的 controller 方法上增加注解 **io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission**，默认30秒过期
 > - 前后端交互 **HttpStatus Code** 说明
 > 
 >     | HttpStatus | 描述 |
@@ -70,33 +70,28 @@
 - gradle 6.5+
 - kotlin 1.5+
 
-## 二、gradle 配置及使用
+## 二、gradle 脚本配置及使用
 ### （一）配置文件
-##### 1.gradle/dependencies.gradle
+##### 1.[gradle/dependencies.gradle](gradle/dependencies.gradle)
 定义外部依赖版本号
 
-##### 2.gradle/environment.gradle
+##### 2.[gradle/environment.gradle](gradle/environment.gradle)
 编译时定义的环境变量
-    
-##### 3.settings.gradle
+
+##### 3.[settings.gradle](settings.gradle)
 定义项目/模块结构
 
-##### 4.gradle.properties
+##### 4.[project.properties](project.properties)
 gradle全局参数：
 - gradleVersion：gradle版本号
-- group：对应打包时的groupid
-- version：工程版本号
+- group：对应打包时的最外层groupid，最终的groupid还会加上模块路径，例如`groupid.acp.core`
+- version：版本号
 - encoding：编译字符集
 - mavenCentralUrl：maven中央仓库地址
-- org.gradle.jvmargs：gradle执行时的jvm参数
 - javaVersion：jdk版本号
-- kotlinVersion：kotlin版本号
-    
-##### 5.build.gradle
+
+##### 5.[build.gradle](build.gradle)
 公共构建脚本
-    
-##### 6.模块根路径/build.gradle
-单个模块特有的构建脚本
 
 ### （二）自定义任务
 - clearPj 清理所有输出文件
@@ -105,15 +100,32 @@ gradle全局参数：
   ```
   gradlew project:release -Pactive=test
   ```
-```groovy
-ext {
-    mavenUploadUrl = "http://localhost:8081/nexus/content/repositories/thirdparty"
-    mavenUserName = "admin"
-    mavenPassword = "admin123"
-}
+### （三）发布至maven仓库
+##### 1、发布至本地仓库
+- 执行 publishToMavenLocal 任务
+##### 2、发布至私服
+- 项目根路径下创建 gradle.properties 并添加如下参数（参数值根据实际情况修改）
+```properties
+mavenUploadUrlRelease=https://maven.com/repositories/releases/
+mavenUploadUrlSnapshot=https://maven.com/repositories/snapshot/
+mavenUserName=username
+mavenPassword=password
 ```
+- 执行 publish 任务
+##### 3、发布至中央仓库
+- 项目根路径下创建 gradle.properties 并添加如下参数（参数值根据实际情况修改）
+```properties
+mavenUploadUrlRelease=https://maven.com/repositories/releases/
+mavenUploadUrlSnapshot=https://maven.com/repositories/snapshot/
+mavenUserName=username
+mavenPassword=password
+signing.keyId=shortId
+signing.password=keyPassword
+signing.secretKeyRingFile=keyFile
+```
+- 执行 publish 任务
 
-### （三）升级命令
+### （四）升级命令
 ```
     gradlew wrapper --gradle-version=7.2 --distribution-type=all
 ```
@@ -182,7 +194,7 @@ http://127.0.0.1:5601
 > - 用作服务注册/发现中心，配置中心，详情请参考[官网](https://nacos.io/zh-cn/)
 > - 独立部署，数据库仅支持 MySQL5.6或5.7
 > - 控制台 http://ip:port/nacos
-> - 使用时需导入初始化配置信息[doc/nacos_config](doc/nacos_config_export.zip)
+> - 使用时需导入初始化配置信息[doc/nacos_config_nacos_config_export.zip](doc/nacos_config_export.zip)
 > - 可监控服务健康状况，管理服务优雅上下线。进行配置项的统一管理、维护、分发
 
 ### （三）Zipkin

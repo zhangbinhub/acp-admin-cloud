@@ -2,9 +2,9 @@ package pers.acp.admin.common.test;
 
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
-import pers.acp.core.CommonTools;
-import pers.acp.core.task.timer.Calculation;
-import pers.acp.spring.boot.exceptions.ServerException;
+import io.github.zhangbinhub.acp.core.CommonTools;
+import io.github.zhangbinhub.acp.core.task.timer.Calculation;
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException;
 
 /**
  * @author zhang by 15/01/2019

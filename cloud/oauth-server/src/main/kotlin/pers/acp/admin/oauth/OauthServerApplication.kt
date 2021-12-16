@@ -1,7 +1,7 @@
 package pers.acp.admin.oauth
 
 import org.springframework.boot.runApplication
-import pers.acp.spring.cloud.annotation.AcpCloudOauthServerApplication
+import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudOauthServerApplication
 
 /**
  * @author zhangbin by 09/04/2018 16:11

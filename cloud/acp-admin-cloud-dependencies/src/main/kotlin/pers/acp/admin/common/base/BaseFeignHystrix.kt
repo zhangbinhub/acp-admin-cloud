@@ -3,9 +3,9 @@ package pers.acp.admin.common.base
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.FeignException
 import org.springframework.cloud.openfeign.FallbackFactory
-import pers.acp.core.CommonTools
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVo
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
 import java.nio.charset.Charset
 
 /**

@@ -16,9 +16,9 @@ import pers.acp.admin.oauth.domain.ApplicationDomain
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.token.SecurityTokenService
 import pers.acp.admin.oauth.vo.OnlineInfoVo
-import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVo
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
 
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull

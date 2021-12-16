@@ -1,6 +1,6 @@
 package pers.acp.admin.common.base
 
-import pers.acp.spring.boot.conf.SwaggerConfiguration
+import io.github.zhangbinhub.acp.boot.conf.SwaggerConfiguration
 import springfox.documentation.builders.*
 import springfox.documentation.schema.ModelSpecification
 import springfox.documentation.service.ApiInfo

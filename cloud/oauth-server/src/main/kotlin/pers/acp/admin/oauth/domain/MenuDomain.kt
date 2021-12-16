@@ -12,7 +12,7 @@ import pers.acp.admin.oauth.repo.MenuRepository
 import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.vo.MenuVo
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 /**
  * @author zhang by 26/12/2018

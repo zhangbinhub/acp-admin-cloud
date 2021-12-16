@@ -2,8 +2,8 @@ package pers.acp.admin.common.base
 
 import org.joda.time.DateTime
 import org.springframework.security.oauth2.provider.OAuth2Authentication
-import pers.acp.core.CalendarTools
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CalendarTools
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 15/01/2019
