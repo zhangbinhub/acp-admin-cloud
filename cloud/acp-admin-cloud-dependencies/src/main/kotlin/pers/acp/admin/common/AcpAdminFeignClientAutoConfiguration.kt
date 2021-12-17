@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pers.acp.admin.common.hystrix.CommonOauthServerHystrix
 import pers.acp.admin.common.hystrix.WorkFlowServerHystrix
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 12/12/2019

@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import pers.acp.admin.common.lock.ZkDistributedLock
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.cloud.AcpCloudLogAutoConfiguration
-import pers.acp.spring.cloud.lock.DistributedLock
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.cloud.AcpCloudLogAutoConfiguration
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 30/09/2019

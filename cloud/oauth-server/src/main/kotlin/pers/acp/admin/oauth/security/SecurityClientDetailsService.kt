@@ -7,10 +7,10 @@ import org.springframework.security.oauth2.provider.ClientDetails
 import org.springframework.security.oauth2.provider.ClientDetailsService
 import org.springframework.security.oauth2.provider.ClientRegistrationException
 import org.springframework.stereotype.Component
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.admin.oauth.domain.ApplicationDomain
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 import javax.annotation.PostConstruct
 

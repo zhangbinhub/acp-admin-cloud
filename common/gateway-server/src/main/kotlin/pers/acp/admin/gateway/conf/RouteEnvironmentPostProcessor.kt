@@ -9,7 +9,7 @@ import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.MapPropertySource
 import org.springframework.core.env.MutablePropertySources
 import org.springframework.util.MimeTypeUtils
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 
 /**
  * @author zhang by 17/12/2018 00:41

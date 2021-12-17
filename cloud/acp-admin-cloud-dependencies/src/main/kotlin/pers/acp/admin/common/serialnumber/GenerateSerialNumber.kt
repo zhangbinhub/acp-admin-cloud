@@ -1,6 +1,6 @@
 package pers.acp.admin.common.serialnumber
 
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 
 /**
  * @author zhang by 05/03/2020

@@ -20,8 +20,8 @@ import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.oauth.domain.ModuleFuncDomain
 import pers.acp.admin.oauth.entity.ModuleFunc
 import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 16/01/2019

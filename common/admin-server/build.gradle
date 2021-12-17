@@ -1,26 +1,22 @@
-group "${group}.cloud"
-versions += [
-        boot_admin: "2.5.4"
-]
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
     imports {
-        mavenBom("pers.acp.dependency:acp-dependency:${CoreVersion}")
+        mavenBom("io.github.zhangbinhub.acp.dependency:acp-dependency:$versions.acp")
     }
 }
 bootJar {
     manifest {
-        attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
+        attributes('Version': "${project.version}", 'Provider': "Gradle ${projectProperties.getProperty('gradleVersion')}", 'JDK': "${projectProperties.getProperty('javaVersion')}", 'Kotlin': "${projectProperties.getProperty('kotlinVersion')}", 'Project': 'Acp Admin Cloud')
     }
 }
 dependencies {
-    implementation "pers.acp.core:acp-core"
+    implementation "io.github.zhangbinhub.acp.core:acp-core"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-security"
 
-    implementation "de.codecentric:spring-boot-admin-starter-server:$versions.boot_admin"
+    implementation "de.codecentric:spring-boot-admin-starter-server:$versions.springBootAdmin"
     implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
     implementation "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     // 服务注册发现

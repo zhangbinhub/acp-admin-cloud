@@ -10,7 +10,7 @@ import pers.acp.admin.common.vo.InnerInfoVo
 import pers.acp.admin.common.vo.ProcessHistoryActivityVo
 import pers.acp.admin.common.vo.ProcessInstanceVo
 import pers.acp.admin.common.vo.ProcessTaskVo
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 20/12/2019

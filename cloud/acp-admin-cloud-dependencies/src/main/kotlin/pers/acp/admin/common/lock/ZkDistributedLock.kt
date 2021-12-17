@@ -2,8 +2,8 @@ package pers.acp.admin.common.lock
 
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.recipes.locks.InterProcessMutex
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.cloud.lock.DistributedLock
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 

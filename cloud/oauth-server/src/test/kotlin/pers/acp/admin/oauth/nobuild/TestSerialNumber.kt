@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import pers.acp.admin.common.serialnumber.GenerateSerialNumber
 import pers.acp.admin.oauth.BaseTest
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 
 /**
  * @author zhang by 03/08/2019

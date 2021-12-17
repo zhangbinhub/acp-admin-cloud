@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.oauth.repo.UserRepository
-import pers.acp.core.CommonTools
-import pers.acp.core.task.timer.Calculation
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.task.timer.Calculation
 
 /**
  * @author zhang by 06/03/2019

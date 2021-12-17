@@ -1,7 +1,7 @@
 package pers.acp.admin.oauth.token.error
 
-import pers.acp.spring.boot.enums.ResponseCode
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.enums.ResponseCode
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception

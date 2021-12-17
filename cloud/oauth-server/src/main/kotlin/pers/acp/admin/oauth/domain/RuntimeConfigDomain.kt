@@ -12,9 +12,9 @@ import pers.acp.admin.oauth.po.RuntimePo
 import pers.acp.admin.oauth.po.RuntimeQueryPo
 import pers.acp.admin.oauth.repo.RuntimeConfigRepository
 import pers.acp.admin.oauth.repo.UserRepository
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 import pers.acp.admin.common.vo.RuntimeConfigVo
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import org.springframework.beans.BeanUtils
 
 import javax.annotation.PostConstruct

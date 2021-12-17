@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import pers.acp.admin.oauth.token.granter.UserPasswordAuthenticationProvider
-import pers.acp.spring.cloud.constant.CloudConfigurationOrder
+import io.github.zhangbinhub.acp.cloud.constant.CloudConfigurationOrder
 
 /**
  * @author zhangbin by 11/04/2018 15:16

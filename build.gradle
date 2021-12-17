@@ -1,25 +1,30 @@
 ext {
-    println("Environment        : JAVA_HOME=$System.env.JAVA_HOME")
-    println("Gradle Version     : ${gradleVersion}")
-    println("Target JDK Version : ${javaVersion}")
-    println("Kotlin Version     : ${kotlinVersion}")
-    println("Spring Boot Version: ${springBootVersion}")
-    println("Core Version       : ${CoreVersion}")
-    println("Encoding           : ${encoding}")
-    println("Build Version      : ${version}")
+    println("Environment          : JAVA_HOME=$System.env.JAVA_HOME")
+    println("Gradle Version       : ${projectProperties.getProperty('gradleVersion')}")
+    println("Target JDK Version   : ${projectProperties.getProperty('javaVersion')}")
+    println("Kotlin Version       : $versions.kotlin")
+    println("Spring Boot Version  : $versions.springBoot")
+    println("Acp Version          : $versions.acp")
+    println("Encoding             : ${projectProperties.getProperty('encoding')}")
+    println("Build Version        : ${projectProperties.getProperty('version')}")
 }
 
 buildscript {
+    ext {
+        projectProperties = new Properties()
+        projectProperties.load(new FileInputStream("$rootDir/project.properties"))
+    }
+    apply from: "$rootDir/gradle/dependencies.gradle"
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-        classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
-        classpath "org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$versions.kotlin"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$versions.kotlin"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$versions.springBoot"
     }
     repositories {
         mavenLocal()
         maven {
-            url = new URI("${mavenCentralUrl}")
+            url = new URI(projectProperties.getProperty('mavenCentralUrl').toString())
             allowInsecureProtocol = true
         }
         mavenCentral()
@@ -27,6 +32,11 @@ buildscript {
 }
 
 allprojects {
+
+    group project.group.toString().isBlank() ? projectProperties.getProperty('group') : "${projectProperties.getProperty('group')}.$project.group"
+    version projectProperties.getProperty('version')
+
+    apply from: "$rootDir/gradle/dependencies.gradle"
 
     apply plugin: 'java'
     apply plugin: 'kotlin'
@@ -36,18 +46,18 @@ allprojects {
     apply plugin: 'kotlin-jpa'
     apply plugin: 'idea'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
-    apply from: "$rootDir/gradle/dependencies.gradle"
     apply from: "$rootDir/gradle/environment.gradle"
 
-    sourceCompatibility = "${javaVersion}"
-    targetCompatibility = "${javaVersion}"
+    sourceCompatibility = projectProperties.getProperty('javaVersion')
+    targetCompatibility = projectProperties.getProperty('javaVersion')
 
     buildscript {
         repositories {
             mavenLocal()
             maven {
-                url = new URI("${mavenCentralUrl}")
+                url = new URI(projectProperties.getProperty('mavenCentralUrl').toString())
                 allowInsecureProtocol = true
             }
             mavenCentral()
@@ -57,7 +67,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven {
-            url = new URI("${mavenCentralUrl}")
+            url = new URI(projectProperties.getProperty('mavenCentralUrl').toString())
             allowInsecureProtocol = true
         }
         mavenCentral()
@@ -65,12 +75,12 @@ allprojects {
 
     dependencies {
         testImplementation("org.junit.jupiter:junit-jupiter:$versions.jupiter")
-        testImplementation("org.junit.platform:junit-platform-launcher:$versions.junit_platform")
+        testImplementation("org.junit.platform:junit-platform-launcher:$versions.junitPlatform")
         testImplementation "org.jetbrains.kotlin:kotlin-test"
         testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         implementation "org.jetbrains.kotlin:kotlin-reflect"
-        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinCoroutines"
     }
 
     task clearPj(type: Delete) {
@@ -120,7 +130,7 @@ allprojects {
     jar {
         dependsOn(copyJar)
         manifest {
-            attributes('Version': "${project.version}", 'Provider': "Gradle ${gradleVersion}", 'JDK': "${javaVersion}", 'Kotlin': "${kotlinVersion}", 'Project': 'Acp Admin Cloud')
+            attributes('Version': "${project.version}", 'Provider': "Gradle ${projectProperties.getProperty('gradleVersion')}", 'JDK': "${projectProperties.getProperty('javaVersion')}", 'Kotlin': "$versions.kotlin", 'Project': 'Acp Admin Cloud')
         }
     }
 
@@ -130,34 +140,35 @@ allprojects {
     }
 
     javadoc {
-        options.charSet = "${encoding}"
-        options.docEncoding = "${encoding}"
-        options.encoding = "${encoding}"
+        options.charSet = projectProperties.getProperty('encoding')
+        options.docEncoding = projectProperties.getProperty('encoding')
+        options.encoding = projectProperties.getProperty('encoding')
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     compileJava {
-        options.encoding = "${encoding}"
+        options.encoding = projectProperties.getProperty('encoding')
     }
     compileJava.dependsOn(processResources)
     compileTestJava {
-        options.encoding = "${encoding}"
+        options.encoding = projectProperties.getProperty('encoding')
     }
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "${javaVersion}"
+            jvmTarget = projectProperties.getProperty('javaVersion')
         }
     }
     compileKotlin.dependsOn(processResources)
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "${javaVersion}"
+            jvmTarget = projectProperties.getProperty('javaVersion')
         }
     }
 
     test {
         useJUnitPlatform()
+        exclude '**/*nobuild**'
     }
 
     def generateShell = { String appJarName ->
@@ -236,6 +247,92 @@ allprojects {
             }
         }
     }
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                //指定group/artifact/version信息
+                groupId project.group
+                artifactId project.name
+                version project.version
+                //打包类型 war: components.web jar: components.java
+                from components.java
+                pom {
+                    name = "acp-admin-cloud"
+                    description = "基于acp构建的cloud应用"
+                    url = "https://github.com/zhangbinhub/acp-admin-cloud"
+                    licenses {
+                        license {
+                            name = "Apache License Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "hangbinhub"
+                            name = "zhangbin"
+                            email = "zhangbin1010@qq.com"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:https://github.com/zhangbinhub/acp-admin-cloud.git"
+                        developerConnection = "scm:git:https://github.com/zhangbinhub/acp-admin-cloud.git"
+                        url = "https://github.com/zhangbinhub/acp-admin-cloud"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def file = new File("$rootDir/gradle.properties")
+                def releaseUrl = 'http://maven/repository'
+                def snapshotUrl = 'http://maven/repository'
+                def name = ''
+                def pwd = ''
+                if (file.exists()) {
+                    def gradleProperties = new Properties()
+                    gradleProperties.load(new FileInputStream(file))
+                    releaseUrl = gradleProperties.containsKey('mavenUploadUrlRelease') ? "${mavenUploadUrlRelease}" : releaseUrl
+                    snapshotUrl = gradleProperties.containsKey('mavenUploadUrlSnapshot') ? "${mavenUploadUrlSnapshot}" : snapshotUrl
+                    name = gradleProperties.containsKey('mavenUserName') ? "${mavenUserName}" : name
+                    pwd = gradleProperties.containsKey('mavenUserName') ? "${mavenPassword}" : pwd
+                }
+                url = version.endsWith('-SNAPSHOT') ? new URI(snapshotUrl) : new URI(releaseUrl)
+                allowInsecureProtocol = true
+                //认证用户和密码
+                credentials {
+                    username name
+                    password pwd
+                }
+            }
+        }
+    }
+    signing {
+        required {
+            def file = new File("$rootDir/gradle.properties")
+            if (file.exists()) {
+                def gradleProperties = new Properties()
+                gradleProperties.load(new FileInputStream(file))
+                if (!gradleProperties.getProperty('signing.keyId', '').isBlank()) {
+                    return true
+                }
+            }
+            return false
+        }
+        sign publishing.publications.maven
+    }
 
     task release(dependsOn: [build, copyJar])
+
+    def needDeployProject = {
+        return ["acp-admin-cloud-constant",
+                "acp-admin-cloud-dependencies"].toArray().contains("$project.name")
+    } as Object
+
+    publish.onlyIf { needDeployProject() }
+    generateMetadataFileForMavenPublication.onlyIf { needDeployProject() }
+    generatePomFileForMavenPublication.onlyIf { needDeployProject() }
+    publishAllPublicationsToMavenRepository.onlyIf { needDeployProject() }
+    publishMavenPublicationToMavenLocal.onlyIf { needDeployProject() }
+    publishMavenPublicationToMavenRepository.onlyIf { needDeployProject() }
+    publishToMavenLocal.onlyIf { needDeployProject() }
 }

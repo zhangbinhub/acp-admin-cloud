@@ -20,13 +20,13 @@ import pers.acp.admin.oauth.po.UserInfoPo
 import pers.acp.admin.oauth.po.UserPo
 import pers.acp.admin.oauth.po.UserQueryPo
 import pers.acp.admin.common.vo.UserVo
-import pers.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.CommonTools
 import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
-import pers.acp.spring.boot.exceptions.ServerException
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.boot.vo.ErrorVo
-import pers.acp.spring.cloud.annotation.AcpCloudDuplicateSubmission
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
+import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
 
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank

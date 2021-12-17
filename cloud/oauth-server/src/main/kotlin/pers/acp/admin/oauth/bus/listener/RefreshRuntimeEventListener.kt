@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component
 import pers.acp.admin.common.event.ReloadDataBusEvent
 import pers.acp.admin.oauth.constant.BusEventMessage
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
-import pers.acp.core.task.BaseAsyncTask
-import pers.acp.core.task.threadpool.ThreadPoolService
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.task.BaseAsyncTask
+import io.github.zhangbinhub.acp.core.task.threadpool.ThreadPoolService
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 19/03/2019

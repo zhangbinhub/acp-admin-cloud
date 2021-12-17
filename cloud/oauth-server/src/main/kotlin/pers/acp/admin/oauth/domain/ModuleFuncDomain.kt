@@ -12,7 +12,7 @@ import pers.acp.admin.oauth.repo.ModuleFuncRepository
 import pers.acp.admin.oauth.repo.RoleRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.vo.ModuleFuncVo
-import pers.acp.spring.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 /**
  * @author zhang by 16/01/2019

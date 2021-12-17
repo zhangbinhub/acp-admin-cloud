@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pers.acp.admin.common.base.BaseSwaggerConfiguration
-import pers.acp.spring.boot.conf.SwaggerConfiguration
+import io.github.zhangbinhub.acp.boot.conf.SwaggerConfiguration
 
 /**
  * @author zhang by 27/12/2018

@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.annotations.GenericGenerator
 import pers.acp.admin.log.base.BaseLogEntity
-import pers.acp.core.CommonTools
-import pers.acp.core.task.timer.Calculation
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.task.timer.Calculation
 
 import javax.persistence.*
 

@@ -3,9 +3,14 @@ ext {
 }
 
 versions += [
-        jupiter          : "5.8.1",
-        junit_platform   : "1.8.1",
-        kotlin_coroutines: "1.5.2",
-        flowable         : "6.6.0",
-        mysql            : "8.0.26"
+        jupiter         : "5.8.2",
+        junitPlatform   : "1.8.2",
+        kotlin          : "1.6.0",
+        kotlinCoroutines: "1.5.2",
+        springBoot      : "2.6.1",
+        springBootAdmin : "2.5.4",
+        acp             : "2021.0.0-M4",
+        logstash        : "6.3",
+        flowable        : "6.6.0",
+        mysql           : "8.0.27"
 ]

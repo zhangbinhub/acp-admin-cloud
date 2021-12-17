@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.jpa.MemberTwo
 import pers.acp.admin.oauth.jpa.TableTwo
 import pers.acp.admin.oauth.jpa.TableTwoRepository
-import pers.acp.spring.cloud.lock.DistributedLock
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 @Service
 @Transactional(readOnly = true)

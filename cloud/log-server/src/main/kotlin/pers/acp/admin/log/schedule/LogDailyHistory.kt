@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.constant.LogBackUp
 import pers.acp.admin.log.domain.LogHistoryDomain
-import pers.acp.core.CommonTools
-import pers.acp.spring.boot.base.BaseSpringBootScheduledAsyncTask
-import pers.acp.spring.boot.interfaces.LogAdapter
-import pers.acp.spring.cloud.component.CloudTools
-import pers.acp.spring.cloud.lock.DistributedLock
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.boot.base.BaseSpringBootScheduledAsyncTask
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.cloud.component.CloudTools
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 12/09/2019

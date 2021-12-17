@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration
 import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.log.consumer.RouteLogConsumer
 import pers.acp.admin.log.domain.LogDomain
-import pers.acp.spring.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 10/09/2019
