@@ -46,6 +46,7 @@ allprojects {
     apply plugin: 'kotlin-jpa'
     apply plugin: 'idea'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     apply from: "$rootDir/gradle/environment.gradle"
 
@@ -167,6 +168,7 @@ allprojects {
 
     test {
         useJUnitPlatform()
+        exclude '**/*nobuild**'
     }
 
     def generateShell = { String appJarName ->
@@ -245,6 +247,92 @@ allprojects {
             }
         }
     }
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                //指定group/artifact/version信息
+                groupId project.group
+                artifactId project.name
+                version project.version
+                //打包类型 war: components.web jar: components.java
+                from components.java
+                pom {
+                    name = "acp-admin-cloud"
+                    description = "基于acp构建的cloud应用"
+                    url = "https://github.com/zhangbinhub/acp-admin-cloud"
+                    licenses {
+                        license {
+                            name = "Apache License Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "hangbinhub"
+                            name = "zhangbin"
+                            email = "zhangbin1010@qq.com"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:https://github.com/zhangbinhub/acp-admin-cloud.git"
+                        developerConnection = "scm:git:https://github.com/zhangbinhub/acp-admin-cloud.git"
+                        url = "https://github.com/zhangbinhub/acp-admin-cloud"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def file = new File("$rootDir/gradle.properties")
+                def releaseUrl = 'http://maven/repository'
+                def snapshotUrl = 'http://maven/repository'
+                def name = ''
+                def pwd = ''
+                if (file.exists()) {
+                    def gradleProperties = new Properties()
+                    gradleProperties.load(new FileInputStream(file))
+                    releaseUrl = gradleProperties.containsKey('mavenUploadUrlRelease') ? "${mavenUploadUrlRelease}" : releaseUrl
+                    snapshotUrl = gradleProperties.containsKey('mavenUploadUrlSnapshot') ? "${mavenUploadUrlSnapshot}" : snapshotUrl
+                    name = gradleProperties.containsKey('mavenUserName') ? "${mavenUserName}" : name
+                    pwd = gradleProperties.containsKey('mavenUserName') ? "${mavenPassword}" : pwd
+                }
+                url = version.endsWith('-SNAPSHOT') ? new URI(snapshotUrl) : new URI(releaseUrl)
+                allowInsecureProtocol = true
+                //认证用户和密码
+                credentials {
+                    username name
+                    password pwd
+                }
+            }
+        }
+    }
+    signing {
+        required {
+            def file = new File("$rootDir/gradle.properties")
+            if (file.exists()) {
+                def gradleProperties = new Properties()
+                gradleProperties.load(new FileInputStream(file))
+                if (!gradleProperties.getProperty('signing.keyId', '').isBlank()) {
+                    return true
+                }
+            }
+            return false
+        }
+        sign publishing.publications.maven
+    }
 
     task release(dependsOn: [build, copyJar])
+
+    def needDeployProject = {
+        return ["acp-admin-cloud-constant",
+                "acp-admin-cloud-dependencies"].toArray().contains("$project.name")
+    } as Object
+
+    publish.onlyIf { needDeployProject() }
+    generateMetadataFileForMavenPublication.onlyIf { needDeployProject() }
+    generatePomFileForMavenPublication.onlyIf { needDeployProject() }
+    publishAllPublicationsToMavenRepository.onlyIf { needDeployProject() }
+    publishMavenPublicationToMavenLocal.onlyIf { needDeployProject() }
+    publishMavenPublicationToMavenRepository.onlyIf { needDeployProject() }
+    publishToMavenLocal.onlyIf { needDeployProject() }
 }

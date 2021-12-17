@@ -10,9 +10,6 @@ bootJar {
         attributes('Version': "${project.version}", 'Provider': "Gradle ${projectProperties.getProperty('gradleVersion')}", 'JDK': "${projectProperties.getProperty('javaVersion')}", 'Kotlin': "${projectProperties.getProperty('kotlinVersion')}", 'Project': 'Acp Admin Cloud')
     }
 }
-test {
-    exclude '**/*nobuild**'
-}
 dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
