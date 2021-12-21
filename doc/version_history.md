@@ -8,6 +8,8 @@
     - Spring Boot Admin 2.5.4
 - acp-admin-cloud-dependencies
   - [Upgrade] 优化Feign客户端写法
+- log-server
+  - [Upgrade] 修改日志级别
 - oauth-server
   - [Upgrade] 增加禁用用户内部接口
   - [Upgrade] 去除无用的WebSecurity配置

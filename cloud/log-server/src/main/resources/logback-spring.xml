@@ -19,13 +19,10 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ALL</level>
         </filter>
     </appender>
     <appender name="ALL-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
         <encoder>
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
@@ -37,7 +34,7 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ERROR</level>
         </filter>
     </appender>
     <!--    <appender name="ALL-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
@@ -61,13 +58,10 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ALL</level>
         </filter>
     </appender>
     <appender name="AUTH-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
         <encoder>
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
@@ -79,7 +73,7 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ERROR</level>
         </filter>
     </appender>
     <!--    <appender name="AUTH-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
@@ -103,13 +97,10 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ALL</level>
         </filter>
     </appender>
     <appender name="ROUTE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
         <encoder>
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
@@ -121,7 +112,7 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ERROR</level>
         </filter>
     </appender>
     <!--    <appender name="ROUTE-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
@@ -145,13 +136,10 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ALL</level>
         </filter>
     </appender>
     <appender name="WORKFLOW-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
         <encoder>
             <pattern>${logPatternFileServer}</pattern>
             <charset>UTF8</charset>
@@ -163,7 +151,7 @@
             <maxHistory>180</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>ERROR</level>
         </filter>
     </appender>
     <!--    <appender name="WORKFLOW-LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
@@ -175,22 +163,22 @@
     <!--        </encoder>-->
     <!--    </appender>-->
 
-    <logger name="ALL" level="INFO" additivity="false">
+    <logger name="ALL" level="ALL" additivity="false">
         <appender-ref ref="ALL"/>
         <appender-ref ref="ALL-ERROR"/>
         <!--        <appender-ref ref="ALL-LOGSTASH"/>-->
     </logger>
-    <logger name="AUTH" level="INFO" additivity="false">
+    <logger name="AUTH" level="ALL" additivity="false">
         <appender-ref ref="AUTH"/>
         <appender-ref ref="AUTH-ERROR"/>
         <!--        <appender-ref ref="AUTH-LOGSTASH"/>-->
     </logger>
-    <logger name="ROUTE" level="INFO" additivity="false">
+    <logger name="ROUTE" level="ALL" additivity="false">
         <appender-ref ref="ROUTE"/>
         <appender-ref ref="ROUTE-ERROR"/>
         <!--        <appender-ref ref="ROUTE-LOGSTASH"/>-->
     </logger>
-    <logger name="WORKFLOW" level="INFO" additivity="false">
+    <logger name="WORKFLOW" level="ALL" additivity="false">
         <appender-ref ref="WORKFLOW"/>
         <appender-ref ref="WORKFLOW-ERROR"/>
         <!--        <appender-ref ref="WORKFLOW-LOGSTASH"/>-->
