@@ -2,7 +2,7 @@
 ##### v5.1.2
 - Global
   - [Upgrade] 升级依赖
-    - Acp 2021.0.0-M3
+    - Acp 2021.0.0
     - kotlin 1.6.0
     - Spring Boot 2.6.1
     - Spring Boot Admin 2.5.4

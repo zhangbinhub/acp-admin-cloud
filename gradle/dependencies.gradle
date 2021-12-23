@@ -9,7 +9,7 @@ versions += [
         kotlinCoroutines: "1.5.2",
         springBoot      : "2.6.1",
         springBootAdmin : "2.5.4",
-        acp             : "2021.0.0-M5",
+        acp             : "2021.0.0-M6",
         logstash        : "6.3",
         flowable        : "6.6.0",
         mysql           : "8.0.27"
