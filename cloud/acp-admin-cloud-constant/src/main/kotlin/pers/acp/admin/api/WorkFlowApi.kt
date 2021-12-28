@@ -11,6 +11,7 @@ object WorkFlowApi {
     const val definitionDeploy = "$definition/deploy"
     const val start = "/start"
     const val pending = "/pending"
+    const val distribute = "/distribute"
     const val claim = "/claim"
     const val transfer = "/transfer"
     const val delegate = "/delegate"
@@ -22,4 +23,5 @@ object WorkFlowApi {
     const val termination = "$instance/termination"
     const val myProcess = "$instance/my-process"
     const val task = "/task"
+    const val taskList = "/task-list"
 }

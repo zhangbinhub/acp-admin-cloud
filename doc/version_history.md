@@ -14,6 +14,8 @@
   - [Upgrade] 增加禁用用户内部接口
   - [Upgrade] 去除无用的WebSecurity配置
 - workflow-server
+  - [Upgrade] 任务详情增加待办人列表
+  - [Upgrade] 增加任务分配和任务强制转办接口
   - [Add] 增加待办生成和完成通知写法
 ##### v5.1.1
 - Global
