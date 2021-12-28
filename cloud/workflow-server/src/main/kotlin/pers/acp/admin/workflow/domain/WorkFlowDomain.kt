@@ -94,7 +94,8 @@ constructor(
                     description = params[WorkFlowParamKey.description]?.toString() ?: "",
                     startUser = getUserById(processInstance.startUserId),
                     taskOwnerUser = getUserById(task.owner),
-                    delegated = task.delegationState == DelegationState.PENDING
+                    delegated = task.delegationState == DelegationState.PENDING,
+                    pendingUserList = getUserListByIdList(taskCreateListener.findTaskPendingUserIdList(task.id))
                 )
             } ?: throw ServerException("获取流程实例失败")
 
@@ -300,12 +301,15 @@ constructor(
      * @param userId 用户ID
      */
     @Throws(ServerException::class)
-    fun findTaskList(processInstanceId: String, userId: String): List<ProcessTaskVo> =
+    fun findTaskList(processInstanceId: String, userId: String? = null): List<ProcessTaskVo> =
         try {
-            taskService.createTaskQuery().processInstanceId(processInstanceId)
-                .taskAssignee(userId).list().map {
-                    taskToVo(it)
+            taskService.createTaskQuery().processInstanceId(processInstanceId).apply {
+                if (!CommonTools.isNullStr(userId)) {
+                    this.taskAssignee(userId)
                 }
+            }.list().map {
+                taskToVo(it)
+            }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
             throw ServerException(e.message)
@@ -363,20 +367,24 @@ constructor(
      */
     @Transactional
     @Throws(ServerException::class)
-    fun claimTask(taskId: String) {
+    fun claimTask(taskId: String, userId: String? = null) {
         try {
-            commonOauthServer.userInfo()?.let { userInfo ->
+            (if (CommonTools.isNullStr(userId)) {
+                commonOauthServer.userInfo()?.id ?: throw ServerException("获取当前登录用户信息失败！")
+            } else {
+                userId!!
+            }).let { targetUserId ->
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
                     logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
                 taskCreateListener.findTaskPendingUserIdList(taskId).let { userIdList ->
-                    taskService.claim(taskId, userInfo.id)
+                    taskService.claim(taskId, targetUserId)
                     taskCreateListener.notifyPendingFinished(taskId, userIdList)
-                    taskCreateListener.notifyPendingCreated(taskId, listOf(userInfo.id!!))
+                    taskCreateListener.notifyPendingCreated(taskId, listOf(targetUserId))
                 }
-            } ?: throw ServerException("获取当前登录用户信息失败！")
+            }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
             throw ServerException(e.message)
@@ -398,10 +406,11 @@ constructor(
                     logAdapter.error("流程任务【$taskId】不存在！")
                     throw ServerException("流程任务不存在！")
                 }
-                taskService.setOwner(taskId, userInfo.id)
-                taskService.setAssignee(taskId, acceptUserId)
-                taskCreateListener.notifyPendingFinished(taskId, listOf(userInfo.id!!))
-                taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
+                taskCreateListener.findTaskPendingUserIdList(taskId).let { userIdList ->
+                    taskService.setAssignee(taskId, acceptUserId)
+                    taskCreateListener.notifyPendingFinished(taskId, userIdList)
+                    taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
+                }
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)

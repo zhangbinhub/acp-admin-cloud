@@ -11,20 +11,24 @@ object WorkFlowExpression {
     /**
      * 流程定义
      */
-    const val flowDefinition = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"
+    const val flowDefinition =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowDefinition + "')"
+
+    /**
+     * 流程管理
+     */
+    const val flowAdmin =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "')"
 
     /**
      * 获取流程待办任务
      */
-    const val flowPending = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowPending + "')"
+    const val flowPending =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowPending + "')"
 
     /**
      * 流程处理
      */
-    const val flowProcess = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowProcess + "')"
-
-    /**
-     * 流程终止
-     */
-    const val flowTermination = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "','" + ModuleFuncCode.flowProcess + "')"
+    const val flowProcess =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.flowAdmin + "','" + ModuleFuncCode.flowProcess + "')"
 }
