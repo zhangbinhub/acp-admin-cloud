@@ -3,6 +3,9 @@ dependencyManagement {
     imports {
         mavenBom("io.github.zhangbinhub.acp.dependency:acp-dependency:$versions.acp")
     }
+    dependencies {
+        dependency "$group:acp-admin-cloud-dependencies:$version"
+    }
 }
 dependencies {
     api project(":cloud:acp-admin-cloud-constant")
