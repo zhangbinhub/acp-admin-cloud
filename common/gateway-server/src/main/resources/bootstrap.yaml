@@ -2,10 +2,9 @@ server:
   port: ${acp_server_port:8771}
   http2:
     enabled: true
-  tomcat:
-    uri-encoding: UTF-8
+  undertow:
     threads:
-      max: 1000
+      worker: 1000
 spring:
   profiles:
     active: ${acp_profile_active:dev}

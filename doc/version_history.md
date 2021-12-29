@@ -3,11 +3,13 @@
 - Global
   - [Upgrade] 升级依赖
     - Acp 2021.0.0
-    - kotlin 1.6.0
-    - Spring Boot 2.6.1
-    - Spring Boot Admin 2.5.4
+    - kotlin 1.6.10
+    - Spring Boot 2.6.2
+    - Spring Boot Admin 2.5.5
 - acp-admin-cloud-dependencies
   - [Upgrade] 优化Feign客户端写法
+- admin-server
+  - [Upgrade] 默认 tomcat 切换为 undertow
 - log-server
   - [Upgrade] 修改日志级别
 - oauth-server
