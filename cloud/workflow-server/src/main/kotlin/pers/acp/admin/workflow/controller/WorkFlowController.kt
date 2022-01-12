@@ -22,6 +22,7 @@ import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import io.github.zhangbinhub.acp.boot.vo.ErrorVo
 import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
+import pers.acp.admin.constant.TokenConstant
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
@@ -175,7 +176,10 @@ constructor(
             }
         }.let {
             if (it) {
-                workFlowDomain.deleteProcessInstance(processTerminationPo).let {
+                workFlowDomain.deleteProcessInstance(
+                    processTerminationPo,
+                    commonOauthServer.tokenInfo()?.additionalInformation?.get(TokenConstant.USER_INFO_ID)?.toString()
+                ).let {
                     ResponseEntity.ok(InfoVo(message = "强制结束流程实例成功"))
                 }
             } else {

@@ -25,12 +25,12 @@ class UserPasswordAuthenticationProvider(
         return authentication!!.name?.let { username ->
             userDetailsService.loadUserByUsername(username).let { user ->
                 if (!user.isEnabled) {
-                    throw CustomerOAuth2Exception("用户已被锁定或禁用！")
+                    throw CustomerOAuth2Exception("用户【${user.username}】已被锁定或禁用！")
                 }
                 authentication.credentials?.toString()?.let { password ->
                     if (!userPasswordEncrypt.matches(password, user.password)) {
                         userDetailsService.storePasswordErrorTime(username)
-                        throw CustomerOAuth2Exception("用户名或密码不正确！")
+                        throw CustomerOAuth2Exception("【${user.username}】用户名或密码不正确！")
                     } else {
                         userDetailsService.clearPasswordErrorTime(username)
                     }
