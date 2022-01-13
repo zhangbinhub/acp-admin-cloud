@@ -5,7 +5,7 @@
     - Acp 2021.0.0
     - kotlin 1.6.10
     - Spring Boot 2.6.2
-    - Spring Boot Admin 2.5.5
+    - Spring Boot Admin 2.6.0
 - acp-admin-cloud-dependencies
   - [Upgrade] 优化Feign客户端写法
 - admin-server
@@ -15,9 +15,11 @@
 - oauth-server
   - [Upgrade] 增加禁用用户内部接口
   - [Upgrade] 去除无用的WebSecurity配置
+  - [Upgrade] 优化认证日志
 - workflow-server
   - [Upgrade] 任务详情增加待办人列表
   - [Upgrade] 增加任务分配和任务强制转办接口
+  - [Upgrade] 增加流程处理日志
   - [Add] 增加待办生成和完成通知写法
 ##### v5.1.1
 - Global

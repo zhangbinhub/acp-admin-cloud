@@ -250,7 +250,15 @@ constructor(
                 processStartPo.processDefinitionKey,
                 processStartPo.businessKey,
                 params
-            ).id
+            ).id.also {
+                logAdapter.info(
+                    "流程启动成功：流程定义【${processStartPo.processDefinitionKey}】流程实例ID【$it】业务KEY【${processStartPo.businessKey}】启动人【${
+                        getUserById(
+                            userId
+                        ).loginNo
+                    }】"
+                )
+            }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
             throw ServerException(e.message)
@@ -374,6 +382,7 @@ constructor(
             } else {
                 userId!!
             }).let { targetUserId ->
+                Authentication.setAuthenticatedUserId(targetUserId)
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
                     logAdapter.error("流程任务【$taskId】不存在！")
@@ -384,6 +393,7 @@ constructor(
                     taskCreateListener.notifyPendingFinished(taskId, userIdList)
                     taskCreateListener.notifyPendingCreated(taskId, listOf(targetUserId))
                 }
+                logAdapter.info("任务签收成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】签收人【${getUserById(targetUserId).loginNo}】")
             }
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -401,6 +411,7 @@ constructor(
     fun turnTask(taskId: String, acceptUserId: String) {
         try {
             commonOauthServer.userInfo()?.let { userInfo ->
+                Authentication.setAuthenticatedUserId(userInfo.id)
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
                     logAdapter.error("流程任务【$taskId】不存在！")
@@ -411,6 +422,9 @@ constructor(
                     taskCreateListener.notifyPendingFinished(taskId, userIdList)
                     taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
                 }
+                logAdapter.info(
+                    "任务转办成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${getUserById(acceptUserId).loginNo}】"
+                )
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -428,6 +442,7 @@ constructor(
     fun delegateTask(taskId: String, acceptUserId: String) {
         try {
             commonOauthServer.userInfo()?.let { userInfo ->
+                Authentication.setAuthenticatedUserId(userInfo.id)
                 val task = taskService.createTaskQuery().taskId(taskId).singleResult()
                 if (task == null) {
                     logAdapter.error("流程任务【$taskId】不存在！")
@@ -437,6 +452,9 @@ constructor(
                 taskService.delegateTask(taskId, acceptUserId)
                 taskCreateListener.notifyPendingFinished(taskId, listOf(userInfo.id!!))
                 taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
+                logAdapter.info(
+                    "任务委派成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${getUserById(acceptUserId).loginNo}】"
+                )
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
             logAdapter.error(e.message, e)
@@ -453,6 +471,7 @@ constructor(
     @Throws(ServerException::class)
     fun processTask(processHandlingPo: ProcessHandlingPo, userId: String) {
         try {
+            Authentication.setAuthenticatedUserId(userId)
             val task = taskService.createTaskQuery().taskId(processHandlingPo.taskId).singleResult()
             if (task == null) {
                 logAdapter.error("流程任务【${processHandlingPo.taskId}】不存在！")
@@ -492,6 +511,7 @@ constructor(
                 taskService.complete(task.id, params)
                 taskCreateListener.notifyPendingFinished(task.id, listOf(userId))
             }
+            logAdapter.info("任务处理完成：流程实例ID【${task.processInstanceId}】任务ID【${processHandlingPo.taskId}】操作人【${getUserById(userId).loginNo}】意见【$comment】")
             // 添加至我处理过的流程实例
             myProcessInstanceRepository.findByUserIdAndProcessInstanceId(userId, task.processInstanceId).let {
                 if (!it.isPresent) {
@@ -516,7 +536,7 @@ constructor(
 
     @Transactional
     @Throws(ServerException::class)
-    fun deleteProcessInstance(processTerminationPo: ProcessTerminationPo) {
+    fun deleteProcessInstance(processTerminationPo: ProcessTerminationPo, userId: String? = null) {
         taskService.createTaskQuery().processInstanceId(processTerminationPo.processInstanceId).list()
             .associateBy({
                 it.id
@@ -530,6 +550,7 @@ constructor(
                 taskUserIdList.forEach { (taskId, userIdList) ->
                     taskCreateListener.notifyPendingFinished(taskId, userIdList)
                 }
+                logAdapter.info("流程删除成功：流程实例ID【${processTerminationPo.processInstanceId}】操作人【${getUserById(userId).loginNo}】")
             }
     }
 

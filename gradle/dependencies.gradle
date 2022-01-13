@@ -8,7 +8,7 @@ versions += [
         kotlin          : "1.6.10",
         kotlinCoroutines: "1.5.2",
         springBoot      : "2.6.2",
-        springBootAdmin : "2.5.5",
+        springBootAdmin : "2.6.0",
         acp             : "2021.0.0-M7",
         logstash        : "6.3",
         flowable        : "6.6.0",
