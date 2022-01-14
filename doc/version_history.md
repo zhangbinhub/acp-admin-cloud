@@ -16,6 +16,7 @@
   - [Upgrade] 增加禁用用户内部接口
   - [Upgrade] 去除无用的WebSecurity配置
   - [Upgrade] 优化认证日志
+  - [Upgrade] 修改“获取机构列表（编码或名称）”和“通过登录号或姓名，查询用户列表”两个接口，传参使用RequestParam，避免URL中出现中文
 - workflow-server
   - [Upgrade] 任务详情增加待办人列表
   - [Upgrade] 增加任务分配和任务强制转办接口

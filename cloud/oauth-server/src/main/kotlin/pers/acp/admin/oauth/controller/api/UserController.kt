@@ -42,36 +42,44 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["用户信息"])
 class UserController @Autowired
-constructor(logAdapter: LogAdapter,
-            private val userDomain: UserDomain,
-            private val runtimeConfigDomain: RuntimeConfigDomain) : BaseController(logAdapter) {
+constructor(
+    logAdapter: LogAdapter,
+    private val userDomain: UserDomain,
+    private val runtimeConfigDomain: RuntimeConfigDomain
+) : BaseController(logAdapter) {
 
     @ApiOperation(value = "获取当前用户信息", notes = "根据当前登录的用户信息，并查询详细信息，包含用户基本信息、所属角色、所属机构")
     @ApiResponses(ApiResponse(code = 400, message = "找不到用户信息", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.currUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun userInfo(user: OAuth2Authentication): ResponseEntity<User> =
-            (userDomain.getUserInfoByLoginNo(user.name)?.apply {
-                if (this.lastUpdatePasswordTime == null) {
-                    this.passwordExpire = true
-                } else {
-                    runtimeConfigDomain.findByName(OauthConstant.passwordUpdateIntervalTime)?.let { runtimeConfig ->
-                        if (runtimeConfig.enabled && !CommonTools.isNullStr(runtimeConfig.value)) {
-                            this.passwordExpire = (System.currentTimeMillis() - this.lastUpdatePasswordTime!! - runtimeConfig.value!!.toLong()) >= 0
-                        }
+        (userDomain.getUserInfoByLoginNo(user.name)?.apply {
+            if (this.lastUpdatePasswordTime == null) {
+                this.passwordExpire = true
+            } else {
+                runtimeConfigDomain.findByName(OauthConstant.passwordUpdateIntervalTime)?.let { runtimeConfig ->
+                    if (runtimeConfig.enabled && !CommonTools.isNullStr(runtimeConfig.value)) {
+                        this.passwordExpire =
+                            (System.currentTimeMillis() - this.lastUpdatePasswordTime!! - runtimeConfig.value!!.toLong()) >= 0
                     }
                 }
-            } ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
+            }
+        } ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "更新当前用户信息", notes = "1、根据当前登录的用户信息，更新头像、名称、手机；2、如果原密码和新密码均不为空，校验原密码并修改为新密码")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；找不到用户信息；原密码不正确；新密码为空；", response = ErrorVo::class))
-    @RequestMapping(value = [OauthApi.currUser], method = [RequestMethod.PUT, RequestMethod.PATCH], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @RequestMapping(
+        value = [OauthApi.currUser],
+        method = [RequestMethod.PUT, RequestMethod.PATCH],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun updateCurrUser(user: OAuth2Authentication, @RequestBody @Valid userInfoPo: UserInfoPo): ResponseEntity<User> {
         val userInfo = userDomain.getUserInfoByLoginNo(user.name) ?: throw ServerException("找不到用户信息")
         if (!CommonTools.isNullStr(userInfoPo.mobile)) {
-            userDomain.getMobileForOtherUser(userInfoPo.mobile!!, userInfo.id)?.let { throw ServerException("手机号已存在，请重新输入") }
+            userDomain.getMobileForOtherUser(userInfoPo.mobile!!, userInfo.id)
+                ?.let { throw ServerException("手机号已存在，请重新输入") }
         }
         userInfo.avatar = userInfoPo.avatar ?: ""
         userInfo.name = userInfoPo.name ?: userInfo.name
@@ -95,36 +103,47 @@ constructor(logAdapter: LogAdapter,
     @PreAuthorize(UserConfigExpression.userConfig)
     @GetMapping(value = [OauthApi.modifiableUser], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun modifiableUser(user: OAuth2Authentication): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.findModifiableUserList(user.name))
+        ResponseEntity.ok(userDomain.findModifiableUserList(user.name))
 
     @ApiOperation(value = "新建用户信息", notes = "名称、登录账号、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = User::class), ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 201, message = "创建成功", response = User::class),
+        ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；", response = ErrorVo::class)
+    )
     @PreAuthorize(UserConfigExpression.userAdd)
     @PutMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(user: OAuth2Authentication, @RequestBody @Valid userPo: UserPo): ResponseEntity<User> =
-            userDomain.doCreate(user.name, userPo).let {
-                ResponseEntity.status(HttpStatus.CREATED).body(it)
-            }
+        userDomain.doCreate(user.name, userPo).let {
+            ResponseEntity.status(HttpStatus.CREATED).body(it)
+        }
 
     @ApiOperation(value = "删除指定的用户信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；没有权限做此操作；", response = ErrorVo::class))
     @PreAuthorize(UserConfigExpression.userDelete)
     @DeleteMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun delete(user: OAuth2Authentication,
-               @ApiParam(value = "id列表", required = true)
-               @NotEmpty(message = "id不能为空")
-               @NotNull(message = "id不能为空")
-               @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVo> {
+    fun delete(
+        user: OAuth2Authentication,
+        @ApiParam(value = "id列表", required = true)
+        @NotEmpty(message = "id不能为空")
+        @NotNull(message = "id不能为空")
+        @RequestBody
+        idList: MutableList<String>
+    ): ResponseEntity<InfoVo> {
         userDomain.doDelete(user.name, idList)
         return ResponseEntity.ok(InfoVo(message = "删除成功"))
     }
 
     @ApiOperation(value = "更新用户信息", notes = "名称、手机号、级别、序号、是否启用、关联机构、管理机构、关联角色")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(
+            code = 400,
+            message = "参数校验不通过；角色编码非法，请重新输入；没有权限做此操作；ID不能为空；找不到信息；",
+            response = ErrorVo::class
+        )
+    )
     @PreAuthorize(UserConfigExpression.userUpdate)
     @PatchMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
@@ -153,7 +172,7 @@ constructor(logAdapter: LogAdapter,
     @PostMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun query(@RequestBody @Valid userQueryPo: UserQueryPo): ResponseEntity<Page<UserVo>> =
-            ResponseEntity.ok(userDomain.doQuery(userQueryPo))
+        ResponseEntity.ok(userDomain.doQuery(userQueryPo))
 
     @ApiOperation(value = "查询用户信息（用户ID）", notes = "根据用户ID查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
@@ -161,69 +180,101 @@ constructor(logAdapter: LogAdapter,
     @GetMapping(value = [OauthApi.userConfig + "/{userId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun getUserInfo(@PathVariable userId: String): ResponseEntity<User> =
-            (userDomain.getUserInfoById(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
+        (userDomain.getUserInfoById(userId) ?: throw ServerException("找不到用户信息")).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "查询用户信息（登录账号）", notes = "根据用户登录账号查询详细信息")
     @ApiResponses(ApiResponse(code = 400, message = "找不到信息；", response = ErrorVo::class))
     @GetMapping(value = [OauthApi.userConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun getUserInfoByLoginNo(@ApiParam(value = "登录账号", required = true)
-                             @NotBlank(message = "登录账号不能为空")
-                             @RequestParam loginNo: String): ResponseEntity<UserVo> =
-            userDomain.getUserVoByLoginNo(loginNo).let { ResponseEntity.ok(it) }
+    fun getUserInfoByLoginNo(
+        @ApiParam(value = "登录账号", required = true)
+        @NotBlank(message = "登录账号不能为空")
+        @RequestParam loginNo: String
+    ): ResponseEntity<UserVo> =
+        userDomain.getUserVoByLoginNo(loginNo).let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "通过登录号或姓名，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
-    @GetMapping(value = [OauthApi.userList + "/{loginNoOrName}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = [OauthApi.userList + "-by-code-or-name"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
-    fun getUserListByLoginNoOrName(@ApiParam(value = "登录号或姓名", required = true)
-                                   @NotBlank(message = "登录号或姓名不能为空")
-                                   @PathVariable loginNoOrName: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserVoListByLoginNoOrName(loginNoOrName, false))
+    fun getUserListByLoginNoOrName(
+        @ApiParam(value = "登录号或姓名", required = true)
+        @NotBlank(message = "登录号或姓名不能为空")
+        @RequestParam loginNoOrName: String
+    ): ResponseEntity<List<UserVo>> =
+        ResponseEntity.ok(userDomain.getUserVoListByLoginNoOrName(loginNoOrName, false))
 
     @ApiOperation(value = "通过角色编码，查询当前机构下的用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
-    @GetMapping(value = [OauthApi.currOrgUserList], params = ["!orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [OauthApi.currOrgUserList],
+        params = ["!orgLevel", "roleCode"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @Throws(ServerException::class)
-    fun getUserListByCurrOrgAndRole(user: OAuth2Authentication,
-                                    @ApiParam(value = "角色编码", required = true)
-                                    @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserVoListByCurrOrgAndRole(user.name, roleCode.split(",")))
+    fun getUserListByCurrOrgAndRole(
+        user: OAuth2Authentication,
+        @ApiParam(value = "角色编码", required = true)
+        @NotBlank(message = "角色编码不能为空")
+        @RequestParam roleCode: String
+    ): ResponseEntity<List<UserVo>> =
+        ResponseEntity.ok(userDomain.getUserVoListByCurrOrgAndRole(user.name, roleCode.split(",")))
 
     @ApiOperation(value = "通过相对机构级别和角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
-    @GetMapping(value = [OauthApi.currOrgUserList], params = ["orgLevel", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [OauthApi.currOrgUserList],
+        params = ["orgLevel", "roleCode"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @Throws(ServerException::class)
-    fun getUserListByRelativeOrgAndRole(user: OAuth2Authentication,
-                                        @ApiParam(value = "机构层级", required = true)
-                                        @NotBlank(message = "机构层级不能为空")
-                                        @RequestParam orgLevel: String,
-                                        @ApiParam(value = "角色编码", required = true)
-                                        @NotBlank(message = "角色编码不能为空")
-                                        @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserVoListByRelativeOrgAndRole(user.name,
-                    orgLevel.split(",").map { item -> item.toInt() },
-                    roleCode.split(",")))
+    fun getUserListByRelativeOrgAndRole(
+        user: OAuth2Authentication,
+        @ApiParam(value = "机构层级", required = true)
+        @NotBlank(message = "机构层级不能为空")
+        @RequestParam orgLevel: String,
+        @ApiParam(value = "角色编码", required = true)
+        @NotBlank(message = "角色编码不能为空")
+        @RequestParam roleCode: String
+    ): ResponseEntity<List<UserVo>> =
+        ResponseEntity.ok(
+            userDomain.getUserVoListByRelativeOrgAndRole(
+                user.name,
+                orgLevel.split(",").map { item -> item.toInt() },
+                roleCode.split(",")
+            )
+        )
 
     @ApiOperation(value = "通过机构编码和角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
-    @GetMapping(value = [OauthApi.userList], params = ["orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [OauthApi.userList],
+        params = ["orgCode", "roleCode"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @Throws(ServerException::class)
-    fun getUserListByOrgCodeAndRole(@ApiParam(value = "机构编码", required = true)
-                                    @NotBlank(message = "机构编码不能为空")
-                                    @RequestParam orgCode: String,
-                                    @ApiParam(value = "角色编码", required = true)
-                                    @NotBlank(message = "角色编码不能为空")
-                                    @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserVoListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
+    fun getUserListByOrgCodeAndRole(
+        @ApiParam(value = "机构编码", required = true)
+        @NotBlank(message = "机构编码不能为空")
+        @RequestParam orgCode: String,
+        @ApiParam(value = "角色编码", required = true)
+        @NotBlank(message = "角色编码不能为空")
+        @RequestParam roleCode: String
+    ): ResponseEntity<List<UserVo>> =
+        ResponseEntity.ok(userDomain.getUserVoListByOrgCodeAndRole(orgCode.split(","), roleCode.split(",")))
 
     @ApiOperation(value = "通过角色编码，查询用户列表")
     @PreAuthorize(UserConfigExpression.userQuery)
-    @GetMapping(value = [OauthApi.userList], params = ["!orgCode", "roleCode"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(
+        value = [OauthApi.userList],
+        params = ["!orgCode", "roleCode"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @Throws(ServerException::class)
-    fun getUserListByRole(@ApiParam(value = "角色编码", required = true)
-                          @NotBlank(message = "角色编码不能为空")
-                          @RequestParam roleCode: String): ResponseEntity<List<UserVo>> =
-            ResponseEntity.ok(userDomain.getUserVoListByRole(roleCode.split(",")))
+    fun getUserListByRole(
+        @ApiParam(value = "角色编码", required = true)
+        @NotBlank(message = "角色编码不能为空")
+        @RequestParam roleCode: String
+    ): ResponseEntity<List<UserVo>> =
+        ResponseEntity.ok(userDomain.getUserVoListByRole(roleCode.split(",")))
 }
