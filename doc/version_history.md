@@ -1,13 +1,14 @@
 ## 版本更新记录
 ##### v5.1.2
 - Global
+  - [Upgrade] 更新文档
   - [Upgrade] 升级依赖
     - Acp 2021.0.0
     - kotlin 1.6.10
     - Spring Boot 2.6.2
     - Spring Boot Admin 2.6.0
 - acp-admin-cloud-dependencies
-  - [Upgrade] 优化Feign客户端写法
+  - [Upgrade] 优化Feign客户端写法，hystrix统一获取错误信息，并传递
 - admin-server
   - [Upgrade] 默认 tomcat 切换为 undertow
 - log-server
