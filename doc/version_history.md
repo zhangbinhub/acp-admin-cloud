@@ -6,7 +6,7 @@
     - Acp 2021.0.0
     - kotlin 1.6.10
     - Spring Boot 2.6.2
-    - Spring Boot Admin 2.6.0
+    - Spring Boot Admin 2.6.1
 - acp-admin-cloud-dependencies
   - [Upgrade] 优化Feign客户端写法，hystrix统一获取错误信息，并传递
 - admin-server
