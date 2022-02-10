@@ -10,6 +10,7 @@
 
 - [Spring Boot 2.6.2](https://projects.spring.io/spring-boot)
 - [Acp 2021.0.0](https://github.com/zhangbinhub/acp)
+- [Spring Boot Admin 2.6.2](https://github.com/codecentric/spring-boot-admin)
 
 ## 技术栈
 
@@ -128,7 +129,7 @@ gradle全局参数：
 
 - 项目根路径下创建 gradle.properties 并添加如下参数（参数值根据实际情况修改）
 
-```properties
+```
 mavenUploadUrlRelease=https://maven.com/repositories/releases/
 mavenUploadUrlSnapshot=https://maven.com/repositories/snapshot/
 mavenUserName=username
@@ -141,7 +142,7 @@ mavenPassword=password
 
 - 项目根路径下创建 gradle.properties 并添加如下参数（参数值根据实际情况修改）
 
-```properties
+```
 mavenUploadUrlRelease=https://maven.com/repositories/releases/
 mavenUploadUrlSnapshot=https://maven.com/repositories/snapshot/
 mavenUserName=username
@@ -156,7 +157,7 @@ signing.secretKeyRingFile=keyFile
 ### （四）升级命令
 
 ```
-    gradlew wrapper --gradle-version=7.2 --distribution-type=all
+    gradlew wrapper --gradle-version=7.4 --distribution-type=all
 ```
 
 ## 三、工程说明
@@ -177,13 +178,13 @@ signing.secretKeyRingFile=keyFile
 - windows：修改[server.bat](doc/script/server.bat)内相关参数后，直接运行即可
 - Linux 命令：
 
-|          命令         |           描述          |
-| --------------------- | ----------------------- | 
-| ./server.sh           | 查看可用参数            |
-| ./server.sh status    | 查看系统运行状态        |
-| ./server.sh start     | 启动应用                |
-| ./server.sh stop      | 停止应用                |
-| ./server.sh restart   | 重启应用                |
+| 命令                  | 描述       |
+|---------------------|----------|
+| ./server.sh         | 查看可用参数   |
+| ./server.sh status  | 查看系统运行状态 |
+| ./server.sh start   | 启动应用     |
+| ./server.sh stop    | 停止应用     |
+| ./server.sh restart | 重启应用     |
 
 ## 五、基础中间件环境搭建
 
@@ -193,7 +194,7 @@ signing.secretKeyRingFile=keyFile
 
 命令模式进入dockerfile目录，执行启动命令
 
-```bash
+```
 docker-compose -f docker-compose-base.yaml up -d
 ```
 
@@ -201,7 +202,7 @@ docker-compose -f docker-compose-base.yaml up -d
 
 命令模式进入dockerfile目录，执行启动命令
 
-```bash
+```
 docker-compose -f docker-compose-base.yaml stop
 ```
 
@@ -209,7 +210,7 @@ docker-compose -f docker-compose-base.yaml stop
 
 命令模式进入dockerfile目录，执行启动命令
 
-```bash
+```
 docker-compose -f docker-compose-base.yaml down
 ```
 
@@ -250,7 +251,7 @@ http://127.0.0.1:5601
 - 配合 Spring Cloud Sleuth 进行服务链路追踪分析、统计，Zipkin Server 需要自行安装部署，详情请参考[官网](https://zipkin.io/)
 - 使用方法：
     - 添加依赖
-         ```groovy
+         ```
          implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
          implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
          ```
@@ -360,26 +361,26 @@ http://127.0.0.1:5601
 
 ## 十一、环境变量及启动参数
 
-|    变量名    |     描述     | 默认值 |  说明  |
-| ----------- | ----------- | ----- | ----- |
-|acp_profile_active|激活的配置环境|dev|服务器部署时建议java启动命令加入参数 -Dacp_profile_active 或 --acp_profile_active；容器部署时指定环境变量即可
-|acp_server_port|服务启动端口|0（随机端口）|服务器部署时建议java启动命令加入参数 -Dacp_server_port 或 --acp_server_port；容器部署时指定环境变量即可。服务不需要外部直接访问时，建议保持默认值。注：admin-server默认值：9099，gateway-server默认值：8771
-|acp_log_path|日志路径|logs/${spring.application.name}|服务器部署时建议java启动命令加入参数 -Dacp_log_path 或 --acp_log_path；容器部署时指定环境变量即可
-|acp_nacos_addr|nacos地址|127.0.0.1:8848|nacos服务地址，ip:port
-|acp_nacos_username|nacos用户名|nacos|nacos用户名，默认nacos，可自行在nacos管理端添加用户
-|acp_nacos_password|nacos密码|nacos|nacos用户密码，默认nacos，可自行在nacos管理端添加用户
-|acp_nacos_namespace|nacos命名空间|acp-cloud-admin|nacos命名空间，默认nacos，可自行在nacos管理端配置
-|acp_jvm_param|JVM启动参数|-server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8|该环境变量在容器部署时使用
+| 变量名                 | 描述        | 默认值                                                                                                                     | 说明                                                                                                                                          |
+|---------------------|-----------|-------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| acp_profile_active  | 激活的配置环境   | dev                                                                                                                     | 服务器部署时建议java启动命令加入参数 -Dacp_profile_active 或 --acp_profile_active；容器部署时指定环境变量即可                                                              |
+| acp_server_port     | 服务启动端口    | 0（随机端口）                                                                                                                 | 服务器部署时建议java启动命令加入参数 -Dacp_server_port 或 --acp_server_port；容器部署时指定环境变量即可。服务不需要外部直接访问时，建议保持默认值。注：admin-server默认值：9099，gateway-server默认值：8771 |
+| acp_log_path        | 日志路径      | logs/${spring.application.name}                                                                                         | 服务器部署时建议java启动命令加入参数 -Dacp_log_path 或 --acp_log_path；容器部署时指定环境变量即可                                                                          |
+| acp_nacos_addr      | nacos地址   | 127.0.0.1:8848                                                                                                          | nacos服务地址，ip:port                                                                                                                           |
+| acp_nacos_username  | nacos用户名  | nacos                                                                                                                   | nacos用户名，默认nacos，可自行在nacos管理端添加用户                                                                                                           |
+| acp_nacos_password  | nacos密码   | nacos                                                                                                                   | nacos用户密码，默认nacos，可自行在nacos管理端添加用户                                                                                                          |
+| acp_nacos_namespace | nacos命名空间 | acp-cloud-admin                                                                                                         | nacos命名空间，默认nacos，可自行在nacos管理端配置                                                                                                            |
+| acp_jvm_param       | JVM启动参数   | -server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8 | 该环境变量在容器部署时使用                                                                                                                               |
 
 ## 十二、JVM启动参数
 
-```shell
+```
 -server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8
 ```
 
 ## 十三、打包OCI镜像
 
-```groovy
+```
 bootBuildImage {
     docker {
         host = "tcp://localhost:2375"
