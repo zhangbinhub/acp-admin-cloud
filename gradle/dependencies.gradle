@@ -7,9 +7,9 @@ versions += [
         junitPlatform   : "1.8.2",
         kotlin          : "1.6.10",
         kotlinCoroutines: "1.5.2",
-        springBoot      : "2.6.2",
+        springBoot      : "2.6.3",
         springBootAdmin : "2.6.2",
-        acp             : "2021.0.0-M7",
+        acp             : "2021.0.0-M8",
         logstash        : "6.3",
         flowable        : "6.6.0",
         mysql           : "8.0.27"
