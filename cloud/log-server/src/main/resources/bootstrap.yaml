@@ -60,6 +60,8 @@ logging:
     name: ${logging.file.path}/${spring.application.name}.log
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+knife4j:
+  enable: true
 acp:
   cloud:
     log-server:

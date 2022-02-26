@@ -46,7 +46,7 @@ abstract class BaseSwaggerConfiguration(
             .build()
 
     protected fun buildDocket(basePackage: String, title: String): Docket =
-        Docket(DocumentationType.SWAGGER_2)
+        Docket(DocumentationType.OAS_30)
             .enable(swaggerConfiguration.enabled)
             .apiInfo(buildApiInfo(title))
             .select()

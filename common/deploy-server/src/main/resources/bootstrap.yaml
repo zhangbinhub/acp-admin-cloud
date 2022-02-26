@@ -59,6 +59,8 @@ management:
   endpoint:
     health:
       show-details: always
+knife4j:
+  enable: true
 acp:
   cloud:
     oauth:
