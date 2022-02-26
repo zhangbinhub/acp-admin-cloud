@@ -61,6 +61,8 @@ management:
       show-details: always
     flowable:
       enabled: true
+knife4j:
+  enable: true
 flowable:
   history-level: full
   check-process-definitions: false

@@ -55,6 +55,8 @@ management:
   endpoint:
     health:
       show-details: always
+knife4j:
+  enable: true
 # ===============================
 # = ACP Config
 # ===============================
