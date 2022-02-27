@@ -1,7 +1,7 @@
 package pers.acp.admin.deploy
 
-import org.springframework.boot.runApplication
 import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudAtomApplication
+import org.springframework.boot.runApplication
 
 /**
  * @author zhangbin by 09/04/2018 16:11

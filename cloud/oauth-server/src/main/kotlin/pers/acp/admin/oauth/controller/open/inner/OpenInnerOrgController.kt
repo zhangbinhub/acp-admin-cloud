@@ -1,19 +1,22 @@
 package pers.acp.admin.oauth.controller.open.inner
 
-import io.swagger.annotations.*
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import pers.acp.admin.api.CommonPath
-import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.OauthApi
+import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.vo.OrganizationVo
 import pers.acp.admin.oauth.domain.OrganizationDomain
 import pers.acp.admin.oauth.entity.Organization
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 16/01/2019

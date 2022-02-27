@@ -1,7 +1,6 @@
 package pers.acp.admin.workflow.base
 
 import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import kotlin.jvm.Throws
 
 abstract class PendingFinishedNotify : BaseWorkFlowNotify {
     @Throws(ServerException::class)

@@ -9,15 +9,15 @@ import io.swagger.annotations.ApiModelProperty
  */
 @ApiModel("运行配置信息")
 data class RuntimeConfigVo(
-        @ApiModelProperty("名称")
-        var name: String = "",
+    @ApiModelProperty("名称")
+    var name: String = "",
 
-        @ApiModelProperty("值")
-        var value: String? = null,
+    @ApiModelProperty("值")
+    var value: String? = null,
 
-        @ApiModelProperty("描述")
-        var configDes: String? = null,
+    @ApiModelProperty("描述")
+    var configDes: String? = null,
 
-        @ApiModelProperty("是否启用")
-        var enabled: Boolean? = null
+    @ApiModelProperty("是否启用")
+    var enabled: Boolean? = null
 )

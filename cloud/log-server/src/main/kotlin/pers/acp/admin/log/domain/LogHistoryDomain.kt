@@ -1,20 +1,20 @@
 package pers.acp.admin.log.domain
 
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import pers.acp.admin.log.entity.LoginLogHistory
-import pers.acp.admin.log.entity.OperateLogHistory
-import pers.acp.admin.log.entity.RouteLogHistory
-import pers.acp.admin.log.repo.*
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.log.constant.LogConstant
-import io.github.zhangbinhub.acp.core.CommonTools
+import pers.acp.admin.log.entity.LoginLogHistory
+import pers.acp.admin.log.entity.OperateLogHistory
+import pers.acp.admin.log.entity.RouteLogHistory
+import pers.acp.admin.log.repo.*
 
 /**
  * @author zhang by 12/09/2019
@@ -131,12 +131,12 @@ constructor(
         logAdapter.info("开始清理历史登录日志...")
         CommonTools.getNowDateTime().withTimeAtStartOfDay()
             .minusMonths(LogConstant.LOGIN_LOG_STATISTICS_MAX_MONTH).millis.also {
-            if (it < time) {
-                loginLogHistoryRepository.deleteAllByRequestTimeLessThan(it)
-            } else {
-                loginLogHistoryRepository.deleteAllByRequestTimeLessThan(time)
+                if (it < time) {
+                    loginLogHistoryRepository.deleteAllByRequestTimeLessThan(it)
+                } else {
+                    loginLogHistoryRepository.deleteAllByRequestTimeLessThan(time)
+                }
             }
-        }
         logAdapter.info("历史登录日志清理完成")
     }
 }

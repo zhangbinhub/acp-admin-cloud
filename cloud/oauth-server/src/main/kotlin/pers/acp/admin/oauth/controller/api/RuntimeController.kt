@@ -1,5 +1,10 @@
 package pers.acp.admin.oauth.controller.api
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
+import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
+import io.github.zhangbinhub.acp.core.CommonTools
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -9,23 +14,17 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import pers.acp.admin.api.OauthApi
 import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.oauth.constant.RuntimeConfigExpression
 import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.common.vo.RuntimeConfigVo
-import pers.acp.admin.api.OauthApi
 import pers.acp.admin.oauth.bus.publish.RefreshEventPublish
+import pers.acp.admin.oauth.constant.RuntimeConfigExpression
 import pers.acp.admin.oauth.controller.open.inner.OpenInnerRuntimeController
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.admin.oauth.po.RuntimePo
 import pers.acp.admin.oauth.po.RuntimeQueryPo
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-import io.github.zhangbinhub.acp.boot.vo.ErrorVo
-import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
-
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -39,38 +38,45 @@ import javax.validation.constraints.NotNull
 @RequestMapping(OauthApi.basePath)
 @Api(tags = ["运行参数配置"])
 class RuntimeController @Autowired
-constructor(logAdapter: LogAdapter,
-            private val openInnerRuntimeController: OpenInnerRuntimeController,
-            private val runtimeConfigDomain: RuntimeConfigDomain,
-            private val refreshEventPublish: RefreshEventPublish) : BaseController(logAdapter) {
+constructor(
+    logAdapter: LogAdapter,
+    private val openInnerRuntimeController: OpenInnerRuntimeController,
+    private val runtimeConfigDomain: RuntimeConfigDomain,
+    private val refreshEventPublish: RefreshEventPublish
+) : BaseController(logAdapter) {
 
     @ApiOperation(value = "新建参数信息", notes = "参数名称、参数值、描述、状态")
-    @ApiResponses(ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig::class), ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 201, message = "创建成功", response = RuntimeConfig::class),
+        ApiResponse(code = 400, message = "参数校验不通过；参数信息已存在；", response = ErrorVo::class)
+    )
     @PreAuthorize(RuntimeConfigExpression.runtimeAdd)
     @PutMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun add(@RequestBody @Valid runtimePo: RuntimePo): ResponseEntity<RuntimeConfig> =
-            runtimeConfigDomain.doCreate(runtimePo).also {
-                refreshEventPublish.doNotifyUpdateRuntime()
-            }.let {
-                ResponseEntity.status(HttpStatus.CREATED).body(it)
-            }
+        runtimeConfigDomain.doCreate(runtimePo).also {
+            refreshEventPublish.doNotifyUpdateRuntime()
+        }.let {
+            ResponseEntity.status(HttpStatus.CREATED).body(it)
+        }
 
     @ApiOperation(value = "删除指定的参数信息")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
     @PreAuthorize(RuntimeConfigExpression.runtimeDelete)
     @DeleteMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun delete(@ApiParam(value = "id列表", required = true)
-               @NotEmpty(message = "id不能为空")
-               @NotNull(message = "id不能为空")
-               @RequestBody
-               idList: MutableList<String>): ResponseEntity<InfoVo> =
-            runtimeConfigDomain.doDelete(idList).also {
-                refreshEventPublish.doNotifyUpdateRuntime()
-            }.let {
-                ResponseEntity.ok(InfoVo(message = "删除成功"))
-            }
+    fun delete(
+        @ApiParam(value = "id列表", required = true)
+        @NotEmpty(message = "id不能为空")
+        @NotNull(message = "id不能为空")
+        @RequestBody
+        idList: MutableList<String>
+    ): ResponseEntity<InfoVo> =
+        runtimeConfigDomain.doDelete(idList).also {
+            refreshEventPublish.doNotifyUpdateRuntime()
+        }.let {
+            ResponseEntity.ok(InfoVo(message = "删除成功"))
+        }
 
     @ApiOperation(value = "更新指定的参数信息", notes = "可更新参数值、描述、状态")
     @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；配置ID不能为空；找不到信息；", response = ErrorVo::class))
@@ -95,7 +101,7 @@ constructor(logAdapter: LogAdapter,
     @PostMapping(value = [OauthApi.runtimeConfig], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(ServerException::class)
     fun query(@RequestBody @Valid runtimeQueryPo: RuntimeQueryPo): ResponseEntity<Page<RuntimeConfig>> =
-            ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimeQueryPo))
+        ResponseEntity.ok(runtimeConfigDomain.doQuery(runtimeQueryPo))
 
     @ApiOperation(value = "获取参数信息", notes = "根据参数名称获取")
     @ApiResponses(ApiResponse(code = 400, message = "找不到参数信息；", response = ErrorVo::class))

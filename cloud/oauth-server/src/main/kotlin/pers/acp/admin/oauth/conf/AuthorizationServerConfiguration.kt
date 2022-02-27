@@ -3,17 +3,12 @@ package pers.acp.admin.oauth.conf
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
-import pers.acp.admin.oauth.security.SecurityClientDetailsService
-import pers.acp.admin.oauth.token.SecurityTokenService
-import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
-import pers.acp.admin.oauth.token.error.CustomerWebResponseExceptionTranslator
-import pers.acp.admin.oauth.token.granter.UserPasswordTokenGranter
-import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory
 import org.springframework.security.oauth2.provider.TokenGranter
@@ -24,6 +19,11 @@ import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCo
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory
+import pers.acp.admin.oauth.security.SecurityClientDetailsService
+import pers.acp.admin.oauth.token.SecurityTokenService
+import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
+import pers.acp.admin.oauth.token.error.CustomerWebResponseExceptionTranslator
+import pers.acp.admin.oauth.token.granter.UserPasswordTokenGranter
 
 /**
  * @author zhangbin by 11/04/2018 14:34

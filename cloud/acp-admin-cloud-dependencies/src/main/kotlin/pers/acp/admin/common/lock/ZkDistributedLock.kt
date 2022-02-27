@@ -1,9 +1,9 @@
 package pers.acp.admin.common.lock
 
-import org.apache.curator.framework.CuratorFramework
-import org.apache.curator.framework.recipes.locks.InterProcessMutex
 import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
+import org.apache.curator.framework.CuratorFramework
+import org.apache.curator.framework.recipes.locks.InterProcessMutex
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -12,8 +12,10 @@ import java.util.concurrent.TimeUnit
  * @author zhang by 30/09/2019
  * @since JDK 11
  */
-class ZkDistributedLock(private val curatorFramework: CuratorFramework,
-                        private val logAdapter: LogAdapter) : DistributedLock {
+class ZkDistributedLock(
+    private val curatorFramework: CuratorFramework,
+    private val logAdapter: LogAdapter
+) : DistributedLock {
 
     /**
      * 获取分布式锁

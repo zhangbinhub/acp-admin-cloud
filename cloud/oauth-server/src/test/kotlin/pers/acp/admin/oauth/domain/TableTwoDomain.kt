@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.oauth.jpa.MemberTwo
 import pers.acp.admin.oauth.jpa.TableTwo
 import pers.acp.admin.oauth.jpa.TableTwoRepository
-import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +21,8 @@ constructor(private val tableTwoRepository: TableTwoRepository) {
             } else {
                 print(Thread.currentThread())
                 println("  找不到数据 ---> name=${tableTwo.name}")
-                TableTwo(name = tableTwo.name, value = tableTwo.value * 10
+                TableTwo(
+                    name = tableTwo.name, value = tableTwo.value * 10
                 )
             }
         }.apply {

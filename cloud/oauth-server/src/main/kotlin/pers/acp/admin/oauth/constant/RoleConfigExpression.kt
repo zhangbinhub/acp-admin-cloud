@@ -2,7 +2,6 @@ package pers.acp.admin.oauth.constant
 
 import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.constant.RoleCode
-import pers.acp.admin.permission.BaseExpression
 
 /**
  * 定义角色配置权限表达式
@@ -14,7 +13,8 @@ object RoleConfigExpression {
     /**
      * 角色配置
      */
-    const val roleConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleConfig + "')"
+    const val roleConfig =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleConfig + "')"
 
     /**
      * 角色新增
@@ -24,15 +24,18 @@ object RoleConfigExpression {
     /**
      * 角色删除
      */
-    const val roleDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleDelete + "')"
+    const val roleDelete =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleDelete + "')"
 
     /**
      * 角色更新
      */
-    const val roleUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleUpdate + "')"
+    const val roleUpdate =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleUpdate + "')"
 
     /**
      * 角色查询
      */
-    const val roleQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleQuery + "')"
+    const val roleQuery =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.roleQuery + "')"
 }

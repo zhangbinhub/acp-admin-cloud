@@ -3,6 +3,7 @@
 ##### v5.1.2
 
 - Global
+    - [Upgrade] Reformat Code
     - [Upgrade] 升级 Gradle 至 7.4
     - [Upgrade] 更新文档
     - [Upgrade] 升级依赖

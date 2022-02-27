@@ -1,9 +1,6 @@
 package pers.acp.admin.gateway.producer
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.messaging.support.MessageBuilder
 import pers.acp.admin.gateway.message.RouteLogMessage

@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.security
 
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder
@@ -7,11 +9,8 @@ import org.springframework.security.oauth2.provider.ClientDetails
 import org.springframework.security.oauth2.provider.ClientDetailsService
 import org.springframework.security.oauth2.provider.ClientRegistrationException
 import org.springframework.stereotype.Component
-import io.github.zhangbinhub.acp.core.CommonTools
 import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.admin.oauth.domain.ApplicationDomain
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-
 import javax.annotation.PostConstruct
 
 /**

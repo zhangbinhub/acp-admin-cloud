@@ -12,16 +12,18 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_operate_history",
-        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
-        indexes = [Index(columnList = "requestTime")])
+@Table(
+    name = "t_log_operate_history",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+    indexes = [Index(columnList = "requestTime")]
+)
 @ApiModel("操作日志")
 @org.hibernate.annotations.Table(appliesTo = "t_log_operate_history", comment = "操作日志历史表")
 data class OperateLogHistory(
-        @Id
-        @GenericGenerator(name = "idGenerator", strategy = "uuid")
-        @GeneratedValue(generator = "idGenerator")
-        @Column(length = 36, nullable = false)
-        @ApiModelProperty("ID")
-        var id: String = ""
+    @Id
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "idGenerator")
+    @Column(length = 36, nullable = false)
+    @ApiModelProperty("ID")
+    var id: String = ""
 ) : BaseLogEntity()

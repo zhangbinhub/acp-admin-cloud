@@ -1,5 +1,9 @@
 package pers.acp.admin.workflow.domain
 
+import io.github.zhangbinhub.acp.boot.component.FileDownLoadHandle
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.flowable.bpmn.converter.BpmnXMLConverter
 import org.flowable.bpmn.model.Process
 import org.flowable.engine.ProcessEngine
@@ -11,15 +15,11 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import pers.acp.admin.common.base.BaseDomain
-import pers.acp.admin.workflow.po.WorkFlowDefinitionPo
-import pers.acp.admin.workflow.po.WorkFlowDefinitionQueryPo
 import pers.acp.admin.workflow.constant.WorkFlowConstant
 import pers.acp.admin.workflow.entity.WorkFlowDefinition
+import pers.acp.admin.workflow.po.WorkFlowDefinitionPo
+import pers.acp.admin.workflow.po.WorkFlowDefinitionQueryPo
 import pers.acp.admin.workflow.repo.WorkFlowDefinitionRepository
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.boot.component.FileDownLoadHandle
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -38,11 +38,13 @@ import javax.xml.stream.XMLStreamReader
 @Service
 @Transactional(readOnly = true)
 class WorkFlowDefinitionDomain @Autowired
-constructor(private val logAdapter: LogAdapter,
-            private val repositoryService: RepositoryService,
-            private val workFlowDefinitionRepository: WorkFlowDefinitionRepository,
-            private val fileDownLoadHandle: FileDownLoadHandle,
-            @param:Qualifier("processEngine") private val processEngine: ProcessEngine) : BaseDomain() {
+constructor(
+    private val logAdapter: LogAdapter,
+    private val repositoryService: RepositoryService,
+    private val workFlowDefinitionRepository: WorkFlowDefinitionRepository,
+    private val fileDownLoadHandle: FileDownLoadHandle,
+    @param:Qualifier("processEngine") private val processEngine: ProcessEngine
+) : BaseDomain() {
 
     private fun parseProcessDefinition(processFile: File): Process {
         var reader: XMLStreamReader? = null
@@ -71,16 +73,18 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     @Throws(ServerException::class)
     fun doDeploy(id: String): WorkFlowDefinition =
-            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(id).apply {
-                val deployment = repositoryService.createDeployment()
-                        .name(name)
-                        .key(processKey)
-                        .addInputStream(WorkFlowConstant.baseResourcePath + "/" + resourceName,
-                                ByteArrayInputStream(content.toByteArray(Charset.forName(CommonTools.getDefaultCharset()))))
-                        .deploy() ?: throw ServerException("流程部署失败！")
-                deployTime = deployment.deploymentTime.time
-                deploymentId = deployment.id
-            })
+        workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(id).apply {
+            val deployment = repositoryService.createDeployment()
+                .name(name)
+                .key(processKey)
+                .addInputStream(
+                    WorkFlowConstant.baseResourcePath + "/" + resourceName,
+                    ByteArrayInputStream(content.toByteArray(Charset.forName(CommonTools.getDefaultCharset())))
+                )
+                .deploy() ?: throw ServerException("流程部署失败！")
+            deployTime = deployment.deploymentTime.time
+            deploymentId = deployment.id
+        })
 
     @Transactional
     @Throws(ServerException::class)
@@ -95,14 +99,14 @@ constructor(private val logAdapter: LogAdapter,
         val process = parseProcessDefinition(tmpFile)
         val content = CommonTools.getFileContent(tmpFile.canonicalPath) ?: throw ServerException("流程配置文件内容为空")
         val version = workFlowDefinitionRepository.findAllByProcessKeyOrderByVersionDesc(process.id)
-                .size + 1
+            .size + 1
         return WorkFlowDefinition(
-                processKey = process.id,
-                name = process.name,
-                version = version,
-                remarks = workFlowDefinitionPo.remarks,
-                resourceName = resourceName,
-                content = content
+            processKey = process.id,
+            name = process.name,
+            version = version,
+            remarks = workFlowDefinitionPo.remarks,
+            resourceName = resourceName,
+            content = content
         ).let {
             CommonTools.doDeleteFile(tmpFile)
             workFlowDefinitionRepository.save(it)
@@ -112,36 +116,60 @@ constructor(private val logAdapter: LogAdapter,
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(workFlowDefinitionPo: WorkFlowDefinitionPo): WorkFlowDefinition =
-            workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(workFlowDefinitionPo.id!!).apply {
-                remarks = workFlowDefinitionPo.remarks
-                modifyTime = System.currentTimeMillis()
-            })
+        workFlowDefinitionRepository.save(workFlowDefinitionRepository.getById(workFlowDefinitionPo.id!!).apply {
+            remarks = workFlowDefinitionPo.remarks
+            modifyTime = System.currentTimeMillis()
+        })
 
     @Transactional
     fun doDelete(idList: MutableList<String>) = workFlowDefinitionRepository.deleteByIdIn(idList)
 
     fun doQuery(workFlowDefinitionQueryPo: WorkFlowDefinitionQueryPo): Page<WorkFlowDefinition> =
-            workFlowDefinitionRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.resourceName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("resourceName").`as`(String::class.java), "%" + workFlowDefinitionQueryPo.resourceName + "%"))
-                }
-                if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.name)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("name").`as`(String::class.java), "%" + workFlowDefinitionQueryPo.name + "%"))
-                }
-                if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.processKey)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("processKey").`as`(String::class.java), "%" + workFlowDefinitionQueryPo.processKey + "%"))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(workFlowDefinitionQueryPo.queryParam!!))
+        workFlowDefinitionRepository.findAll({ root, _, criteriaBuilder ->
+            val predicateList: MutableList<Predicate> = mutableListOf()
+            if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.resourceName)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("resourceName").`as`(String::class.java),
+                        "%" + workFlowDefinitionQueryPo.resourceName + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.name)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("name").`as`(String::class.java),
+                        "%" + workFlowDefinitionQueryPo.name + "%"
+                    )
+                )
+            }
+            if (!CommonTools.isNullStr(workFlowDefinitionQueryPo.processKey)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("processKey").`as`(String::class.java),
+                        "%" + workFlowDefinitionQueryPo.processKey + "%"
+                    )
+                )
+            }
+            criteriaBuilder.and(*predicateList.toTypedArray())
+        }, buildPageRequest(workFlowDefinitionQueryPo.queryParam!!))
 
     @Throws(ServerException::class)
     fun doDownLoadFile(request: HttpServletRequest, response: HttpServletResponse, id: String) {
         val workFlowDefinition = workFlowDefinitionRepository.getById(id)
-        val targetFile = CommonTools.contentWriteToFile(WorkFlowConstant.upLoadTempPath + "/" + System.currentTimeMillis() + "_" + workFlowDefinition.resourceName,
-                workFlowDefinition.content) ?: throw ServerException("生成文件失败")
+        val targetFile = CommonTools.contentWriteToFile(
+            WorkFlowConstant.upLoadTempPath + "/" + System.currentTimeMillis() + "_" + workFlowDefinition.resourceName,
+            workFlowDefinition.content
+        ) ?: throw ServerException("生成文件失败")
         val foldPath = targetFile.parentFile.canonicalPath
-        fileDownLoadHandle.downLoadFile(request, response, targetFile.canonicalPath, listOf("$foldPath/.*"), true, 120000)
+        fileDownLoadHandle.downLoadFile(
+            request,
+            response,
+            targetFile.canonicalPath,
+            listOf("$foldPath/.*"),
+            true,
+            120000
+        )
     }
 
     /**
@@ -154,18 +182,27 @@ constructor(private val logAdapter: LogAdapter,
      */
     @Throws(ServerException::class)
     fun generateDefinitionDiagram(deploymentId: String, imgType: String): InputStream =
-            try {
-                repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult()?.let {
-                    val model = repositoryService.getBpmnModel(it.id)
-                    val engineConfiguration = processEngine.processEngineConfiguration
-                    val diagramGenerator = engineConfiguration.processDiagramGenerator
-                    diagramGenerator.generateDiagram(model, imgType.lowercase(), listOf(), listOf(),
-                            engineConfiguration.activityFontName, engineConfiguration.labelFontName, engineConfiguration.annotationFontName,
-                            engineConfiguration.classLoader, 1.0, true)
-                } ?: throw ServerException("获取流程定义失败！")
-            } catch (e: Exception) {
-                logAdapter.error(e.message, e)
-                throw ServerException(e.message)
-            }
+        try {
+            repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult()?.let {
+                val model = repositoryService.getBpmnModel(it.id)
+                val engineConfiguration = processEngine.processEngineConfiguration
+                val diagramGenerator = engineConfiguration.processDiagramGenerator
+                diagramGenerator.generateDiagram(
+                    model,
+                    imgType.lowercase(),
+                    listOf(),
+                    listOf(),
+                    engineConfiguration.activityFontName,
+                    engineConfiguration.labelFontName,
+                    engineConfiguration.annotationFontName,
+                    engineConfiguration.classLoader,
+                    1.0,
+                    true
+                )
+            } ?: throw ServerException("获取流程定义失败！")
+        } catch (e: Exception) {
+            logAdapter.error(e.message, e)
+            throw ServerException(e.message)
+        }
 
 }

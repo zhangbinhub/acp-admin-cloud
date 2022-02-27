@@ -27,5 +27,5 @@ class UserPasswordEncoder : PasswordEncoder {
      * @return 匹配结果
      */
     override fun matches(rawPassword: CharSequence, encodedPassword: String): Boolean =
-            rawPassword.toString().equals(encodedPassword, ignoreCase = true)
+        rawPassword.toString().equals(encodedPassword, ignoreCase = true)
 }

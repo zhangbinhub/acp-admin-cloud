@@ -10,6 +10,7 @@ package pers.acp.admin.constant
  */
 object RoleCode {
     const val prefix = "ROLE_"
+
     /**
      * 新建角色时默认值
      */

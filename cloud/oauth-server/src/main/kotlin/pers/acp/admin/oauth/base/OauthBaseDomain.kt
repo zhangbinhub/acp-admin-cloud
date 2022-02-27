@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.base
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import org.hibernate.Hibernate
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.base.BaseDomain
@@ -9,7 +10,6 @@ import pers.acp.admin.oauth.entity.Role
 import pers.acp.admin.oauth.entity.User
 import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.UserRepository
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 /**
  * @author zhang by 26/12/2018

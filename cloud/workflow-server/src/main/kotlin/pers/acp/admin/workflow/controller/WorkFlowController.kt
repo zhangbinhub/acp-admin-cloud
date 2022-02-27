@@ -1,5 +1,10 @@
 package pers.acp.admin.workflow.controller
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
+import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
+import io.github.zhangbinhub.acp.core.CommonTools
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -9,20 +14,19 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.base.BaseController
-import pers.acp.admin.common.vo.*
 import pers.acp.admin.api.WorkFlowApi
+import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.feign.CommonOauthServer
-import pers.acp.admin.common.po.*
+import pers.acp.admin.common.po.ProcessHandlingPo
+import pers.acp.admin.common.po.ProcessQueryPo
+import pers.acp.admin.common.po.ProcessStartPo
+import pers.acp.admin.common.po.ProcessTerminationPo
+import pers.acp.admin.common.vo.*
 import pers.acp.admin.constant.ModuleFuncCode
+import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-import io.github.zhangbinhub.acp.boot.vo.ErrorVo
-import io.github.zhangbinhub.acp.cloud.annotation.AcpCloudDuplicateSubmission
-import pers.acp.admin.constant.TokenConstant
+import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
@@ -154,7 +158,7 @@ constructor(
     @AcpCloudDuplicateSubmission
     @Throws(ServerException::class)
     fun termination(
-        user: OAuth2Authentication,
+        @ApiIgnore user: OAuth2Authentication,
         @RequestBody @Valid processTerminationPo: ProcessTerminationPo
     ): ResponseEntity<InfoVo> =
         workFlowDomain.findProcessInstance(processTerminationPo.processInstanceId!!).let { instance ->

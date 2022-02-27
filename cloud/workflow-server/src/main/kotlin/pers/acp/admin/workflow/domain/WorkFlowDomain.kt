@@ -1,5 +1,8 @@
 package pers.acp.admin.workflow.domain
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.flowable.bpmn.constants.BpmnXMLConstants
 import org.flowable.bpmn.model.FlowElement
 import org.flowable.bpmn.model.FlowNode
@@ -17,16 +20,16 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.common.feign.CommonOauthServer
-import pers.acp.admin.common.po.*
+import pers.acp.admin.common.po.ProcessHandlingPo
+import pers.acp.admin.common.po.ProcessQueryPo
+import pers.acp.admin.common.po.ProcessStartPo
+import pers.acp.admin.common.po.ProcessTerminationPo
 import pers.acp.admin.common.vo.*
 import pers.acp.admin.workflow.base.BaseWorkFlowDomain
 import pers.acp.admin.workflow.constant.WorkFlowParamKey
-import io.github.zhangbinhub.acp.core.CommonTools
 import pers.acp.admin.workflow.entity.MyProcessInstance
 import pers.acp.admin.workflow.listener.TaskCreateListener
 import pers.acp.admin.workflow.repo.MyProcessInstanceRepository
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import java.io.InputStream
 import javax.persistence.criteria.Predicate
 
@@ -423,7 +426,11 @@ constructor(
                     taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
                 }
                 logAdapter.info(
-                    "任务转办成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${getUserById(acceptUserId).loginNo}】"
+                    "任务转办成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${
+                        getUserById(
+                            acceptUserId
+                        ).loginNo
+                    }】"
                 )
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
@@ -453,7 +460,11 @@ constructor(
                 taskCreateListener.notifyPendingFinished(taskId, listOf(userInfo.id!!))
                 taskCreateListener.notifyPendingCreated(taskId, listOf(acceptUserId))
                 logAdapter.info(
-                    "任务委派成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${getUserById(acceptUserId).loginNo}】"
+                    "任务委派成功：流程实例ID【${task.processInstanceId}】任务ID【$taskId】操作人【${userInfo.loginNo}】新办理人【${
+                        getUserById(
+                            acceptUserId
+                        ).loginNo
+                    }】"
                 )
             } ?: throw ServerException("获取当前登录用户信息失败！")
         } catch (e: Exception) {
@@ -511,7 +522,13 @@ constructor(
                 taskService.complete(task.id, params)
                 taskCreateListener.notifyPendingFinished(task.id, listOf(userId))
             }
-            logAdapter.info("任务处理完成：流程实例ID【${task.processInstanceId}】任务ID【${processHandlingPo.taskId}】操作人【${getUserById(userId).loginNo}】意见【$comment】")
+            logAdapter.info(
+                "任务处理完成：流程实例ID【${task.processInstanceId}】任务ID【${processHandlingPo.taskId}】操作人【${
+                    getUserById(
+                        userId
+                    ).loginNo
+                }】意见【$comment】"
+            )
             // 添加至我处理过的流程实例
             myProcessInstanceRepository.findByUserIdAndProcessInstanceId(userId, task.processInstanceId).let {
                 if (!it.isPresent) {

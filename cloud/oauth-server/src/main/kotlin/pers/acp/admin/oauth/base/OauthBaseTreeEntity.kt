@@ -12,10 +12,10 @@ import javax.persistence.Transient
  */
 @MappedSuperclass
 abstract class OauthBaseTreeEntity<T : OauthBaseTreeEntity<T>>(
-        @Column(length = 36, nullable = false)
-        @ApiModelProperty("上级ID")
-        var parentId: String = "",
-        @Transient
-        @ApiModelProperty("子列表")
-        var children: MutableList<T> = mutableListOf()
+    @Column(length = 36, nullable = false)
+    @ApiModelProperty("上级ID")
+    var parentId: String = "",
+    @Transient
+    @ApiModelProperty("子列表")
+    var children: MutableList<T> = mutableListOf()
 )

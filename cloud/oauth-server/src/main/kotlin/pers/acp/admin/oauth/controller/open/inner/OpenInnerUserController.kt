@@ -1,20 +1,20 @@
 package pers.acp.admin.oauth.controller.open.inner
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.boot.vo.ErrorVo
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.api.CommonPath
 import pers.acp.admin.api.OauthApi
+import pers.acp.admin.common.base.BaseController
 import pers.acp.admin.common.vo.InfoVo
-import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.common.vo.UserVo
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-import io.github.zhangbinhub.acp.boot.vo.ErrorVo
+import pers.acp.admin.oauth.domain.UserDomain
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull

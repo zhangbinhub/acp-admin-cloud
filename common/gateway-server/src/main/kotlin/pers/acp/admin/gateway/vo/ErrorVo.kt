@@ -5,7 +5,7 @@ package pers.acp.admin.gateway.vo
  * @since JDK 11
  */
 data class ErrorVo(
-        var code: Int = 0,
-        var error: String? = null,
-        var errorDescription: String? = null
+    var code: Int = 0,
+    var error: String? = null,
+    var errorDescription: String? = null
 )
