@@ -1,15 +1,14 @@
 package pers.acp.admin.oauth.token.granter
 
-import pers.acp.admin.oauth.constant.OauthConstant
-import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
-import org.springframework.security.authentication.*
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException
 import org.springframework.security.oauth2.provider.*
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices
+import pers.acp.admin.oauth.constant.OauthConstant
 import pers.acp.admin.oauth.token.UserPasswordAuthenticationToken
-import kotlin.jvm.Throws
+import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
 
 class UserPasswordTokenGranter(
     private val authenticationManager: AuthenticationManager,

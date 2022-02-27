@@ -29,20 +29,22 @@ constructor(adminServerProperties: AdminServerProperties) : WebSecurityConfigure
         successHandler.setTargetUrlParameter("redirectTo")
         successHandler.setDefaultTargetUrl("$adminContextPath/")
         http.csrf().disable().authorizeRequests()
-                .antMatchers("$adminContextPath/assets/**",
-                        "$adminContextPath/instances",
-                        "$adminContextPath/instances/**",
-                        "$adminContextPath/actuator",
-                        "$adminContextPath/actuator/**",
-                        "$adminContextPath/login",
-                        "$adminContextPath/error",
-                        "$adminContextPath/webjars/**",
-                        "$adminContextPath/notifications/**",
-                        "$adminContextPath/proxy.stream").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("$adminContextPath/login").successHandler(successHandler).and()
-                .logout().logoutUrl("$adminContextPath/logout")
+            .antMatchers(
+                "$adminContextPath/assets/**",
+                "$adminContextPath/instances",
+                "$adminContextPath/instances/**",
+                "$adminContextPath/actuator",
+                "$adminContextPath/actuator/**",
+                "$adminContextPath/login",
+                "$adminContextPath/error",
+                "$adminContextPath/webjars/**",
+                "$adminContextPath/notifications/**",
+                "$adminContextPath/proxy.stream"
+            ).permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin().loginPage("$adminContextPath/login").successHandler(successHandler).and()
+            .logout().logoutUrl("$adminContextPath/logout")
     }
 
 }

@@ -1,7 +1,9 @@
 ### gateway-server
+
 网关服务
 
 ##### 一、说明
+
 - 1、该服务不依赖任何自主开发的包，也不使用oauth2、bus、配置中心、日志服务等其他服务
 - 2、固定路由配置定义于[bootstrap.yaml](src/main/resources/bootstrap.yaml)中
 - 3、动态路由配置由[路由服务](../../cloud/route-server/README.md)进行管理

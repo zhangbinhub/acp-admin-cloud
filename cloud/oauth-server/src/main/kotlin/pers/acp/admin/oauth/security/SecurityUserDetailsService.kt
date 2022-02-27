@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.security
 
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -14,8 +16,6 @@ import pers.acp.admin.oauth.domain.ModuleFuncDomain
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.admin.oauth.domain.UserDomain
 import pers.acp.admin.oauth.token.error.CustomerOAuth2Exception
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhangbin by 11/04/2018 15:19

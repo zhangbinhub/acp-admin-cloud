@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.nobuild
 
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -11,7 +12,6 @@ import pers.acp.admin.oauth.BaseTest
 import pers.acp.admin.oauth.domain.TableTwoDomain
 import pers.acp.admin.oauth.jpa.MemberTwo
 import pers.acp.admin.oauth.jpa.TableTwo
-import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 03/08/2019
@@ -36,8 +36,8 @@ internal class TestJpa : BaseTest() {
                     try {
                         withContext(Dispatchers.IO) {
                             tableTwoDomain!!.doTestSync(TableTwo(
-                                    name = name,
-                                    value = index.toDouble()
+                                name = name,
+                                value = index.toDouble()
                             ).apply {
                                 this.memberSet.add(MemberTwo(loginNo = "loginNo${index}"))
                             })

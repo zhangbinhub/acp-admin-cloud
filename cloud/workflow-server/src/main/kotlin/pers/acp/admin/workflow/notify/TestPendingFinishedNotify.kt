@@ -1,10 +1,9 @@
 package pers.acp.admin.workflow.notify
 
-import org.springframework.stereotype.Component
-import pers.acp.admin.workflow.base.PendingFinishedNotify
 import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-import kotlin.jvm.Throws
+import org.springframework.stereotype.Component
+import pers.acp.admin.workflow.base.PendingFinishedNotify
 
 @Component
 class TestPendingFinishedNotify(private val logAdapter: LogAdapter) : PendingFinishedNotify() {

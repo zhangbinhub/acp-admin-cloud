@@ -1,5 +1,7 @@
 package pers.acp.admin.oauth.domain
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -11,9 +13,6 @@ import pers.acp.admin.oauth.po.ApplicationPo
 import pers.acp.admin.oauth.po.ApplicationQueryPo
 import pers.acp.admin.oauth.repo.ApplicationRepository
 import pers.acp.admin.oauth.repo.UserRepository
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-
 import javax.persistence.criteria.Predicate
 
 /**
@@ -23,7 +22,8 @@ import javax.persistence.criteria.Predicate
 @Service
 @Transactional(readOnly = true)
 class ApplicationDomain @Autowired
-constructor(userRepository: UserRepository, private val applicationRepository: ApplicationRepository) : OauthBaseDomain(userRepository) {
+constructor(userRepository: UserRepository, private val applicationRepository: ApplicationRepository) :
+    OauthBaseDomain(userRepository) {
 
     fun getAppList(): MutableList<Application> = applicationRepository.findAllByOrderByIdentifyAscAppNameAsc()
 
@@ -45,51 +45,56 @@ constructor(userRepository: UserRepository, private val applicationRepository: A
 
     @Transactional
     fun doCreate(applicationPo: ApplicationPo): Application =
-            Application(
-                    appName = applicationPo.appName!!,
-                    secret = CommonTools.getUuid32(),
-                    scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
-                    identify = applicationPo.identify?.trim() ?: "",
-                    accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
-                    refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds,
-                    covert = true
-            ).let {
-                applicationRepository.save(it)
-            }
+        Application(
+            appName = applicationPo.appName!!,
+            secret = CommonTools.getUuid32(),
+            scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
+            identify = applicationPo.identify?.trim() ?: "",
+            accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
+            refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds,
+            covert = true
+        ).let {
+            applicationRepository.save(it)
+        }
 
     @Transactional
     @Throws(ServerException::class)
     fun doUpdate(applicationPo: ApplicationPo): Application =
-            applicationRepository.getById(applicationPo.id!!).copy(
-                    appName = applicationPo.appName!!,
-                    scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
-                    identify = applicationPo.identify?.trim() ?: "",
-                    accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
-                    refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
-            ).let {
-                applicationRepository.save(it)
-            }
+        applicationRepository.getById(applicationPo.id!!).copy(
+            appName = applicationPo.appName!!,
+            scope = applicationPo.scope?.trim()?.replace("，", ",") ?: "",
+            identify = applicationPo.identify?.trim() ?: "",
+            accessTokenValiditySeconds = applicationPo.accessTokenValiditySeconds,
+            refreshTokenValiditySeconds = applicationPo.refreshTokenValiditySeconds
+        ).let {
+            applicationRepository.save(it)
+        }
 
     @Transactional
     @Throws(ServerException::class)
     fun doUpdateSecret(appId: String): Application =
-            applicationRepository.getById(appId).copy(
-                    secret = CommonTools.getUuid32()
-            ).let {
-                applicationRepository.save(it)
-            }
+        applicationRepository.getById(appId).copy(
+            secret = CommonTools.getUuid32()
+        ).let {
+            applicationRepository.save(it)
+        }
 
     @Transactional
     fun doDelete(idList: MutableList<String>) = applicationRepository.deleteByIdInAndCovert(idList, true)
 
     fun doQuery(applicationQueryPo: ApplicationQueryPo): Page<Application> =
-            applicationRepository.findAll({ root, _, criteriaBuilder ->
-                val predicateList: MutableList<Predicate> = mutableListOf()
-                if (!CommonTools.isNullStr(applicationQueryPo.appName)) {
-                    predicateList.add(criteriaBuilder.like(root.get<Any>("appName").`as`(String::class.java), "%" + applicationQueryPo.appName + "%"))
-                }
-                criteriaBuilder.and(*predicateList.toTypedArray())
-            }, buildPageRequest(applicationQueryPo.queryParam!!))
+        applicationRepository.findAll({ root, _, criteriaBuilder ->
+            val predicateList: MutableList<Predicate> = mutableListOf()
+            if (!CommonTools.isNullStr(applicationQueryPo.appName)) {
+                predicateList.add(
+                    criteriaBuilder.like(
+                        root.get<Any>("appName").`as`(String::class.java),
+                        "%" + applicationQueryPo.appName + "%"
+                    )
+                )
+            }
+            criteriaBuilder.and(*predicateList.toTypedArray())
+        }, buildPageRequest(applicationQueryPo.queryParam!!))
 
     fun getApp(appId: String): Application? = applicationRepository.findById(appId).orElse(null)
 

@@ -1,18 +1,16 @@
 package pers.acp.admin.log.domain
 
+import io.github.zhangbinhub.acp.boot.component.FileDownLoadHandle
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
+import io.github.zhangbinhub.acp.core.task.timer.Calculation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pers.acp.admin.log.conf.LogServerCustomerConfiguration
 import pers.acp.admin.log.constant.LogBackUp
-import io.github.zhangbinhub.acp.core.task.timer.Calculation
-import io.github.zhangbinhub.acp.boot.component.FileDownLoadHandle
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-
+import java.io.File
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import java.io.File
-import java.util.Comparator
 
 /**
  * @author zhang by 01/02/2019
@@ -21,7 +19,10 @@ import java.util.Comparator
 @Service
 @Transactional(readOnly = true)
 class LogFileDomain @Autowired
-constructor(private val logServerCustomerConfiguration: LogServerCustomerConfiguration, private val fileDownLoadHandle: FileDownLoadHandle) {
+constructor(
+    private val logServerCustomerConfiguration: LogServerCustomerConfiguration,
+    private val fileDownLoadHandle: FileDownLoadHandle
+) {
 
     @Throws(ServerException::class)
     private fun validateFold(fold: File) {

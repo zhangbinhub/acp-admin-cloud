@@ -10,10 +10,10 @@ import pers.acp.admin.common.base.BaseQueryPo
  */
 @ApiModel("工作流定义信息查询")
 data class WorkFlowDefinitionQueryPo(
-        @ApiModelProperty("资源文件名")
-        var resourceName: String? = null,
-        @ApiModelProperty("流程定义键")
-        var processKey: String? = null,
-        @ApiModelProperty("流程名称")
-        var name: String? = null
+    @ApiModelProperty("资源文件名")
+    var resourceName: String? = null,
+    @ApiModelProperty("流程定义键")
+    var processKey: String? = null,
+    @ApiModelProperty("流程名称")
+    var name: String? = null
 ) : BaseQueryPo()

@@ -28,8 +28,10 @@ class RouteDefinition {
     constructor(text: String) {
         val eqIdx = text.indexOf('=')
         if (eqIdx <= 0) {
-            throw ValidationException("Unable to parse RouteDefinition text '" + text + "'" +
-                    ", must be of the form name=value")
+            throw ValidationException(
+                "Unable to parse RouteDefinition text '" + text + "'" +
+                        ", must be of the form name=value"
+            )
         }
 
         id = text.substring(0, eqIdx)

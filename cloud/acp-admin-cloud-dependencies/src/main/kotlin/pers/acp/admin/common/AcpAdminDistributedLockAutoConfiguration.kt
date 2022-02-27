@@ -1,5 +1,8 @@
 package pers.acp.admin.common
 
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
+import io.github.zhangbinhub.acp.cloud.AcpCloudLogAutoConfiguration
+import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 import org.apache.curator.framework.CuratorFramework
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -9,9 +12,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import pers.acp.admin.common.lock.ZkDistributedLock
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
-import io.github.zhangbinhub.acp.cloud.AcpCloudLogAutoConfiguration
-import io.github.zhangbinhub.acp.cloud.lock.DistributedLock
 
 /**
  * @author zhang by 30/09/2019
@@ -26,5 +26,5 @@ class AcpAdminDistributedLockAutoConfiguration {
     @Primary
     @ConditionalOnBean(CuratorFramework::class)
     fun zkDistributedLock(curatorFramework: CuratorFramework, logAdapter: LogAdapter): DistributedLock =
-            ZkDistributedLock(curatorFramework, logAdapter)
+        ZkDistributedLock(curatorFramework, logAdapter)
 }

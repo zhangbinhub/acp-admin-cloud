@@ -1,7 +1,6 @@
 package pers.acp.admin.workflow.base
 
 import io.github.zhangbinhub.acp.boot.exceptions.ServerException
-import kotlin.jvm.Throws
 
 interface BaseWorkFlowNotify {
     @Throws(ServerException::class)

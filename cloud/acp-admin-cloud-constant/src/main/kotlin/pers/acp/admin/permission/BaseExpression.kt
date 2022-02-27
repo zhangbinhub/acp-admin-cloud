@@ -14,12 +14,16 @@ object BaseExpression {
      * 仅超级管理员可执行
      */
     const val superOnly = "hasRole('" + RoleCode.SUPER + "')"
+
     /**
      * 拥有系统监控权限
      */
-    const val sysMonitor = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.sysMonitor + "')"
+    const val sysMonitor =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.sysMonitor + "')"
+
     /**
      * 拥有系统配置权限
      */
-    const val sysConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.sysConfig + "')"
+    const val sysConfig =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.sysConfig + "')"
 }

@@ -1,5 +1,6 @@
 package pers.acp.admin.oauth.domain
 
+import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +11,6 @@ import pers.acp.admin.oauth.po.OrganizationPo
 import pers.acp.admin.oauth.repo.OrganizationRepository
 import pers.acp.admin.oauth.repo.UserRepository
 import pers.acp.admin.oauth.vo.OrganizationVo
-import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 
 /**
  * @author zhang by 16/01/2019

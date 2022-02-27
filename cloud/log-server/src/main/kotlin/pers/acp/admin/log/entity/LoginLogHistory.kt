@@ -1,12 +1,11 @@
 package pers.acp.admin.log.entity
 
+import io.github.zhangbinhub.acp.core.CommonTools
+import io.github.zhangbinhub.acp.core.task.timer.Calculation
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.annotations.GenericGenerator
 import pers.acp.admin.log.base.BaseLogEntity
-import io.github.zhangbinhub.acp.core.CommonTools
-import io.github.zhangbinhub.acp.core.task.timer.Calculation
-
 import javax.persistence.*
 
 /**
@@ -14,25 +13,27 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_login_history",
-        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
-        indexes = [
-            Index(columnList = "requestTime"),
-            Index(columnList = "userId"),
-            Index(columnList = "clientId,loginDate"),
-            Index(columnList = "userId,clientId,loginDate")
-        ])
+@Table(
+    name = "t_log_login_history",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+    indexes = [
+        Index(columnList = "requestTime"),
+        Index(columnList = "userId"),
+        Index(columnList = "clientId,loginDate"),
+        Index(columnList = "userId,clientId,loginDate")
+    ]
+)
 @org.hibernate.annotations.Table(appliesTo = "t_log_login_history", comment = "登录日志历史表")
 @ApiModel("登录日志")
 data class LoginLogHistory(
-        @Id
-        @GenericGenerator(name = "idGenerator", strategy = "uuid")
-        @GeneratedValue(generator = "idGenerator")
-        @Column(length = 36, nullable = false)
-        @ApiModelProperty("ID")
-        var id: String = "",
+    @Id
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "idGenerator")
+    @Column(length = 36, nullable = false)
+    @ApiModelProperty("ID")
+    var id: String = "",
 
-        @Column(nullable = false)
-        @ApiModelProperty("登录日期")
-        var loginDate: String = CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT)
+    @Column(nullable = false)
+    @ApiModelProperty("登录日期")
+    var loginDate: String = CommonTools.getDateTimeString(null, Calculation.DATE_FORMAT)
 ) : BaseLogEntity()

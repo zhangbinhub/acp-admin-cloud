@@ -29,8 +29,6 @@ spring:
     loadbalancer:
       cache:
         ttl: 5s
-      ribbon:
-        enabled: false
     nacos:
       username: ${acp_nacos_username:nacos}
       password: ${acp_nacos_password:nacos}

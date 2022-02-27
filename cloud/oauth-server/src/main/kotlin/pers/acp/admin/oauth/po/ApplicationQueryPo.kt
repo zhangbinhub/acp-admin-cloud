@@ -10,6 +10,6 @@ import pers.acp.admin.common.base.BaseQueryPo
  */
 @ApiModel("应用配置查询参数")
 data class ApplicationQueryPo(
-        @ApiModelProperty(value = "应用名称", position = 1)
-        var appName: String? = null
+    @ApiModelProperty(value = "应用名称", position = 1)
+    var appName: String? = null
 ) : BaseQueryPo()

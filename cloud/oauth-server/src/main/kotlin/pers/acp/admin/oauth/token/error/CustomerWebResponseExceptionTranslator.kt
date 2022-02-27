@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.common.exceptions.InvalidGrantExcepti
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator
 import org.springframework.stereotype.Component
-import java.lang.Exception
 
 @Component
 class CustomerWebResponseExceptionTranslator : WebResponseExceptionTranslator<OAuth2Exception> {

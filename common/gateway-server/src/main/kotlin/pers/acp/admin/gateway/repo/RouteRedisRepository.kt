@@ -7,15 +7,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.cloud.gateway.route.RouteDefinition
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository
 import org.springframework.context.annotation.Scope
-
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Component
 import pers.acp.admin.constant.RouteConstant
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-
-import javax.annotation.PostConstruct
 import java.util.concurrent.CopyOnWriteArrayList
+import javax.annotation.PostConstruct
 
 /**
  * @author zhang by 17/03/2019

@@ -2,7 +2,6 @@ package pers.acp.admin.workflow.po
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.NotBlank
 
 /**
  * @author zhang by 20/12/2019
@@ -10,8 +9,8 @@ import javax.validation.constraints.NotBlank
  */
 @ApiModel("工作流定义信息参数")
 data class WorkFlowDefinitionPo(
-        @ApiModelProperty("ID")
-        var id: String? = null,
-        @ApiModelProperty("备注")
-        var remarks: String? = null
+    @ApiModelProperty("ID")
+    var id: String? = null,
+    @ApiModelProperty("备注")
+    var remarks: String? = null
 )

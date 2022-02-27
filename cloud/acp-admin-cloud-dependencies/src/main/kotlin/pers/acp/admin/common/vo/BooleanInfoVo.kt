@@ -9,6 +9,6 @@ import io.swagger.annotations.ApiModelProperty
  */
 @ApiModel("布尔响应信息")
 data class BooleanInfoVo(
-        @ApiModelProperty(value = "响应内容")
-        var result: Boolean? = null
+    @ApiModelProperty(value = "响应内容")
+    var result: Boolean? = null
 )

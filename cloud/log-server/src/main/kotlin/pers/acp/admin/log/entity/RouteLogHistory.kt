@@ -12,16 +12,18 @@ import javax.persistence.*
  * @since JDK 11
  */
 @Entity
-@Table(name = "t_log_gateway_route_history",
-        uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
-        indexes = [Index(columnList = "requestTime")])
+@Table(
+    name = "t_log_gateway_route_history",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["logId", "requestTime"])],
+    indexes = [Index(columnList = "requestTime")]
+)
 @org.hibernate.annotations.Table(appliesTo = "t_log_gateway_route_history", comment = "网关路由日志历史表")
 @ApiModel("网关路由日志")
 data class RouteLogHistory(
-        @Id
-        @GenericGenerator(name = "idGenerator", strategy = "uuid")
-        @GeneratedValue(generator = "idGenerator")
-        @Column(length = 36, nullable = false)
-        @ApiModelProperty("ID")
-        var id: String = ""
+    @Id
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "idGenerator")
+    @Column(length = 36, nullable = false)
+    @ApiModelProperty("ID")
+    var id: String = ""
 ) : BaseLogEntity()

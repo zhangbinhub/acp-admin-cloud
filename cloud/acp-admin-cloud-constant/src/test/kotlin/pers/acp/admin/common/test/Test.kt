@@ -38,7 +38,7 @@ fun main() = runBlocking {
                     totlet++
                 }
             }
-            totle=totlet
+            totle = totlet
         }
         println(set.size)
         println("totle = $totle, time = ${System.currentTimeMillis() - start} ms")

@@ -11,11 +11,11 @@ import javax.validation.constraints.NotBlank
  */
 @ApiModel("强制终止流程实例参数")
 data class ProcessTerminationPo(
-        @ApiModelProperty(value = "流程实例ID", required = true, position = 1)
-        @get:NotBlank(message = "流程实例ID不能为空")
-        var processInstanceId: String? = null,
+    @ApiModelProperty(value = "流程实例ID", required = true, position = 1)
+    @get:NotBlank(message = "流程实例ID不能为空")
+    var processInstanceId: String? = null,
 
-        @ApiModelProperty(value = "原因", required = true, position = 2)
-        @get:NotBlank(message = "原因不能为空")
-        var reason: String? = null
+    @ApiModelProperty(value = "原因", required = true, position = 2)
+    @get:NotBlank(message = "原因不能为空")
+    var reason: String? = null
 )

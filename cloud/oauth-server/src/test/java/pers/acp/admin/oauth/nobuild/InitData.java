@@ -2,7 +2,6 @@ package pers.acp.admin.oauth.nobuild;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pers.acp.admin.constant.ModuleFuncCode;
@@ -10,7 +9,6 @@ import pers.acp.admin.constant.RoleCode;
 import pers.acp.admin.oauth.BaseTest;
 import pers.acp.admin.oauth.component.UserPasswordEncrypt;
 import pers.acp.admin.oauth.entity.*;
-import pers.acp.admin.oauth.entity.ModuleFunc;
 import pers.acp.admin.oauth.repo.*;
 
 /**

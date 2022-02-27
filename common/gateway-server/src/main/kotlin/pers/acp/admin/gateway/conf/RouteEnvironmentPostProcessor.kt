@@ -1,7 +1,6 @@
 package pers.acp.admin.gateway.conf
 
-import pers.acp.admin.constant.RouteConstant
-import pers.acp.admin.gateway.constant.GateWayConstant
+import io.github.zhangbinhub.acp.core.CommonTools
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.env.EnvironmentPostProcessor
 import org.springframework.cloud.function.context.FunctionProperties
@@ -9,7 +8,8 @@ import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.MapPropertySource
 import org.springframework.core.env.MutablePropertySources
 import org.springframework.util.MimeTypeUtils
-import io.github.zhangbinhub.acp.core.CommonTools
+import pers.acp.admin.constant.RouteConstant
+import pers.acp.admin.gateway.constant.GateWayConstant
 
 /**
  * @author zhang by 17/12/2018 00:41

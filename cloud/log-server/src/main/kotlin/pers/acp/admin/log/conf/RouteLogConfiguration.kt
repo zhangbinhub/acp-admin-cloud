@@ -1,6 +1,7 @@
 package pers.acp.admin.log.conf
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.cloud.stream.config.BindingServiceConfiguration
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import pers.acp.admin.constant.RouteConstant
 import pers.acp.admin.log.consumer.RouteLogConsumer
 import pers.acp.admin.log.domain.LogDomain
-import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 
 /**
  * @author zhang by 10/09/2019

@@ -10,25 +10,25 @@ import io.swagger.annotations.ApiModelProperty
 @ApiModel("机构详细信息")
 data class OrganizationVo(
 
-        @ApiModelProperty("机构ID")
-        var id: String? = null,
+    @ApiModelProperty("机构ID")
+    var id: String? = null,
 
-        @ApiModelProperty(value = "机构名称", position = 1)
-        var name: String? = null,
+    @ApiModelProperty(value = "机构名称", position = 1)
+    var name: String? = null,
 
-        @ApiModelProperty(value = "机构区域", position = 2)
-        var area: String? = null,
+    @ApiModelProperty(value = "机构区域", position = 2)
+    var area: String? = null,
 
-        @ApiModelProperty(value = "机构编码", position = 3)
-        var code: String? = null,
+    @ApiModelProperty(value = "机构编码", position = 3)
+    var code: String? = null,
 
-        @ApiModelProperty(value = "上级机构ID", position = 4)
-        var parentId: String? = null,
+    @ApiModelProperty(value = "上级机构ID", position = 4)
+    var parentId: String? = null,
 
-        @ApiModelProperty(value = "序号", position = 5)
-        var sort: Int = 0,
+    @ApiModelProperty(value = "序号", position = 5)
+    var sort: Int = 0,
 
-        @ApiModelProperty(value = "关联用户ID", position = 6)
-        var userIds: MutableList<String> = mutableListOf()
+    @ApiModelProperty(value = "关联用户ID", position = 6)
+    var userIds: MutableList<String> = mutableListOf()
 
 )

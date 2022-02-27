@@ -2,7 +2,6 @@ package pers.acp.admin.oauth.constant
 
 import pers.acp.admin.constant.ModuleFuncCode
 import pers.acp.admin.constant.RoleCode
-import pers.acp.admin.permission.BaseExpression
 
 /**
  * 定义运行参数配置权限表达式
@@ -14,25 +13,30 @@ object RuntimeConfigExpression {
     /**
      * 运行参数配置
      */
-    const val runtimeConfig = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeConfig + "')"
+    const val runtimeConfig =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeConfig + "')"
 
     /**
      * 运行参数新增
      */
-    const val runtimeAdd = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeAdd + "')"
+    const val runtimeAdd =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeAdd + "')"
 
     /**
      * 运行参数删除
      */
-    const val runtimeDelete = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeDelete + "')"
+    const val runtimeDelete =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeDelete + "')"
 
     /**
      * 运行参数更新
      */
-    const val runtimeUpdate = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeUpdate + "')"
+    const val runtimeUpdate =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeUpdate + "')"
 
     /**
      * 运行参数查询
      */
-    const val runtimeQuery = "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeQuery + "')"
+    const val runtimeQuery =
+        "hasAnyAuthority('" + RoleCode.prefix + RoleCode.SUPER + "','" + ModuleFuncCode.runtimeQuery + "')"
 }
