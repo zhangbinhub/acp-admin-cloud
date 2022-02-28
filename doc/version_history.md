@@ -18,6 +18,7 @@
     - [Upgrade] 默认 tomcat 切换为 undertow
 - log-server
     - [Upgrade] 修改日志级别
+    - [Upgrade] 规范文件下载接口注解写法
 - oauth-server
     - [Upgrade] 增加禁用用户内部接口
     - [Upgrade] 去除无用的WebSecurity配置
@@ -27,7 +28,10 @@
     - [Upgrade] 任务详情增加待办人列表
     - [Upgrade] 增加任务分配和任务强制转办接口
     - [Upgrade] 增加流程处理日志
+    - [Upgrade] 规范文件下载接口注解写法
     - [Add] 增加待办生成和完成通知写法
+- deploy-server
+    - [Upgrade] 规范文件下载接口注解写法
 
 ##### v5.1.1
 

@@ -21,6 +21,7 @@ import pers.acp.admin.deploy.domain.DeployFileDomain
 import pers.acp.admin.deploy.po.FilePo
 import pers.acp.admin.deploy.vo.FileVo
 import pers.acp.admin.permission.BaseExpression
+import java.io.OutputStream
 import java.nio.charset.Charset
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -98,7 +99,10 @@ constructor(
     }
 
     @ApiOperation(value = "下载文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 200, message = "请求成功，进行文件下载；", response = OutputStream::class),
+        ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class)
+    )
     @GetMapping(value = [DeployApi.fileDownLoad], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun downloadFile(

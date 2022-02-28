@@ -23,6 +23,7 @@ import pers.acp.admin.workflow.domain.WorkFlowDefinitionDomain
 import pers.acp.admin.workflow.entity.WorkFlowDefinition
 import pers.acp.admin.workflow.po.WorkFlowDefinitionPo
 import pers.acp.admin.workflow.po.WorkFlowDefinitionQueryPo
+import java.io.OutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -120,7 +121,10 @@ constructor(
         ResponseEntity.status(HttpStatus.CREATED).body(workFlowDefinitionDomain.doDeploy(id))
 
     @ApiOperation(value = "流程定义文件下载")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 200, message = "请求成功，进行文件下载；", response = OutputStream::class),
+        ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class)
+    )
     @GetMapping(value = [WorkFlowApi.definitionFile + "/{id}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun downloadFile(
@@ -131,7 +135,10 @@ constructor(
     }
 
     @ApiOperation(value = "获取流程图", notes = "返回图片二进制流数据")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 200, message = "请求成功，进行文件下载；", response = OutputStream::class),
+        ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class)
+    )
     @PreAuthorize(WorkFlowExpression.flowDefinition)
     @GetMapping(value = [WorkFlowApi.definitionDiagram + "/{deploymentId}/{imgType}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
