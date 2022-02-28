@@ -27,6 +27,7 @@ import pers.acp.admin.constant.TokenConstant
 import pers.acp.admin.workflow.constant.WorkFlowExpression
 import pers.acp.admin.workflow.domain.WorkFlowDomain
 import springfox.documentation.annotations.ApiIgnore
+import java.io.OutputStream
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
@@ -259,7 +260,10 @@ constructor(
         }
 
     @ApiOperation(value = "获取流程图", notes = "获取指定实例id的流程图，返回图片二进制流数据")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 200, message = "请求成功，进行文件下载；", response = OutputStream::class),
+        ApiResponse(code = 400, message = "参数校验不通过；系统异常", response = ErrorVo::class)
+    )
     @GetMapping(value = [WorkFlowApi.diagram + "/{processInstanceId}/{imgType}"], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun diagram(

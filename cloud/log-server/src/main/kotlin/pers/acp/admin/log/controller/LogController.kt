@@ -26,6 +26,7 @@ import pers.acp.admin.log.po.LogQueryPo
 import pers.acp.admin.log.vo.LoginLogVo
 import pers.acp.admin.permission.BaseExpression
 import java.io.File
+import java.io.OutputStream
 import java.nio.charset.Charset
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -121,7 +122,10 @@ constructor(
         }
 
     @ApiOperation(value = "日志文件下载", notes = "下载指定的日志文件")
-    @ApiResponses(ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class))
+    @ApiResponses(
+        ApiResponse(code = 200, message = "请求成功，进行文件下载；", response = OutputStream::class),
+        ApiResponse(code = 400, message = "参数校验不通过；", response = ErrorVo::class)
+    )
     @GetMapping(value = [LogApi.logFile], produces = [MediaType.ALL_VALUE])
     @Throws(ServerException::class)
     fun downloadFile(
