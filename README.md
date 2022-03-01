@@ -8,8 +8,8 @@
 
 ## 相关组件版本
 
-- [Spring Boot 2.6.3](https://projects.spring.io/spring-boot)
-- [Acp 2021.0.0](https://github.com/zhangbinhub/acp)
+- [Spring Boot 2.6.4](https://projects.spring.io/spring-boot)
+- [Acp 2021.0.1](https://github.com/zhangbinhub/acp)
 - [Spring Boot Admin 2.6.2](https://github.com/codecentric/spring-boot-admin)
 
 ## 技术栈
@@ -255,7 +255,7 @@ http://127.0.0.1:5601
          implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
          implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
          ```
-    - bootstrap.yaml 增加配置
+    - application.yaml 增加配置
          ```yaml
          spring:
            zipkin:

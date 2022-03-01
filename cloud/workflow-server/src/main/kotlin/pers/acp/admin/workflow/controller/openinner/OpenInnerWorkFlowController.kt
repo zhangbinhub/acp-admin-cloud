@@ -1,4 +1,4 @@
-package pers.acp.admin.workflow.controller.open.inner
+package pers.acp.admin.workflow.controller.openinner
 
 import io.github.zhangbinhub.acp.boot.exceptions.ServerException
 import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter

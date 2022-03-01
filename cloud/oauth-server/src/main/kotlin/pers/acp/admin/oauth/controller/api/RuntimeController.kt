@@ -20,7 +20,7 @@ import pers.acp.admin.common.vo.InfoVo
 import pers.acp.admin.common.vo.RuntimeConfigVo
 import pers.acp.admin.oauth.bus.publish.RefreshEventPublish
 import pers.acp.admin.oauth.constant.RuntimeConfigExpression
-import pers.acp.admin.oauth.controller.open.inner.OpenInnerRuntimeController
+import pers.acp.admin.oauth.controller.openinner.OpenInnerRuntimeController
 import pers.acp.admin.oauth.domain.RuntimeConfigDomain
 import pers.acp.admin.oauth.entity.RuntimeConfig
 import pers.acp.admin.oauth.po.RuntimePo
