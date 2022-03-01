@@ -61,6 +61,8 @@ management:
   info:
     java:
       enabled: true
+    env:
+      enabled: true
 knife4j:
   enable: true
 acp:
