@@ -1,4 +1,4 @@
-package pers.acp.admin.oauth.controller.open.inner
+package pers.acp.admin.oauth.controller.openinner
 
 import io.github.zhangbinhub.acp.boot.interfaces.LogAdapter
 import io.swagger.annotations.Api
