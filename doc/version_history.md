@@ -6,8 +6,12 @@
     - [Upgrade] Reformat Code
     - [Upgrade] 升级 Gradle 至 7.4
     - [Upgrade] 更新文档
+    - [Upgrade] 调整所有服务 CustomerSwaggerConfiguration 配置
+    - [Upgrade] 移除```spring-cloud-starter-bootstrap```依赖
+    - [Upgrade] 配置中心写法改为```spring.config.import```
+    - [Upgrade] ```bootstrap.yaml```修改为```application.yaml```
     - [Upgrade] 升级依赖
-        - Acp 2021.0.0
+        - Acp 2021.0.1
         - kotlin 1.6.10
         - Spring Boot 2.6.4
         - Spring Boot Admin 2.6.2
@@ -29,6 +33,7 @@
     - [Upgrade] 增加任务分配和任务强制转办接口
     - [Upgrade] 增加流程处理日志
     - [Upgrade] 规范文件下载接口注解写法
+    - [Upgrade] 调整controller包名
     - [Add] 增加待办生成和完成通知写法
 - deploy-server
     - [Upgrade] 规范文件下载接口注解写法

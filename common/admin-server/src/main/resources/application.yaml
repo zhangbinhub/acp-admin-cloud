@@ -1,7 +1,5 @@
 server:
-  port: ${acp_server_port:0}
-  http2:
-    enabled: true
+  port: ${acp_server_port:9099}
   undertow:
     threads:
       worker: 1000
@@ -9,17 +7,26 @@ spring:
   profiles:
     active: ${acp_profile_active:dev}
   application:
-    name: deploy-server
+    name: admin-server
   thymeleaf:
     cache: false
-  servlet:
-    multipart:
-      max-file-size: 1GB
-      max-request-size: 2GB
-  #  zipkin:
-  #    sender:
-  #      type: kafka
+  security:
+    user:
+      name: ${acp_admin_username:admin}
+      password: ${acp_admin_password:888888}
+  # ===============================
+  # = Spring Boot Admin
+  # ===============================
+  boot:
+    admin:
+      ui:
+        resource-locations:
+          - "classpath:/META-INF/spring-boot-admin-server-ui/"
+          - "classpath:/static/"
   cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
     nacos:
       username: ${acp_nacos_username:nacos}
       password: ${acp_nacos_password:nacos}
@@ -28,21 +35,21 @@ spring:
         namespace: ${acp_nacos_namespace:acp-cloud-admin}
         cluster-name: ${spring.profiles.active}
         group: ${spring.profiles.active}
-      config:
-        file-extension: yaml
-        namespace: ${spring.cloud.nacos.discovery.namespace}
-        cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
-        group: ${spring.cloud.nacos.discovery.group}
-        shared-configs:
-          - data-id: atom-server-common-${spring.profiles.active}.yaml
-            group: ${spring.profiles.active}
-            refresh: true
+        metadata:
+          user.name: ${spring.security.user.name}
+          user.password: ${spring.security.user.password}
 logging:
   file:
     path: ${acp_log_path:logs}/${spring.application.name}
     name: ${logging.file.path}/${spring.application.name}.log
   pattern:
     file: '[%date{yyyy-MM-dd HH:mm:ss.SSS}] [ %-5level] [%thread] %logger{96} [%X{lineno}] - %msg%n'
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+  level:
+    com.alibaba.nacos.client: warn
 info:
   version: 5.1.2
   app-name: ${spring.application.name}
@@ -59,10 +66,6 @@ management:
   endpoint:
     health:
       show-details: always
-knife4j:
-  enable: true
-acp:
-  cloud:
-    oauth:
-      resource-server-permit-all-path:
-        - /deploy/file-download/**
+  info:
+    java:
+      enabled: true

@@ -1,7 +1,5 @@
 server:
   port: ${acp_server_port:0}
-  http2:
-    enabled: true
   undertow:
     threads:
       worker: 1000
@@ -9,12 +7,19 @@ spring:
   profiles:
     active: ${acp_profile_active:dev}
   application:
-    name: oauth2-server
+    name: workflow-server
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   #  zipkin:
   #    sender:
   #      type: kafka
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   cloud:
     nacos:
       username: ${acp_nacos_username:nacos}
@@ -25,14 +30,12 @@ spring:
         cluster-name: ${spring.profiles.active}
         group: ${spring.profiles.active}
       config:
-        file-extension: yaml
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
-        group: ${spring.cloud.nacos.discovery.group}
-        shared-configs:
-          - data-id: atom-server-common-${spring.profiles.active}.yaml
-            group: ${spring.profiles.active}
-            refresh: true
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
+      - optional:nacos:atom-server-common-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
 logging:
   file:
     path: ${acp_log_path:logs}/${spring.application.name}
@@ -55,16 +58,22 @@ management:
   endpoint:
     health:
       show-details: always
+    flowable:
+      enabled: true
+  info:
+    java:
+      enabled: true
 knife4j:
   enable: true
-# ===============================
-# = ACP Config
-# ===============================
+flowable:
+  history-level: full
+  check-process-definitions: false
 acp:
   cloud:
-    oauth:
-      oauth-server: true
     log-server:
       client:
         enabled: true
-        log-type: AUTH
+        log-type: WORKFLOW
+    oauth:
+      resource-server-permit-all-path:
+        - /workflow/definition/file/**

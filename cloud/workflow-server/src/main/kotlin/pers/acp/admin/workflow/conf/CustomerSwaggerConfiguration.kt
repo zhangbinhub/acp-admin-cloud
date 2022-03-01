@@ -1,11 +1,12 @@
 package pers.acp.admin.workflow.conf
 
+import io.github.zhangbinhub.acp.boot.base.BaseSwaggerConfiguration
 import io.github.zhangbinhub.acp.boot.conf.SwaggerConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import pers.acp.admin.common.base.BaseSwaggerConfiguration
+import springfox.documentation.spring.web.plugins.Docket
 
 /**
  * @author zhang by 27/12/2018
@@ -18,8 +19,24 @@ constructor(
     version: String?,
     swaggerConfiguration: SwaggerConfiguration
 ) : BaseSwaggerConfiguration(version, swaggerConfiguration) {
+    @Bean
+    fun gatewayApi(): Docket = buildDocket(
+        "pers.acp.admin.workflow.controller.api",
+        "WorkFlow Server API",
+        "API Document",
+        "ZhangBin",
+        "https://github.com/zhangbinhub",
+        "zhangbin1010@qq.com"
+    ).groupName("网关接口")
+        .globalRequestParameters(globalRequestParameter())
 
     @Bean
-    fun createRestApi() = buildDocket("pers.acp.admin.workflow.controller", "WorkFlow Server RESTful API")
-
+    fun openInnerApi(): Docket = buildDocket(
+        "pers.acp.admin.workflow.controller.open.inner",
+        "WorkFlow Server API",
+        "API Document",
+        "ZhangBin",
+        "https://github.com/zhangbinhub",
+        "zhangbin1010@qq.com"
+    ).groupName("内部开放接口")
 }

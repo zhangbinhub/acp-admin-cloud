@@ -1,7 +1,5 @@
 server:
   port: ${acp_server_port:8771}
-  http2:
-    enabled: true
   undertow:
     threads:
       worker: 1000
@@ -22,14 +20,8 @@ spring:
         cluster-name: ${spring.profiles.active}
         group: ${spring.profiles.active}
       config:
-        file-extension: yaml
         namespace: ${spring.cloud.nacos.discovery.namespace}
         cluster-name: ${spring.cloud.nacos.discovery.cluster-name}
-        group: ${spring.cloud.nacos.discovery.group}
-        shared-configs:
-          - data-id: atom-server-common-${spring.profiles.active}.yaml
-            group: ${spring.profiles.active}
-            refresh: true
     # ===============================
     # = GateWay Config
     # ===============================
@@ -67,12 +59,16 @@ spring:
             - Path=/open/oauth/**
           filters:
             - RewritePath=/open/oauth/(?<segment>.*),/open/$\{segment}
-#            - name: RequestRateLimiter
-#              args:
-#                redis-rate-limiter.replenishRate: 10
-#                redis-rate-limiter.burstCapacity: 20
-#                rate-limiter: "#{@myRateLimiter}"
-#                key-resolver: "#{@userKeyResolver}"
+  #            - name: RequestRateLimiter
+  #              args:
+  #                redis-rate-limiter.replenishRate: 10
+  #                redis-rate-limiter.burstCapacity: 20
+  #                rate-limiter: "#{@myRateLimiter}"
+  #                key-resolver: "#{@userKeyResolver}"
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
+      - optional:nacos:atom-server-common-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
 logging:
   file:
     path: ${acp_log_path:logs}/${spring.application.name}
@@ -102,3 +98,6 @@ management:
   endpoint:
     health:
       show-details: always
+  info:
+    java:
+      enabled: true
