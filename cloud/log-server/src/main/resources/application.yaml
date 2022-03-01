@@ -51,6 +51,8 @@ management:
   info:
     java:
       enabled: true
+    env:
+      enabled: true
 # ===============================
 # = Log To File Config
 # ===============================
