@@ -1,5 +1,13 @@
 ## 版本更新记录
 
+##### v5.1.3
+
+- Global
+    - [Upgrade] 规范打包后 MANIFEST.MF 信息
+    - [Upgrade] 升级依赖
+        - Acp 2021.0.2
+        - flowable 6.7.2
+
 ##### v5.1.2
 
 - Global
@@ -15,7 +23,6 @@
         - kotlin 1.6.10
         - Spring Boot 2.6.4
         - Spring Boot Admin 2.6.2
-        - flowable 6.7.2
         - mysql 8.0.28
 - acp-admin-cloud-dependencies
     - [Upgrade] 优化Feign客户端写法，hystrix统一获取错误信息，并传递
