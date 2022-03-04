@@ -1,5 +1,13 @@
 ## 版本更新记录
 
+##### v5.1.3
+
+- Global
+    - [Upgrade] 规范打包后 MANIFEST.MF 信息
+    - [Upgrade] 升级依赖
+        - Acp 2021.0.2
+        - flowable 6.7.2
+
 ##### v5.1.2
 
 - Global

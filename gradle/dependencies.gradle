@@ -11,6 +11,6 @@ versions += [
         springBootAdmin : "2.6.2",
         acp             : "2021.0.1",
         logstash        : "6.3",
-        flowable        : "6.6.0",
+        flowable        : "6.7.2",
         mysql           : "8.0.28"
 ]
