@@ -33,7 +33,7 @@ spring:
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
       - optional:nacos:atom-server-common-${spring.profiles.active}.yaml?group=${spring.cloud.nacos.discovery.group}
 info:
-  version: 5.1.2
+  version: 5.1.3
   app-name: ${spring.application.name}
   tags:
     environment: ${spring.profiles.active}
