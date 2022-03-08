@@ -1,5 +1,10 @@
 ## 版本更新记录
 
+##### release
+
+- Global
+  [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
+
 ##### v5.1.3
 
 - Global
