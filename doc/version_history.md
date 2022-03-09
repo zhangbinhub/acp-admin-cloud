@@ -1,21 +1,17 @@
 ## 版本更新记录
 
-##### release
-
-- Global
-    - [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
-- oauth-server
-    - [Upgrade] 优化 UserPasswordAuthenticationToken 序列化
-    - [Upgrade] token查询过滤过期的token
-    - [Upgrade] 调整token相关controller名称
-
 ##### v5.1.3
 
 - Global
+    - [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
     - [Upgrade] 规范打包后 MANIFEST.MF 信息
     - [Upgrade] 升级依赖
         - Acp 2021.0.2
         - flowable 6.7.2
+- oauth-server
+    - [Upgrade] 优化 UserPasswordAuthenticationToken 序列化
+    - [Upgrade] token查询过滤过期的token
+    - [Upgrade] 调整token相关controller名称
 
 ##### v5.1.2
 
