@@ -30,8 +30,8 @@ import springfox.documentation.annotations.ApiIgnore
 @Validated
 @RestController
 @RequestMapping(CommonPath.innerBasePath)
-@Api(tags = ["权限信息（内部接口）"])
-class InnerAuthController @Autowired
+@Api(tags = ["认证信息（内部接口）"])
+class InnerTokenController @Autowired
 constructor(
     logAdapter: LogAdapter,
     private val securityTokenService: SecurityTokenService,

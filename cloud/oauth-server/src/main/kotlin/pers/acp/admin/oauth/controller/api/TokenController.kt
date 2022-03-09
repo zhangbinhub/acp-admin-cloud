@@ -30,8 +30,8 @@ import javax.validation.constraints.NotNull
 @Validated
 @RestController
 @RequestMapping(OauthApi.basePath)
-@Api(tags = ["登录信息"])
-class LoginController @Autowired
+@Api(tags = ["认证信息"])
+class TokenController @Autowired
 constructor(
     private val logAdapter: LogAdapter,
     private val applicationDomain: ApplicationDomain,
@@ -62,7 +62,10 @@ constructor(
                         OnlineInfoVo(
                             appId = it.id,
                             appName = it.appName,
-                            count = securityTokenService.getTokensByAppId(it.id).size.toLong()
+                            count = securityTokenService.getTokensByAppId(it.id)
+                                .filter { token ->
+                                    !token.isExpired
+                                }.size.toLong()
                         )
                     )
                 }
@@ -95,7 +98,9 @@ constructor(
                             count = securityTokenService.getTokensByAppIdAndLoginNo(
                                 item.id,
                                 userInfo.loginNo
-                            ).size.toLong()
+                            ).filter { token ->
+                                !token.isExpired
+                            }.size.toLong()
                         )
                     )
                 }
