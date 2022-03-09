@@ -2,15 +2,11 @@ package pers.acp.admin.oauth.token
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.SpringSecurityCoreVersion
+import java.io.Serializable
 
-class UserPasswordAuthenticationToken : AbstractAuthenticationToken {
+class UserPasswordAuthenticationToken : Serializable, AbstractAuthenticationToken {
     private var principal: Any? = null
     private var credentials: Any? = null
-
-    companion object {
-        private const val serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID
-    }
 
     constructor(principal: Any?, credentials: Any?) : super(null) {
         this.principal = principal
@@ -29,5 +25,9 @@ class UserPasswordAuthenticationToken : AbstractAuthenticationToken {
     override fun eraseCredentials() {
         super.eraseCredentials()
         credentials = null
+    }
+
+    companion object {
+        private const val serialVersionUID: Long = -8266012108197485218L
     }
 }

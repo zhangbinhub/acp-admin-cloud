@@ -3,7 +3,11 @@
 ##### release
 
 - Global
-  [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
+    - [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
+- oauth-server
+    - [Upgrade] 优化 UserPasswordAuthenticationToken 序列化
+    - [Upgrade] token查询过滤过期的token
+    - [Upgrade] 调整token相关controller名称
 
 ##### v5.1.3
 

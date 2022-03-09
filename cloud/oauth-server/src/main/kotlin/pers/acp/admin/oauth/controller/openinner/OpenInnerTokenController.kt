@@ -23,8 +23,8 @@ import pers.acp.admin.oauth.domain.ModuleFuncDomain
 @Validated
 @RestController
 @RequestMapping(CommonPath.openInnerBasePath)
-@Api(tags = ["权限信息（内部开放接口）"])
-class OpenInnerAuthController @Autowired
+@Api(tags = ["认证信息（内部开放接口）"])
+class OpenInnerTokenController @Autowired
 constructor(
     logAdapter: LogAdapter,
     private val checkTokenEndpoint: CheckTokenEndpoint,
