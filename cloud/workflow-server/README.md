@@ -1,6 +1,6 @@
 ### workflow-server
 
-工作流服务，集成[FlowAble v6.6.0](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
+工作流服务，集成[Flowable](https://www.flowable.org)工作流引擎，详情请看[参考文档](https://www.flowable.org/docs/userguide/index.html)
 
 ##### 一、操作系统增加字体文件
 
@@ -10,7 +10,7 @@
 
 ###### （二）linux
 
-将宋体字体文件[simsun.ttc](fonts/simsun.ttc)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
+将宋体字体文件[simsun.ttc](src/main/resources/libs/simsun.ttc)复制到Linux服务器上的 $JAVA_HOME/lib/fonts 路径即可
 
 ```
  cd $JAVA_HOME/lib

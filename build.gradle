@@ -31,6 +31,58 @@ buildscript {
     }
 }
 
+task bootBuildImageAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "common:admin-server:bootBuildImage",
+            "common:gateway-server:bootBuildImage",
+            "common:deploy-server:bootBuildImage",
+            "cloud:log-server:bootBuildImage",
+            "cloud:oauth-server:bootBuildImage",
+            "cloud:route-server:bootBuildImage",
+            "cloud:workflow-server:bootBuildImage"
+}
+
+task bootBuildImageAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "common:admin-server:bootBuildImage",
+            "common:gateway-server:bootBuildImage",
+            "common:deploy-server:bootBuildImage",
+            "cloud:log-server:bootBuildImage",
+            "cloud:oauth-server:bootBuildImage",
+            "cloud:route-server:bootBuildImage",
+            "cloud:workflow-server:bootBuildImage"
+}
+
+task publishAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "cloud:acp-admin-cloud-constant:publish",
+            "cloud:acp-admin-cloud-dependencies:publish"
+}
+
+task publishAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "cloud:acp-admin-cloud-constant:publish",
+            "cloud:acp-admin-cloud-dependencies:publish"
+}
+
+task publishToMavenLocalAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "cloud:acp-admin-cloud-constant:publishToMavenLocal",
+            "cloud:acp-admin-cloud-dependencies:publishToMavenLocal"
+}
+
+task publishToMavenLocalAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "cloud:acp-admin-cloud-constant:publishToMavenLocal",
+            "cloud:acp-admin-cloud-dependencies:publishToMavenLocal"
+}
+
 allprojects {
 
     group project.group.toString().isBlank() ? projectProperties.getProperty('group') : "${projectProperties.getProperty('group')}.$project.group"
@@ -322,17 +374,4 @@ allprojects {
     }
 
     task release(dependsOn: [build, copyJar])
-
-    def needDeployProject = {
-        return ["acp-admin-cloud-constant",
-                "acp-admin-cloud-dependencies"].toArray().contains("$project.name")
-    } as Object
-
-    publish.onlyIf { needDeployProject() }
-    generateMetadataFileForMavenPublication.onlyIf { needDeployProject() }
-    generatePomFileForMavenPublication.onlyIf { needDeployProject() }
-    publishAllPublicationsToMavenRepository.onlyIf { needDeployProject() }
-    publishMavenPublicationToMavenLocal.onlyIf { needDeployProject() }
-    publishMavenPublicationToMavenRepository.onlyIf { needDeployProject() }
-    publishToMavenLocal.onlyIf { needDeployProject() }
 }

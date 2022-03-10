@@ -1,0 +1,87 @@
+version: "3.7"
+services:
+  admin-server:
+    image: pers.acp.acp-admin-cloud.common/admin-server:5.1.3
+    container_name: admin-server
+    restart: always
+    ports:
+      - "9099:9099"
+    environment:
+      - acp_server_port=9099
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+      - acp_admin_username=admin
+      - acp_admin_password=8888
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  gateway-server:
+    image: pers.acp.acp-admin-cloud.common/gateway-server:5.1.3
+    container_name: gateway-server
+    restart: always
+    ports:
+      - "8771:8771"
+    environment:
+      - acp_server_port=8771
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  deploy-server:
+    image: pers.acp.acp-admin-cloud.common/deploy-server:5.1.3
+    network_mode: "host"
+    container_name: deploy-server
+    restart: always
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  log-server:
+    image: pers.acp.acp-admin-cloud.cloud/log-server:5.1.3
+    network_mode: "host"
+    container_name: log-server
+    restart: always
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  oauth2-server:
+    image: pers.acp.acp-admin-cloud.cloud/oauth2-server:5.1.3
+    network_mode: "host"
+    container_name: oauth2-server
+    restart: always
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  route-server:
+    image: pers.acp.acp-admin-cloud.cloud/route-server:5.1.3
+    network_mode: "host"
+    container_name: route-server
+    restart: always
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+  workflow-server:
+    image: pers.acp.acp-admin-cloud.cloud/workflow-server:5.1.3
+    network_mode: "host"
+    container_name: workflow-server
+    restart: always
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
+    env_file:
+      - deploy.env
+    networks:
+      - cloud-service
+networks:
+  cloud-service:

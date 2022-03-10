@@ -166,7 +166,7 @@ signing.secretKeyRingFile=keyFile
 - gradle 目录下为相关配置文件
 - common 目录下为基于 Spring Cloud 的基础组件模块，含 Spring Boot Admin 和 GateWay
 - cloud 目录下为基于 Spring Cloud 的自定义组件模块
-- dockerfiles 所使用的中间件[docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)
+- dockerfiles 所使用的中间件[docker-compose-base.yaml](deploy/docker/middleware/docker-compose.yaml)
 - [数据库表结构](doc/数据结构.docx)
 - swagger url : /doc.html
 
@@ -214,7 +214,7 @@ docker-compose -f docker-compose-base.yaml stop
 docker-compose -f docker-compose-base.yaml down
 ```
 
-- docker-compose 文件：[dockerfiles/docker-compose-base.yaml](dockerfiles/docker-compose-base.yaml)
+- docker-compose 文件：[dockerfiles/docker-compose-base.yaml](deploy/docker/middleware/docker-compose.yaml)
 
 ##### 1. kafka-manager kafka队列监控
 
@@ -370,7 +370,7 @@ http://127.0.0.1:5601
 | acp_nacos_username  | nacos用户名  | nacos                                                                                                                   | nacos用户名，默认nacos，可自行在nacos管理端添加用户                                                                                                           |
 | acp_nacos_password  | nacos密码   | nacos                                                                                                                   | nacos用户密码，默认nacos，可自行在nacos管理端添加用户                                                                                                          |
 | acp_nacos_namespace | nacos命名空间 | acp-cloud-admin                                                                                                         | nacos命名空间，默认nacos，可自行在nacos管理端配置                                                                                                            |
-| acp_jvm_param       | JVM启动参数   | -server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8 | 该环境变量在容器部署时使用                                                                                                                               |
+| acp_jvm_param       | JVM启动参数   | -server -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xms256m -Xmx512m -Djava.library.path=./libs -Dfile.encoding=utf-8 | 该环境变量在容器部署时使用；如果使用SpringBoot插件bootBuildImage打包的镜像，需要使用```JAVA_TOOL_OPTIONS```环境变量                                                           |
 
 ## 十二、JVM启动参数
 
@@ -383,13 +383,10 @@ http://127.0.0.1:5601
 ```
 bootBuildImage {
     docker {
-        host = "tcp://localhost:2375"
-        tlsVerify = false
+        host = imageParam['docker']['host'] as String
+        tlsVerify = imageParam['docker']['tlsVerify'] as Boolean
     }
-    imageName = "${group}/${project.name}:${version}"
-    environment = [
-            "BP_JVM_VERSION"              : "11.*",
-            "BPE_APPEND_JAVA_TOOL_OPTIONS": " -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dfile.encoding=utf-8"
-    ]
+    imageName = "${project.group}/${project.name}:${project.version}"
+    environment = imageParam.get('environment') as Map<String, String>
 }
 ```

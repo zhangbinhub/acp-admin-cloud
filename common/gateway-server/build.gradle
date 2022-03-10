@@ -26,3 +26,12 @@ dependencies {
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 }
+
+bootBuildImage {
+    docker {
+        host = imageParam['docker']['host'] as String
+        tlsVerify = imageParam['docker']['tlsVerify'] as Boolean
+    }
+    imageName = "${project.group}/${project.name}:${project.version}"
+    environment = imageParam.get('environment') as Map<String, String>
+}

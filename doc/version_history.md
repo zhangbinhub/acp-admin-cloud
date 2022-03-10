@@ -3,8 +3,10 @@
 ##### v5.1.3
 
 - Global
-    - [Upgrade] 优化中间件脚本[docker-compose-base.yaml](../dockerfiles/docker-compose-base.yaml)
+    - [Upgrade] 优化中间件部署脚本[docker-compose.yaml](../deploy/docker/middleware/docker-compose.yaml)
     - [Upgrade] 规范打包后 MANIFEST.MF 信息
+    - [Upgrade] 增加SpringBoot bootBuildImage打包镜像
+    - [Upgrade] 增加服务部署脚本[docker-compose.yaml](../deploy/docker/cloud-services/docker-compose.yaml)
     - [Upgrade] 升级依赖
         - Acp 2021.0.2
         - flowable 6.7.2

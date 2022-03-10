@@ -17,3 +17,12 @@ dependencies {
     implementation project(":cloud:acp-admin-cloud-dependencies")
     implementation "net.logstash.logback:logstash-logback-encoder:$versions.logstash"
 }
+
+bootBuildImage {
+    docker {
+        host = imageParam['docker']['host'] as String
+        tlsVerify = imageParam['docker']['tlsVerify'] as Boolean
+    }
+    imageName = "${project.group}/${project.name}:${project.version}"
+    environment = imageParam.get('environment') as Map<String, String>
+}

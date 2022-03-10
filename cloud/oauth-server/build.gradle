@@ -18,3 +18,12 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
+
+bootBuildImage {
+    docker {
+        host = imageParam['docker']['host'] as String
+        tlsVerify = imageParam['docker']['tlsVerify'] as Boolean
+    }
+    imageName = "${project.group}/${project.name}:${project.version}"
+    environment = imageParam.get('environment') as Map<String, String>
+}

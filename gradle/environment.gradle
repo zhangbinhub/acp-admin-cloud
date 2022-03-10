@@ -1,6 +1,7 @@
 ext {
     jvmMemoryParam = [:]
     jvmExtParam = [:]
+    imageParam = [:]
 }
 jvmMemoryParam += [
         'default': '-Xms256m -Xmx512m'
@@ -12,5 +13,17 @@ jvmExtParam += [
                 acp_nacos_password : 'nacos',
                 acp_nacos_namespace: 'acp-cloud-admin',
                 acp_log_path       : 'logs'
+        ]
+]
+imageParam += [
+        docker     : [
+                host     : 'tcp://localhost:2375',
+                tlsVerify: false
+        ],
+        environment: [
+                'BP_JVM_VERSION'              : "${projectProperties.getProperty('javaVersion')}".toString(),
+                'BPE_APPEND_JAVA_TOOL_OPTIONS': " -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dfile.encoding=utf-8 -Djava.library.path=./BOOT-INF/classes/libs",
+                'BPE_APPEND_PATH'             : ":/workspace/BOOT-INF/classes/libs",
+                'BPE_APPEND_LD_LIBRARY_PATH'  : ":/workspace/BOOT-INF/classes/libs"
         ]
 ]

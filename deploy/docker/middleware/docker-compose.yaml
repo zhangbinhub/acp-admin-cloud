@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.7"
 services:
   redis-acp:
     image: redis:6.0.14
