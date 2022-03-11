@@ -14,7 +14,7 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    implementation project(":cloud:acp-admin-cloud-dependencies")
+    implementation project(":common:acp-admin-cloud-dependencies")
     implementation "net.logstash.logback:logstash-logback-encoder:$versions.logstash"
 }
 

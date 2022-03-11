@@ -1,0 +1,51 @@
+task bootBuildImageAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "cloud:admin-server:bootBuildImage",
+            "cloud:gateway-server:bootBuildImage",
+            "cloud:deploy-server:bootBuildImage",
+            "cloud:log-server:bootBuildImage",
+            "cloud:oauth-server:bootBuildImage",
+            "cloud:route-server:bootBuildImage",
+            "cloud:workflow-server:bootBuildImage"
+}
+
+task bootBuildImageAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "cloud:admin-server:bootBuildImage",
+            "cloud:gateway-server:bootBuildImage",
+            "cloud:deploy-server:bootBuildImage",
+            "cloud:log-server:bootBuildImage",
+            "cloud:oauth-server:bootBuildImage",
+            "cloud:route-server:bootBuildImage",
+            "cloud:workflow-server:bootBuildImage"
+}
+
+task publishAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "common:acp-admin-cloud-constant:publish",
+            "common:acp-admin-cloud-dependencies:publish"
+}
+
+task publishAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "common:acp-admin-cloud-constant:publish",
+            "common:acp-admin-cloud-dependencies:publish"
+}
+
+task publishToMavenLocalAll("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew",
+            "common:acp-admin-cloud-constant:publishToMavenLocal",
+            "common:acp-admin-cloud-dependencies:publishToMavenLocal"
+}
+
+task publishToMavenLocalAll_win("type": Exec) {
+    workingDir "$rootDir"
+    commandLine "./gradlew.bat",
+            "common:acp-admin-cloud-constant:publishToMavenLocal",
+            "common:acp-admin-cloud-dependencies:publishToMavenLocal"
+}

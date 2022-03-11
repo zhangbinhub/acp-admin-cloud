@@ -1,12 +1,18 @@
 ## 版本更新记录
 
+##### v5.1.4
+
+- Global
+    - [Upgrade] 调整工程模块分布
+    - [Upgrade] 优化构建脚本
+    - [Upgrade] 优化中间件部署脚本[docker-compose.yaml](../deploy/docker/middleware/docker-compose.yaml)
+    - [Upgrade] 增加SpringBoot bootBuildImage打包镜像
+    - [Upgrade] 增加服务部署脚本[docker-compose.yaml](../deploy/docker/cloud-services/docker-compose.yaml)
+
 ##### v5.1.3
 
 - Global
-    - [Upgrade] 优化中间件部署脚本[docker-compose.yaml](../deploy/docker/middleware/docker-compose.yaml)
     - [Upgrade] 规范打包后 MANIFEST.MF 信息
-    - [Upgrade] 增加SpringBoot bootBuildImage打包镜像
-    - [Upgrade] 增加服务部署脚本[docker-compose.yaml](../deploy/docker/cloud-services/docker-compose.yaml)
     - [Upgrade] 升级依赖
         - Acp 2021.0.2
         - flowable 6.7.2
@@ -648,7 +654,7 @@
 - [Upgrade] 升级核心库至 6.1.1
 - [Upgrade] 分布式锁接口及防重请求移入核心库，仅保留分布式锁实现
 - [Upgrade] 防重请求处理移入核心库
-- [Upgrade] 公共模块中增加基于Redis的全局序列号生成组件 **pers.acp.admin.common.serialnumber.GenerateSerialNumber**
+- [Upgrade] 公共模块中增加基于Redis的全局序列号生成组件 **GenerateSerialNumber**
 
 ##### v3.0.2
 

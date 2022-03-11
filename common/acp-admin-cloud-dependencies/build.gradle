@@ -8,7 +8,7 @@ dependencyManagement {
     }
 }
 dependencies {
-    api project(":cloud:acp-admin-cloud-constant")
+    api project(":common:acp-admin-cloud-constant")
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

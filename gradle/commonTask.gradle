@@ -1,0 +1,139 @@
+def generateShell = { String appJarName ->
+    mkdir("${buildDir}/bin")
+    def memoryParam = jvmMemoryParam.get('default') as String
+    // generate linux shell
+    File templateFile = new File("$rootDir/doc/script/server.model")
+    List<String> lines = templateFile.readLines("UTF-8")
+    StringBuilder buffer = new StringBuilder()
+    for (String line : lines) {
+        buffer.append(line).append("\n")
+    }
+    String shellContent = buffer.toString()
+    shellContent = shellContent.replaceAll("@appJarName@", appJarName)
+    shellContent = shellContent.replaceAll("@jvmMemoryParam@", memoryParam)
+    StringBuilder jvmExtParamBuilder = new StringBuilder()
+    jvmExtParamBuilder.append("'")
+    if (project.hasProperty("active") && project.active != null && project.active != "") {
+        println("$project.name release finished: active=$project.active")
+        def envParam = jvmExtParam.get(project.active)
+        if (envParam != null) {
+            jvmExtParamBuilder.append("-Dacp_profile_active=$project.active" as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_addr=" + envParam['acp_nacos_addr'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_username=" + envParam['acp_nacos_username'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_password=" + envParam['acp_nacos_password'] as String)
+            jvmExtParamBuilder.append(" -Dacp_nacos_namespace=" + envParam['acp_nacos_namespace'] as String)
+            jvmExtParamBuilder.append(" -Dacp_log_path=" + envParam['acp_log_path'] as String)
+        }
+    }
+    jvmExtParamBuilder.append("'")
+    shellContent = shellContent.replaceAll("@jvmExtParam@", jvmExtParamBuilder.toString())
+
+    File outFile = new File("${buildDir}/bin/server.sh")
+    Writer writer = new FileWriter(outFile)
+    writer.write(new String(shellContent.getBytes("UTF-8")))
+    writer.flush()
+    writer.close()
+
+    // generate img shell
+    File templateFileImg = new File("$rootDir/doc/script/server-img.model")
+    List<String> linesImg = templateFileImg.readLines("UTF-8")
+    StringBuilder bufferImg = new StringBuilder()
+    for (String line : linesImg) {
+        bufferImg.append(line).append("\n")
+    }
+    String shellContentImg = bufferImg.toString()
+    shellContentImg = shellContentImg.replaceAll("@appJarName@", appJarName)
+    shellContentImg = shellContentImg.replaceAll("@jvmMemoryParam@", memoryParam)
+    File outFileImg = new File("${buildDir}/bin/server-img.sh")
+    Writer writerImg = new FileWriter(outFileImg)
+    writerImg.write(new String(shellContentImg.getBytes("UTF-8")))
+    writerImg.flush()
+    writerImg.close()
+} as Object
+
+task copyJar(type: Copy) {
+    from(configurations.runtimeClasspath)
+    into('build/libs/dependencies')
+}
+
+task mapperFileCopy(type: Copy) {
+    copy {
+        from("src/main/java") {
+            include("**/*.xml")
+            include("**/*.json")
+            include("**/*.properties")
+        }
+        into("${buildDir}/classes/main")
+    }
+    copy {
+        from("src/test/java") {
+            include("**/*.xml")
+            include("**/*.json")
+            include("**/*.properties")
+        }
+        into("${buildDir}/classes/test")
+    }
+    copy {
+        from("src/main/kotlin") {
+            include("**/*.xml")
+            include("**/*.json")
+            include("**/*.properties")
+        }
+        into("${buildDir}/classes/main")
+    }
+    copy {
+        from("src/test/kotlin") {
+            include("**/*.xml")
+            include("**/*.json")
+            include("**/*.properties")
+        }
+        into("${buildDir}/classes/test")
+    }
+}
+
+jar {
+    dependsOn(copyJar)
+    manifest {
+        attributes('Implementation-Vendor': "${project.group}", 'Implementation-Title': "${project.name}", 'Implementation-Version': "${project.version}", 'Build-By': "Gradle ${projectProperties.getProperty('gradleVersion')}", 'Jvm-Version': "${projectProperties.getProperty('javaVersion')}", 'Kotlin-Version': "$versions.kotlin")
+    }
+}
+
+task clearPj(type: Delete) {
+    delete 'release', 'build', 'target', 'out'
+}
+
+task release(dependsOn: [build, copyJar]) {
+    onlyIf {
+        def exclude = ["common"]
+        def needRelease = true
+        for (subGroup in exclude) {
+            if (project.group.toString().startsWith("${rootProject.group}.${rootProject.name}.$subGroup")) {
+                needRelease = false
+                break
+            }
+        }
+        new File("${projectDir}/src").exists() && needRelease
+    }
+    doLast {
+        def fileName = "$project.name" + "-" + "$project.version" + ".jar"
+        generateShell(fileName)
+        copy {
+            from file("${buildDir}/libs/" + fileName)
+            into "$rootDir/release/$project.name"
+        }
+        copy {
+            from("${buildDir}/bin") {
+                include("*.sh")
+            }
+            into "$rootDir/release/$project.name"
+        }
+        copy {
+            from "${buildDir}/resources/main"
+            into "$rootDir/release/$project.name"
+        }
+        copy {
+            from "${buildDir}/resources/main"
+            into "$rootDir/release/$project.name"
+        }
+    }
+}

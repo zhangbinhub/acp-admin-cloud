@@ -11,20 +11,12 @@ bootJar {
     }
 }
 dependencies {
-    implementation "io.github.zhangbinhub.acp.core:acp-core"
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    implementation project(":cloud:acp-admin-cloud-constant")
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
-    implementation "org.springframework.cloud:spring-cloud-starter-stream-kafka"
-    implementation "org.springframework.cloud:spring-cloud-stream-binder-kafka-streams"
-    implementation "org.springframework.cloud:spring-cloud-starter-gateway"
-    implementation "org.springframework.cloud:spring-cloud-starter-loadbalancer"
-    // 服务注册发现
-    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
-    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    implementation project(":common:acp-admin-cloud-dependencies")
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 bootBuildImage {
